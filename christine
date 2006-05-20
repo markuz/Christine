@@ -209,10 +209,6 @@ class christine:
 
 
 	def set_location(self,filename):
-		#path = self.player.get_location()
-		#del self.player
-		#self.player = player(self)
-		#self.player_init()
 		self.STATE_PLAYING = False
 		self.player.stop()
 		self.player.set_location(filename)
@@ -221,19 +217,6 @@ class christine:
 		self.natural_model.foreach(self.clear_play_state)
 		t = self.player.type
 		
-		#self.model.foreach(self.search_by_path,filename)
-		#iter = self.get_natural_iter(self.current_iter)
-		#name = self.player.get_tag("title")
-		#album = self.player.get_tag("album")
-		#artist = self.player.get_tag("artist")
-		#track_number = self.player.get_tag("track-number")
-		#if name != "":
-		#	self.natural_model.set(iter,
-		#			NAME,name,
-		#			ALBUM,album,
-		#			ARTIST,artist,
-		#			TN,track_number,
-		#			SEARCH,".".join([name,artist,album]))
 		t = self.player.type
 	
 		if t == "video":
@@ -679,26 +662,26 @@ class christine:
 			self.go_next()
 		elif t == gst.MESSAGE_DURATION:
 			print b.parse_duration()
-		elif t == gst.MESSAGE_TAG:
-			self.player.found_tag_cb(b.parse_tag())
-			self.current_iter = None
-			self.natural_model.foreach(self.search_by_path,self.player.get_location())
-			#iter = self.get_natural_iter(self.current_iter)
-			iter = self.current_iter
-			name = self.player.get_tag("title")
-			if name == "":
-				name = os.path.split(self.player.get_location())[1]
-				name = ".".join([k for k in name.split(".")[:-1]])
-			album = self.player.get_tag("album")
-			artist = self.player.get_tag("artist")
-			track_number = self.player.get_tag("track-number")
-			self.natural_model.set(iter,
-					NAME,name,
-					ALBUM,album,
-					ARTIST,artist,
-					TN,track_number,
-					SEARCH,".".join([name,artist,album]))
-			gobject.timeout_add(500,self.library.save)
+#		elif t == gst.MESSAGE_TAG:
+#			self.player.found_tag_cb(b.parse_tag())
+#			self.current_iter = None
+#			self.natural_model.foreach(self.search_by_path,self.player.get_location())
+#			#iter = self.get_natural_iter(self.current_iter)
+#			iter = self.current_iter
+#			name = self.player.get_tag("title")
+#			if name == "":
+#				name = os.path.split(self.player.get_location())[1]
+#				name = ".".join([k for k in name.split(".")[:-1]])
+#			album = self.player.get_tag("album")
+#			artist = self.player.get_tag("artist")
+#			track_number = self.player.get_tag("track-number")
+#			self.natural_model.set(iter,
+#					NAME,name,
+#					ALBUM,album,
+#					ARTIST,artist,
+#					TN,track_number,
+#					SEARCH,".".join([name,artist,album]))
+#			gobject.timeout_add(500,self.library.save)
 		return True
 
 
@@ -737,18 +720,14 @@ class christine:
 		self.model.foreach(self.search_by_path,location)
 		iter = self.current_iter
 		track_number = ""
-		if iter == None:
-			title  = self.player.get_tag("title")
-			artist = self.player.get_tag("artist")
-			album  = self.player.get_tag("album")
-			track_number = self.player.get_tag("track-number")
-			if title == "":
-				title = os.path.split(self.player.get_location())[1]
-				title = ".".join(title.split(".")[:-1])
-		else:
-			title	= self.model.get_value(iter,NAME).replace("_"," ")
-			artist	= self.model.get_value(iter,ARTIST)
-			album	= self.model.get_value(iter,ALBUM)
+		title  = self.player.get_tag("title").replace("_"," ")
+		artist = self.player.get_tag("artist")
+		album  = self.player.get_tag("album")
+		track_number = self.player.get_tag("track-number")
+		if title == "":
+			title = os.path.split(self.player.get_location())[1]
+			title = ".".join(title.split(".")[:-1])
+
 		title = title.replace("&","&amp;")
 		self.title_label.set_markup("<big>%s</big>"%title)
 		self.window.set_title("%s - Christine"%title)
@@ -771,6 +750,7 @@ class christine:
 						ARTIST,artist,
 						TN,track_number,
 						SEARCH,".".join([title,artist,album]))
+		self.library.save()
 
 	
 #===============player section ends ===========
