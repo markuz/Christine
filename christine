@@ -1,0 +1,796 @@
+#! /usr/bin/env python
+# -*- coding: UTF8 -*-
+
+## Copyright (c) 2006 Marco Antonio Islas Cruz
+## <markuz@islascruz.org>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+
+import gnome,gst,gtk,gst.interfaces,random,sys
+from gnome import ui
+from lib_christine.libs_christine import *
+from lib_christine.gtk_misc import *
+from lib_christine.library import *
+
+
+
+
+class christine:
+	def __init__(self):
+		gnomeprogram		= gnome.program_init("christine","0.0.1")
+		self.gtk_misc		= gtk_misc()
+		client				= ui.master_client()
+		self.xml			= glade_xml("main_window.glade")
+		self.xml.signal_autoconnect(self)
+		self.gconf = christine_gconf()
+		self.moving_scale	= False
+		self.STATE_PLAYING = False
+		#self.player = player(self)
+		self.player = play10(self)
+		self.win()
+		self.player_init()
+		gobject.timeout_add(900,self.on_tick)
+	
+	def player_init(self):
+		#self.player.play.connect("stream-length",self.stream_length)
+		#self.player.play.connect("time-tick",self.on_tick)
+		#self.player.play.connect("eos",self.player.pause)
+		#self.player.play.connect("eos",self.go_next)
+		self.set_player_for_first_time()
+		self.player.bus.add_watch(self.error_handler)
+		self.filename = ""
+	
+	def miniviewer(self):
+		self.mv_xml = glade_xml("miniviewer.glade")
+		self.mv_xml.signal_autoconnect(self)
+		self.miniviewer_window = self.mv_xml["mv_window"]
+		self.miniviewer_window.hide()
+		self.miniviewer_place = self.mv_xml["videobox"]
+		self.miniviewer_tcontainer = self.mv_xml["toolbox_container"]
+	def hide_miniviewer(self,widget):
+		widget.hide()
+	
+	def win(self):
+		self.window = self.xml["main_window"]
+		self.play_button	= self.xml["play"]
+		self.play_menuitem = self.xml["play_menuitem"]
+		self.library = library(self)
+		self.treeview = self.library.tv
+		self.treeview.connect("button-press-event",self.pop_menu)
+		self.treeview.connect("key-press-event",self.key_press_handler)
+
+
+		self.search_hbox = self.xml["search_hbox"]
+		self.search_box = self.xml["search_box"]
+		
+		self.browser = self.xml["browser"]
+
+		self.model = self.library.tv.get_model()
+		self.filter_model = self.model.get_model()
+		self.filter_model.set_visible_func(self.filter)
+		self.natural_model = self.filter_model.get_model()
+
+		self.current_iter = self.model.get_iter_first()
+		self.last_iter = []
+		self.artist = mini_lists("Artist","All Artists")
+		self.artist_frame = self.xml["artist_scroll"]
+		self.artist_frame.add(self.artist.treeview)
+		self.model.foreach(self.add_artists)
+
+		self.albums = mini_lists("Albums","All Albumes")
+		self.album_frame = self.xml["albums_scroll"]
+		self.album_frame.add(self.albums.treeview)
+		self.model.foreach(self.add_albums)
+		
+		self.music_sw = self.xml["music_sw"]
+		self.music_sw.add(self.library.tv)
+		self.main_viewer_place = self.xml["videobox"]
+		#=============queue ends
+		self.queue_sw = self.xml["queue_sw"]
+		self.queue = queue(self)
+		self.queue_sw.add(self.queue.treeview)
+		gobject.timeout_add(500,self.check_queue)
+		self.queue.treeview.connect("key-press-event",self.queue_key_handler)
+		#=============queue begins
+	
+		self.list_box = self.xml["lists_box"]
+
+		self.shuffle = self.xml["shuffle"]
+		self.shuffle.set_active(self.gconf.get_bool("control/shuffle"))
+		val = self.gconf.get_bool("control/shuffle")
+		self.shuffle.set_active(val)
+		self.toggle_visualization = self.xml["toggle_visualization"]
+		self.small_view_menuitem = self.xml["small_view_menuitem"]
+		val = self.gconf.get_bool("ui/small_view")
+		self.small_view_menuitem.set_active(val)
+		#if val:
+		#	self.small_view_menuitem.emit("toggled")
+		#	#self.small_view_menuitem.set_active(val)
+		self.toggle_small_view(self.small_view_menuitem)
+
+		
+		self.title_label	= self.xml["title_label"]
+		self.artist_button	= self.xml["artist_button"]
+		self.artist_box		= self.xml["artist_box"]
+		self.artist_box.hide()
+		self.album_button	= self.xml["album_button"]
+		self.album_box		= self.xml["album_box"]
+		self.album_box.hide()
+		
+
+		self.scale = self.xml["scale"]
+		self.time  = self.xml["time"]
+		self.stream_length_label = self.xml["total"]
+		self.toolbox = self.xml["toolbox"]
+		self.toolbox_container = self.xml["toolbox_container"]
+		self.volume_scale = self.xml["volume_scale"]
+		self.volume_scale.set_value(0.8)
+
+	def queue_key_handler(self,widget,event):
+		if event.keyval == 65535:
+			selection = self.queue.treeview.get_selection()
+			model,iter = selection.get_selected()
+			name = model.get_value(iter,NAME)
+			self.queue.remove(iter)
+			self.queue.save()
+
+	def pop_menu(self,widget,event):
+		if event.button == 3:
+			xml = glade_xml("popmenu.glade")
+			xml.signal_autoconnect(self)
+			popup = xml["menu"]
+			popup.popup(None,None,None,3,gtk.get_current_event_time())
+			popup.show_all()
+
+	def popup_add_to_queue(self,widget):
+		selection = self.treeview.get_selection()
+		model,iter, = selection.get_selected()
+		file = model.get_value(iter,PATH)
+		self.queue.add(file)
+	
+	def key_press_handler(self,treeview,event):
+		if event.keyval == 65535:
+			selection = treeview.get_selection()
+			model,iter = selection.get_selected()
+			name = model.get_value(iter,NAME)
+			niter = self.get_natural_iter(iter)
+			self.natural_model.remove(niter)
+			self.library.remove(niter)
+			self.library.save()
+		elif event.keyval == 113:
+			selection = treeview.get_selection()
+			model,iter = selection.get_selected()
+			name = model.get_value(iter,PATH)
+			self.queue.add(name)
+		else:
+			pass
+	
+	def set_player_for_first_time(self):
+		self.main_viewer_place.pack_start(self.player,True,True)
+		
+	def add_player_to_miniviewer(self,widget=None):
+		#print "add_to_miniviewer"
+		self.miniviewer()
+		self.player.reparent(self.miniviewer_place)
+		self.toolbox.reparent(self.miniviewer_tcontainer)
+		self.miniviewer_window.show_all()
+		self.player.show()
+		
+	def remove_player_from_miniviewer(self,widget=None):
+		#print "remove_player_from_miniviewer"
+		self.player.reparent(self.main_viewer_place)
+		self.toolbox.reparent(self.toolbox_container)
+		self.play_button.set_active(False)
+		del self.miniviewer_window
+		self.player.hide()
+		
+	def toolbar(self):
+		self.sortb = self.xml["sortb"]
+		self.gtk_misc.set_toolbutton_image(self.sortb,"usort.png")
+		self.repeatb = self.xml["repeatb"]
+		self.musicb = self.xml["musicb"]
+		self.musicb.connect("clicked",self.switch,"music")
+		self.gtk_misc.set_toolbutton_image(self.musicb,"sound.png")
+		self.videob = self.xml["videob"]
+		self.videob.connect("clicked",self.switch,"video")
+		self.gtk_misc.set_toolbutton_image(self.videob,"video.png")
+
+
+	def set_location(self,filename):
+		#path = self.player.get_location()
+		#del self.player
+		#self.player = player(self)
+		#self.player_init()
+		self.STATE_PLAYING = False
+		self.player.stop()
+		self.player.set_location(filename)
+		self.player.discoverer.connect("discovered",self.set_tags)
+		gobject.timeout_add(200,self.stream_length)
+		self.natural_model.foreach(self.clear_play_state)
+		t = self.player.type
+		
+		#self.model.foreach(self.search_by_path,filename)
+		#iter = self.get_natural_iter(self.current_iter)
+		#name = self.player.get_tag("title")
+		#album = self.player.get_tag("album")
+		#artist = self.player.get_tag("artist")
+		#track_number = self.player.get_tag("track-number")
+		#if name != "":
+		#	self.natural_model.set(iter,
+		#			NAME,name,
+		#			ALBUM,album,
+		#			ARTIST,artist,
+		#			TN,track_number,
+		#			SEARCH,".".join([name,artist,album]))
+		t = self.player.type
+	
+		if t == "video":
+			try:
+				self.miniviewer_window
+			except:
+				self.add_player_to_miniviewer()
+		elif t == "sound":
+			try:
+				self.miniviewer_window.destroy()
+				self.player.set_size_request(200,200)
+				del self.miniviewer_window
+			except: pass
+		else:
+			print "Not to miniviewer"
+	
+	def stop(self,widget):
+		self.player.stop()
+			
+
+	def switch(self,widget,who="music"):
+		if who == "music":
+			self.video_sw.hide()
+			self.music_sw.show()	
+			self.model = self.library.model
+		elif who== "video":
+			self.video_sw.show()
+			self.music_sw.hide()	
+			self.model = self.video_library.model
+		else:
+			raise ValueError,"Not allowed for %s"%music
+
+
+	def volume_change_value(self,widget,a=None,value=None):
+		value = widget.get_value()
+		self.player.set_volume(value)
+	
+	def toggle_small_view(self,widget):
+		active = widget.get_active()
+		self.gconf.set_value("ui/small_view",active)
+		if active:
+			self.list_box.hide()
+			self.search_hbox.hide()
+			self.window_size= self.window.get_size()
+			self.window.unmaximize()
+			self.window.resize(10,10)
+		else:
+			try:
+				w,h = self.window_size
+			except:
+				w,h = 640,480
+			self.list_box.show()
+			self.search_hbox.show()
+			self.window.resize(w,h)
+
+	def toggle_visualization(self,widget):
+		self.player.set_visualization_visible(widget.get_active())
+		self.gconf.set_value("ui/visualization",widget.get_active())
+		if self.small_view_menuitem.get_active() and \
+				not widget.get_active():
+			self.toggle_small_view(self.small_view_menuitem)
+			
+#==================== search stuff begins ===============================
+
+	def search(self,widget):
+		self.filter_model.refilter()
+
+	def filter(self,model,iter):
+		text = self.search_box.get_text().lower()
+		value	= model.get_value(iter,SEARCH)
+		try:
+			value = value.lower()
+		except:
+			value = ""
+		if value.find(text) >= 0:
+			return True
+		else:
+			return False
+	
+	def toggle_browser(self,widget):
+		if widget.get_active():
+			self.browser.show()
+		else:
+			self.browser.hide()
+
+#==================== search stuff ends==================================
+#====================Play stuff==================================
+	def switch_play(self,widget):
+		active = widget.get_active()
+		if not active:
+			self.player.pause()
+			self.STATE_PLAYING = False
+		else:
+			self.play()
+			#gobject.timeout_add(100,self.play)
+			self.STATE_PLAYING = True
+		self.play_menuitem.set_active(active)
+		self.play_button.set_active(active)
+			
+
+	
+	def play(self):
+		print "play:",self.STATE_PLAYING
+		if not self.STATE_PLAYING:
+			location = self.player.get_location()
+			print "location:",location
+			if location == None:
+				self.go_next()
+			self.player.playit()
+			path = self.player.get_location()
+			self.current_iter = None
+			self.natural_model.foreach(self.search_by_path,path)
+			if self.current_iter != None:
+				pix = self.gtk_misc.gen_pixbuf("sound.png")
+				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+				iter = self.current_iter
+				self.natural_model.set(iter,PIX,pix)
+			self.jump_to_playing()
+	
+	def clear_play_state(self,model,path,iter):
+		pix = self.gtk_misc.gen_pixbuf("blank.png")
+		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+		self.natural_model.set(iter,PIX,pix)
+		
+	def get_natural_iter(self,iter):
+		fiter = self.model.convert_iter_to_child_iter(None,iter)
+		return self.filter_model.convert_iter_to_child_iter(fiter)
+	
+	def go_next(self,widget=None):
+		#gobject.timeout_add(100,self.go_next1)
+		self.go_next1()
+	
+	def toggle_shuffle(self,widget):
+		self.gconf.set_value("control/shuffle",widget.get_active())
+
+	def go_next1(self,widget=None):
+		try:
+			model = self.queue.treeview.get_model()
+			iter = model.get_iter_first()
+			filename = model.get_value(iter,PATH)
+			self.set_location(filename)
+			self.current_iter == None
+			self.jump_to_playing()
+			#self.model.foreach(self.search_by_path,filename)
+			#if self.current_iter != None:
+			#	path = self.model.get_path(self.current_iter)
+			#	self.treeview.scroll_to_cell(path,None,
+			#		True,0.5,0.5)
+			self.queue.remove(iter)
+			self.queue.save()
+			#self.play_button.emit("clicked")
+			self.play_button.set_active(False)
+			self.play_button.set_active(True)
+		except:
+			if self.gconf.get_bool("control/shuffle"):
+				self.elements = []
+				self.model.foreach(self.get_max_elements)
+				iter = int(len(self.elements)*random.random())
+				filename = self.model.get_value(self.elements[iter],
+						PATH)
+				self.set_location(filename)
+				self.current_iter = self.elements[iter]
+				self.play_button.set_active(False)
+				self.play_button.set_active(True)
+			else:
+				self.get_next_in_list()
+	def	check_queue(self):
+		model = self.queue.treeview.get_model()
+		b = model.get_iter_first()
+		if type(b) != gtk.TreeIter:
+			self.queue_sw.hide()
+		else:
+			self.queue_sw.show()
+		return True
+			
+			
+	def get_next_in_list(self):
+		path = self.player.get_location()
+		print "get_next_in_list: path",path
+		if path == None:
+			print "colocando el primero de la lista"
+			iter = self.model.get_iter_first()
+			filename = self.model.get_value(iter,PATH)
+			self.set_location(filename)
+			print "get_next_in_list:",self.player.get_location()
+		else:
+			self.model.foreach(self.search_by_path,path)
+			iter = self.model.iter_next(self.current_iter)
+			self.last_iter.append(self.current_iter)
+			try:
+				filename = self.model.get_value(iter,PATH)
+				self.set_location(filename)
+				self.play_button.set_active(False)
+				self.play_button.set_active(True)
+			except:
+				self.set_scale_value("","",b=0)
+				self.set_location(path)
+				self.play_button.set_active(False)
+	
+	def go_prev(self,widget=None):
+		iter = self.last_iter.pop()
+		filename = model.get_value(iter,PATH)
+	
+	def search_by_path(self,model,path,iter,location):
+		mlocation = model.get_value(iter,PATH)
+		if mlocation == location:
+			self.current_iter = iter
+			
+	def get_max_elements(self,model,path,iter):
+		self.elements.append(iter)
+		
+	
+	def on_scale_value_changed(self,scale,a,value=None):
+		value = self.scale_value
+		#print "value=",value
+		self.moving_scale = False
+		if value == 0:
+			value = 1
+		self.player.seek_to(value)
+		#print self.moving_scale
+		
+	def set_scale_value(self,scale,a,b):
+		self.moving_scale = True
+		self.scale_value = b
+		self.moving_scale = False
+	
+	def set_scale_to_value(self,value):
+		#print self.moving_scale,value
+		if not self.moving_scale:
+			try:
+				self.scale.set_value(value)
+			except:
+				value
+				self.scale.set_value(0)
+				
+	def jump_to_playing(self,widget=None):
+		location = self.player.get_location()
+		self.model.foreach(self.search_by_path,location)
+		path = self.model.get_path(self.current_iter)
+		if path != None:
+			self.treeview.scroll_to_cell(path,None,True,0.5,0.5)
+	
+	def jump_to(self,widget):
+		try:
+			a = self.total
+		except:
+			return False
+		xml = glade_xml("jump_to.glade")
+		dialog = xml["dialog"]
+		mins,seconds = divmod(self.total/gst.SECOND,60)
+		#Current minute and current second
+		cmins,cseconds = divmod(self.scale.get_value(),60)
+		cmins,cseconds = (int(cmins),int(cseconds))
+		mins_adj = gtk.Adjustment(value=0,lower=0,upper=mins,step_incr=1)
+		secs_adj = gtk.Adjustment(value=0,lower=0,upper=59,step_incr=1)
+
+		mins_scale = xml["mins"]
+		secs_scale = xml["secs"]
+		mins_scale.set_adjustment(mins_adj)
+		mins_scale.set_value(cmins)
+		secs_scale.set_adjustment(secs_adj)
+		secs_scale.set_value(cseconds)
+		response = dialog.run()
+		dialog.destroy()
+		if response == gtk.RESPONSE_OK:
+			time = mins_scale.get_value()*60 + secs_scale.get_value()
+			if time > self.total:
+				time = self.total
+			self.scale.set_value(time)
+			self.player.seek_to(time)
+			
+
+
+
+#===============Play stuff ends =============================
+
+#===============libraty stuff begins=============
+	def add_artists(self,model,path,iter):
+		artist = model.get_value(iter,ARTIST)
+		if artist =="":
+			artist = self.artist.first_element
+		if not artist in self.artist.list:
+			self.artist.add(artist)
+			
+	def add_albums(self,model,path,iter):
+		album = model.get_value(iter,ALBUM)
+		if album =="":
+			album = self.albums.first_element
+		if not album in self.albums.list:
+			self.albums.add(album)
+
+
+	def import_file(self,widget):
+		xml = glade_xml("file_selector.glade")
+		fs = xml["fs"]
+		s = []
+		v = []
+		for i in sound:
+			s.append("*"+i)
+		for i in video:
+			v.append("*"+i)
+		filter = gtk.FileFilter()
+		filter.set_name("All media files")
+		for i in [s,v]:
+			for i in i:
+				filter.add_pattern(i)
+		fs.add_filter(filter)
+
+		filter = gtk.FileFilter()
+		filter.set_name("Sound files")
+		for i in s:
+			filter.add_pattern(i)
+		fs.add_filter(filter)
+
+		filter1 = gtk.FileFilter()
+		filter1.set_name("Video files")
+		for i in v:
+			filter1.add_pattern(i)
+		fs.add_filter(filter1)
+		response = fs.run()
+		files = fs.get_filenames()
+		fs.destroy()
+		if response == gtk.RESPONSE_OK:
+			self.add_files(files=files)
+			self.library.save()
+	
+	def import_folder(self,widget):
+		xml = glade_xml("dir_selector.glade")
+		ds = xml["ds"]
+		walk = xml["walk"]
+		response = ds.run()
+		filenames = ds.get_filenames()
+		ds.destroy()
+		if response == gtk.RESPONSE_OK:
+			for i in filenames:
+				if walk.get_active():
+					self.add_dirs(i)
+				else:
+					self.add_dir(i)
+			self.library.save()
+	
+	def add_dirs(self,dir):
+		a = os.walk(dir)
+		b = True
+		f = []
+		filenames = []
+		while b:
+			try: 
+				dirpath,dirnames,files = a.next()
+				filenames.append([dirpath,files])
+			except:
+				b = False
+		for i in filenames:
+			for path in i[1]:
+				ext = path.split(".").pop().lower()
+				if ext in sound or ext in video:
+					f.append(os.path.join(i[0],path))
+		if len(f) > 0:
+			self.add_files(files = f)
+		else:
+			print f
+			
+
+	def add_dir(self,dir):
+		files = os.listdir(dir)
+		f = []
+		for i in files:
+			ext = i.split(".").pop()
+			if ext in [sound,video]:
+				f.append(i)
+		self.add_files(files = f)
+	
+	def add_files(self,widget=None,files=None):
+		xml = glade_xml("add_files.glade")
+		xml.signal_autoconnect(self)
+		self.IMPORTING = True
+		self.add_win			= xml["main_window"]
+		self.add_file_label		= xml["file_label"]
+		self.add_progress		= xml["progressbar"]
+		self.add_close_button	= xml["close"]
+		if type(files) != type([]):
+			raise TypeError,"files must be List, got %s"%type(files)
+		#for i in files:
+		files.reverse()
+		self.files_to_add = files
+		self.percentaje = 0
+		if len(files)>0:
+			inc = 1.0/len(files)
+		else:
+			inc = 1
+		self.paths = []
+		self.model.foreach(self.get_paths)
+		gobject.timeout_add(100,self.add_file,inc)
+		self.add_win.run()
+			#self.path_exists = False
+			#self.model.foreach(self.exists,i)
+			#if not self.path_exists:
+			#	self.library.add(i)
+			#print self.path_exists
+		
+	def add_file(self,inc):
+		try:
+			if self.IMPORTING:
+				newfile = self.files_to_add.pop()
+				self.percentaje += inc
+				if self.percentaje > 1.0:
+					self.percentaje == 0.99
+				self.add_progress.set_fraction(self.percentaje)	
+				self.add_file_label.set_text(os.path.split(newfile)[1])
+				if not newfile in self.paths:
+					self.library.add(newfile)
+		except:
+			self.library.save()
+			self.IMPORTING = False
+		return self.IMPORTING
+
+	def import_cancel(self,widget):
+		self.IMPORTING = False
+		self.add_win.destroy()
+
+		
+	def get_paths(self,model,path,iter):
+		loc = model.get_value(iter,PATH)
+		self.paths.append(loc)
+
+#===============libraty stuff ends=============
+			
+#===============player section begins===========
+	def error_handler(self,a,b,c=None,d=None):
+		#print b,dir (b),
+		t = b.type
+		#print dir (b),"\n"
+		#print t
+		if t == gst.MESSAGE_ERROR:
+			print "An error has ocurred"
+			print dir (b)
+			print b.parse_error()
+			print b.structure["debug"]
+			print b.src
+		elif t == gst.MESSAGE_EOS:
+			print "self.error_handler: eos"
+			#self.player.pause()
+			self.go_next()
+		elif t == gst.MESSAGE_DURATION:
+			print b.parse_duration()
+		elif t == gst.MESSAGE_TAG:
+			self.player.found_tag_cb(b.parse_tag())
+			self.current_iter = None
+			self.natural_model.foreach(self.search_by_path,self.player.get_location())
+			#iter = self.get_natural_iter(self.current_iter)
+			iter = self.current_iter
+			name = self.player.get_tag("title")
+			if name == "":
+				name = os.path.split(self.player.get_location())[1]
+				name = ".".join([k for k in name.split(".")[:-1]])
+			album = self.player.get_tag("album")
+			artist = self.player.get_tag("artist")
+			track_number = self.player.get_tag("track-number")
+			self.natural_model.set(iter,
+					NAME,name,
+					ALBUM,album,
+					ARTIST,artist,
+					TN,track_number,
+					SEARCH,".".join([name,artist,album]))
+			gobject.timeout_add(500,self.library.save)
+		return True
+
+
+	def on_tick(self):
+		try:
+			nanos = self.player.query_position(gst.FORMAT_TIME)[0]
+			ts = nanos / gst.SECOND
+			time = "%02d:%02d" % divmod(ts,60)
+			time_total = "%02d:%02d" %divmod(self.total/gst.SECOND,60)
+			self.time.set_text("%s"%(time))
+			if ts < 0:
+				print ts
+				ts = long(0)
+			self.set_scale_to_value(int(ts))
+		except:
+			pass
+		return True
+	
+	def stream_length(self):
+		try:
+			self.total = self.player.query_duration(gst.FORMAT_TIME)[0]
+			print "stream_length:",self.total
+			ts = self.total/gst.SECOND
+			print "stream_length:",ts
+			self.stream_length_label.set_text("%02d:%02d"%divmod(ts,60))
+			ad = gtk.Adjustment(value=0,lower=0,upper=ts)
+			self.scale.set_adjustment(ad)
+			return False
+		except:
+			print "stream_length: error"
+			return True
+		
+	def set_tags(self,widget,b):
+		location = self.player.get_location()
+		self.current_iter = None
+		self.model.foreach(self.search_by_path,location)
+		iter = self.current_iter
+		track_number = ""
+		if iter == None:
+			title  = self.player.get_tag("title")
+			artist = self.player.get_tag("artist")
+			album  = self.player.get_tag("album")
+			track_number = self.player.get_tag("track-number")
+			if title == "":
+				title = os.path.split(self.player.get_location())[1]
+				title = ".".join(title.split(".")[:-1])
+		else:
+			title	= self.model.get_value(iter,NAME).replace("_"," ")
+			artist	= self.model.get_value(iter,ARTIST)
+			album	= self.model.get_value(iter,ALBUM)
+		title = title.replace("&","&amp;")
+		self.title_label.set_markup("<big>%s</big>"%title)
+		self.window.set_title("%s - Christine"%title)
+		if artist != "":
+			self.artist_button.set_label(artist)
+			self.artist_box.show_all()
+		else:
+			self.artist_box.hide()
+		if album != "":
+			self.album_button.set_label(album)
+			self.album_box.show_all()
+		else:
+			self.album_box.hide()
+		iter = self.get_natural_iter(iter)
+		if iter != None:
+			if title != "":
+				self.natural_model.set(iter,
+						NAME,title,
+						ALBUM,album,
+						ARTIST,artist,
+						TN,track_number,
+						SEARCH,".".join([title,artist,album]))
+
+	
+#===============player section ends ===========
+	
+	def show_about(self,widget):
+		xml = glade_xml("about.glade")
+	def main_quit(self,widget=None):
+		self.player.stop()
+		#gst.main_quit()
+		gtk.main_quit()
+		
+	def main(self):
+		#gst.main()
+		gtk.main()
+
+
+if __name__ == "__main__":
+	a = christine()
+	if len(sys.argv) > 1:
+		for i in sys.argv[1:]:
+			if os.path.isfile(i):
+				a.queue.add(i,prepend=True)
+	a.main()

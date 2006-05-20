@@ -1,0 +1,58 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
+<!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
+
+<glade-interface>
+
+<widget class="GtkMenu" id="menu">
+
+  <child>
+    <widget class="GtkImageMenuItem" id="add_to_queue1">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">Add to queue</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="popup_add_to_queue" last_modification_time="Sat, 29 Apr 2006 17:02:00 GMT"/>
+      <accelerator key="q" modifiers="0" signal="activate"/>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image6">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-add</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+      </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkSeparatorMenuItem" id="separator1">
+      <property name="visible">True</property>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="remove1">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">Remove</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="on_remove1_activate" last_modification_time="Sat, 29 Apr 2006 16:54:18 GMT"/>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image7">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-delete</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+      </child>
+    </widget>
+  </child>
+</widget>
+
+</glade-interface>
