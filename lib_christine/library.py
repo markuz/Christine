@@ -286,6 +286,9 @@ class queue(gtk_misc):
 	def add(self,filename,prepend=False):
 		play = play10(self)
 		play.set_location(filename)
+		play.discoverer.connect("discovered",self.add1,play,filename,prepend)
+
+	def add1(self,widget,b,play,filename,prepend=False):
 		name = play.get_tag("title")
 		type1 = play.type
 		type1 = self.library.get_type(filename)

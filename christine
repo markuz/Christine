@@ -215,23 +215,22 @@ class christine:
 		self.player.discoverer.connect("discovered",self.set_tags)
 		gobject.timeout_add(200,self.stream_length)
 		self.natural_model.foreach(self.clear_play_state)
-		t = self.player.type
-		
-		t = self.player.type
-	
-		if t == "video":
-			try:
-				self.miniviewer_window
-			except:
-				self.add_player_to_miniviewer()
-		elif t == "sound":
-			try:
-				self.miniviewer_window.destroy()
-				self.player.set_size_request(200,200)
-				del self.miniviewer_window
-			except: pass
-		else:
-			print "Not to miniviewer"
+		#t = self.player.type
+		#t = self.player.type
+		#
+		#if t == "video":
+		#	try:
+		#		self.miniviewer_window
+		#	except:
+		#		self.add_player_to_miniviewer()
+		#elif t == "sound":
+		#	try:
+		#		self.miniviewer_window.destroy()
+		#		self.player.set_size_request(200,200)
+		#		del self.miniviewer_window
+		#	except: pass
+		#else:
+		#	print "Not to miniviewer"
 	
 	def stop(self,widget):
 		self.player.stop()
@@ -334,7 +333,7 @@ class christine:
 				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 				iter = self.current_iter
 				self.natural_model.set(iter,PIX,pix)
-			self.jump_to_playing()
+				self.jump_to_playing()
 	
 	def clear_play_state(self,model,path,iter):
 		pix = self.gtk_misc.gen_pixbuf("blank.png")
@@ -741,8 +740,8 @@ class christine:
 			self.album_box.show_all()
 		else:
 			self.album_box.hide()
-		iter = self.get_natural_iter(iter)
 		if iter != None:
+			iter = self.get_natural_iter(iter)
 			if title != "":
 				self.natural_model.set(iter,
 						NAME,title,
@@ -751,6 +750,24 @@ class christine:
 						TN,track_number,
 						SEARCH,".".join([title,artist,album]))
 		self.library.save()
+
+		t = self.player.type
+		t = self.player.type
+	
+		if self.player.isvideo():
+			try:
+				self.miniviewer_window
+			except:
+				self.add_player_to_miniviewer()
+		elif self.player.issound():
+			try:
+				self.miniviewer_window.destroy()
+				self.player.set_size_request(200,200)
+				del self.miniviewer_window
+			except: pass
+		else:
+			print "Not to miniviewer"
+
 
 	
 #===============player section ends ===========

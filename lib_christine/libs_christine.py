@@ -320,6 +320,7 @@ class player(gtk.DrawingArea):
 class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def __init__(self,main):
 		self.main = main
+		self.should_show = False
 		christine_gconf.__init__(self)
 		gtk_misc.__init__(self)
 		gtk.DrawingArea.__init__(self)
@@ -329,19 +330,6 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.__create_playbin()
 		#self.__create_fakeplay()
 	
-	def __create_fakeplay(self):
-		self.__fakeplay = gst.element_factory_make("playbin")
-		self.__fakeplay.set_property("delay",GST_DELAY)
-		self.__fakeplay.set_property("volume",0.0)
-		self.__fake_bus = self.__fakeplay.get_bus()
-		self.__fake_bus.add_watch(self.fake_handler)
-		asink			= self.get_string("backend/audiosink")
-		self.__fake_audio_sink = gst.element_factory_make(asink)
-		#print "asink",asink
-		if asink == "alsasink":
-			self.__fake_audio_sink.set_property("device","hw:0")
-		
-
 		
 	def __create_playbin(self):
 		self.playbin	= gst.element_factory_make("playbin")
@@ -368,13 +356,6 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.query_duration = self.playbin.query_duration
 		self.query_position = self.playbin.query_position
 
-	def fake_handler(self,a,b,c=None,d=None):
-		#print b,dir (b),
-		t = b.type
-		if t == gst.MESSAGE_TAG:
-			self.found_tag_cb(b.parse_tag())
-		return True
-
 		
 	def __connect(self):
 		self.playbin.set_property("video-sink",self.video_sink)
@@ -396,7 +377,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		else:
 			error("file %s not found"%os.path.split(file)[1])
 		#print "set_location check:",self.playbin.get_property("uri")
-		self.type = "sound"
+		self.get_type()
 			
 	def print_discover(self,widget=None,b=None):
 		#print widget,b
@@ -417,9 +398,9 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		return True
 		
 	def pause(self):
-		#self.playbin.set_state(gst.STATE_PAUSED)
-		self.audio_sink.set_state(gst.STATE_PAUSED)
-		self.video_sink.set_state(gst.STATE_PAUSED)
+		self.playbin.set_state(gst.STATE_PAUSED)
+		#self.audio_sink.set_state(gst.STATE_PAUSED)
+		#self.video_sink.set_state(gst.STATE_PAUSED)
 		
 	def stop(self):
 		self.playbin.set_state(gst.STATE_NULL)
@@ -469,7 +450,8 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		elif self.issound():
 			self.type = "sound"
 		else:
-			raise TypeError,"Not an known video or sound"
+			pass
+			#raise TypeError,"Not an known video or sound"
 
 	def nano2str(self,nanos):
 		ts = nanos / gst.SECOND
@@ -499,18 +481,20 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 
 
 	def isvideo(self):
-		ext = self.get_location().split(".").pop().lower()
-		if "video-codec" in self.tags.keys() or \
-			ext in video:
-			return True
-		else:
-			return False
+		#ext = self.get_location().split(".").pop().lower()
+		#if "video-codec" in self.tags.keys() or \
+		#	ext in video:
+		#	return True
+		#else:
+		#	return False
+		return self.discoverer.is_video
 		
 	def issound(self):
-		ext = self.get_location().split(".").pop().lower()
-		if "audio-codec" in self.tags.keys() or \
-				ext in sound:
-			return True
-		else:
-			return False
+		#ext = self.get_location().split(".").pop().lower()
+		#if "audio-codec" in self.tags.keys() or \
+		#		ext in sound:
+		#	return True
+		#else:
+		#	return False
+		return self.discoverer.is_audio
 
