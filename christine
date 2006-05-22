@@ -39,6 +39,7 @@ class christine:
 		self.STATE_PLAYING = False
 		#self.player = player(self)
 		self.player = play10(self)
+		self.stream_error_count = 0
 		self.win()
 		self.player_init()
 		gobject.timeout_add(900,self.on_tick)
@@ -708,8 +709,15 @@ class christine:
 			self.stream_length_label.set_text("%02d:%02d"%divmod(ts,60))
 			ad = gtk.Adjustment(value=0,lower=0,upper=ts)
 			self.scale.set_adjustment(ad)
+			self.stream_error_count = 0
 			return False
 		except:
+			self.stream_error_count += 1
+			if self.stream_error_count > 20:
+				l = self.player.get_location()
+				self.set_location(l)
+				self.play_button.set_active(False)
+				self.play_button.set_active(True)
 			print "stream_length: error"
 			return True
 		
