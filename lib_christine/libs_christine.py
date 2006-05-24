@@ -33,7 +33,7 @@ from lib_christine.gtk_misc import *
 
 
 
-GST_DELAY = 10000
+GST_DELAY = 500
 wdir = os.environ["HOME"]+"/.christine/"
 sound = ["mp3","ogg","wma"]
 video = ["mpg","mpeg","mpe","avi"]
@@ -352,6 +352,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 		vsink			= self.get_string("backend/vis-plugin") 
 		self.vis_plugin = gst.element_factory_make("goom")
+		#self.playbin.set_property("vis-plugin",self.vis_plugin)
 		self.__connect()
 		self.query_duration = self.playbin.query_duration
 		self.query_position = self.playbin.query_position
@@ -411,10 +412,10 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		
 	def set_visualization_visible(self,active=False):
 		if active:
-			self.playbin.set_property("vis-plugin",self.vis_plugin)
+			#self.playbin.set_property("vis-plugin",self.vis_plugin)
 			self.show()
 		else:
-			self.playbin.set_peroperty("vis-plugin",None)
+			#self.playbin.set_property("vis-plugin",None)
 			if self.type == "sound":
 				self.hide()
 				

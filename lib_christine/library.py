@@ -284,21 +284,8 @@ class queue(gtk_misc):
 					TYPE,self.library[i]["type"])
 	
 	def add(self,filename,prepend=False):
-		play = play10(self)
-		play.set_location(filename)
-		play.discoverer.connect("discovered",self.add1,play,filename,prepend)
-
-	def add1(self,widget,b,play,filename,prepend=False):
-		name = play.get_tag("title")
-		type1 = play.type
-		type1 = self.library.get_type(filename)
-		if type1 == None:
-			type1 = "sound"
-		pix = self.gen_pixbuf(type1+".png")
-		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		file = os.path.split(filename)[1]
-		if name == "":
-			name = ".".join(k for k in file.split(".")[:-1])
+		name = ".".join(k for k in file.split(".")[:-1])
 		if prepend:
 			iter = self.model.prepend()
 		else:
@@ -306,8 +293,39 @@ class queue(gtk_misc):
 		self.model.set(iter,
 				PATH,filename,
 				NAME,name,
-				TYPE,type1)
-		del play
+				TYPE,"sound")
+
+		self.discoverer = gst.extend.discoverer.Discoverer(filename)
+		self.discoverer.connect("discovered",self.add1,filename,iter,prepend)
+		gobject.timeout_add(100,self.print_discover)
+		#gobject.timeout_add(500,self.add1,filename,prepend)
+
+	def print_discover(self,widget=None,b=None):
+		#print widget,b
+		self.discoverer.discover()
+		#print self.discoverer.print_info()
+		print "tags:",self.discoverer.tags
+		self.tags = self.discoverer.tags
+		if len(self.discoverer.tags.keys()):
+			return False
+		return True
+
+	def add1(self,widget,b,filename,iter,prepend=False):
+		try:
+			name = self.tags["title"]
+		except:
+			name = ".".join(k for k in file.split(".")[:-1])
+		if self.discoverer.is_audio:
+			type1 = "sound"
+		else:
+			type1 = "video"
+		pix = self.gen_pixbuf(type1+".png")
+		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+		file = os.path.split(filename)[1]
+		self.model.set(iter,
+				PATH,filename,
+				NAME,name,
+				TYPE,"sound")
 		self.save()
 	
 	def add_columns(self):
