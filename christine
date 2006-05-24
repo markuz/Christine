@@ -612,17 +612,16 @@ class christine:
 			#print self.path_exists
 		
 	def add_file(self,inc):
-		try:
-			if self.IMPORTING:
-				newfile = self.files_to_add.pop()
-				self.percentaje += inc
-				if self.percentaje > 1.0:
-					self.percentaje == 0.99
-				self.add_progress.set_fraction(self.percentaje)	
-				self.add_file_label.set_text(os.path.split(newfile)[1])
-				if not newfile in self.paths:
-					self.library.add(newfile)
-		except:
+		if self.IMPORTING and len(self.files_to_add)>0:
+			newfile = self.files_to_add.pop()
+			self.percentaje += inc
+			if self.percentaje > 1.0:
+				self.percentaje == 0.99
+			self.add_progress.set_fraction(self.percentaje)	
+			self.add_file_label.set_text(os.path.split(newfile)[1])
+			if not newfile in self.paths:
+				self.library.add(newfile)
+		else:
 			self.library.save()
 			self.IMPORTING = False
 		return self.IMPORTING

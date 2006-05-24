@@ -133,6 +133,66 @@ class library(gtk_misc):
 		self.gconf.notify_add("/apps/christine/ui/show_album",self.gconf.toggle_visible,album)
 		self.gconf.notify_add("/apps/christine/ui/show_type",self.gconf.toggle_visible,type)
 
+# This code breaks chrstine, at least to me.... somebody can check it??
+#	def add(self,filename):
+#		model = self.model
+#		file = os.path.split(filename)[1]
+#		name = ".".join(k for k in file.split(".")[:-1])
+#		pix = self.gen_pixbuf("sound.png")
+#		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+#		iter = model.append()
+#		model.set(iter,
+#					NAME,name,
+#					PATH,filename,
+#					TYPE,"sound",
+#					PIX, pix,
+#					ALBUM,"",
+#					ARTIST,"",
+#					TN,"",
+#					SEARCH,",".join([name]))
+#
+#		self.discoverer = gst.extend.discoverer.Discoverer(filename)
+#		self.discoverer.connect("discovered",self.add1,filename,iter)
+#		gobject.timeout_add(100,self.print_discover)
+#		#gobject.timeout_add(500,self.add1,filename,prepend)
+#
+#	def print_discover(self,widget=None,b=None):
+#		#print widget,b
+#		self.discoverer.discover()
+#		#print self.discoverer.print_info()
+#		self.tags = self.discoverer.tags
+#		if len(self.discoverer.tags.keys()):
+#			return False
+#		return True
+#	def get_tag(self,key):
+#		try:
+#			return self.tags[key]
+#		except:
+#			return ""
+#
+#	def add1(self,widget,b,filename,iter):
+#		try:
+#			name = self.tags["title"]
+#		except:
+#			name = ".".join(k for k in file.split(".")[:-1])
+#		if self.discoverer.is_audio:
+#			type1 = "sound"
+#		else:
+#			type1 = "video"
+#		pix = self.gen_pixbuf(type1+".png")
+#		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+#		file = os.path.split(filename)[1]
+#		model.set(iter,
+#					NAME,name,
+#					PATH,file,
+#					TYPE,type1,
+#					PIX, pix,
+#					ALBUM,self.get_tag("album"),
+#					ARTIST,self.get_tag("artist"),
+#					TN,str(self.get_tag("track_number")),
+#					SEARCH,",".join([name,album,artist]))
+#		self.save()
+
 	def add(self,file,prepend=False):
 		#play = play10(self)
 		#play = self.player
@@ -143,7 +203,6 @@ class library(gtk_misc):
 		name   = ""
 		artist = ""
 		album  = ""
-
 		#track_number = self.play.get_tag("track-number")
 		track_number = 0
 
