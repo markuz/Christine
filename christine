@@ -377,6 +377,7 @@ class christine:
 				self.play_button.set_active(True)
 			else:
 				self.get_next_in_list()
+
 	def	check_queue(self):
 		model = self.queue.treeview.get_model()
 		b = model.get_iter_first()
@@ -452,6 +453,7 @@ class christine:
 		path = self.model.get_path(self.current_iter)
 		if path != None:
 			self.treeview.scroll_to_cell(path,None,True,0.5,0.5)
+			self.treeview.set_cursor(path)
 	
 	def jump_to(self,widget):
 		try:
@@ -753,7 +755,6 @@ class christine:
 						SEARCH,".".join([title,artist,album]))
 		self.library.save()
 
-		t = self.player.type
 		t = self.player.type
 	
 		if self.player.isvideo():
