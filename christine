@@ -213,8 +213,8 @@ class christine:
 		self.STATE_PLAYING = False
 		self.player.stop()
 		self.player.set_location(filename)
-		self.player.discoverer.connect("discovered",self.set_tags)
-		gobject.timeout_add(200,self.stream_length)
+		#self.player.discoverer.connect("discovered",self.set_tags)
+		gobject.timeout_add(100,self.stream_length)
 		self.natural_model.foreach(self.clear_play_state)
 		#t = self.player.type
 		#t = self.player.type
@@ -655,8 +655,10 @@ class christine:
 			self.go_next()
 		elif t == gst.MESSAGE_DURATION:
 			print b.parse_duration()
-#		elif t == gst.MESSAGE_TAG:
-#			self.player.found_tag_cb(b.parse_tag())
+		elif t == gst.MESSAGE_TAG:
+			print "gst.MESSAGE_TAG"
+			self.player.found_tag_cb(b.parse_tag())
+			self.set_tags()
 #			self.current_iter = None
 #			self.natural_model.foreach(self.search_by_path,self.player.get_location())
 #			#iter = self.get_natural_iter(self.current_iter)
@@ -713,7 +715,7 @@ class christine:
 			print "stream_length: error"
 			return True
 		
-	def set_tags(self,widget,b):
+	def set_tags(self,widget="",b=""):
 		location = self.player.get_location()
 		self.current_iter = None
 		self.model.foreach(self.search_by_path,location)

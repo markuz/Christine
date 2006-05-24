@@ -337,6 +337,10 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.playbin.set_property("delay",GST_DELAY)
 		self.play		= self.playbin
 		self.bus		= self.playbin.get_bus()
+		
+		#self.vis_plugin = gst.element_factory_make("goom")
+		#self.playbin.set_property("vis-plugin",self.vis_plugin)
+
 		#self.bus.add_watch(self.error_handler)
 		#self.playbin.connect("error",self.error_handler)
 		asink			= self.get_string("backend/audiosink")
@@ -351,8 +355,6 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		if aspect_ratio != None:
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 		vsink			= self.get_string("backend/vis-plugin") 
-		self.vis_plugin = gst.element_factory_make("goom")
-		#self.playbin.set_property("vis-plugin",self.vis_plugin)
 		self.__connect()
 		self.query_duration = self.playbin.query_duration
 		self.query_position = self.playbin.query_position
@@ -370,8 +372,8 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			#print "nfile:",nfile
 			print "self.playbin.set_property(\"uri\",nfile)"
 			self.playbin.set_property("uri",nfile)
-			self.discoverer = gst.extend.discoverer.Discoverer(file)
-			gobject.timeout_add(100,self.print_discover)
+			#self.discoverer = gst.extend.discoverer.Discoverer(file)
+			#gobject.timeout_add(500,self.print_discover)
 			print "self.pause()"
 			self.pause()
 			print "set_location is done"
@@ -435,6 +437,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
+		print __name__,"fount_tags_cb",self.tags
 
 	def get_location(self):
 		path = self.playbin.get_property("uri")
@@ -482,20 +485,20 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 
 
 	def isvideo(self):
-		#ext = self.get_location().split(".").pop().lower()
-		#if "video-codec" in self.tags.keys() or \
-		#	ext in video:
-		#	return True
-		#else:
-		#	return False
-		return self.discoverer.is_video
+		ext = self.get_location().split(".").pop().lower()
+		if "video-codec" in self.tags.keys() or \
+			ext in video:
+			return True
+		else:
+			return False
+		#return self.discoverer.is_video
 		
 	def issound(self):
-		#ext = self.get_location().split(".").pop().lower()
-		#if "audio-codec" in self.tags.keys() or \
-		#		ext in sound:
-		#	return True
-		#else:
-		#	return False
-		return self.discoverer.is_audio
+		ext = self.get_location().split(".").pop().lower()
+		if "audio-codec" in self.tags.keys() or \
+				ext in sound:
+			return True
+		else:
+			return False
+		#return self.discoverer.is_audio
 
