@@ -368,6 +368,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		print "self.tags={}"
 		self.tags = {}
 		if os.path.isfile(file):
+			self.playbin.set_state(gst.STATE_READY)
 			nfile = "file://"+file
 			#print "nfile:",nfile
 			print "self.playbin.set_property(\"uri\",nfile)"
