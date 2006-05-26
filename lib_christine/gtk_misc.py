@@ -145,4 +145,11 @@ class christine_gconf:
 		else:
 			raise TypeError,"value is not int, bool or string"
 	
-
+class error:
+	def __init__(self,text):
+		xml = glade_xml("error.glade")
+		dialog		= xml["dialog"]
+		error_label = xml["error"]
+		error_label.set_text(text)
+		dialog.run()
+		dialog.destroy()
