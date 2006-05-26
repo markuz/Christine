@@ -378,6 +378,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			self.pause()
 			print "set_location is done"
 		else:
+			print file
 			error("file %s not found"%os.path.split(file)[1])
 		#print "set_location check:",self.playbin.get_property("uri")
 		self.get_type()
@@ -502,3 +503,42 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			return False
 		#return self.discoverer.is_audio
 
+class discoverer:
+	def __init__(self):
+		print "discoverer: new instance"
+		self.discoverer = gst.element_factory_make("playbin")
+		self.discoverer.set_property("audio-sink",gst.element_factory_make("esdsink"))
+		self.discoverer.set_property("video-sink",gst.element_factory_make("xvimagesink"))
+		self.discoverer.set_property("volume",0.0)
+		#self.discoverer.set_property("delay",0)
+		self.bus = self.discoverer.get_bus()
+	
+	def set_location(self,file):
+		self.tags = {}
+		self.discoverer.set_property("uri","file://%s"%file)
+		self.discoverer.set_state(gst.STATE_READY)
+		self.discoverer.set_state(gst.STATE_PAUSED)
+		self.discoverer.set_state(gst.STATE_PLAYING)
+		self.discoverer.set_state(gst.STATE_PAUSED)
+		#gobject.timeout_add(100,self.set_null)
+
+
+
+	def found_tags_cb(self,tags):
+		if len(tags.keys()) > 0:
+			for i in tags.keys():
+				self.tags[i] = tags[i]
+		#print self.tags
+		
+	def get_location(self):
+		path = self.discoverer.get_property("uri")
+		if path != None:
+			path = path[7:]
+		return path
+
+	
+	def get_tag(self,key):
+		try:
+			return self.tags[key]
+		except:
+			return ""

@@ -32,6 +32,5 @@ gchar *s = N_("button2");
 gchar *s = N_("Search");
 gchar *s = N_("<b>Artists</b>");
 gchar *s = N_("<b>Albums</b>");
-gchar *s = N_("<b>Browser</b>");
 gchar *s = N_("00:00");
 gchar *s = N_("00:00");

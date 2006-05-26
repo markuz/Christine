@@ -565,16 +565,26 @@ class christine:
 				filenames.append([dirpath,files])
 			except:
 				b = False
+		self.f = []
+		self.model.foreach(self.exists)
 		for i in filenames:
 			for path in i[1]:
 				ext = path.split(".").pop().lower()
-				if ext in sound or ext in video:
+				exists = False
+				if os.path.join(i[0],path) in self.f:
+					exists = True
+				if (ext in sound or ext in video) and not exists:
 					f.append(os.path.join(i[0],path))
+				else:
+					print "skipping:",os.path.join(i[0],path)
 		if len(f) > 0:
 			self.add_files(files = f)
 		else:
 			print f
 			
+	def exists(self,model,path,iter):
+		self.f.append(model.get_value(iter,PATH))
+		
 
 	def add_dir(self,dir):
 		files = os.listdir(dir)
@@ -603,9 +613,10 @@ class christine:
 			inc = 1.0/len(files)
 		else:
 			inc = 1
+		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(100,self.add_file,inc)
+		gobject.timeout_add(350,self.add_file,inc)
 		self.add_win.run()
 			#self.path_exists = False
 			#self.model.foreach(self.exists,i)
@@ -619,14 +630,22 @@ class christine:
 			self.percentaje += inc
 			if self.percentaje > 1.0:
 				self.percentaje == 0.99
-			self.add_progress.set_fraction(self.percentaje)	
+			self.add_progress.set_fraction(self.percentaje)
+			rest =self.total_num_files - len(self.files_to_add)
+			self.add_progress.set_text("%02d/%02d"%(rest,self.total_num_files))
 			self.add_file_label.set_text(os.path.split(newfile)[1])
 			if not newfile in self.paths:
 				self.library.add(newfile)
+				div,mod = divmod(len(self.files_to_add),10)
+				if mod == 0:
+					print "library save"
+					self.library.save()
 		else:
+			print "library save"
 			self.library.save()
 			self.IMPORTING = False
 		return self.IMPORTING
+
 
 	def import_cancel(self,widget):
 		self.IMPORTING = False

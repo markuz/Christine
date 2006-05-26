@@ -28,6 +28,7 @@ from lib_christine.gtk_misc import *
 
 class library(gtk_misc):
 	def __init__(self,main):
+		self.iters = {}
 		gtk_misc.__init__(self)
 		#self.player = player(self)
 		self.player = play10(self)
@@ -91,6 +92,8 @@ class library(gtk_misc):
 					ARTIST,artist,
 					TN,str(sounds[i]["track_number"]),
 					SEARCH,",".join([name,album,artist]))
+			#self.model.foreach(self.get_last_iter)
+			#self.iters.append([self.last_iter,i])
 
 	def add_columns(self):
 		render = gtk.CellRendererText()
@@ -132,68 +135,48 @@ class library(gtk_misc):
 		self.gconf.notify_add("/apps/christine/ui/show_artist",self.gconf.toggle_visible,artist)
 		self.gconf.notify_add("/apps/christine/ui/show_album",self.gconf.toggle_visible,album)
 		self.gconf.notify_add("/apps/christine/ui/show_type",self.gconf.toggle_visible,type)
-
-# This code breaks chrstine, at least to me.... somebody can check it??
-#	def add(self,filename):
-#		model = self.model
-#		file = os.path.split(filename)[1]
-#		name = ".".join(k for k in file.split(".")[:-1])
-#		pix = self.gen_pixbuf("sound.png")
-#		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-#		iter = model.append()
-#		model.set(iter,
-#					NAME,name,
-#					PATH,filename,
-#					TYPE,"sound",
-#					PIX, pix,
-#					ALBUM,"",
-#					ARTIST,"",
-#					TN,"",
-#					SEARCH,",".join([name]))
-#
-#		self.discoverer = gst.extend.discoverer.Discoverer(filename)
-#		self.discoverer.connect("discovered",self.add1,filename,iter)
-#		gobject.timeout_add(100,self.print_discover)
-#		#gobject.timeout_add(500,self.add1,filename,prepend)
-#
-#	def print_discover(self,widget=None,b=None):
-#		#print widget,b
-#		self.discoverer.discover()
-#		#print self.discoverer.print_info()
-#		self.tags = self.discoverer.tags
-#		if len(self.discoverer.tags.keys()):
-#			return False
-#		return True
-#	def get_tag(self,key):
-#		try:
-#			return self.tags[key]
-#		except:
-#			return ""
-#
-#	def add1(self,widget,b,filename,iter):
-#		try:
-#			name = self.tags["title"]
-#		except:
-#			name = ".".join(k for k in file.split(".")[:-1])
-#		if self.discoverer.is_audio:
-#			type1 = "sound"
-#		else:
-#			type1 = "video"
-#		pix = self.gen_pixbuf(type1+".png")
-#		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-#		file = os.path.split(filename)[1]
-#		model.set(iter,
-#					NAME,name,
-#					PATH,file,
-#					TYPE,type1,
-#					PIX, pix,
-#					ALBUM,self.get_tag("album"),
-#					ARTIST,self.get_tag("artist"),
-#					TN,str(self.get_tag("track_number")),
-#					SEARCH,",".join([name,album,artist]))
-#		self.save()
+		self.discoverer = discoverer()
+		self.discoverer.bus.add_watch(self.message_handler)
 
 	def add(self,file,prepend=False):
+		self.discoverer.set_location(file)
+		model = self.model
+		if prepend:
+			iter = model.prepend()
+		else:
+			iter = model.append()
+		self.iters[file] = iter
+
+	def message_handler(self,a,b):
+		d = self.discoverer
+		t = b.type
+		if t == gst.MESSAGE_TAG:
+			#print a,b,d.get_location(),self.model.get_path(self.iters[d.get_location()])
+			self.discoverer.found_tags_cb(b.parse_tag())
+			name	= d.get_tag("title")
+			album	= d.get_tag("album")
+			artist	= d.get_tag("artist")
+			tn		= d.get_tag("track-number")
+			#if name != "":
+			#	del self.discoverer
+			pix = self.gen_pixbuf("blank.png")
+			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+			if name == "":
+				n = os.path.split(d.get_location())[1].split(".")
+				name = ".".join([k for k in n[:-1]])
+			model = self.model
+			model.set(self.iters[d.get_location()],
+						NAME,name,
+						PATH,d.get_location(),
+						TYPE,"sound",
+						PIX, pix,
+						ALBUM,album,
+						ARTIST,artist,
+						TN,str(tn),
+						SEARCH,",".join([name,album,artist]))
+		return True
+
+	def add1(self,file,prepend=False):
 		#play = play10(self)
 		#play = self.player
 		#play.set_location(file)
@@ -226,8 +209,20 @@ class library(gtk_misc):
 					ARTIST,artist,
 					TN,str(track_number),
 					SEARCH,",".join([name,album,artist]))
+		model.foreach(self.get_last_iter)
+		self.iters.append([self.last_iter,file])
 		#del play
-	
+	def get_last_iter(self,model,path,iter):
+		self.last_iter = iter
+	def set_tags(self):
+		if len(self.iters) > 0:
+			iter,path = self.iters.pop()
+			print iter, path
+			self.iter = iter
+			self.discoverer.set_location(path)
+			self.save()
+		return True
+			
 
 	def remove(self,iter):
 		key = self.model.get_value(iter,PATH)
@@ -354,20 +349,20 @@ class queue(gtk_misc):
 				NAME,name,
 				TYPE,"sound")
 
-		self.discoverer = gst.extend.discoverer.Discoverer(filename)
-		self.discoverer.connect("discovered",self.add1,filename,iter,prepend)
-		gobject.timeout_add(100,self.print_discover)
+		#self.discoverer = gst.extend.discoverer.Discoverer(filename)
+		#self.discoverer.connect("discovered",self.add1,filename,iter,prepend)
+		#gobject.timeout_add(100,self.print_discover)
 		#gobject.timeout_add(500,self.add1,filename,prepend)
 
-	def print_discover(self,widget=None,b=None):
-		#print widget,b
-		self.discoverer.discover()
-		#print self.discoverer.print_info()
-		print "tags:",self.discoverer.tags
-		self.tags = self.discoverer.tags
-		if len(self.discoverer.tags.keys()):
-			return False
-		return True
+#	def print_discover(self,widget=None,b=None):
+#		#print widget,b
+#		self.discoverer.discover()
+#		#print self.discoverer.print_info()
+#		print "tags:",self.discoverer.tags
+#		self.tags = self.discoverer.tags
+#		if len(self.discoverer.tags.keys()):
+#			return False
+#		return True
 
 	def add1(self,widget,b,filename,iter,prepend=False):
 		try:
