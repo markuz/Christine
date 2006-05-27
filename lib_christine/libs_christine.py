@@ -338,8 +338,6 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.play		= self.playbin
 		self.bus		= self.playbin.get_bus()
 		
-		#self.vis_plugin = gst.element_factory_make("goom")
-		#self.playbin.set_property("vis-plugin",self.vis_plugin)
 
 		#self.bus.add_watch(self.error_handler)
 		#self.playbin.connect("error",self.error_handler)
@@ -355,6 +353,9 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		if aspect_ratio != None:
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 		vsink			= self.get_string("backend/vis-plugin") 
+
+		self.vis_plugin = gst.element_factory_make("goom")
+
 		self.__connect()
 		self.query_duration = self.playbin.query_duration
 		self.query_position = self.playbin.query_position
@@ -416,6 +417,11 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		
 	def set_visualization_visible(self,active=False):
 		if active:
+			#source =  self.playbin.get_property("source")
+			#print source
+			#if source != None:
+			#	source.link(self.vis_plugin)
+				#self.vis_plugin.link(source)
 			#self.playbin.set_property("vis-plugin",self.vis_plugin)
 			self.show()
 		else:

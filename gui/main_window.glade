@@ -55,7 +55,7 @@
 		      <accelerator key="i" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image268">
+			<widget class="GtkImage" id="image288">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-new</property>
 			  <property name="icon_size">1</property>
@@ -78,7 +78,7 @@
 		      <accelerator key="i" modifiers="GDK_CONTROL_MASK | GDK_SHIFT_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image269">
+			<widget class="GtkImage" id="image289">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-open</property>
 			  <property name="icon_size">1</property>
@@ -133,7 +133,7 @@
 		      <accelerator key="j" modifiers="GDK_CONTROL_MASK | GDK_SHIFT_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image270">
+			<widget class="GtkImage" id="image290">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-jump-to</property>
 			  <property name="icon_size">1</property>
@@ -176,7 +176,7 @@
 		    <widget class="GtkImageMenuItem" id="properties1">
 		      <property name="visible">True</property>
 		      <property name="stock_item">GNOMEUIINFO_MENU_PROPERTIES_ITEM</property>
-		      <signal name="activate" handler="on_properties1_activate" last_modification_time="Mon, 17 Apr 2006 19:36:09 GMT"/>
+		      <signal name="activate" handler="show_properties" last_modification_time="Sat, 27 May 2006 05:31:49 GMT"/>
 		    </widget>
 		  </child>
 
@@ -190,7 +190,7 @@
 		    <widget class="GtkImageMenuItem" id="preferences1">
 		      <property name="visible">True</property>
 		      <property name="stock_item">GNOMEUIINFO_MENU_PREFERENCES_ITEM</property>
-		      <signal name="activate" handler="on_preferences1_activate" last_modification_time="Mon, 17 Apr 2006 19:36:09 GMT"/>
+		      <signal name="activate" handler="show_preferences" last_modification_time="Sat, 27 May 2006 04:37:41 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -234,7 +234,7 @@
 		      <accelerator key="Right" modifiers="GDK_MOD1_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image271">
+			<widget class="GtkImage" id="image291">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -256,7 +256,7 @@
 		      <accelerator key="Left" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image272">
+			<widget class="GtkImage" id="image292">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>

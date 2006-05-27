@@ -23,12 +23,15 @@ from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.library import *
+from lib_christine.preferences import *
+from lib_christine.show_properties import *
 
 
 
 
-class christine:
+class christine(gtk_misc):
 	def __init__(self):
+		gtk_misc.__init__(self)
 		gnomeprogram		= gnome.program_init("christine","0.0.1")
 		self.gtk_misc		= gtk_misc()
 		client				= ui.master_client()
@@ -57,6 +60,7 @@ class christine:
 		self.mv_xml = glade_xml("miniviewer.glade")
 		self.mv_xml.signal_autoconnect(self)
 		self.miniviewer_window = self.mv_xml["mv_window"]
+		self.miniviewer_window.set_icon(self.gen_pixbuf("logo.png"))
 		self.miniviewer_window.hide()
 		self.miniviewer_place = self.mv_xml["videobox"]
 		self.miniviewer_tcontainer = self.mv_xml["toolbox_container"]
@@ -65,6 +69,7 @@ class christine:
 	
 	def win(self):
 		self.window = self.xml["main_window"]
+		self.window.set_icon(self.gen_pixbuf("logo.png"))
 		self.play_button	= self.xml["play"]
 		self.play_menuitem = self.xml["play_menuitem"]
 		self.library = library(self)
@@ -470,6 +475,7 @@ class christine:
 			return False
 		xml = glade_xml("jump_to.glade")
 		dialog = xml["dialog"]
+		dialog.set_icon(self.gen_pixbuf("logo.png"))
 		mins,seconds = divmod(self.total/gst.SECOND,60)
 		#Current minute and current second
 		cmins,cseconds = divmod(self.scale.get_value(),60)
@@ -804,6 +810,15 @@ class christine:
 	
 	def show_about(self,widget):
 		xml = glade_xml("about.glade")
+		about = xml["about"]
+		pix = self.gen_pixbuf("logo.png")
+		about.set_logo(pix)
+	def show_preferences(self,widget):
+		preferences()
+	
+	def show_properties(self,widget):
+		show_properties()
+
 	def main_quit(self,widget=None):
 		self.player.stop()
 		#gst.main_quit()
