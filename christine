@@ -138,6 +138,7 @@ class christine:
 		self.toolbox_container = self.xml["toolbox_container"]
 		self.volume_scale = self.xml["volume_scale"]
 		self.volume_scale.set_value(0.8)
+		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
 
 	def queue_key_handler(self,widget,event):
 		if event.keyval == 65535:
@@ -213,6 +214,7 @@ class christine:
 		self.STATE_PLAYING = False
 		self.player.stop()
 		self.player.set_location(filename)
+		self.gconf.set_value("backend/last_played",filename)
 		#self.player.discoverer.connect("discovered",self.set_tags)
 		gobject.timeout_add(100,self.stream_length)
 		self.natural_model.foreach(self.clear_play_state)
@@ -392,9 +394,12 @@ class christine:
 		path = self.player.get_location()
 		print "get_next_in_list: path",path
 		if path == None:
-			print "colocando el primero de la lista"
-			iter = self.model.get_iter_first()
-			filename = self.model.get_value(iter,PATH)
+			filename = self.gconf.get_string("backend/last_played")
+			self.current_iter = None
+			self.model.foreach(self.search_by_path,filename)
+			if self.current_iter == None:
+				iter = self.model.get_iter_first()
+				filename = self.model.get_value(iter,PATH)
 			self.set_location(filename)
 			print "get_next_in_list:",self.player.get_location()
 		else:
@@ -447,8 +452,11 @@ class christine:
 				value
 				self.scale.set_value(0)
 				
-	def jump_to_playing(self,widget=None):
-		location = self.player.get_location()
+	def jump_to_playing(self,widget=None,path=None):
+		if path == None:
+			location = self.player.get_location()
+		else:
+			location = path
 		self.model.foreach(self.search_by_path,location)
 		path = self.model.get_path(self.current_iter)
 		if path != None:
