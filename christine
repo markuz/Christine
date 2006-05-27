@@ -218,14 +218,17 @@ class christine(gtk_misc):
 	def set_location(self,filename):
 		self.STATE_PLAYING = False
 		self.player.stop()
+		self.current_iter = None
+		self.natural_model.foreach(self.search_by_path,self.player.get_location())
+		if self.current_iter != None:
+			pix = self.gtk_misc.gen_pixbuf("blank.png")
+			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+			self.natural_model.set(self.current_iter,PIX,pix)
 		self.player.set_location(filename)
 		self.gconf.set_value("backend/last_played",filename)
 		#self.player.discoverer.connect("discovered",self.set_tags)
 		gobject.timeout_add(100,self.stream_length)
-		self.natural_model.foreach(self.clear_play_state)
-		#t = self.player.type
-		#t = self.player.type
-		#
+		
 		#if t == "video":
 		#	try:
 		#		self.miniviewer_window
@@ -343,10 +346,6 @@ class christine(gtk_misc):
 				self.natural_model.set(iter,PIX,pix)
 				self.jump_to_playing()
 	
-	def clear_play_state(self,model,path,iter):
-		pix = self.gtk_misc.gen_pixbuf("blank.png")
-		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		self.natural_model.set(iter,PIX,pix)
 		
 	def get_natural_iter(self,iter):
 		fiter = self.model.convert_iter_to_child_iter(None,iter)
