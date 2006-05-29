@@ -40,6 +40,7 @@ class christine(gtk_misc):
 		self.gconf = christine_gconf()
 		self.moving_scale	= False
 		self.STATE_PLAYING = False
+		self.last_played = []
 		#self.player = player(self)
 		self.player = play10(self)
 		self.stream_error_count = 0
@@ -113,6 +114,15 @@ class christine(gtk_misc):
 	
 		self.list_box = self.xml["lists_box"]
 
+		self.CONTROL_STAT = 0
+		shuffle = self.gconf.get_bool("control/suffle")
+		repeat  = self.gconf.get_bool("control/repeat")
+		if shuffle:
+			self.CONTROL_STAT +=1
+		if repeat:
+			self.CONTROL_STAT +=1
+
+		self.control_button = self.xml["control_button"]
 		self.shuffle = self.xml["shuffle"]
 		self.shuffle.set_active(self.gconf.get_bool("control/shuffle"))
 		val = self.gconf.get_bool("control/shuffle")
@@ -152,6 +162,7 @@ class christine(gtk_misc):
 			name = model.get_value(iter,NAME)
 			self.queue.remove(iter)
 			self.queue.save()
+		
 
 	def pop_menu(self,widget,event):
 		if event.button == 3:
@@ -225,6 +236,7 @@ class christine(gtk_misc):
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 			self.natural_model.set(self.current_iter,PIX,pix)
 		self.player.set_location(filename)
+		self.last_played.append(filename)
 		self.gconf.set_value("backend/last_played",filename)
 		#self.player.discoverer.connect("discovered",self.set_tags)
 		gobject.timeout_add(100,self.stream_length)
@@ -277,7 +289,7 @@ class christine(gtk_misc):
 			try:
 				w,h = self.window_size
 			except:
-				w,h = 640,480
+				w,h = 800,480
 			self.list_box.show()
 			self.search_hbox.show()
 			self.window.resize(w,h)
@@ -357,6 +369,10 @@ class christine(gtk_misc):
 	
 	def toggle_shuffle(self,widget):
 		self.gconf.set_value("control/shuffle",widget.get_active())
+		
+	def toggle_repeat(self,widget):
+		self.gconf.set_value("control/repeat",widget.get_active())
+
 
 	def go_next1(self,widget=None):
 		model = self.queue.treeview.get_model()
@@ -373,14 +389,22 @@ class christine(gtk_misc):
 		else:
 			if self.gconf.get_bool("control/shuffle"):
 				self.elements = []
+				self.paths_in_list = []
 				self.model.foreach(self.get_max_elements)
 				iter = int(len(self.elements)*random.random())
 				filename = self.model.get_value(self.elements[iter],
 						PATH)
-				self.set_location(filename)
-				#self.current_iter = self.elements[iter]
-				self.play_button.set_active(False)
-				self.play_button.set_active(True)
+				if self.last_played != self.paths_in_list and (filename in self.last_played or \
+					self.gconf.get_bool("control/repeat")):
+						self.set_location(filename)
+						#self.current_iter = self.elements[iter]
+						self.play_button.set_active(False)
+						self.play_button.set_active(True)
+				else:
+					self.set_scale_value("","",b=0)
+					self.set_location(filename)
+					self.play_button.set_active(False)
+					
 			else:
 				self.get_next_in_list()
 
@@ -431,6 +455,7 @@ class christine(gtk_misc):
 			
 	def get_max_elements(self,model,path,iter):
 		self.elements.append(iter)
+		self.paths_in_list.append(model.get_value(iter,PATH))
 		
 	
 	def on_scale_value_changed(self,scale,a,value=None):
@@ -498,6 +523,18 @@ class christine(gtk_misc):
 			self.player.seek_to(time)
 			
 
+	def change_control(self,widget):
+		t = self.CONTROL_STAT
+		if t == 0:
+			self.shuffle.set_active(True)
+		elif t == 1:
+			self.repeat.set_active(True)
+		elif t == 2:
+			self.both_sr.set_active(True)
+		elif t > 2:
+			self.CONTROL_STAT = -1
+			self.none_sr.set_active(True)
+		self.CONTROL_STAT += 1
 
 
 #===============Play stuff ends =============================
@@ -752,7 +789,7 @@ class christine(gtk_misc):
 	def set_tags(self,widget="",b=""):
 		location = self.player.get_location()
 		self.current_iter = None
-		self.model.foreach(self.search_by_path,location)
+		self.natural_model.foreach(self.search_by_path,location)
 		iter = self.current_iter
 		track_number = ""
 		title  = self.player.get_tag("title").replace("_"," ")
@@ -776,8 +813,8 @@ class christine(gtk_misc):
 			self.album_box.show_all()
 		else:
 			self.album_box.hide()
-		if iter != None:
-			iter = self.get_natural_iter(iter)
+		if self.current_iter != None:
+			#iter = self.get_natural_iter(iter)
 			if title != "":
 				self.natural_model.set(iter,
 						NAME,title,
