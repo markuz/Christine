@@ -27,7 +27,10 @@ from lib_christine.preferences import *
 from lib_christine.show_properties import *
 
 
-
+(CONTROL_SHUFFLE,
+CONTROL_REPEAT,
+CONTROL_BOTH,
+CONTROL_NONE) = range(4)
 
 class christine(gtk_misc):
 	def __init__(self):
@@ -114,19 +117,19 @@ class christine(gtk_misc):
 	
 		self.list_box = self.xml["lists_box"]
 
-		self.CONTROL_STAT = 0
-		shuffle = self.gconf.get_bool("control/suffle")
-		repeat  = self.gconf.get_bool("control/repeat")
-		if shuffle:
-			self.CONTROL_STAT +=1
-		if repeat:
-			self.CONTROL_STAT +=1
+		self.CONTROL_STAT = self.gconf.get_int("control/CONTROL_STAT") -1
 
 		self.control_button = self.xml["control_button"]
 		self.shuffle = self.xml["shuffle"]
-		self.shuffle.set_active(self.gconf.get_bool("control/shuffle"))
-		val = self.gconf.get_bool("control/shuffle")
-		self.shuffle.set_active(val)
+		#self.shuffle.set_active(self.gconf.get_bool("control/shuffle"))
+		#val = self.gconf.get_bool("control/shuffle")
+		#self.shuffle.set_active(val)
+		self.repeat = self.xml["repeat"]
+		self.both_sr = self.xml["both_sr"]
+		self.none_sr = self.xml["none_sr"]
+		
+		self.change_control("start")
+		#gobject.timeout_add(500,self.change_control)
 		self.toggle_visualization = self.xml["toggle_visualization"]
 		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		val = self.gconf.get_bool("ui/small_view")
@@ -333,7 +336,6 @@ class christine(gtk_misc):
 			self.STATE_PLAYING = False
 		else:
 			self.play()
-			#gobject.timeout_add(100,self.play)
 			self.STATE_PLAYING = True
 		self.play_menuitem.set_active(active)
 		self.play_button.set_active(active)
@@ -366,12 +368,29 @@ class christine(gtk_misc):
 	def go_next(self,widget=None):
 		#gobject.timeout_add(100,self.go_next1)
 		self.go_next1()
+	def go_prev(self,widget=None):
+		if len(self.last_played) > 1:
+			location = self.last_played.pop()
+			self.set_location(self.last_played.pop())
+			self.play_button.set_active(False)
+			self.play_button.set_active(True)
 	
-	def toggle_shuffle(self,widget):
-		self.gconf.set_value("control/shuffle",widget.get_active())
-		
-	def toggle_repeat(self,widget):
-		self.gconf.set_value("control/repeat",widget.get_active())
+	def toggle_control_none(self,widget):
+		if widget.get_active():
+			self.CONTROL_STAT=CONTROL_NONE
+			self.change_control()
+	def toggle_control_shuffle(self,widget):
+		if widget.get_active():
+			self.CONTROL_STAT=CONTROL_SHUFFLE
+			self.change_control()
+	def toggle_control_both_sr(self,widget):
+		if widget.get_active():
+			self.CONTROL_STAT=CONTROL_BOTH
+			self.change_control()
+	def toggle_control_repeat(self,widget):
+		if widget.get_active():
+			self.CONTROL_STAT=CONTROL_REPEAT
+			self.change_control()
 
 
 	def go_next1(self,widget=None):
@@ -387,7 +406,7 @@ class christine(gtk_misc):
 			self.play_button.set_active(False)
 			self.play_button.set_active(True)
 		else:
-			if self.gconf.get_bool("control/shuffle"):
+			if self.CONTROL_STAT -1 == CONTROL_SHUFFLE:
 				self.elements = []
 				self.paths_in_list = []
 				self.model.foreach(self.get_max_elements)
@@ -444,9 +463,9 @@ class christine(gtk_misc):
 				self.set_location(path)
 				self.play_button.set_active(False)
 	
-	def go_prev(self,widget=None):
-		iter = self.last_iter.pop()
-		filename = model.get_value(iter,PATH)
+	#def go_prev(self,widget=None):
+	#	iter = self.last_iter.pop()
+	#	filename = model.get_value(iter,PATH)
 	
 	def search_by_path(self,model,path,iter,location):
 		mlocation = model.get_value(iter,PATH)
@@ -523,18 +542,51 @@ class christine(gtk_misc):
 			self.player.seek_to(time)
 			
 
-	def change_control(self,widget):
+	def change_control(self,widget=None):
 		t = self.CONTROL_STAT
-		if t == 0:
+		print t
+		if t == CONTROL_SHUFFLE:
 			self.shuffle.set_active(True)
-		elif t == 1:
+			self.CONTROL_STAT = CONTROL_REPEAT
+			pix = "usort.png"
+		elif t == CONTROL_REPEAT:
 			self.repeat.set_active(True)
-		elif t == 2:
+			self.CONTROL_STAT = CONTROL_BOTH
+			pix = "logo.png"
+		elif t == CONTROL_BOTH:
 			self.both_sr.set_active(True)
-		elif t > 2:
-			self.CONTROL_STAT = -1
+			self.CONTROL_STAT = CONTROL_NONE
+			pix = "video.png"
+		else:
+			self.CONTROL_STAT = CONTROL_SHUFFLE
 			self.none_sr.set_active(True)
-		self.CONTROL_STAT += 1
+			pix = "sort.png"
+		pix = self.gen_pixbuf(pix)
+		image = gtk.Image()
+		image.set_from_pixbuf(pix.scale_simple(18,18,gtk.gdk.INTERP_BILINEAR))
+		self.control_button.set_image(image)
+		self.gconf.set_value("control/CONTROL_STAT",self.CONTROL_STAT)
+		return True
+
+	def less_volume(self,widget=None):
+		volume = self.volume_scale.get_value() - 0.1
+		if volume < 0:
+			volume = 0
+		self.volume_scale.set_value(volume)
+		
+	def more_volume(self,widget=None):
+		volume = self.volume_scale.get_value() + 0.1
+		if volume > 1.0:
+			volume = 1.0
+		self.volume_scale.set_value(volume)
+		
+	def mute(self,widget):
+		if widget.get_active():
+			self.volume = self.volume_scale.get_value()
+			self.volume_scale.set_value(0.0)
+		else:
+			self.volume_scale.set_value(self.volume)
+	
 
 
 #===============Play stuff ends =============================
@@ -778,7 +830,7 @@ class christine(gtk_misc):
 			return False
 		except:
 			self.stream_error_count += 1
-			if self.stream_error_count > 20:
+			if self.stream_error_count > 10:
 				l = self.player.get_location()
 				self.set_location(l)
 				self.play_button.set_active(False)
