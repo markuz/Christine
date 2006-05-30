@@ -394,7 +394,7 @@ class christine(gtk_misc):
 				iter = int(len(self.elements)*random.random())
 				filename = self.model.get_value(self.elements[iter],
 						PATH)
-				if self.last_played != self.paths_in_list and (filename in self.last_played or \
+				if self.last_played != self.paths_in_list and (not filename in self.last_played or \
 					self.gconf.get_bool("control/repeat")):
 						self.set_location(filename)
 						#self.current_iter = self.elements[iter]
