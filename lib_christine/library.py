@@ -233,7 +233,7 @@ class library(gtk_misc):
 		'''
 		Save the current library
 		'''
-		#self.library_lib.clear()
+		self.library_lib.clear()
 		self.model.foreach(self.prepare_for_disk)
 		self.library_lib.save()
 		
