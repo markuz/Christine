@@ -531,8 +531,12 @@ class christine(gtk_misc):
 		mins_adj = gtk.Adjustment(value=0,lower=0,upper=mins,step_incr=1)
 		secs_adj = gtk.Adjustment(value=0,lower=0,upper=59,step_incr=1)
 
+		ok_button = xml["okbutton"]
+
 		mins_scale = xml["mins"]
 		secs_scale = xml["secs"]
+		mins_scale.connect("key-press-event",self.jump_to_ok_clicked,ok_button)
+		secs_scale.connect("key-press-event",self.jump_to_ok_clicked,ok_button)
 		mins_scale.set_adjustment(mins_adj)
 		mins_scale.set_value(cmins)
 		secs_scale.set_adjustment(secs_adj)
@@ -545,6 +549,10 @@ class christine(gtk_misc):
 				time = self.total
 			self.scale.set_value(time)
 			self.player.seek_to(time)
+			
+	def jump_to_ok_clicked(self,widget,event,button):
+		if event.keyval == 65293:
+			button.emit("clicked")
 			
 
 	def change_control(self,widget=None):
