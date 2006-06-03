@@ -45,7 +45,7 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkButton" id="okbutton1">
+	    <widget class="GtkButton" id="okbutton">
 	      <property name="visible">True</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>

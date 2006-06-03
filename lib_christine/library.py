@@ -480,7 +480,9 @@ class mini_lists:
 		self.list = []
 		self.gen_model()
 		self.add_column()
-		self.treeview.set_model(self.model)
+		filter = self.model.filter_new()
+		filter.set_visible_func(self.filter)
+		self.treeview.set_model(filter)
 		
 	def gen_model(self,refresh=False):
 		if refresh:
@@ -500,6 +502,14 @@ class mini_lists:
 				gtk.CellRendererText(),
 				text=0)
 		self.treeview.append_column(artist)
+		
+	def filter(self,model,iter,text=""):
+		value = model.get_value(iter,0)
+		if value == text:
+			return True
+		else:
+			return False
+	
 
 #
 # code below this comment is deprecated

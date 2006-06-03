@@ -92,17 +92,19 @@ class christine(gtk_misc):
 		self.filter_model.set_visible_func(self.filter)
 		self.natural_model = self.filter_model.get_model()
 
+		self.albums = mini_lists("Albums","All Albumes")
+		self.album_frame = self.xml["albums_scroll"]
+		self.album_frame.add(self.albums.treeview)
+		self.model.foreach(self.add_albums)
+
 		self.current_iter = self.model.get_iter_first()
 		self.last_iter = []
 		self.artist = mini_lists("Artist","All Artists")
 		self.artist_frame = self.xml["artist_scroll"]
 		self.artist_frame.add(self.artist.treeview)
+		self.artist.treeview.connect("cursor-changed",self.albums_refilter)
 		self.model.foreach(self.add_artists)
 
-		self.albums = mini_lists("Albums","All Albumes")
-		self.album_frame = self.xml["albums_scroll"]
-		self.album_frame.add(self.albums.treeview)
-		self.model.foreach(self.add_albums)
 		
 		self.music_sw = self.xml["music_sw"]
 		self.music_sw.add(self.library.tv)
@@ -157,6 +159,11 @@ class christine(gtk_misc):
 		self.volume_scale = self.xml["volume_scale"]
 		self.volume_scale.set_value(0.8)
 		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
+
+	def albums_refilter(self,treeview):
+		selection = treeview.get_selection()
+		model,iter = treeview.get_selected()
+		
 
 	def queue_key_handler(self,widget,event):
 		if event.keyval == 65535:
