@@ -1,2 +1,5 @@
+2006-06-02 Marco Antonio Islas <markuz@islascruz.org>
+	* Christine: On jump_to function, now pressing Enter on any
+	spin button will cause an OK press button signal
 2006-05-19 Marco Antonio Islas <markuz@islascruz.org>
 	* ChangeLog: Created ChangeLog
