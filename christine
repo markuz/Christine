@@ -86,6 +86,8 @@ class christine(gtk_misc):
 		self.search_box = self.xml["search_box"]
 		
 		self.browser = self.xml["browser"]
+		self.browser_menuitem = self.xml["browser_menuitem"]
+		self.browser_menuitem.set_active(self.gconf.get_bool("ui/show_browser"))
 
 		self.model = self.library.tv.get_model()
 		self.filter_model = self.model.get_model()
@@ -355,6 +357,7 @@ class christine(gtk_misc):
 			self.browser.show()
 		else:
 			self.browser.hide()
+		self.gconf.set_value("ui/show_browser",widget.get_active())
 
 #==================== search stuff ends==================================
 #====================Play stuff==================================
