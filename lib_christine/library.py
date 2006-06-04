@@ -478,6 +478,7 @@ class mini_lists:
 		self.header = header
 		self.first_element = first_element
 		self.list = []
+		self.text_to_search = ""
 		self.gen_model()
 		self.add_column()
 		filter = self.model.filter_new()
@@ -488,13 +489,16 @@ class mini_lists:
 		if refresh:
 			self.model.clear()
 		else:
-			self.model = gtk.ListStore(gobject.TYPE_STRING)
-		self.add(self.first_element)
+			self.model = gtk.ListStore(gobject.TYPE_STRING,
+					gobject.TYPE_STRING)
+		self.add(self.first_element,"")
 			
-	def add(self,artist):
+	def add(self,artist,parent=""):
+		#print "minilist.add:",artist,parent
 		iter = self.model.append()
 		self.model.set(iter,
-				0,artist)
+				0,artist,
+				1,parent)
 		self.list.append(artist)
 		
 	def add_column(self):
@@ -503,9 +507,10 @@ class mini_lists:
 				text=0)
 		self.treeview.append_column(artist)
 		
-	def filter(self,model,iter,text=""):
-		value = model.get_value(iter,0)
-		if value == text:
+	def filter(self,model,iter):
+		value = model.get_value(iter,1)
+		if value == self.text_to_search \
+			or self.text_to_search == "All Artists":
 			return True
 		else:
 			return False

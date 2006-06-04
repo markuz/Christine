@@ -92,18 +92,26 @@ class christine(gtk_misc):
 		self.filter_model.set_visible_func(self.filter)
 		self.natural_model = self.filter_model.get_model()
 
-		self.albums = mini_lists("Albums","All Albumes")
-		self.album_frame = self.xml["albums_scroll"]
-		self.album_frame.add(self.albums.treeview)
-		self.model.foreach(self.add_albums)
-
 		self.current_iter = self.model.get_iter_first()
 		self.last_iter = []
+
 		self.artist = mini_lists("Artist","All Artists")
+		self.artist.treeview.set_model(self.artist.model)
 		self.artist_frame = self.xml["artist_scroll"]
 		self.artist_frame.add(self.artist.treeview)
 		self.artist.treeview.connect("cursor-changed",self.albums_refilter)
-		self.model.foreach(self.add_artists)
+		model = self.artist.treeview.get_model()
+		path = model.get_path(model.get_iter_first())
+
+
+		self.albums = mini_lists("Albums","All Albumes")
+		self.album_frame = self.xml["albums_scroll"]
+		self.album_frame.add(self.albums.treeview)
+		self.albums.treeview.connect("cursor-changed",self.search)
+		self.natural_model.foreach(self.add_albums)
+
+		self.artist.treeview.set_cursor(path,None)
+		self.artist.treeview.scroll_to_cell(path,None,True,0,0)
 
 		
 		self.music_sw = self.xml["music_sw"]
@@ -162,7 +170,10 @@ class christine(gtk_misc):
 
 	def albums_refilter(self,treeview):
 		selection = treeview.get_selection()
-		model,iter = treeview.get_selected()
+		model,iter = selection.get_selected()
+		value = model.get_value(iter,0)
+		self.albums.text_to_search = value
+		self.albums.treeview.get_model().refilter()
 		
 
 	def queue_key_handler(self,widget,event):
@@ -313,17 +324,24 @@ class christine(gtk_misc):
 			
 #==================== search stuff begins ===============================
 
-	def search(self,widget):
+	def search(self,widget=None):
 		self.filter_model.refilter()
 
 	def filter(self,model,iter):
 		text = self.search_box.get_text().lower()
 		value	= model.get_value(iter,SEARCH)
+		album	= model.get_value(iter,ALBUM)
+		selection	= self.albums.treeview.get_selection()
+		model,iter	= selection.get_selected()
+		lalbum = model.get_value(iter,0)
+		
 		try:
 			value = value.lower()
 		except:
 			value = ""
-		if value.find(text) >= 0:
+
+		if value.find(text) >= 0 \
+			and album == lalbum:
 			return True
 		else:
 			return False
@@ -614,17 +632,26 @@ class christine(gtk_misc):
 #===============libraty stuff begins=============
 	def add_artists(self,model,path,iter):
 		artist = model.get_value(iter,ARTIST)
-		if artist =="":
+		#print "artist = self.artist.first_element","artist:'%s'"%artist
+		if artist == "":
 			artist = self.artist.first_element
 		if not artist in self.artist.list:
 			self.artist.add(artist)
 			
 	def add_albums(self,model,path,iter):
-		album = model.get_value(iter,ALBUM)
-		if album =="":
+		album  = model.get_value(iter,ALBUM)
+		artist = model.get_value(iter,ARTIST)
+		#print "artist: '%s album:'%s'"%(artist,album)
+		if album == "":
 			album = self.albums.first_element
+		if artist == "":
+			artist = self.artist.first_element
+			
+		if not artist in self.artist.list:
+			self.artist.add(artist)
+
 		if not album in self.albums.list:
-			self.albums.add(album)
+			self.albums.add(album,artist)
 
 
 	def import_file(self,widget):
@@ -802,24 +829,6 @@ class christine(gtk_misc):
 			print "gst.MESSAGE_TAG"
 			self.player.found_tag_cb(b.parse_tag())
 			self.set_tags()
-#			self.current_iter = None
-#			self.natural_model.foreach(self.search_by_path,self.player.get_location())
-#			#iter = self.get_natural_iter(self.current_iter)
-#			iter = self.current_iter
-#			name = self.player.get_tag("title")
-#			if name == "":
-#				name = os.path.split(self.player.get_location())[1]
-#				name = ".".join([k for k in name.split(".")[:-1]])
-#			album = self.player.get_tag("album")
-#			artist = self.player.get_tag("artist")
-#			track_number = self.player.get_tag("track-number")
-#			self.natural_model.set(iter,
-#					NAME,name,
-#					ALBUM,album,
-#					ARTIST,artist,
-#					TN,track_number,
-#					SEARCH,".".join([name,artist,album]))
-#			gobject.timeout_add(500,self.library.save)
 		return True
 
 
