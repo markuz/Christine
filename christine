@@ -101,17 +101,20 @@ class christine(gtk_misc):
 		self.artist_frame.add(self.artist.treeview)
 		self.artist.treeview.connect("cursor-changed",self.albums_refilter)
 		model = self.artist.treeview.get_model()
-		path = model.get_path(model.get_iter_first())
+		arpath = model.get_path(model.get_iter_first())
 
 
-		self.albums = mini_lists("Albums","All Albumes")
+		self.albums = mini_lists("Albums","All Albums")
 		self.album_frame = self.xml["albums_scroll"]
 		self.album_frame.add(self.albums.treeview)
 		self.albums.treeview.connect("cursor-changed",self.search)
 		self.natural_model.foreach(self.add_albums)
+		model = self.albums.treeview.get_model()
+		path = model.get_path(model.get_iter_first())
+		self.albums.treeview.set_cursor(path,None)
 
-		self.artist.treeview.set_cursor(path,None)
-		self.artist.treeview.scroll_to_cell(path,None,True,0,0)
+		self.artist.treeview.set_cursor(arpath,None)
+		self.artist.treeview.scroll_to_cell(arpath,None,True,0,0)
 
 		
 		self.music_sw = self.xml["music_sw"]
@@ -340,8 +343,9 @@ class christine(gtk_misc):
 		except:
 			value = ""
 
-		if value.find(text) >= 0 \
-			and album == lalbum:
+		if (value.find(text) >= 0 \
+			and album == lalbum) \
+			or lalbum == "All Albums":
 			return True
 		else:
 			return False

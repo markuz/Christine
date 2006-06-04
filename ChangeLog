@@ -1,5 +1,6 @@
 2006-06-04 Marco Antonio Islas <markuz@islascruz.org>
 	* Christine: Filtering options are improved to work with minilists
+	* Christine: Filtering bugfix
 	* lib_chrsitine/library.py: Minilist filering stuff
 2006-06-02 Marco Antonio Islas <markuz@islascruz.org>
 	* Christine: On jump_to function, now pressing Enter on any
