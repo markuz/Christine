@@ -345,11 +345,12 @@ class christine(gtk_misc):
 		except:
 			value = ""
 
-		if (value.find(text) >= 0 \
-			and album == lalbum) \
-			or lalbum == "All Albums":
+		if value.find(text) >= 0 \
+				or album == lalbum:
 			return True
 		else:
+			if text == "" and lalbum=="All Albums":
+				return True
 			return False
 	
 	def toggle_browser(self,widget):
