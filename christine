@@ -543,8 +543,6 @@ class christine(gtk_misc):
 				pix = self.gtk_misc.gen_pixbuf("sound.png")
 				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 				self.natural_model.set(iter,PIX,pix)
-			else:
-				print locals()
 			path = self.model.get_path(self.current_iter)
 			if path != None:
 				self.treeview.scroll_to_cell(path,None,True,0.5,0.5)
