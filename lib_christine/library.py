@@ -311,9 +311,10 @@ class queue(gtk_misc):
 		gtk_misc.__init__(self)
 		self.main = main
 		self.library = lib_library("queue")
-		self.xml = glade_xml("treeview.glade","ltv")
+		self.xml = glade_xml("treeview_reorderable.glade","ltv")
 		self.xml.signal_autoconnect(self)
-		self.treeview= self.xml["ltv"]
+		self.treeview = self.xml["ltv"]
+		#self.treeview.set_reorderable(True)
 		self.gen_model()
 		self.treeview.set_model(self.model)
 		self.add_columns()
@@ -348,21 +349,7 @@ class queue(gtk_misc):
 				PATH,filename,
 				NAME,name,
 				TYPE,"sound")
-
-		#self.discoverer = gst.extend.discoverer.Discoverer(filename)
-		#self.discoverer.connect("discovered",self.add1,filename,iter,prepend)
-		#gobject.timeout_add(100,self.print_discover)
-		#gobject.timeout_add(500,self.add1,filename,prepend)
-
-#	def print_discover(self,widget=None,b=None):
-#		#print widget,b
-#		self.discoverer.discover()
-#		#print self.discoverer.print_info()
-#		print "tags:",self.discoverer.tags
-#		self.tags = self.discoverer.tags
-#		if len(self.discoverer.tags.keys()):
-#			return False
-#		return True
+		self.save()
 
 	def add1(self,widget,b,filename,iter,prepend=False):
 		try:
@@ -403,6 +390,7 @@ class queue(gtk_misc):
 		'''
 		Save the current library
 		'''
+		print "save"
 		self.pos = 0
 		self.model.foreach(self.prepare_for_disk)
 		self.library.save()
@@ -428,23 +416,29 @@ class queue(gtk_misc):
 		print widget,event,key
 	
 	def set_drag_n_drop(self):
-		 self.treeview.connect("drag_motion",self.check_contexts)
-		 self.treeview.connect("drag_drop",self.dnd_handler)
-		 self.treeview.connect("drag_data_received",self.add_it)
+		return True
+	### FIXME For some reason this thing doesn't work!!! ###
+		self.treeview.drag_dest_set(gtk.DEST_DEFAULT_DROP,[("STRING",0,0),('GTK_TREE_MODEL_ROW',2,0)],0)
+		self.treeview.connect("drag-motion",self.check_contexts)
+		self.treeview.connect("drag-drop",self.dnd_handler)
+		self.treeview.connect("drag-data-received",self.add_it)
 
 	def check_contexts(self,treeview,context,selection,info,timestamp):
 		context.drag_status(gtk.gdk.ACTION_COPY,timestamp)
-		print selection.get_text()
+		#print selection.get_text()
 		return True
 
 	def dnd_handler(self,treeview,context,selection,info,timestamp,b=None,c=None):
 		'''
 		'''
-		tgt = treeview.drag_dest_find_target(context,[("STRING",0,0),("STRING",8,0)])
+		tgt = treeview.drag_dest_find_target(context,[('STRING',0,0),('GTK_TREE_MODEL_ROW',2,0)])
+		print treeview.drag_dest_get_target_list()
 		data = treeview.drag_get_data(context,tgt)
+		print locals(),context.get_data(tgt)
 		return True
 	
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
+		#print locals()
 		treeview.emit_stop_by_name("drag_data_received")
 		target = treeview.drag_dest_find_target(context,[("STRING",0,0)])
 		if timestamp !=0:

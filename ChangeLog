@@ -1,3 +1,5 @@
+2006-06.07 Marco Antonio Islas <markuz@islascruz.org>
+	* lib_christine/library.py: Queue reordering is enable
 2006-06-04 Marco Antonio Islas <markuz@islascruz.org>
 	* Christine: Filtering options are improved to work with minilists
 				- Filtering bugfix
