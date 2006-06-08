@@ -542,9 +542,14 @@ class christine(gtk_misc):
 		else:
 			location = path
 		self.current_iter = None
-		self.model.foreach(self.search_by_path,location)
+		self.natural_model.foreach(self.search_by_path,location)
 		if self.current_iter != None:
-			path = self.model.get_path(self.current_iter)
+			if self.player.get_state() == gst.STATE_PLAYING:
+				pix = self.gtk_misc.gen_pixbuf("sound.png")
+				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+				iter = self.current_iter
+				self.natural_model.set(iter,PIX,pix)
+			path = self.natural_model.get_path(self.current_iter)
 			if path != None:
 				self.treeview.scroll_to_cell(path,None,True,0.5,0.5)
 				self.treeview.set_cursor(path)
@@ -773,7 +778,7 @@ class christine(gtk_misc):
 		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(350,self.add_file,inc)
+		gobject.timeout_add(500,self.add_file,inc)
 		self.add_win.run()
 			#self.path_exists = False
 			#self.model.foreach(self.exists,i)
@@ -800,6 +805,8 @@ class christine(gtk_misc):
 		else:
 			print "library save"
 			self.library.save()
+			self.library.gen_model(True)
+			self.jump_to_playing()
 			self.IMPORTING = False
 		return self.IMPORTING
 

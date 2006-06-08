@@ -445,7 +445,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
-		print __name__,"fount_tags_cb",self.tags
+		#print __name__,"fount_tags_cb",self.tags
 
 	def get_location(self):
 		path = self.playbin.get_property("uri")
@@ -455,6 +455,8 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			path = None
 		print "player.get_location:",path
 		return path
+	def get_state(self):
+		return self.playbin.get_state()
 
 	def get_type(self):
 		if self.isvideo():
@@ -535,7 +537,7 @@ class discoverer:
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
-		#print self.tags
+		print self.tags
 		
 	def get_location(self):
 		path = self.discoverer.get_property("uri")
