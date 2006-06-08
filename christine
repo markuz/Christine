@@ -384,14 +384,7 @@ class christine(gtk_misc):
 				self.go_next()
 			self.player.playit()
 			path = self.player.get_location()
-			self.current_iter = None
-			self.natural_model.foreach(self.search_by_path,path)
-			if self.current_iter != None:
-				pix = self.gtk_misc.gen_pixbuf("sound.png")
-				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-				iter = self.current_iter
-				self.natural_model.set(iter,PIX,pix)
-				self.jump_to_playing()
+			self.jump_to_playing()
 	
 		
 	def get_natural_iter(self,iter):
