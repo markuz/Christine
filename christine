@@ -370,6 +370,7 @@ class christine(gtk_misc):
 		else:
 			self.play()
 			self.STATE_PLAYING = True
+			self.jump_to_playing()
 		self.play_menuitem.set_active(active)
 		self.play_button.set_active(active)
 			
@@ -384,7 +385,6 @@ class christine(gtk_misc):
 				self.go_next()
 			self.player.playit()
 			path = self.player.get_location()
-			self.jump_to_playing()
 	
 		
 	def get_natural_iter(self,iter):
@@ -535,14 +535,17 @@ class christine(gtk_misc):
 		else:
 			location = path
 		self.current_iter = None
-		self.natural_model.foreach(self.search_by_path,location)
+		self.model.foreach(self.search_by_path,location)
 		if self.current_iter != None:
-			if self.player.get_state() == gst.STATE_PLAYING:
+			state = self.STATE_PLAYING
+			if self.STATE_PLAYING:
+				iter = self.get_natural_iter(self.current_iter)
 				pix = self.gtk_misc.gen_pixbuf("sound.png")
 				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-				iter = self.current_iter
 				self.natural_model.set(iter,PIX,pix)
-			path = self.natural_model.get_path(self.current_iter)
+			else:
+				print locals()
+			path = self.model.get_path(self.current_iter)
 			if path != None:
 				self.treeview.scroll_to_cell(path,None,True,0.5,0.5)
 				self.treeview.set_cursor(path)
