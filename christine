@@ -136,15 +136,19 @@ class christine(gtk_misc):
 
 		self.control_button = self.xml["control_button"]
 		self.shuffle = self.xml["shuffle"]
+		self.shuffle.set_active(False)
 		#self.shuffle.set_active(self.gconf.get_bool("control/shuffle"))
 		#val = self.gconf.get_bool("control/shuffle")
 		#self.shuffle.set_active(val)
 		self.repeat = self.xml["repeat"]
+		self.repeat.set_active(False)
 		self.both_sr = self.xml["both_sr"]
+		self.both_sr.set_active(False)
 		self.none_sr = self.xml["none_sr"]
+		self.none_sr.set_active(False)
 		
-		self.change_control("start")
-		#gobject.timeout_add(500,self.change_control)
+		self.change_control()
+
 		self.toggle_visualization = self.xml["toggle_visualization"]
 		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		val = self.gconf.get_bool("ui/small_view")
@@ -401,18 +405,22 @@ class christine(gtk_misc):
 	
 	def toggle_control_none(self,widget):
 		if widget.get_active():
+			print "none"
 			self.CONTROL_STAT=CONTROL_NONE
 			self.change_control()
 	def toggle_control_shuffle(self,widget):
 		if widget.get_active():
+			print "shuffle"
 			self.CONTROL_STAT=CONTROL_SHUFFLE
 			self.change_control()
 	def toggle_control_both_sr(self,widget):
 		if widget.get_active():
+			print "both"
 			self.CONTROL_STAT=CONTROL_BOTH
 			self.change_control()
 	def toggle_control_repeat(self,widget):
 		if widget.get_active():
+			print "repeat"
 			self.CONTROL_STAT=CONTROL_REPEAT
 			self.change_control()
 
