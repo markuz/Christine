@@ -949,7 +949,10 @@ class christine(gtk_misc):
 		preferences()
 	
 	def show_properties(self,widget):
-		show_properties()
+		selected = self.treeview.get_selection()
+		model, iter = selected.get_selected()
+		if iter != None:
+			show_properties(model.get_value(iter,PATH))
 
 	def main_quit(self,widget=None):
 		self.player.stop()

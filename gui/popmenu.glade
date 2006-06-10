@@ -14,7 +14,7 @@
       <accelerator key="q" modifiers="0" signal="activate"/>
 
       <child internal-child="image">
-	<widget class="GtkImage" id="image6">
+	<widget class="GtkImage" id="image7">
 	  <property name="visible">True</property>
 	  <property name="stock">gtk-add</property>
 	  <property name="icon_size">1</property>
@@ -34,6 +34,21 @@
   </child>
 
   <child>
+    <widget class="GtkMenuItem" id="properties1">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">Properties</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="show_properties" last_modification_time="Sat, 10 Jun 2006 03:38:12 GMT"/>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkSeparatorMenuItem" id="separator2">
+      <property name="visible">True</property>
+    </widget>
+  </child>
+
+  <child>
     <widget class="GtkImageMenuItem" id="remove1">
       <property name="visible">True</property>
       <property name="label" translatable="yes">Remove</property>
@@ -41,7 +56,7 @@
       <signal name="activate" handler="on_remove1_activate" last_modification_time="Sat, 29 Apr 2006 16:54:18 GMT"/>
 
       <child internal-child="image">
-	<widget class="GtkImage" id="image7">
+	<widget class="GtkImage" id="image8">
 	  <property name="visible">True</property>
 	  <property name="stock">gtk-delete</property>
 	  <property name="icon_size">1</property>
