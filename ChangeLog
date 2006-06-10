@@ -1,6 +1,9 @@
 2006-06-09 Marco Antonio Islas <markuz@islascruz.org>
 	* christine: Search and browse bugfix,
 	Bugfix in control radiobuttons
+	* gui/properties.glade: labels renamed, added video-codec label
+	* lib_christine/show_properties.py: class finished
+	* gui/popupmenu.glade: added properties item
 2006-06-07 Marco Antonio Islas <markuz@islascruz.org>
 	* lib_christine/library.py: Queue reordering is enable
 2006-06-04 Marco Antonio Islas <markuz@islascruz.org>
