@@ -68,6 +68,7 @@ class christine(gtk_misc):
 		self.miniviewer_window.hide()
 		self.miniviewer_place = self.mv_xml["videobox"]
 		self.miniviewer_tcontainer = self.mv_xml["toolbox_container"]
+
 	def hide_miniviewer(self,widget):
 		widget.hide()
 	
@@ -111,6 +112,7 @@ class christine(gtk_misc):
 		self.album_frame.add(self.albums.treeview)
 		self.albums.treeview.connect("cursor-changed",self.search)
 		self.natural_model.foreach(self.add_albums)
+		self.add_artists_sorted()
 		model = self.albums.treeview.get_model()
 		path = model.get_path(model.get_iter_first())
 		self.albums.treeview.set_cursor(path,None)
@@ -126,20 +128,17 @@ class christine(gtk_misc):
 		self.queue_sw = self.xml["queue_sw"]
 		self.queue = queue(self)
 		self.queue_sw.add(self.queue.treeview)
+		self.queue_sw.hide()
 		gobject.timeout_add(500,self.check_queue)
 		self.queue.treeview.connect("key-press-event",self.queue_key_handler)
 		#=============queue begins
 	
 		self.list_box = self.xml["lists_box"]
 
-		self.CONTROL_STAT = self.gconf.get_int("control/CONTROL_STAT") -1
 
 		self.control_button = self.xml["control_button"]
 		self.shuffle = self.xml["shuffle"]
 		self.shuffle.set_active(False)
-		#self.shuffle.set_active(self.gconf.get_bool("control/shuffle"))
-		#val = self.gconf.get_bool("control/shuffle")
-		#self.shuffle.set_active(val)
 		self.repeat = self.xml["repeat"]
 		self.repeat.set_active(False)
 		self.both_sr = self.xml["both_sr"]
@@ -147,15 +146,13 @@ class christine(gtk_misc):
 		self.none_sr = self.xml["none_sr"]
 		self.none_sr.set_active(False)
 		
-		self.change_control()
+		self.CONTROL_STAT = self.gconf.get_int("control/CONTROL_STAT") #-1
+		self.change_control("start")
 
 		self.toggle_visualization = self.xml["toggle_visualization"]
 		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		val = self.gconf.get_bool("ui/small_view")
 		self.small_view_menuitem.set_active(val)
-		#if val:
-		#	self.small_view_menuitem.emit("toggled")
-		#	#self.small_view_menuitem.set_active(val)
 		self.toggle_small_view(self.small_view_menuitem)
 
 		
@@ -340,9 +337,11 @@ class christine(gtk_misc):
 		text = self.search_box.get_text().lower()
 		value	= model.get_value(iter,SEARCH)
 		album	= model.get_value(iter,ALBUM)
+		artist	= model.get_value(iter,ARTIST)
 		selection	= self.albums.treeview.get_selection()
 		model,iter	= selection.get_selected()
-		lalbum = model.get_value(iter,0)
+		lalbum  = model.get_value(iter,0)
+		lartist = model.get_value(iter,1)
 		
 		try:
 			value = value.lower()
@@ -350,7 +349,7 @@ class christine(gtk_misc):
 			value = ""
 
 		if value.find(text) >= 0  and \
-				 (album == lalbum or lalbum == "All Albums"):
+				 (lalbum in [album,"All Albums"]):
 			return True
 		else:
 			return False
@@ -461,11 +460,12 @@ class christine(gtk_misc):
 
 	def	check_queue(self):
 		model = self.queue.treeview.get_model()
-		b = model.get_iter_first()
-		if type(b) != gtk.TreeIter:
-			self.queue_sw.hide()
-		else:
-			self.queue_sw.show()
+		if model != None:
+			b = model.get_iter_first()
+			if type(b) != gtk.TreeIter:
+				self.queue_sw.hide()
+			else:
+				self.queue_sw.show()
 		return True
 			
 			
@@ -646,10 +646,8 @@ class christine(gtk_misc):
 	def add_artists(self,model,path,iter):
 		artist = model.get_value(iter,ARTIST)
 		#print "artist = self.artist.first_element","artist:'%s'"%artist
-		if artist == "":
-			artist = self.artist.first_element
 		if not artist in self.artist.list:
-			self.artist.add(artist)
+			self.artist_l.append(artist)
 			
 	def add_albums(self,model,path,iter):
 		album  = model.get_value(iter,ALBUM)
@@ -661,11 +659,17 @@ class christine(gtk_misc):
 			artist = self.artist.first_element
 			
 		if not artist in self.artist.list:
-			self.artist.add(artist)
+			self.artist.list.append(artist)
 
 		if not album in self.albums.list:
 			self.albums.add(album,artist)
-
+			
+	def add_artists_sorted(self):
+		self.artist.list.sort()
+		self.artist.list.append(self.artist.first_element)
+		
+		for i in self.artist.list:
+			self.artist.add(i)
 
 	def import_file(self,widget):
 		xml = glade_xml("file_selector.glade")

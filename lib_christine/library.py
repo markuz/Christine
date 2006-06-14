@@ -378,37 +378,6 @@ class queue(gtk_misc):
 			iter = model.append()
 		self.iters[file] = iter
 
-	def add2(self,filename,prepend=False):
-		file = os.path.split(filename)[1]
-		name = ".".join(k for k in file.split(".")[:-1])
-		if prepend:
-			iter = self.model.prepend()
-		else:
-			iter = self.model.append()
-		self.model.set(iter,
-				PATH,filename,
-				NAME,name,
-				TYPE,"sound")
-		self.save()
-
-	def add1(self,widget,b,filename,iter,prepend=False):
-		try:
-			name = self.tags["title"]
-		except:
-			name = ".".join(k for k in file.split(".")[:-1])
-		if self.discoverer.is_audio:
-			type1 = "sound"
-		else:
-			type1 = "video"
-		pix = self.gen_pixbuf(type1+".png")
-		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		file = os.path.split(filename)[1]
-		self.model.set(iter,
-				PATH,filename,
-				NAME,name,
-				TYPE,"sound")
-		self.save()
-	
 	def add_columns(self):
 		render = gtk.CellRendererText()
 		tv = self.treeview

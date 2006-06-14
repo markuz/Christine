@@ -1,4 +1,4 @@
 * Create a universal player compatible with gst 0.8 and 0.10
-* Improve the import, avoid freezes
+* Improve the import, avoid freezes (done)
 * Create the preferences dialog
 * Gconf-ize everything
