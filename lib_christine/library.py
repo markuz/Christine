@@ -310,6 +310,9 @@ class queue(gtk_misc):
 	def __init__(self,main):
 		gtk_misc.__init__(self)
 		self.main = main
+		self.iters = {}
+		self.discoverer = discoverer()
+		self.discoverer.bus.add_watch(self.message_handler)
 		self.library = lib_library("queue")
 		self.xml = glade_xml("treeview_reorderable.glade","ltv")
 		self.xml.signal_autoconnect(self)
@@ -319,6 +322,7 @@ class queue(gtk_misc):
 		self.treeview.set_model(self.model)
 		self.add_columns()
 		self.set_drag_n_drop()
+	
 		
 	def gen_model(self,refresh=False):
 		if refresh:
@@ -337,8 +341,44 @@ class queue(gtk_misc):
 					PATH,self.library[i]["path"],
 					NAME,self.library[i]["name"],
 					TYPE,self.library[i]["type"])
+			
+	def message_handler(self,a,b):
+		d = self.discoverer
+		t = b.type
+		if t == gst.MESSAGE_TAG:
+			#print a,b,d.get_location(),self.model.get_path(self.iters[d.get_location()])
+			self.discoverer.found_tags_cb(b.parse_tag())
+			name	= d.get_tag("title")
+			album	= d.get_tag("album")
+			artist	= d.get_tag("artist")
+			tn		= d.get_tag("track-number")
+			if name == "":
+				n = os.path.split(d.get_location())[1].split(".")
+				name = ".".join([k for k in n[:-1]])
+			name = "<b><i>%s</i></b>"%name
+			if album !="":
+				name += "\n from <i>%s</i>"%album
+			if artist != "":
+				name += "\n by <i>%s</i>"%artist
+
+			model = self.model
+			model.set(self.iters[d.get_location()],
+						PATH,d.get_location(),
+						NAME,name,
+						TYPE,"sound")
+			self.save()
+		return True
 	
-	def add(self,filename,prepend=False):
+	def add(self,file,prepend=False):
+		self.discoverer.set_location(file)
+		model = self.model
+		if prepend:
+			iter = model.prepend()
+		else:
+			iter = model.append()
+		self.iters[file] = iter
+
+	def add2(self,filename,prepend=False):
 		file = os.path.split(filename)[1]
 		name = ".".join(k for k in file.split(".")[:-1])
 		if prepend:
@@ -376,7 +416,7 @@ class queue(gtk_misc):
 		icon = gtk.TreeViewColumn("",pix,pixbuf=PIX)
 		icon.set_sort_column_id(TYPE)
 		#tv.append_column(icon)
-		name = gtk.TreeViewColumn("Title",render,text=NAME)
+		name = gtk.TreeViewColumn("Title",render,markup=NAME)
 		name.set_sort_column_id(NAME)
 		tv.append_column(name)
 
@@ -493,7 +533,8 @@ class mini_lists:
 		self.model.set(iter,
 				0,artist,
 				1,parent)
-		self.list.append(artist)
+		if not artist in self.list:
+			self.list.append(artist)
 		
 	def add_column(self):
 		artist = gtk.TreeViewColumn(self.header,
@@ -503,8 +544,10 @@ class mini_lists:
 		
 	def filter(self,model,iter):
 		value = model.get_value(iter,1)
+		album = model.get_value(iter,0)
 		if value == self.text_to_search \
-			or self.text_to_search == "All Artists":
+				or self.text_to_search == "All Artists" \
+				or album == "All Albums":
 			return True
 		else:
 			return False
