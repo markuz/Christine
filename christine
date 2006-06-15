@@ -331,6 +331,10 @@ class christine(gtk_misc):
 #==================== search stuff begins ===============================
 
 	def search(self,widget=None):
+		selection = self.albums.treeview.get_selection()
+		model,iter = selection.get_selected()
+		self.lalbum = model.get_value(iter,0)
+		self.lartist = model.get_value(iter,1)
 		self.filter_model.refilter()
 
 	def filter(self,model,iter):
@@ -338,10 +342,8 @@ class christine(gtk_misc):
 		value	= model.get_value(iter,SEARCH)
 		album	= model.get_value(iter,ALBUM)
 		artist	= model.get_value(iter,ARTIST)
-		selection	= self.albums.treeview.get_selection()
-		model,iter	= selection.get_selected()
-		lalbum  = model.get_value(iter,0)
-		lartist = model.get_value(iter,1)
+		lalbum  = self.lalbum
+		lartist = self.lartist
 		
 		try:
 			value = value.lower()
