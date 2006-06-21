@@ -133,7 +133,7 @@ class christine_gconf:
 
 	def set_value(self,key,value):
 		t = type(value)
-		print os.path.join(self.dir,key),value
+		print "set:",os.path.join(self.dir,key),value
 		if t == type(1):
 			self.gconf.set_int(os.path.join(self.dir,key),value)
 		elif t == type(""):
