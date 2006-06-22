@@ -370,6 +370,9 @@ class queue(gtk_misc):
 		return True
 	
 	def add(self,file,prepend=False):
+		print "queue.add(%s)"%file
+		if not os.path.isfile(file):
+			return False
 		self.discoverer.set_location(file)
 		model = self.model
 		if prepend:

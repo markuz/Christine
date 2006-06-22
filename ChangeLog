@@ -1,3 +1,7 @@
+2006-06-22 Marco Antonio Islas <markuz@islascruz.org>
+	* christine: Import to queue ready!!
+	* gui/main_window.glade: handler to import to queue menu item
+	* lib_christine/libs_christine: Video player is now available again!!
 2006-06-09 Marco Antonio Islas <markuz@islascruz.org>
 	* christine: Search and browse bugfix,
 	Bugfix in control radiobuttons

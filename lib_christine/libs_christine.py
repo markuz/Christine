@@ -30,8 +30,8 @@ from lib_christine.gtk_misc import *
 
 GST_DELAY = 500
 wdir = os.environ["HOME"]+"/.christine/"
-sound = ["mp3","ogg","wma"]
-video = ["mpg","mpeg","mpe","avi"]
+CHRISTINE_AUDIO_EXT = sound = ["mp3","ogg","wma"]
+CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
 
 class sanity:
 	'''
@@ -146,9 +146,11 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		if asink == "alsasink":
 			self.audio_sink.set_property("device","hw:0")
 		vsink			= self.get_string("backend/videosink") 
-		#print "vsink:",vsink
 		aspect_ratio	= self.get_string("backend/aspect-ratio")
+
 		self.video_sink = gst.element_factory_make(vsink)
+		self.video_sink.set_property("force-aspect-ratio",True)
+
 		if aspect_ratio != None:
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 		vsink			= self.get_string("backend/vis-plugin") 
@@ -176,7 +178,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			#self.discoverer = gst.extend.discoverer.Discoverer(file)
 			#gobject.timeout_add(500,self.print_discover)
 			print "self.pause()"
-			self.pause()
+			#self.pause()
 			print "set_location is done"
 		else:
 			print file
@@ -285,14 +287,6 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
 
-		#self.audio_sink.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
-		#		gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
-		#self.video_sink.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
-		#		gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
-		#self.video_sink.seek(gst.FORMAT_TIME|gst.SEEK_FLAG_FLUSH
-		#		|gst.SEEK_METHOD_SET,sec)
-
-
 	def isvideo(self):
 		ext = self.get_location().split(".").pop().lower()
 		if "video-codec" in self.tags.keys() or \
@@ -311,15 +305,26 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			return False
 		#return self.discoverer.is_audio
 
-class discoverer:
+class discoverer(gtk.DrawingArea):
 	def __init__(self):
 		print "discoverer: new instance"
+		gtk.DrawingArea.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
 		self.discoverer.set_property("audio-sink",gst.element_factory_make("esdsink"))
-		self.discoverer.set_property("video-sink",gst.element_factory_make("xvimagesink"))
+		video_sink = gst.element_factory_make("xvimagesink")
+		video_sink.set_property("display","null")
+		video_sink.set_property("force-aspect-ratio",True)
+		self.discoverer.set_property("video-sink",video_sink)
 		self.discoverer.set_property("volume",0.0)
 		#self.discoverer.set_property("delay",0)
 		self.bus = self.discoverer.get_bus()
+	
+
+	def watcher(self,bus,message):
+		t = message.type
+		if t == gst.MESSAGE_TAG:
+			self.found_tags_cb(message.parse_tag())
+		return True
 	
 	def set_location(self,file):
 		self.tags = {}
@@ -328,14 +333,15 @@ class discoverer:
 		self.discoverer.set_state(gst.STATE_PAUSED)
 		self.discoverer.set_state(gst.STATE_PLAYING)
 		self.discoverer.set_state(gst.STATE_PAUSED)
-		#gobject.timeout_add(100,self.set_null)
-
-
-
+		
 	def found_tags_cb(self,tags):
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
+		if "video-codec" or ext in CHRISTINE_VIDEO_EXT:
+			self.is_video = True
+		elif "audio-codec" or ext in CHRISTINE_AUDIO_EXT:
+			self.is_audio = True
 		print self.tags
 		
 	def get_location(self):

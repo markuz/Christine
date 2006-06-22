@@ -123,7 +123,8 @@ class christine(gtk_misc):
 		
 		self.music_sw = self.xml["music_sw"]
 		self.music_sw.add(self.library.tv)
-		self.main_viewer_place = self.xml["videobox"]
+		self.main_viewer_place = self.xml["playerbox"]
+		self.main_viewer_place.hide_all()
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
 		self.queue = queue(self)
@@ -266,21 +267,7 @@ class christine(gtk_misc):
 		self.last_played.append(filename)
 		self.gconf.set_value("backend/last_played",filename)
 		#self.player.discoverer.connect("discovered",self.set_tags)
-		gobject.timeout_add(100,self.stream_length)
-		
-		#if t == "video":
-		#	try:
-		#		self.miniviewer_window
-		#	except:
-		#		self.add_player_to_miniviewer()
-		#elif t == "sound":
-		#	try:
-		#		self.miniviewer_window.destroy()
-		#		self.player.set_size_request(200,200)
-		#		del self.miniviewer_window
-		#	except: pass
-		#else:
-		#	print "Not to miniviewer"
+		gobject.timeout_add(200,self.stream_length)
 	
 	def stop(self,widget):
 		self.player.stop()
@@ -678,7 +665,7 @@ class christine(gtk_misc):
 		for i in self.artist.list:
 			self.artist.add(i)
 
-	def import_file(self,widget):
+	def import_file(self,widget,queue=False):
 		xml = glade_xml("file_selector.glade")
 		fs = xml["fs"]
 		s = []
@@ -709,8 +696,11 @@ class christine(gtk_misc):
 		files = fs.get_filenames()
 		fs.destroy()
 		if response == gtk.RESPONSE_OK:
-			self.add_files(files=files)
-			self.library.save()
+			self.add_files(files=files,queue=queue)
+			if queue:
+				self.queue.save()
+			else:
+				self.library.save()
 	
 	def import_folder(self,widget):
 		xml = glade_xml("dir_selector.glade")
@@ -768,7 +758,7 @@ class christine(gtk_misc):
 				f.append(i)
 		self.add_files(files = f)
 	
-	def add_files(self,widget=None,files=None):
+	def add_files(self,widget=None,files=None,queue=False):
 		xml = glade_xml("add_files.glade")
 		xml.signal_autoconnect(self)
 		self.IMPORTING = True
@@ -789,7 +779,7 @@ class christine(gtk_misc):
 		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(500,self.add_file,inc)
+		gobject.timeout_add(500,self.add_file,inc,queue)
 		self.add_win.run()
 			#self.path_exists = False
 			#self.model.foreach(self.exists,i)
@@ -797,7 +787,8 @@ class christine(gtk_misc):
 			#	self.library.add(i)
 			#print self.path_exists
 		
-	def add_file(self,inc):
+	def add_file(self,inc,queue=False):
+		print "christine.add_file.queue",queue
 		if self.IMPORTING and len(self.files_to_add)>0:
 			newfile = self.files_to_add.pop()
 			self.percentaje += inc
@@ -807,17 +798,23 @@ class christine(gtk_misc):
 			rest =self.total_num_files - len(self.files_to_add)
 			self.add_progress.set_text("%02d/%02d"%(rest,self.total_num_files))
 			self.add_file_label.set_text(os.path.split(newfile)[1])
-			if not newfile in self.paths:
-				self.library.add(newfile)
-				div,mod = divmod(len(self.files_to_add),10)
-				if mod == 0:
-					print "library save"
-					self.library.save()
+			if not queue:
+				if not newfile in self.paths:
+					div,mod = divmod(len(self.files_to_add),10)
+					self.library.add(newfile)
+					if mod == 0:
+						print "library save"
+						self.library.save()
+			else:
+				print "self.queue.add(%s)"%newfile
+				self.queue.add(newfile)
+
 		else:
-			print "library save"
-			self.library.save()
-			self.library.gen_model(True)
-			self.jump_to_playing()
+			if not queue:
+				print "library save"
+				self.library.save()
+				self.library.gen_model(True)
+				self.jump_to_playing()
 			self.IMPORTING = False
 		return self.IMPORTING
 
@@ -830,6 +827,9 @@ class christine(gtk_misc):
 	def get_paths(self,model,path,iter):
 		loc = model.get_value(iter,PATH)
 		self.paths.append(loc)
+	
+	def import_to_queue(self,widget):
+		self.import_file("",True)
 
 #===============libraty stuff ends=============
 			
@@ -843,6 +843,7 @@ class christine(gtk_misc):
 			print "An error has ocurred"
 			print dir (b)
 			print b.parse_error()
+			error("".join([k for k in b.parse_error()]))
 			print b.structure["debug"]
 			print b.src
 		elif t == gst.MESSAGE_EOS:
@@ -934,16 +935,18 @@ class christine(gtk_misc):
 		t = self.player.type
 	
 		if self.player.isvideo():
-			try:
-				self.miniviewer_window
-			except:
-				self.add_player_to_miniviewer()
+			#try:
+			#	self.miniviewer_window
+			#except:
+			#self.add_player_to_miniviewer()
+			self.main_viewer_place.show_all()
 		elif self.player.issound():
-			try:
-				self.miniviewer_window.destroy()
-				self.player.set_size_request(200,200)
-				del self.miniviewer_window
-			except: pass
+			#try:
+			#	self.miniviewer_window.destroy()
+			#	self.player.set_size_request(200,200)
+			#	del self.miniviewer_window
+			#except: pass
+			self.main_viewer_place.hide_all()
 		else:
 			print "Not to miniviewer"
 
