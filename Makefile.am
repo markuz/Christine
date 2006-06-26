@@ -22,9 +22,9 @@ edit = sed \
 clean-local:
 	rm -rf christine.desktop
 all: all-am
-	chmod 755 gpkg
+	chmod 755 christine
 
-gpkg.desktop: Makefile $(srcdir)/gpkg.desktop.in
+christine.desktop: Makefile $(srcdir)/christine.desktop.in
 	$(edit) $(srcdir)/christine.desktop.in > christine.desktop
 
 ACLOCAL_AMFLAGS = -I m4

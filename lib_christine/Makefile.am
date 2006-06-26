@@ -22,9 +22,12 @@ edit = sed \
 	   -e 's,@programname\@,$(programname),g' \
 	   -e 's,@version\@,$(version),g'
 
-gtk-misc.py: Makefile $(srcdir)/gtk_misc.py.in
+gtk_misc.py: Makefile $(srcdir)/gtk_misc.py.in
 	$(edit) $(srcdir)/gtk_misc.py.in > gtk_misc.py
 
 all: all-am
 
 all-am: 
+
+clean:
+	rm gtk_misc.py

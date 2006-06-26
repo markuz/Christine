@@ -28,11 +28,11 @@ class glade_xml:
 		if os.path.isdir("./locale/"):
 			locale_dir= "./locale"
 		else:
-			locale_dir = "/usr/share/locale"
+			locale_dir = "@datadir@/locale"
 		if os.path.isdir("./gui/"):	
 			self.wdir = "./gui/"
 		else:
-			self.wdir = "/usr/share/christine/gui/"
+			self.wdir = "@datadir@/christine/gui/"
 		gtk.glade.bindtextdomain("gpkg",locale_dir)
 		gtk.glade.textdomain("gpkg")
 		self.xml = gtk.glade.XML(os.path.join(self.wdir,file),root)
@@ -54,7 +54,7 @@ class gtk_misc:
 		if os.path.isdir("./gui/pixmaps/"):
 			self.wdir = "./gui/pixmaps/"
 		else:
-			self.wdir = "/usr/share/christine/gui/pixmaps"
+			self.wdir = "@datadir@/christine/gui/pixmaps"
 
 	def gen_pixbuf(self,imagefile):
 		'''Create a pixbuf from  a file'''

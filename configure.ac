@@ -16,11 +16,12 @@ AM_PATH_PYTHON
 
 PKG_CHECK_MODULES(pygtk, pygtk-2.0)
 PKG_CHECK_MODULES(gstreamer,gstreamer-0.10)
-PKG_CHECK_MODULES(gst-python,gst-python-0.10)
+PKG_CHECK_MODULES(gat_python,gst-python-0.10)
 PKG_CHECK_MODULES(gnome_python,gnome-python-2.0)
 PKG_CHECK_MODULES(gnome_python_extras,gnome-python-extras-2.0)
 PKG_CHECK_MODULES(gconf,gconf-2.0)
 PKG_CHECK_MODULES(glib,glib-2.0)
+
 AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
 

@@ -24,4 +24,4 @@ edit = sed \
 
 all: all-am
 
-all-am: about.py
+all-am: 
