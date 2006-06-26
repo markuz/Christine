@@ -29,7 +29,7 @@ VERSION="0.0.1"
 AC_SUBST(PROGRAM_NAME)
 AC_SUBST(VERSION)
 
-GETTEXT_PACKAGE=gpkg
+GETTEXT_PACKAGE=christine
 AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS="es es_ES es_MX"
 AC_SUBST(ALL_LINGUAS)
@@ -43,6 +43,10 @@ Makefile
 lib_christine/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
+po/Makefile
+intltool-extract
+intltool-merge
+intltool-update
 ])
 
 AC_OUTPUT
