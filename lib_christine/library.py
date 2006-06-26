@@ -348,9 +348,9 @@ class queue(gtk_misc):
 		if t == gst.MESSAGE_TAG:
 			#print a,b,d.get_location(),self.model.get_path(self.iters[d.get_location()])
 			self.discoverer.found_tags_cb(b.parse_tag())
-			name	= d.get_tag("title")
-			album	= d.get_tag("album")
-			artist	= d.get_tag("artist")
+			name	= self.strip_xml_entities(d.get_tag("title"))
+			album	= self.strip_xml_entities(d.get_tag("album"))
+			artist	= self.strip_xml_entities(d.get_tag("artist"))
 			tn		= d.get_tag("track-number")
 			if name == "":
 				n = os.path.split(d.get_location())[1].split(".")
@@ -379,6 +379,10 @@ class queue(gtk_misc):
 			iter = model.prepend()
 		else:
 			iter = model.append()
+		model.set(iter,
+					PATH,file,
+					NAME,"<b>%s</b>"%os.path.split(file)[1].replace("&","&amp;"),
+					TYPE,"sound")
 		self.iters[file] = iter
 
 	def add_columns(self):

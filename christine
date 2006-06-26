@@ -50,6 +50,7 @@ class christine(gtk_misc):
 		self.win()
 		self.player_init()
 		gobject.timeout_add(900,self.on_tick)
+		self.set_location_count = 0
 	
 	def player_init(self):
 		#self.player.play.connect("stream-length",self.stream_length)
@@ -267,7 +268,11 @@ class christine(gtk_misc):
 		self.last_played.append(filename)
 		self.gconf.set_value("backend/last_played",filename)
 		#self.player.discoverer.connect("discovered",self.set_tags)
-		gobject.timeout_add(200,self.stream_length)
+		gobject.timeout_add(300,self.stream_length)
+		if self.set_location_count > 20:
+			self.go_next()
+		else:
+			self.set_location_count +=1
 	
 	def stop(self,widget):
 		self.player.stop()
@@ -383,6 +388,7 @@ class christine(gtk_misc):
 	
 	def go_next(self,widget=None):
 		#gobject.timeout_add(100,self.go_next1)
+		self.set_location_count = 0
 		self.go_next1()
 	def go_prev(self,widget=None):
 		if len(self.last_played) > 1:
@@ -839,14 +845,14 @@ class christine(gtk_misc):
 		t = b.type
 		#print dir (b),"\n"
 		#print t
-		if t == gst.MESSAGE_ERROR:
-			print "An error has ocurred"
-			print dir (b)
-			print b.parse_error()
-			error("".join([k for k in b.parse_error()]))
-			print b.structure["debug"]
-			print b.src
-		elif t == gst.MESSAGE_EOS:
+		#if t == gst.MESSAGE_ERROR:
+		#	print "An error has ocurred"
+		#	print dir (b)
+		#	print b.parse_error()
+		#	error("".join([k for k in b.parse_error()[1]]))
+		#	print b.structure["debug"]
+		#	print b.src
+		if t == gst.MESSAGE_EOS:
 			print "self.error_handler: eos"
 			#self.player.pause()
 			self.go_next()

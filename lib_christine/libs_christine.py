@@ -161,27 +161,26 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.query_duration = self.playbin.query_duration
 		self.query_position = self.playbin.query_position
 
-		
 	def __connect(self):
 		self.playbin.set_property("video-sink",self.video_sink)
 		self.playbin.set_property("audio-sink",self.audio_sink)
 
 	def set_location(self,file):
-		print "self.tags={}"
+		#print "self.tags={}"
 		self.tags = {}
 		if os.path.isfile(file):
 			self.playbin.set_state(gst.STATE_READY)
 			nfile = "file://"+file
 			#print "nfile:",nfile
-			print "self.playbin.set_property(\"uri\",nfile)"
+			#print "self.playbin.set_property(\"uri\",nfile)"
 			self.playbin.set_property("uri",nfile)
 			#self.discoverer = gst.extend.discoverer.Discoverer(file)
 			#gobject.timeout_add(500,self.print_discover)
-			print "self.pause()"
+			#print "self.pause()"
 			#self.pause()
-			print "set_location is done"
+			#print "set_location is done"
 		else:
-			print file
+			#print file
 			error("file %s not found"%os.path.split(file)[1])
 		#print "set_location check:",self.playbin.get_property("uri")
 		self.get_type()
@@ -190,7 +189,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		#print widget,b
 		self.discoverer.discover()
 		#print self.discoverer.print_info()
-		print "tags:",self.discoverer.tags
+		#print "tags:",self.discoverer.tags
 		self.tags = self.discoverer.tags
 		if len(self.discoverer.tags.keys()):
 			return False
@@ -201,7 +200,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		#gobject.timeout_add(1000,self.check)
 	
 	def check(self):
-		print self.playbin.get_property("queue-size")
+		#print self.playbin.get_property("queue-size")
 		return True
 		
 	def pause(self):
@@ -254,7 +253,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			path = path[7:]
 		else:
 			path = None
-		print "player.get_location:",path
+		#print "player.get_location:",path
 		return path
 	def get_state(self):
 		return self.playbin.get_state()
@@ -276,7 +275,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def destroy_cb(self, da):
 		self.video_sink.set_xwindow_id(0L)
 		
-	def expose_cb(self, window, event=None):
+	def expose_cb(self, window=None, event=None):
 		self.video_sink.set_xwindow_id(self.window.xid)
 		if self.should_show:
 			self.show()
@@ -307,7 +306,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 
 class discoverer(gtk.DrawingArea):
 	def __init__(self):
-		print "discoverer: new instance"
+		#print "discoverer: new instance"
 		gtk.DrawingArea.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
 		self.discoverer.set_property("audio-sink",gst.element_factory_make("esdsink"))
@@ -342,7 +341,7 @@ class discoverer(gtk.DrawingArea):
 			self.is_video = True
 		elif "audio-codec" or ext in CHRISTINE_AUDIO_EXT:
 			self.is_audio = True
-		print self.tags
+		#print self.tags
 		
 	def get_location(self):
 		path = self.discoverer.get_property("uri")

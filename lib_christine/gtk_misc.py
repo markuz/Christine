@@ -25,13 +25,16 @@ class glade_xml:
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of initialize gtk.glade.XML'''
 		import gtk.glade
-		#if os.path.isdir("./locale/"):
-		#	locale_dir= "./locale"
-		#else:
-		#	locale_dir = "/usr/share/locale"
-		#gtk.glade.bindtextdomain("gpkg",locale_dir)
-		#gtk.glade.textdomain("gpkg")
-		self.wdir = "./gui/"
+		if os.path.isdir("./locale/"):
+			locale_dir= "./locale"
+		else:
+			locale_dir = "@datadir@/locale"
+		if os.path.isdir("./gui/"):	
+			self.wdir = "./gui/"
+		else:
+			self.wdir = "@datadir@/christine/gui/"
+		gtk.glade.bindtextdomain("gpkg",locale_dir)
+		gtk.glade.textdomain("gpkg")
 		self.xml = gtk.glade.XML(os.path.join(self.wdir,file),root)
 		self.get_widget = self.xml.get_widget
 
@@ -51,7 +54,7 @@ class gtk_misc:
 		if os.path.isdir("./gui/pixmaps/"):
 			self.wdir = "./gui/pixmaps/"
 		else:
-			self.wdir = "somwhere"
+			self.wdir = "@datadir@/christine/gui/pixmaps"
 
 	def gen_pixbuf(self,imagefile):
 		'''Create a pixbuf from  a file'''
@@ -76,6 +79,15 @@ class gtk_misc:
 		image = self.image(filename)
 		widget.set_icon_widget(image)
 	
+	def strip_xml_entities(self,text):
+		entities = {"&":"&amp",
+					"<":"&lg;",
+					"<":"&rg;"}
+					
+		for i in entities.keys():
+			text = text.replace(i,entities[i])
+
+		return text
 
 class christine_gconf:
 	def __init__(self):
