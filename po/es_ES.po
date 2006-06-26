@@ -1,0 +1,199 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.0.1\n"
+"Report-Msgid-Bugs-To: markuz@islascruz.org\n"
+"POT-Creation-Date: 2006-08-26 12:08-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gui/strings_about:7 gui/strings_main_window:7
+msgid "Christine"
+msgstr ""
+
+#: gui/strings_about:8
+msgid "2006 (c) Marco Antonio Islas Cruz"
+msgstr ""
+
+#: gui/strings_about:9
+msgid "A small and cute media player for GNOME"
+msgstr ""
+
+#: gui/strings_about:10
+msgid ""
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"\t\t       Version 2, June 1991\n"
+"\n"
+" Copyright (C) 1989, 1991 Free Software Foundation, Inc.\n"
+"                       59 Temple Place, Suite 330, Boston, MA  02111-1307  "
+"USA\n"
+" Everyone is permitted to copy and distribute verbatim copies\n"
+" of this license document, but changing it is not allowed.\n"
+"\n"
+"\n"
+"    Christine\n"
+"    Copyright (C) 2006  Marco Antonio Islas Cruz <markuz@islascruz.org>\n"
+"\n"
+"    This program is free software; you can redistribute it and/or modify\n"
+"    it under the terms of the GNU General Public License as published by\n"
+"    the Free Software Foundation; version 2 of the License.\n"
+"\n"
+"    This program is distributed in the hope that it will be useful,\n"
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"    GNU General Public License for more details.\n"
+"\n"
+"    You should have received a copy of the GNU General Public License\n"
+"    along with this program; if not, write to the Free Software\n"
+"    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
+"USA\n"
+"\n"
+"\n"
+"This General Public License does not permit incorporating Christine into\n"
+"proprietary programs.  \n"
+msgstr ""
+
+#: gui/strings_about:39
+msgid "translator-credits"
+msgstr ""
+
+#: gui/strings_main_window:8
+msgid "_Media"
+msgstr ""
+
+#: gui/strings_main_window:9
+msgid "Add a file to the list"
+msgstr ""
+
+#: gui/strings_main_window:10
+msgid "Import File"
+msgstr ""
+
+#: gui/strings_main_window:11
+msgid "Add a complete folder to the list"
+msgstr ""
+
+#: gui/strings_main_window:12
+msgid "Import Folder"
+msgstr ""
+
+#: gui/strings_main_window:13
+msgid "Import a file to the queue without add it to the list"
+msgstr ""
+
+#: gui/strings_main_window:14
+msgid "Import to queue"
+msgstr ""
+
+#: gui/strings_main_window:15
+msgid "Jump to some second on the song"
+msgstr ""
+
+#: gui/strings_main_window:16
+msgid "Jump _to"
+msgstr ""
+
+#: gui/strings_main_window:17
+msgid "_Jump to playing"
+msgstr ""
+
+#: gui/strings_main_window:18
+msgid "_Control"
+msgstr ""
+
+#: gui/strings_main_window:19
+msgid "Play"
+msgstr ""
+
+#: gui/strings_main_window:20
+msgid "_Next"
+msgstr ""
+
+#: gui/strings_main_window:21
+msgid "Prev"
+msgstr ""
+
+#: gui/strings_main_window:22
+msgid "None"
+msgstr ""
+
+#: gui/strings_main_window:23
+msgid "Shuffle"
+msgstr ""
+
+#: gui/strings_main_window:24
+msgid "Repeat"
+msgstr ""
+
+#: gui/strings_main_window:25
+msgid "Shuffle + Repeat"
+msgstr ""
+
+#: gui/strings_main_window:26
+msgid "Less volume"
+msgstr ""
+
+#: gui/strings_main_window:27
+msgid "More volume"
+msgstr ""
+
+#: gui/strings_main_window:28
+msgid "Mute"
+msgstr ""
+
+#: gui/strings_main_window:29
+msgid "_Small view"
+msgstr ""
+
+#: gui/strings_main_window:30
+msgid "Browser"
+msgstr ""
+
+#: gui/strings_main_window:31
+msgid "Visualization"
+msgstr ""
+
+#: gui/strings_main_window:32
+msgid "<big>Not playing</big>"
+msgstr ""
+
+#: gui/strings_main_window:33
+msgid "from"
+msgstr ""
+
+#: gui/strings_main_window:34
+msgid "button1"
+msgstr ""
+
+#: gui/strings_main_window:35
+msgid "by"
+msgstr ""
+
+#: gui/strings_main_window:36
+msgid "button2"
+msgstr ""
+
+#: gui/strings_main_window:37
+msgid "Search"
+msgstr ""
+
+#: gui/strings_main_window:38
+msgid "<b>Artists</b>"
+msgstr ""
+
+#: gui/strings_main_window:39
+msgid "<b>Albums</b>"
+msgstr ""
+
+#: gui/strings_main_window:40 gui/strings_main_window:41
+msgid "00:00"
+msgstr ""
