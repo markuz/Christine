@@ -1,0 +1,11 @@
+#! /usr/bin/bash
+#
+# little script to update po files 
+#
+
+echo "es_ES.po"
+xgettext -p po -j -o es_ES.po -l --keyword=translate --keyword=_N  pkglibs/*py gpkggui/*py gui/string*
+echo "fr.po"
+xgettext -p po -j -o fr.po -l --keyword=translate --keyword=_N pkglibs/*py gpkggui/*py gui/string*
+echo "gpkg.po"
+xgettext -p po -j -o gpkg.pot -l --keyword=translate --keyword=_N pkglibs/*py gpkggui/*py gui/string*
