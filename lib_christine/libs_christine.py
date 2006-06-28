@@ -304,11 +304,13 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			return False
 		#return self.discoverer.is_audio
 
-class discoverer(gtk.DrawingArea):
+class discoverer(gtk.DrawingArea,christine_gconf):
 	def __init__(self):
 		#print "discoverer: new instance"
 		gtk.DrawingArea.__init__(self)
+		christine_gconf.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
+		asink			= self.get_string("backend/audiosink")
 		self.discoverer.set_property("audio-sink",gst.element_factory_make("esdsink"))
 		video_sink = gst.element_factory_make("xvimagesink")
 		video_sink.set_property("display","null")

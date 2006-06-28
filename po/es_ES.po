@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: markuz@islascruz.org\n"
 "POT-Creation-Date: 2006-08-26 12:08-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2006-06-26 HO:MI+ZONE\n"
+"Last-Translator: Marco Antonio Islas Cruz <markuz@islascruz.org>\n"
+"Language-Team: es <markuz@islascruz.org>>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: gui/strings_about:7 gui/strings_main_window:7
 msgid "Christine"
-msgstr ""
+msgstr "Christine"
 
 #: gui/strings_about:8
 msgid "2006 (c) Marco Antonio Islas Cruz"
@@ -26,7 +26,7 @@ msgstr ""
 
 #: gui/strings_about:9
 msgid "A small and cute media player for GNOME"
-msgstr ""
+msgstr "Un pequeño reproductor multimedia para Gnome"
 
 #: gui/strings_about:10
 msgid ""
@@ -68,115 +68,115 @@ msgstr ""
 
 #: gui/strings_main_window:8
 msgid "_Media"
-msgstr ""
+msgstr "_Media"
 
 #: gui/strings_main_window:9
 msgid "Add a file to the list"
-msgstr ""
+msgstr "Agregar archivos a la lista"
 
 #: gui/strings_main_window:10
 msgid "Import File"
-msgstr ""
+msgstr "Importar archivo"
 
 #: gui/strings_main_window:11
 msgid "Add a complete folder to the list"
-msgstr ""
+msgstr "Agregar un directorio a la lista"
 
 #: gui/strings_main_window:12
 msgid "Import Folder"
-msgstr ""
+msgstr "Importar directorio"
 
 #: gui/strings_main_window:13
 msgid "Import a file to the queue without add it to the list"
-msgstr ""
+msgstr "Importar un archivo a la cola"
 
 #: gui/strings_main_window:14
 msgid "Import to queue"
-msgstr ""
+msgstr "Agregar a la cola"
 
 #: gui/strings_main_window:15
 msgid "Jump to some second on the song"
-msgstr ""
+msgstr "Ir a un segundo de la cacion"
 
 #: gui/strings_main_window:16
 msgid "Jump _to"
-msgstr ""
+msgstr "_Ir a"
 
 #: gui/strings_main_window:17
 msgid "_Jump to playing"
-msgstr ""
+msgstr "Seleccionar reproduccion"
 
 #: gui/strings_main_window:18
 msgid "_Control"
-msgstr ""
+msgstr "_Control"
 
 #: gui/strings_main_window:19
 msgid "Play"
-msgstr ""
+msgstr "Tocar"
 
 #: gui/strings_main_window:20
 msgid "_Next"
-msgstr ""
+msgstr "_Siguiente"
 
 #: gui/strings_main_window:21
 msgid "Prev"
-msgstr ""
+msgstr "_Previo"
 
 #: gui/strings_main_window:22
 msgid "None"
-msgstr ""
+msgstr "Ninguno"
 
 #: gui/strings_main_window:23
 msgid "Shuffle"
-msgstr ""
+msgstr "Al azar"
 
 #: gui/strings_main_window:24
 msgid "Repeat"
-msgstr ""
+msgstr "Repetir"
 
 #: gui/strings_main_window:25
 msgid "Shuffle + Repeat"
-msgstr ""
+msgstr "Al azar + Repetir"
 
 #: gui/strings_main_window:26
 msgid "Less volume"
-msgstr ""
+msgstr "menos Volumen"
 
 #: gui/strings_main_window:27
 msgid "More volume"
-msgstr ""
+msgstr "Mas Volumen"
 
 #: gui/strings_main_window:28
 msgid "Mute"
-msgstr ""
+msgstr "Mudo"
 
 #: gui/strings_main_window:29
 msgid "_Small view"
-msgstr ""
+msgstr "_Vista pequeña"
 
 #: gui/strings_main_window:30
 msgid "Browser"
-msgstr ""
+msgstr "Navegador"
 
 #: gui/strings_main_window:31
 msgid "Visualization"
-msgstr ""
+msgstr "Visualización"
 
 #: gui/strings_main_window:32
 msgid "<big>Not playing</big>"
-msgstr ""
+msgstr "<big>Sin tocar</big>"
 
 #: gui/strings_main_window:33
 msgid "from"
-msgstr ""
+msgstr "de"
 
 #: gui/strings_main_window:34
 msgid "button1"
-msgstr ""
+msgstr "boton1"
 
 #: gui/strings_main_window:35
 msgid "by"
-msgstr ""
+msgstr "por"
 
 #: gui/strings_main_window:36
 msgid "button2"
@@ -184,16 +184,16 @@ msgstr ""
 
 #: gui/strings_main_window:37
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
 #: gui/strings_main_window:38
 msgid "<b>Artists</b>"
-msgstr ""
+msgstr "<b>Artistas</b>"
 
 #: gui/strings_main_window:39
 msgid "<b>Albums</b>"
-msgstr ""
+msgstr "</b>Albums</b>"
 
 #: gui/strings_main_window:40 gui/strings_main_window:41
 msgid "00:00"
-msgstr ""
+msgstr "00:00"

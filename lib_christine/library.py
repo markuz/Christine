@@ -356,6 +356,7 @@ class queue(gtk_misc):
 				n = os.path.split(d.get_location())[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			name = "<b><i>%s</i></b>"%name
+			name = self.strip_xml_entities(name)
 			if album !="":
 				name += "\n from <i>%s</i>"%album
 			if artist != "":
@@ -381,7 +382,7 @@ class queue(gtk_misc):
 			iter = model.append()
 		model.set(iter,
 					PATH,file,
-					NAME,"<b>%s</b>"%os.path.split(file)[1].replace("&","&amp;"),
+					NAME,"<b>%s</b>"%self.strip_xml_entities(os.path.split(file)[1]),
 					TYPE,"sound")
 		self.iters[file] = iter
 

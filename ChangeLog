@@ -1,6 +1,9 @@
+2006-06-27
 2006-06-26  gettextize  <bug-gnu-gettext@gnu.org>
-
 	* Makefile.am (EXTRA_DIST): Add config.rpath, mkinstalldirs, m4/ChangeLog.
+	* christine: about now uses the new about class
+	* lib_christine/about.py.in: created.
+	* Package: autotoolized
 
 2006-06-22 Marco Antonio Islas <markuz@islascruz.org>
 	* christine: Import to queue ready!!

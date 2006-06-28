@@ -33,8 +33,8 @@ class glade_xml:
 			self.wdir = "./gui/"
 		else:
 			self.wdir = "/usr/share/christine/gui/"
-		gtk.glade.bindtextdomain("gpkg",locale_dir)
-		gtk.glade.textdomain("gpkg")
+		gtk.glade.bindtextdomain("christine",locale_dir)
+		gtk.glade.textdomain("christine")
 		self.xml = gtk.glade.XML(os.path.join(self.wdir,file),root)
 		self.get_widget = self.xml.get_widget
 

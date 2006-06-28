@@ -1,4 +1,4 @@
-SUBDIRS = lib_christine gui
+SUBDIRS = lib_christine gui po
 
 bin_SCRIPTS = christine
 

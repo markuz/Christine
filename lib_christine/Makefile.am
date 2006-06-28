@@ -5,7 +5,8 @@ gtk_misc.py \
 library.py \
 libs_christine.py \
 preferences.py \
-show_properties.py 
+show_properties.py \
+about.py
 
 DISTFILES= Makefile.in $(scripts_DATA)
 
@@ -25,9 +26,13 @@ edit = sed \
 gtk_misc.py: Makefile $(srcdir)/gtk_misc.py.in
 	$(edit) $(srcdir)/gtk_misc.py.in > gtk_misc.py
 
+about.py: Makefile $(srcdir)/about.py.in
+	$(edit) $(srcdir)/about.py.in > about.py
+
 all: all-am
 
 all-am: 
 
 clean:
 	rm gtk_misc.py
+	rm about.py

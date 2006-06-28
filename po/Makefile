@@ -64,8 +64,8 @@ INCLUDES = -I.. -I$(top_srcdir)/intl
 COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(XCFLAGS)
 
 SOURCES = 
-POFILES =  es.po es_ES.po es_MX.po
-GMOFILES =  es.gmo es_ES.gmo es_MX.gmo
+POFILES =  es_ES.po
+GMOFILES =  es_ES.gmo
 DISTFILES = ChangeLog Makefile.in.in POTFILES.in \
 $(POFILES) $(SOURCES)
 EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
