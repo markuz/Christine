@@ -149,7 +149,7 @@ class christine(gtk_misc):
 		self.none_sr = self.xml["none_sr"]
 		#self.none_sr.set_active(False)
 		
-		self.CONTROL_STAT = self.gconf.get_int("control/CONTROL_STAT") #-1
+		self.CONTROL_STAT = self.gconf.get_int("control/CONTROL_STAT") -1
 		self.change_control()
 
 		self.toggle_visualization = self.xml["toggle_visualization"]
