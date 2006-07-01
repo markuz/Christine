@@ -350,7 +350,6 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		if path != None:
 			path = path[7:]
 		return path
-
 	
 	def get_tag(self,key):
 		try:

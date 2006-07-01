@@ -353,7 +353,7 @@ class queue(gtk_misc):
 			artist	= self.strip_xml_entities(d.get_tag("artist"))
 			tn		= d.get_tag("track-number")
 			if name == "":
-				n = os.path.split(d.get_location())[1].split(".")
+				n = os.path.split(self.file)[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			name = "<b><i>%s</i></b>"%name
 			name = self.strip_xml_entities(name)
@@ -363,7 +363,8 @@ class queue(gtk_misc):
 				name += "\n by <i>%s</i>"%artist
 
 			model = self.model
-			model.set(self.iters[d.get_location()],
+			#model.set(self.iters[d.get_location()],
+			model.set(self.iters,
 						PATH,d.get_location(),
 						NAME,name,
 						TYPE,"sound")
@@ -372,6 +373,8 @@ class queue(gtk_misc):
 	
 	def add(self,file,prepend=False):
 		print "queue.add(%s)"%file
+		self.file = file
+		self.discoverer.tags = {}
 		if not os.path.isfile(file):
 			return False
 		self.discoverer.set_location(file)
@@ -384,7 +387,7 @@ class queue(gtk_misc):
 					PATH,file,
 					NAME,"<b>%s</b>"%self.strip_xml_entities(os.path.split(file)[1]),
 					TYPE,"sound")
-		self.iters[file] = iter
+		self.iters = iter
 
 	def add_columns(self):
 		render = gtk.CellRendererText()

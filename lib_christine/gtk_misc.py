@@ -80,10 +80,7 @@ class gtk_misc:
 		widget.set_icon_widget(image)
 	
 	def strip_xml_entities(self,text):
-		entities = {"&":"&amp",
-					"<":"&lg;",
-					"<":"&rg;"}
-					
+		entities = {"&":"&amp;"}				
 		for i in entities.keys():
 			text = text.replace(i,entities[i])
 
