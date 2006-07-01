@@ -149,7 +149,8 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		aspect_ratio	= self.get_string("backend/aspect-ratio")
 
 		self.video_sink = gst.element_factory_make(vsink)
-		self.video_sink.set_property("force-aspect-ratio",True)
+		if vsink == "xvimagesink":
+			self.video_sink.set_property("force-aspect-ratio",True)
 
 		if aspect_ratio != None:
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
