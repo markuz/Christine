@@ -107,6 +107,7 @@ class library(gtk_misc):
 		
 		tn = tvc("Track",render,text=TN)
 		tn.set_sort_column_id(TN)
+		tn.set_visible(self.gconf.get_bool("ui/show_tn"))
 		tv.append_column(tn)
 	
 		name = tvc("Title",render,text=NAME)
@@ -135,6 +136,7 @@ class library(gtk_misc):
 		self.gconf.notify_add("/apps/christine/ui/show_artist",self.gconf.toggle_visible,artist)
 		self.gconf.notify_add("/apps/christine/ui/show_album",self.gconf.toggle_visible,album)
 		self.gconf.notify_add("/apps/christine/ui/show_type",self.gconf.toggle_visible,type)
+		self.gconf.notify_add("/apps/christine/ui/show_tn",self.gconf.toggle_visible,tn)
 		self.discoverer = discoverer()
 		self.discoverer.bus.add_watch(self.message_handler)
 
@@ -363,8 +365,8 @@ class queue(gtk_misc):
 				name += "\n by <i>%s</i>"%artist
 
 			model = self.model
-			#model.set(self.iters[d.get_location()],
-			model.set(self.iters,
+			model.set(self.iters[d.get_location()],
+			#model.set(self.iters,
 						PATH,d.get_location(),
 						NAME,name,
 						TYPE,"sound")
@@ -387,7 +389,7 @@ class queue(gtk_misc):
 					PATH,file,
 					NAME,"<b>%s</b>"%self.strip_xml_entities(os.path.split(file)[1]),
 					TYPE,"sound")
-		self.iters = iter
+		self.iters[file] = iter
 
 	def add_columns(self):
 		render = gtk.CellRendererText()

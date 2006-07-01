@@ -54,7 +54,7 @@
 		      <accelerator key="i" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image401">
+			<widget class="GtkImage" id="image417">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-new</property>
 			  <property name="icon_size">1</property>
@@ -77,7 +77,7 @@
 		      <accelerator key="i" modifiers="GDK_CONTROL_MASK | GDK_SHIFT_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image402">
+			<widget class="GtkImage" id="image418">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-open</property>
 			  <property name="icon_size">1</property>
@@ -133,7 +133,7 @@
 		      <accelerator key="j" modifiers="GDK_CONTROL_MASK | GDK_SHIFT_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image403">
+			<widget class="GtkImage" id="image419">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-jump-to</property>
 			  <property name="icon_size">1</property>
@@ -234,7 +234,7 @@
 		      <accelerator key="Right" modifiers="GDK_MOD1_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image404">
+			<widget class="GtkImage" id="image420">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -256,7 +256,7 @@
 		      <accelerator key="Left" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image405">
+			<widget class="GtkImage" id="image421">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>

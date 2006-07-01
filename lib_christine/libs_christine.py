@@ -155,7 +155,6 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		if aspect_ratio != None:
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 		vsink			= self.get_string("backend/vis-plugin") 
-
 		self.vis_plugin = gst.element_factory_make("goom")
 
 		self.__connect()
@@ -223,10 +222,11 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			#if source != None:
 			#	source.link(self.vis_plugin)
 				#self.vis_plugin.link(source)
-			#self.playbin.set_property("vis-plugin",self.vis_plugin)
+			self.playbin.set_property("vis-plugin",self.vis_plugin)
 			self.show()
+			self.expose_cb()
 		else:
-			#self.playbin.set_property("vis-plugin",None)
+			self.playbin.set_property("vis-plugin",None)
 			if self.type == "sound":
 				self.hide()
 				
@@ -311,8 +311,8 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		gtk.DrawingArea.__init__(self)
 		christine_gconf.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
-		asink			= self.get_string("backend/audiosink")
-		self.discoverer.set_property("audio-sink",gst.element_factory_make("esdsink"))
+		#asink			= self.get_string("backend/audiosink")
+		self.discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
 		video_sink = gst.element_factory_make("xvimagesink")
 		video_sink.set_property("display","null")
 		video_sink.set_property("force-aspect-ratio",True)

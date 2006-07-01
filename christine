@@ -174,7 +174,12 @@ class christine(gtk_misc):
 		self.toolbox = self.xml["toolbox"]
 		self.toolbox_container = self.xml["toolbox_container"]
 		self.volume_scale = self.xml["volume_scale"]
-		self.volume_scale.set_value(0.8)
+		volume = self.gconf.get_float("control/volume")
+		self.gconf.notify_add("/apps/christine/control/volume",self.gconf_change_volume)
+		if volume:
+			self.volume_scale.set_value(volume)
+		else:
+			self.volume_scale.set_value(0.8)
 		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
 
 	def albums_refilter(self,treeview):
@@ -295,6 +300,11 @@ class christine(gtk_misc):
 	def volume_change_value(self,widget,a=None,value=None):
 		value = widget.get_value()
 		self.player.set_volume(value)
+		self.gconf.set_value("control/volume",value)
+	
+	def gconf_change_volume(self,client,cnx_id,entry,widget):
+		print entry.get_value().get_float()
+		self.volume_scale.set_value(entry.get_value().get_float())
 	
 	def toggle_small_view(self,widget):
 		active = widget.get_active()
@@ -638,7 +648,6 @@ class christine(gtk_misc):
 			self.volume_scale.set_value(0.0)
 		else:
 			self.volume_scale.set_value(self.volume)
-	
 
 
 #===============Play stuff ends =============================
@@ -679,13 +688,16 @@ class christine(gtk_misc):
 		v = []
 		for i in sound:
 			s.append("*"+i)
+			s.append("*"+i.upper())
 		for i in video:
 			v.append("*"+i)
+			v.append("*"+i.upper())
 		filter = gtk.FileFilter()
 		filter.set_name("All media files")
 		for i in [s,v]:
 			for i in i:
 				filter.add_pattern(i)
+		print s,v
 		fs.add_filter(filter)
 
 		filter = gtk.FileFilter()
