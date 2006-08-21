@@ -23,8 +23,19 @@ import cPickle as pickle
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 
-(PATH,NAME,TYPE,PIX,ALBUM,ARTIST,TN,SEARCH)=range(8)
-(VPATH,VNAME,VPIX) = range(3)
+(PATH,
+NAME,
+TYPE,
+PIX,
+ALBUM,
+ARTIST,
+TN,
+SEARCH,
+PLAY_COUNT)=range(9)
+
+(VPATH,
+VNAME,
+VPIX) = range(3)
 
 class library(gtk_misc):
 	def __init__(self,main):
@@ -51,7 +62,7 @@ class library(gtk_misc):
 		if not refresh:
 			s = gobject.TYPE_STRING
 			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
-					s,s,s,s)
+					s,s,s,s,int)
 		else:
 			self.model.clear()
 		sounds = self.library_lib.get_sounds()
@@ -82,6 +93,9 @@ class library(gtk_misc):
 				album = sounds[i]["album"]
 			else:
 				album = sounds[i]["album"]
+			
+			if not sounds[i].has_key("play_count"):
+				sounds[i]["play_count"] = 0
 
 			self.model.set(self.model.append(),
 					NAME,name,
@@ -91,7 +105,8 @@ class library(gtk_misc):
 					ALBUM,album,
 					ARTIST,artist,
 					TN,str(sounds[i]["track_number"]),
-					SEARCH,",".join([name,album,artist]))
+					SEARCH,",".join([name,album,artist]),
+					PLAY_COUNT,sounds[i]["play_count"])
 			#self.model.foreach(self.get_last_iter)
 			#self.iters.append([self.last_iter,i])
 
@@ -132,11 +147,18 @@ class library(gtk_misc):
 		type.set_resizable(True)
 		type.set_visible(self.gconf.get_bool("ui/show_type"))
 		tv.append_column(type)
-		
+
+		play = tvc("Count",render,text=PLAY_COUNT)
+		play.set_sort_column_id(PLAY_COUNT)
+		play.set_resizable(True)
+		play.set_visible(self.gconf.get_bool("ui/show_play_count"))
+		tv.append_column(play)
+
 		self.gconf.notify_add("/apps/christine/ui/show_artist",self.gconf.toggle_visible,artist)
 		self.gconf.notify_add("/apps/christine/ui/show_album",self.gconf.toggle_visible,album)
 		self.gconf.notify_add("/apps/christine/ui/show_type",self.gconf.toggle_visible,type)
 		self.gconf.notify_add("/apps/christine/ui/show_tn",self.gconf.toggle_visible,tn)
+		self.gconf.notify_add("/apps/christine/ui/show_play_count",self.gconf.toggle_visible,play)
 		self.discoverer = discoverer()
 		self.discoverer.bus.add_watch(self.message_handler)
 
@@ -175,7 +197,8 @@ class library(gtk_misc):
 						ALBUM,album,
 						ARTIST,artist,
 						TN,str(tn),
-						SEARCH,",".join([name,album,artist]))
+						SEARCH,",".join([name,album,artist]),
+						PLAY_COUNT,0)
 		return True
 
 	def add1(self,file,prepend=False):
@@ -247,9 +270,11 @@ class library(gtk_misc):
 		track_number = model.get_value(iter,TN)
 		path = model.get_value(iter,PATH)
 		type = model.get_value(iter,TYPE)
+		pc	 = model.get_value(iter,PLAY_COUNT)
 		self.library_lib.append(path,{"name":name,
 				"type":type,"artist":artist,
-				"album":album,"track_number":track_number})
+				"album":album,"track_number":track_number,
+				"play_count":pc})
 		
 	def item_activated(self,widget,path,iter):
 		model = widget.get_model()
@@ -596,3 +621,14 @@ class video_library(gtk_misc):
 		pix  = model.get_value(iter,VPIX)
 		self.library.append(name,{"path":path,"type":"video","extra":[]})
 	
+
+
+class sources(gtk_misc):
+	def __init__(self):
+		gtk_misc.__init__(self)
+		self.xml = glade_xml("treeview.glade","ltv")
+		self.treeview = self.xml["ltv"]
+	
+	def gen_model(self):
+		self.model = gtk.ListStore(gtk.gdk.Pixbuf,str)
+		

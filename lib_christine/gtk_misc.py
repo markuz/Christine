@@ -95,8 +95,9 @@ class christine_gconf:
 						"control/repeat":False,
 						"ui/show_artist":True,
 						"ui/show_album":True,
+						"ui/show_play_count":True,
 						"ui/show_type":True}
-		self.string_keys = {"backend/audiosink":"esdsink",
+		self.string_keys = {"backend/audiosink":"autoaudiosink",
 						"backend/videosink":"xvimagesink",
 						"backend/video-aspect-ratio":"1/1",
 						"backend/vis-plugin":"goom"}

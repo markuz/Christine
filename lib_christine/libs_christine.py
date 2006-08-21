@@ -149,7 +149,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		aspect_ratio	= self.get_string("backend/aspect-ratio")
 
 		self.video_sink = gst.element_factory_make(vsink)
-		if vsink == "xvimagesink":
+		if vsink == "xvimagesink" or vsink == "ximagesink":
 			self.video_sink.set_property("force-aspect-ratio",True)
 
 		if aspect_ratio != None:
@@ -221,7 +221,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			#print source
 			#if source != None:
 			#	source.link(self.vis_plugin)
-				#self.vis_plugin.link(source)
+			#	self.vis_plugin.link(source)
 			self.playbin.set_property("vis-plugin",self.vis_plugin)
 			self.show()
 			self.expose_cb()

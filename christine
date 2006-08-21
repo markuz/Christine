@@ -233,22 +233,6 @@ class christine(gtk_misc):
 	def set_player_for_first_time(self):
 		self.main_viewer_place.pack_start(self.player,True,True)
 		
-	def add_player_to_miniviewer(self,widget=None):
-		#print "add_to_miniviewer"
-		self.miniviewer()
-		self.player.reparent(self.miniviewer_place)
-		self.toolbox.reparent(self.miniviewer_tcontainer)
-		self.miniviewer_window.show_all()
-		self.player.show()
-		
-	def remove_player_from_miniviewer(self,widget=None):
-		#print "remove_player_from_miniviewer"
-		self.player.reparent(self.main_viewer_place)
-		self.toolbox.reparent(self.toolbox_container)
-		self.play_button.set_active(False)
-		del self.miniviewer_window
-		self.player.hide()
-		
 	def toolbar(self):
 		self.sortb = self.xml["sortb"]
 		self.gtk_misc.set_toolbutton_image(self.sortb,"usort.png")
@@ -262,6 +246,7 @@ class christine(gtk_misc):
 
 
 	def set_location(self,filename):
+		print "christine set_location:",filename,os.path.exists(filename)
 		self.STATE_PLAYING = False
 		self.player.stop()
 		self.current_iter = None
@@ -270,9 +255,15 @@ class christine(gtk_misc):
 			pix = self.gtk_misc.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 			self.natural_model.set(self.current_iter,PIX,pix)
+			
+		self.natural_model.foreach(self.search_by_path,filename)
+		if self.current_iter != None:
+			count = self.natural_model.get_value(self.current_iter,PLAY_COUNT)
+			self.natural_model.set(self.current_iter,PLAY_COUNT,count+1)
+			self.library.save()
+			self.last_played.append(filename)
+			self.gconf.set_value("backend/last_played",filename)
 		self.player.set_location(filename)
-		self.last_played.append(filename)
-		self.gconf.set_value("backend/last_played",filename)
 		#self.player.discoverer.connect("discovered",self.set_tags)
 		gobject.timeout_add(300,self.stream_length)
 		if self.set_location_count > 20:
@@ -333,12 +324,18 @@ class christine(gtk_misc):
 			
 #==================== search stuff begins ===============================
 
+	def on_find_activate(self,widget):
+		self.search_box.grab_focus()
+
 	def search(self,widget=None):
 		selection = self.albums.treeview.get_selection()
 		model,iter = selection.get_selected()
 		self.lalbum = model.get_value(iter,0)
 		self.lartist = model.get_value(iter,1)
 		self.filter_model.refilter()
+		
+	def clear_search_entry(self,widget):
+		self.search_box.set_text("")
 
 	def filter(self,model,iter):
 		text = self.search_box.get_text().lower()
@@ -481,7 +478,7 @@ class christine(gtk_misc):
 			
 			
 	def get_next_in_list(self):
-		path = self.player.get_location()
+		path = self.gconf.get_string("backend/last_played")
 		print "get_next_in_list: path",path
 		if path == None:
 			filename = self.gconf.get_string("backend/last_played")
@@ -798,7 +795,7 @@ class christine(gtk_misc):
 		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(500,self.add_file,inc,queue)
+		gobject.timeout_add(300,self.add_file,inc,queue)
 		self.add_win.run()
 			#self.path_exists = False
 			#self.model.foreach(self.exists,i)
@@ -811,7 +808,7 @@ class christine(gtk_misc):
 		if self.IMPORTING and len(self.files_to_add)>0:
 			newfile = self.files_to_add.pop()
 			self.percentaje += inc
-			if self.percentaje > 1.0:
+			if self.percentaje >= 1.0:
 				self.percentaje == 0.99
 			self.add_progress.set_fraction(self.percentaje)
 			rest =self.total_num_files - len(self.files_to_add)
@@ -954,17 +951,8 @@ class christine(gtk_misc):
 		t = self.player.type
 	
 		if self.player.isvideo():
-			#try:
-			#	self.miniviewer_window
-			#except:
-			#self.add_player_to_miniviewer()
 			self.main_viewer_place.show_all()
 		elif self.player.issound():
-			#try:
-			#	self.miniviewer_window.destroy()
-			#	self.player.set_size_request(200,200)
-			#	del self.miniviewer_window
-			#except: pass
 			self.main_viewer_place.hide_all()
 		else:
 			print "Not to miniviewer"
