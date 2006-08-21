@@ -189,10 +189,16 @@ class library(gtk_misc):
 				n = os.path.split(d.get_location())[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			model = self.model
+			if d.get_tag("video-codec") != "" or \
+					os.path.splitext(d.get_location())[1] in CHRISTINE_VIDEO_EXT:
+				t = "video"
+			else:
+				t = "audio"
+					
 			model.set(self.iters[d.get_location()],
 						NAME,name,
 						PATH,d.get_location(),
-						TYPE,"sound",
+						TYPE,t,
 						PIX, pix,
 						ALBUM,album,
 						ARTIST,artist,
@@ -202,16 +208,9 @@ class library(gtk_misc):
 		return True
 
 	def add1(self,file,prepend=False):
-		#play = play10(self)
-		#play = self.player
-		#play.set_location(file)
-		#name   = play.get_tag("title")
-		#artist = play.get_tag("artist")
-		#album  = play.get_tag("album")
 		name   = ""
 		artist = ""
 		album  = ""
-		#track_number = self.play.get_tag("track-number")
 		track_number = 0
 
 		pix = self.gen_pixbuf("blank.png")
@@ -236,13 +235,13 @@ class library(gtk_misc):
 					SEARCH,",".join([name,album,artist]))
 		model.foreach(self.get_last_iter)
 		self.iters.append([self.last_iter,file])
-		#del play
+
 	def get_last_iter(self,model,path,iter):
 		self.last_iter = iter
+		
 	def set_tags(self):
 		if len(self.iters) > 0:
 			iter,path = self.iters.pop()
-			print iter, path
 			self.iter = iter
 			self.discoverer.set_location(path)
 			self.save()
@@ -258,19 +257,13 @@ class library(gtk_misc):
 		'''
 		Save the current library
 		'''
-		self.library_lib.clear()
+		#self.library_lib.clear()
 		self.model.foreach(self.prepare_for_disk)
 		self.library_lib.save()
 		
 		
 	def prepare_for_disk(self,model,path,iter):
-		name   = model.get_value(iter,NAME)
-		artist = model.get_value(iter,ARTIST)
-		album  = model.get_value(iter,ALBUM)
-		track_number = model.get_value(iter,TN)
-		path = model.get_value(iter,PATH)
-		type = model.get_value(iter,TYPE)
-		pc	 = model.get_value(iter,PLAY_COUNT)
+		name,artist,album,track_number,path,type,pc = model.get(iter,NAME,ARTIST,ALBUM,TN,PATH,TYPE,PLAY_COUNT)
 		self.library_lib.append(path,{"name":name,
 				"type":type,"artist":artist,
 				"album":album,"track_number":track_number,

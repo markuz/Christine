@@ -795,7 +795,7 @@ class christine(gtk_misc):
 		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(300,self.add_file,inc,queue)
+		gobject.timeout_add(400,self.add_file,inc,queue)
 		self.add_win.run()
 			#self.path_exists = False
 			#self.model.foreach(self.exists,i)
@@ -829,7 +829,7 @@ class christine(gtk_misc):
 			if not queue:
 				print "library save"
 				self.library.save()
-				self.library.gen_model(True)
+				#self.library.gen_model(True)
 				self.jump_to_playing()
 			self.IMPORTING = False
 		return self.IMPORTING
