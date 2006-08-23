@@ -52,11 +52,11 @@ class sanity:
 class lib_library:
 	def __init__(self,list):
 		sanity()
-		try:
+		if os.path.exists(os.path.join(wdir,list)):
 			f =	open(os.path.join(wdir,list),"r")
 			self.files = pickle.load(f)
 			f.close()
-		except:
+		else:
 			self.files = {}
 		self.list = list
 
@@ -104,8 +104,9 @@ class lib_library:
 	def get_sounds(self):
 		a = {}
 		for i in self.keys():
-			if self.files[i]["type"] == "sound":
+			if self.files[i]["type"] == "audio":
 				a[i] = self.files[i]
+		print a
 		return a
 
 	def get_videos(self):

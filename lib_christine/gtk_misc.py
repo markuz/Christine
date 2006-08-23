@@ -95,9 +95,8 @@ class christine_gconf:
 						"control/repeat":False,
 						"ui/show_artist":True,
 						"ui/show_album":True,
-						"ui/show_play_count":True,
 						"ui/show_type":True}
-		self.string_keys = {"backend/audiosink":"autoaudiosink",
+		self.string_keys = {"backend/audiosink":"esdsink",
 						"backend/videosink":"xvimagesink",
 						"backend/video-aspect-ratio":"1/1",
 						"backend/vis-plugin":"goom"}
@@ -111,7 +110,7 @@ class christine_gconf:
 		widget.set_active(entry.get_value.get_bool())
 	
 	def toggle_visible(self,client,cnx_id,entry,widget):
-		if entry.get_value().get_bool():
+		if entry.get_value.get_bool():
 			widget.show()
 		else:
 			widget.hide()

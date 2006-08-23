@@ -59,6 +59,7 @@ class library(gtk_misc):
 		
 	
 	def gen_model(self,refresh=False):
+		print "lib_library.gen_model"
 		if not refresh:
 			s = gobject.TYPE_STRING
 			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
@@ -76,6 +77,7 @@ class library(gtk_misc):
 		for i in keys:
 			pix = self.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+			print sounds[i]
 			if len (sounds[i]["name"]) > limit:
 				name = sounds[i]["name"][:limit-3]+"..."
 				name = sounds[i]["name"]
