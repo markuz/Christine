@@ -187,7 +187,14 @@ class christine(gtk_misc):
 		model,iter = selection.get_selected()
 		value = model.get_value(iter,0)
 		self.albums.text_to_search = value
-		self.albums.treeview.get_model().refilter()
+		alfmodel = self.albums.treeview.get_model()
+		almodel = alfmodel.get_model()
+		iter = almodel.get_iter_first()
+		if value == "All Artist":
+			almodel.set(iter,1,"")
+		else:
+			almodel.set(iter,1,value)
+		alfmodel.refilter()
 		
 
 	def queue_key_handler(self,widget,event):
@@ -344,17 +351,35 @@ class christine(gtk_misc):
 		artist	= model.get_value(iter,ARTIST)
 		lalbum  = self.lalbum
 		lartist = self.lartist
-		
 		try:
 			value = value.lower()
 		except:
 			value = ""
-
-		if value.find(text) >= 0  and \
-				 (lalbum in [album,"All Albums"]):
-			return True
+		
+#		if value.find(text) >=0 and len(text)!=0:
+#			allow = True
+#		else:
+#			allow = False
+			
+		if value.find(text) >= 0 and lalbum == album and \
+			lartist == artist:
+			allow = True
+			print 1
+		elif lalbum == "All Albums" and artist == lartist:
+			allow = True
+			print 2,"'%s','%s','%s'"%(lalbum,lartist,artist)
+		elif lartist == "All Artists" and album == lalbum:
+			allow = True
+			print 3
 		else:
-			return False
+			allow = False
+		return allow
+		
+#		if value.find(text) >= 0  and \
+#				 (lalbum in [album,"All Albums"]):
+#			return True
+#		else:
+#			return False
 	
 	def toggle_browser(self,widget):
 		if widget.get_active():

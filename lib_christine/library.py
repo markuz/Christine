@@ -77,7 +77,7 @@ class library(gtk_misc):
 		for i in keys:
 			pix = self.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-			print sounds[i]
+			#print sounds[i]
 			if len (sounds[i]["name"]) > limit:
 				name = sounds[i]["name"][:limit-3]+"..."
 				name = sounds[i]["name"]
@@ -542,7 +542,12 @@ class mini_lists:
 		artist = gtk.TreeViewColumn(self.header,
 				gtk.CellRendererText(),
 				text=0)
+		artis = gtk.TreeViewColumn("artist",
+				gtk.CellRendererText(),
+				text=1)
+
 		self.treeview.append_column(artist)
+		self.treeview.append_column(artis)
 		
 	def filter(self,model,iter):
 		value = model.get_value(iter,1)

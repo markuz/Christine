@@ -106,7 +106,6 @@ class lib_library:
 		for i in self.keys():
 			if self.files[i]["type"] == "audio":
 				a[i] = self.files[i]
-		print a
 		return a
 
 	def get_videos(self):
