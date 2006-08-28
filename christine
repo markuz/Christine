@@ -355,22 +355,24 @@ class christine(gtk_misc):
 			value = value.lower()
 		except:
 			value = ""
-		
-#		if value.find(text) >=0 and len(text)!=0:
-#			allow = True
-#		else:
-#			allow = False
-			
-		if value.find(text) >= 0 and lalbum == album and \
-			lartist == artist:
+		boolalbum = False
+		boolartist = False
+		if lalbum == "All Albums" and artist == lartist:
+			boolalbum = True
+			#print 2,"lalbum:'%s',lartist:'%s',artist:'%s'"%(lalbum,lartist,artist)
+		if lartist == "All Artists" and album == lalbum:
+			boolartist = True
+			#print 3
+		if value.find(text) >= 0 and lalbum in ["All Artist",album] and \
+			lartist == artist or boolalbum or boolartist:
 			allow = True
 			print 1
-		elif lalbum == "All Albums" and artist == lartist:
-			allow = True
-			print 2,"'%s','%s','%s'"%(lalbum,lartist,artist)
-		elif lartist == "All Artists" and album == lalbum:
-			allow = True
-			print 3
+		elif text =="":
+			if boolalbum or boolartist:
+				print 2
+				allow = True
+			else:
+				allow = False
 		else:
 			allow = False
 		return allow
