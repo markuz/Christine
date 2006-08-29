@@ -720,157 +720,153 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkVBox" id="vbox1">
+	    <widget class="GtkHPaned" id="hpaned1">
 	      <property name="visible">True</property>
-	      <property name="homogeneous">False</property>
-	      <property name="spacing">0</property>
+	      <property name="can_focus">True</property>
 
 	      <child>
-		<placeholder/>
+		<widget class="GtkHBox" id="playerbox">
+		  <property name="width_request">400</property>
+		  <property name="height_request">400</property>
+		  <property name="visible">True</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">0</property>
+
+		  <child>
+		    <placeholder/>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="shrink">True</property>
+		  <property name="resize">False</property>
+		</packing>
 	      </child>
 
 	      <child>
-		<widget class="GtkVPaned" id="vpaned1">
+		<widget class="GtkVBox" id="vbox1">
 		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="position">0</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">0</property>
 
 		  <child>
-		    <widget class="GtkHBox" id="browser">
-		      <property name="height_request">77</property>
-		      <property name="homogeneous">False</property>
-		      <property name="spacing">0</property>
-
-		      <child>
-			<widget class="GtkFrame" id="artist_frame">
-			  <property name="height_request">75</property>
-			  <property name="visible">True</property>
-			  <property name="label_xalign">0</property>
-			  <property name="label_yalign">0.5</property>
-			  <property name="shadow_type">GTK_SHADOW_NONE</property>
-
-			  <child>
-			    <widget class="GtkScrolledWindow" id="artist_scroll">
-			      <property name="visible">True</property>
-			      <property name="can_focus">True</property>
-			      <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-			      <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-			      <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-			      <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
-
-			      <child>
-				<placeholder/>
-			      </child>
-			    </widget>
-			  </child>
-
-			  <child>
-			    <widget class="GtkLabel" id="artist_frame_label">
-			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">&lt;b&gt;Artists&lt;/b&gt;</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">True</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0.5</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
-			      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-			      <property name="width_chars">-1</property>
-			      <property name="single_line_mode">False</property>
-			      <property name="angle">0</property>
-			    </widget>
-			    <packing>
-			      <property name="type">label_item</property>
-			    </packing>
-			  </child>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">True</property>
-			  <property name="fill">True</property>
-			</packing>
-		      </child>
-
-		      <child>
-			<widget class="GtkFrame" id="albums_frame">
-			  <property name="visible">True</property>
-			  <property name="label_xalign">0</property>
-			  <property name="label_yalign">0.5</property>
-			  <property name="shadow_type">GTK_SHADOW_NONE</property>
-
-			  <child>
-			    <widget class="GtkScrolledWindow" id="albums_scroll">
-			      <property name="visible">True</property>
-			      <property name="can_focus">True</property>
-			      <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-			      <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-			      <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-			      <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
-
-			      <child>
-				<placeholder/>
-			      </child>
-			    </widget>
-			  </child>
-
-			  <child>
-			    <widget class="GtkLabel" id="label5">
-			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">&lt;b&gt;Albums&lt;/b&gt;</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">True</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0.5</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
-			      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-			      <property name="width_chars">-1</property>
-			      <property name="single_line_mode">False</property>
-			      <property name="angle">0</property>
-			    </widget>
-			    <packing>
-			      <property name="type">label_item</property>
-			    </packing>
-			  </child>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">True</property>
-			  <property name="fill">True</property>
-			</packing>
-		      </child>
-		    </widget>
-		    <packing>
-		      <property name="shrink">False</property>
-		      <property name="resize">False</property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkHPaned" id="hpanebox">
+		    <widget class="GtkVPaned" id="vpaned1">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
+		      <property name="position">0</property>
 
 		      <child>
-			<widget class="GtkHBox" id="playerbox">
-			  <property name="width_request">400</property>
-			  <property name="height_request">400</property>
-			  <property name="visible">True</property>
+			<widget class="GtkHBox" id="browser">
+			  <property name="height_request">77</property>
 			  <property name="homogeneous">False</property>
 			  <property name="spacing">0</property>
 
 			  <child>
-			    <placeholder/>
+			    <widget class="GtkFrame" id="artist_frame">
+			      <property name="height_request">75</property>
+			      <property name="visible">True</property>
+			      <property name="label_xalign">0</property>
+			      <property name="label_yalign">0.5</property>
+			      <property name="shadow_type">GTK_SHADOW_NONE</property>
+
+			      <child>
+				<widget class="GtkScrolledWindow" id="artist_scroll">
+				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
+				  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+				  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+				  <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+				  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+				  <child>
+				    <placeholder/>
+				  </child>
+				</widget>
+			      </child>
+
+			      <child>
+				<widget class="GtkLabel" id="artist_frame_label">
+				  <property name="visible">True</property>
+				  <property name="label" translatable="yes">&lt;b&gt;Artists&lt;/b&gt;</property>
+				  <property name="use_underline">False</property>
+				  <property name="use_markup">True</property>
+				  <property name="justify">GTK_JUSTIFY_LEFT</property>
+				  <property name="wrap">False</property>
+				  <property name="selectable">False</property>
+				  <property name="xalign">0.5</property>
+				  <property name="yalign">0.5</property>
+				  <property name="xpad">0</property>
+				  <property name="ypad">0</property>
+				  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+				  <property name="width_chars">-1</property>
+				  <property name="single_line_mode">False</property>
+				  <property name="angle">0</property>
+				</widget>
+				<packing>
+				  <property name="type">label_item</property>
+				</packing>
+			      </child>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">True</property>
+			      <property name="fill">True</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkFrame" id="albums_frame">
+			      <property name="visible">True</property>
+			      <property name="label_xalign">0</property>
+			      <property name="label_yalign">0.5</property>
+			      <property name="shadow_type">GTK_SHADOW_NONE</property>
+
+			      <child>
+				<widget class="GtkScrolledWindow" id="albums_scroll">
+				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
+				  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+				  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+				  <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+				  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+				  <child>
+				    <placeholder/>
+				  </child>
+				</widget>
+			      </child>
+
+			      <child>
+				<widget class="GtkLabel" id="label5">
+				  <property name="visible">True</property>
+				  <property name="label" translatable="yes">&lt;b&gt;Albums&lt;/b&gt;</property>
+				  <property name="use_underline">False</property>
+				  <property name="use_markup">True</property>
+				  <property name="justify">GTK_JUSTIFY_LEFT</property>
+				  <property name="wrap">False</property>
+				  <property name="selectable">False</property>
+				  <property name="xalign">0.5</property>
+				  <property name="yalign">0.5</property>
+				  <property name="xpad">0</property>
+				  <property name="ypad">0</property>
+				  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+				  <property name="width_chars">-1</property>
+				  <property name="single_line_mode">False</property>
+				  <property name="angle">0</property>
+				</widget>
+				<packing>
+				  <property name="type">label_item</property>
+				</packing>
+			      </child>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">True</property>
+			      <property name="fill">True</property>
+			    </packing>
 			  </child>
 			</widget>
 			<packing>
-			  <property name="shrink">True</property>
+			  <property name="shrink">False</property>
 			  <property name="resize">False</property>
 			</packing>
 		      </child>
@@ -896,15 +892,15 @@
 		      </child>
 		    </widget>
 		    <packing>
-		      <property name="shrink">True</property>
-		      <property name="resize">True</property>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
 		    </packing>
 		  </child>
 		</widget>
 		<packing>
-		  <property name="padding">0</property>
-		  <property name="expand">True</property>
-		  <property name="fill">True</property>
+		  <property name="shrink">True</property>
+		  <property name="resize">True</property>
 		</packing>
 	      </child>
 	    </widget>

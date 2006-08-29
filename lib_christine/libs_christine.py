@@ -184,6 +184,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			error("file %s not found"%os.path.split(file)[1])
 		#print "set_location check:",self.playbin.get_property("uri")
 		self.get_type()
+		self.expose_cb()
 			
 	def print_discover(self,widget=None,b=None):
 		#print widget,b
