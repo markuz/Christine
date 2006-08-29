@@ -530,7 +530,6 @@ class mini_lists:
 		self.add(self.first_element,"")
 			
 	def add(self,artist,parent=""):
-		#print "minilist.add:",artist,parent
 		iter = self.model.append()
 		self.model.set(iter,
 				0,artist,
@@ -542,12 +541,7 @@ class mini_lists:
 		artist = gtk.TreeViewColumn(self.header,
 				gtk.CellRendererText(),
 				text=0)
-		artis = gtk.TreeViewColumn("artist",
-				gtk.CellRendererText(),
-				text=1)
-
 		self.treeview.append_column(artist)
-		self.treeview.append_column(artis)
 		
 	def filter(self,model,iter):
 		value = model.get_value(iter,1)
@@ -559,70 +553,6 @@ class mini_lists:
 		else:
 			return False
 	
-
-#
-# code below this comment is deprecated
-#
-#
-class video_library(gtk_misc):
-	def __init__(self,main):
-		gtk_misc.__init__(self)
-		self.main = main
-		self.xml = glade_xml("icon_view.glade","iconv")
-		self.xml.signal_autoconnect(self)
-		self.iv = self.xml["iconv"]
-		self.library = lib_library("video")
-		self.gen_model()
-		self.iv.set_model(self.model)
-		self.add_columns()
-		
-	def item_activated(self,widget,path):
-		model = self.model
-		iter = model.get_iter(path)
-		filename = model.get_value(iter,VPATH)
-		self.main.set_location(filename)
-		self.main.play()
-		
-
-	def gen_model(self,refresh=False):
-		s = gobject.TYPE_STRING
-		if refresh:
-			self.model.clear()
-		else:
-			self.model = gtk.ListStore(s,s,gtk.gdk.Pixbuf)
-		videos = self.library.get_videos()
-		for i in videos.keys():
-			self.model.set(self.model.append(),
-					VPIX, self.gen_pixbuf("video.png"),
-					VNAME,i,
-					PATH,videos[i]["path"])
-					
-		
-	def add(self,file):
-		model = self.model
-		iter = model.append()
-		path,name = os.path.split(file)
-		model.set(iter,
-				VNAME,name,
-				VPATH,file,
-				VPIX, self.gen_pixbuf("video.png"))
-
-	def add_columns(self):
-		self.iv.set_pixbuf_column(VPIX)
-		self.iv.set_text_column(VNAME)
-	
-	def save(self):
-		self.model.foreach(self.prepare_for_disk)
-		self.library.save()
-
-	def prepare_for_disk(self,model,path,iter):
-		name = model.get_value(iter,VNAME)
-		path = model.get_value(iter,VPATH)
-		pix  = model.get_value(iter,VPIX)
-		self.library.append(name,{"path":path,"type":"video","extra":[]})
-	
-
-
 class sources(gtk_misc):
 	def __init__(self):
 		gtk_misc.__init__(self)
