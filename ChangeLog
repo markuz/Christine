@@ -1,4 +1,10 @@
-2006-06-27
+2006-08-29 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* christine: Rewrite the filter method in order to make
+	the browser work. Need more tests. refilter on new artist
+	selected.
+	* lib_christine/libs_christine: expose_cb call on new location 
+	setted.
+	* gui/main_window.glade: Player space reallocated.
 2006-06-26  gettextize  <bug-gnu-gettext@gnu.org>
 	* Makefile.am (EXTRA_DIST): Add config.rpath, mkinstalldirs, m4/ChangeLog.
 	* christine: about now uses the new about class
