@@ -353,17 +353,21 @@ class christine(gtk_misc):
 			value = value.lower()
 		except:
 			value = ""
-		boolalbum = False
-		boolartist = False
-
-		if lalbum == "All Albums" and lartist == "All Artists" \
+			
+		if lartist == "All Artists" and lalbum == "All Albums" \
 				and text =="":
 			return True
 
 		if lalbum == "All Albums" and artist == lartist:
 			boolalbum = True
+		else:
+			boolalbum = False
+		
 		if lartist == "All Artists" and album == lalbum:
 			boolartist = True
+		else:
+			boolartist = False
+			
 		if value.find(text) >= 0 and lalbum in ["All Artist",album] and \
 			lartist == artist or boolalbum or boolartist:
 			allow = True
