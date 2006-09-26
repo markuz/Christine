@@ -76,6 +76,7 @@ class christine(gtk_misc):
 		widget.hide()
 	
 	def win(self):
+		self.tmp_vbox = self.xml["tmp_vbox"]
 		self.window = self.xml["main_window"]
 		self.window.set_icon(self.gen_pixbuf("logo.png"))
 		self.play_button	= self.xml["play"]
@@ -240,8 +241,7 @@ class christine(gtk_misc):
 			pass
 	
 	def set_player_for_first_time(self):
-		self.main_viewer_place.pack_start(self.player,True,True)
-		#self.main_viewer_place.show_all()
+		self.main_viewer_place.pack_start(self.player,True,True,0)
 		
 	def toolbar(self):
 		self.sortb = self.xml["sortb"]
@@ -335,16 +335,19 @@ class christine(gtk_misc):
 	def toggle_full_screen(self,widget):
 		if widget.get_active():
 			self.videobox.hide()
-			self.player.unparent()
-			self.miniviewer_tcontainer.unparent()
-			self.main_vbox.pack_start(self.player,True,True,2)
-			self.main_vbox.pack_start(self.miniviewer_tcontainer,False,False,2)
+			self.main_viewer_place.remove(self.player)
+			#self.player.unparent()
+			#self.miniviewer_tcontainer.unparent()
+			self.tmp_vbox.pack_start(self.player,True,True,2)
+			self.tmp_vbox.show_all()
+			#self.main_vbox.pack_start(self.miniviewer_tcontainer,False,False,2)
 			self.window.fullscreen()
 		else:
-			self.player.unparent()
+			self.window.unfullscreen()
+			self.tmp_vbox.hide()
+			self.tmp_vbox.remove(self.player)
 			self.set_player_for_first_time()
 			self.videobox.show_all()
-			self.window.unfullscreen()
 			
 #==================== search stuff begins ===============================
 
