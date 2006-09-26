@@ -45,6 +45,8 @@ class christine(gtk_misc):
 		self.gconf = christine_gconf()
 		self.moving_scale	= False
 		self.STATE_PLAYING = False
+		self.IS_FULLSCREEN = False
+		self.SHOW_BUTTONS = False
 		self.last_played = []
 		#self.player = player(self)
 		self.player = play10(self)
@@ -77,6 +79,7 @@ class christine(gtk_misc):
 	
 	def win(self):
 		self.tmp_vbox = self.xml["tmp_vbox"]
+		self.menubar = self.xml["menubar"]
 		self.window = self.xml["main_window"]
 		self.window.set_icon(self.gen_pixbuf("logo.png"))
 		self.play_button	= self.xml["play"]
@@ -332,8 +335,8 @@ class christine(gtk_misc):
 				not widget.get_active():
 			self.toggle_small_view(self.small_view_menuitem)
 	
-	def toggle_full_screen(self,widget):
-		if widget.get_active():
+	def toggle_full_screen(self,widget=None):
+		if not self.IS_FULLSCREEN:
 			self.videobox.hide()
 			self.main_viewer_place.remove(self.player)
 			#self.player.unparent()
@@ -342,13 +345,49 @@ class christine(gtk_misc):
 			self.tmp_vbox.show_all()
 			#self.main_vbox.pack_start(self.miniviewer_tcontainer,False,False,2)
 			self.window.fullscreen()
+			self.IS_FULLSCREEN = True
 		else:
 			self.window.unfullscreen()
 			self.tmp_vbox.hide()
 			self.tmp_vbox.remove(self.player)
 			self.set_player_for_first_time()
+			self.miniviewer_tcontainer.show()
+			self.menubar.show()
 			self.videobox.show_all()
+			self.IS_FULLSCREEN = False
 			
+	def on_main_window_event(self,player,event):
+		if event.type == gtk.gdk.KEY_PRESS:
+			if event.keyval == 103:
+				self.show_hide_playbuttons()
+				return True
+			elif event.keyval == 65366:
+				if self.IS_FULLSCREEN:
+					self.go_next()
+					return true
+			elif event.keyval == 65365:
+				if self.IS_FULLSCREEN:
+					self.go_prev()
+					return True
+			elif event.keyval == 102:
+				if self.IS_FULLSCREEN:
+					self.toggle_full_screen()
+					return True
+				
+			else:
+				print event.keyval
+			
+	def show_hide_playbuttons(self,widget=None):
+		if not self.IS_FULLSCREEN:
+			return True
+		if self.SHOW_BUTTONS:
+			self.miniviewer_tcontainer.show()
+			self.menubar.show()
+			self.SHOW_BUTTONS = False
+		else:
+			self.miniviewer_tcontainer.hide()
+			self.menubar.hide()
+			self.SHOW_BUTTONS = True
 #==================== search stuff begins ===============================
 
 	def on_find_activate(self,widget):
