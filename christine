@@ -364,7 +364,7 @@ class christine(gtk_misc):
 			elif event.keyval == 65366:
 				if self.IS_FULLSCREEN:
 					self.go_next()
-					return true
+					return True
 			elif event.keyval == 65365:
 				if self.IS_FULLSCREEN:
 					self.go_prev()
@@ -373,9 +373,6 @@ class christine(gtk_misc):
 				if self.IS_FULLSCREEN:
 					self.toggle_full_screen()
 					return True
-				
-			else:
-				print event.keyval
 			
 	def show_hide_playbuttons(self,widget=None):
 		if not self.IS_FULLSCREEN:
