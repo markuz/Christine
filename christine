@@ -41,6 +41,7 @@ class christine(gtk_misc):
 		client				= ui.master_client()
 		self.xml			= glade_xml("main_window.glade")
 		self.xml.signal_autoconnect(self)
+		self.main_vbox = self.xml["main_vbox"]
 		self.gconf = christine_gconf()
 		self.moving_scale	= False
 		self.STATE_PLAYING = False
@@ -125,6 +126,7 @@ class christine(gtk_misc):
 		
 		self.music_sw = self.xml["music_sw"]
 		self.music_sw.add(self.library.tv)
+		self.videobox = self.xml["videobox"]
 		self.main_viewer_place = self.xml["playerbox"]
 		self.main_viewer_place.hide_all()
 		#=============queue ends
@@ -180,6 +182,8 @@ class christine(gtk_misc):
 			self.volume_scale.set_value(volume)
 		else:
 			self.volume_scale.set_value(0.8)
+
+		self.miniviewer_tcontainer = self.xml["toolbox_container"]
 		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
 
 	def albums_refilter(self,treeview):
@@ -237,6 +241,7 @@ class christine(gtk_misc):
 	
 	def set_player_for_first_time(self):
 		self.main_viewer_place.pack_start(self.player,True,True)
+		#self.main_viewer_place.show_all()
 		
 	def toolbar(self):
 		self.sortb = self.xml["sortb"]
@@ -326,6 +331,20 @@ class christine(gtk_misc):
 		if self.small_view_menuitem.get_active() and \
 				not widget.get_active():
 			self.toggle_small_view(self.small_view_menuitem)
+	
+	def toggle_full_screen(self,widget):
+		if widget.get_active():
+			self.videobox.hide()
+			self.player.unparent()
+			self.miniviewer_tcontainer.unparent()
+			self.main_vbox.pack_start(self.player,True,True,2)
+			self.main_vbox.pack_start(self.miniviewer_tcontainer,False,False,2)
+			self.window.fullscreen()
+		else:
+			self.player.unparent()
+			self.set_player_for_first_time()
+			self.videobox.show_all()
+			self.window.unfullscreen()
 			
 #==================== search stuff begins ===============================
 
@@ -335,8 +354,15 @@ class christine(gtk_misc):
 	def search(self,widget=None):
 		selection = self.albums.treeview.get_selection()
 		model,iter = selection.get_selected()
-		self.lalbum = model.get_value(iter,0)
-		self.lartist = model.get_value(iter,1)
+		if iter!=None:
+			self.lalbum = model.get_value(iter,0)
+		else:
+			self.lalbum = ""
+		model,iter = self.artist.treeview.get_selection().get_selected()
+		if iter !=None:
+			self.lartist = model.get_value(iter,1)
+		else:
+			self.lartist = ""
 		self.filter_model.refilter()
 		
 	def clear_search_entry(self,widget):
@@ -358,25 +384,43 @@ class christine(gtk_misc):
 				and text =="":
 			return True
 
-		if lalbum == "All Albums" and artist == lartist:
+		#if lalbum == "All Albums" and artist == lartist:
+		#	boolalbum = True
+		#else:
+		#	boolalbum = False
+		
+		lallowed = [album]
+		aallowed = [artist]
+		
+		if lalbum == "All Albums":
+			lallowed.append("All Albums")
+		if lartist == "All Artist":
+			aallowed.append("All Artist")
+
+		if lalbum in lallowed:
 			boolalbum = True
 		else:
+			#print album,lalbum
 			boolalbum = False
 		
-		if lartist == "All Artists" and album == lalbum:
+		if lartist in aallowed:
 			boolartist = True
 		else:
+			#print artist,lartist
 			boolartist = False
 			
-		if value.find(text) >= 0 and lalbum in ["All Artist",album] and \
-			lartist == artist or boolalbum or boolartist:
+		if value.find(text) >= 0 and (boolartist or boolalbum):
+			#print "1"
 			allow = True
 		elif text =="":
-			if boolalbum or boolartist:
+			if boolartist and album==lalbum:
+			#	print "2"
 				allow = True
 			else:
+			#	print "3"
 				allow = False
 		else:
+			#print "4",lartist,lalbum,text,boolartist,boolalbum
 			allow = False
 		return allow
 		

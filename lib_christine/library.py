@@ -130,6 +130,7 @@ class library(gtk_misc):
 		name = tvc("Title",render,text=NAME)
 		name.set_sort_column_id(NAME)
 		name.set_resizable(True)
+		name.set_fixed_width(150)
 		tv.append_column(name)
 
 		artist = tvc("Artist",render,text=ARTIST)
