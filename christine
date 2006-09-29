@@ -53,7 +53,7 @@ class christine(gtk_misc):
 		self.stream_error_count = 0
 		self.win()
 		self.player_init()
-		gobject.timeout_add(900,self.on_tick)
+		gobject.timeout_add(200,self.on_tick)
 		self.set_location_count = 0
 	
 	def player_init(self):
@@ -259,7 +259,7 @@ class christine(gtk_misc):
 
 
 	def set_location(self,filename):
-		print "christine set_location:",filename,os.path.exists(filename)
+		#print "christine set_location:",filename,os.path.exists(filename)
 		self.STATE_PLAYING = False
 		self.player.stop()
 		self.current_iter = None
@@ -268,7 +268,8 @@ class christine(gtk_misc):
 			pix = self.gtk_misc.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 			self.natural_model.set(self.current_iter,PIX,pix)
-			
+		
+		self.current_iter = None
 		self.natural_model.foreach(self.search_by_path,filename)
 		if self.current_iter != None:
 			count = self.natural_model.get_value(self.current_iter,PLAY_COUNT)
@@ -336,7 +337,7 @@ class christine(gtk_misc):
 			self.toggle_small_view(self.small_view_menuitem)
 	
 	def toggle_full_screen(self,widget=None):
-		if not self.IS_FULLSCREEN:
+		if not self.IS_FULLSCREEN and self.player.isvideo():
 			self.videobox.hide()
 			self.main_viewer_place.remove(self.player)
 			#self.player.unparent()
@@ -347,24 +348,26 @@ class christine(gtk_misc):
 			self.window.fullscreen()
 			self.IS_FULLSCREEN = True
 		else:
+			if not self.player.isvideo():
+				self.player.hide()
 			self.window.unfullscreen()
 			self.tmp_vbox.hide()
 			self.tmp_vbox.remove(self.player)
 			self.set_player_for_first_time()
 			self.miniviewer_tcontainer.show()
 			self.menubar.show()
-			self.videobox.show_all()
+			self.videobox.show()
 			self.IS_FULLSCREEN = False
 			
 	def on_main_window_event(self,player,event):
 		if event.type == gtk.gdk.KEY_PRESS:
 			if event.keyval == 103:
 				self.show_hide_playbuttons()
-				return True
+				#return True
 			elif event.keyval == 65366:
 				if self.IS_FULLSCREEN:
 					self.go_next()
-					return True
+				#	return True
 			elif event.keyval == 65365:
 				if self.IS_FULLSCREEN:
 					self.go_prev()
@@ -372,7 +375,7 @@ class christine(gtk_misc):
 			elif event.keyval == 102:
 				if self.IS_FULLSCREEN:
 					self.toggle_full_screen()
-					return True
+				#	return True
 			
 	def show_hide_playbuttons(self,widget=None):
 		if not self.IS_FULLSCREEN:
@@ -629,12 +632,10 @@ class christine(gtk_misc):
 	
 	def on_scale_value_changed(self,scale,a,value=None):
 		value = self.scale_value
-		#print "value=",value
 		self.moving_scale = False
-		if value == 0:
-			value = 1
+		if value < 0:
+			value = 0
 		self.player.seek_to(value)
-		#print self.moving_scale
 		
 	def set_scale_value(self,scale,a,b):
 		self.moving_scale = True
@@ -642,7 +643,6 @@ class christine(gtk_misc):
 		self.moving_scale = False
 	
 	def set_scale_to_value(self,value):
-		#print self.moving_scale,value
 		if not self.moving_scale:
 			try:
 				self.scale.set_value(value)
@@ -958,17 +958,16 @@ class christine(gtk_misc):
 			
 #===============player section begins===========
 	def error_handler(self,a,b,c=None,d=None):
-		#print b,dir (b),
 		t = b.type
 		#print dir (b),"\n"
 		#print t
-		#if t == gst.MESSAGE_ERROR:
-		#	print "An error has ocurred"
-		#	print dir (b)
-		#	print b.parse_error()
-		#	error("".join([k for k in b.parse_error()[1]]))
-		#	print b.structure["debug"]
-		#	print b.src
+		if t == gst.MESSAGE_ERROR:
+			print "An error has ocurred"
+			print dir (b)
+			print b.parse_error()
+			error("".join([k for k in b.parse_error()[1]]))
+			print b.structure["debug"]
+			print b.src
 		if t == gst.MESSAGE_EOS:
 			print "self.error_handler: eos"
 			#self.player.pause()
@@ -1082,11 +1081,9 @@ class christine(gtk_misc):
 
 	def main_quit(self,widget=None):
 		self.player.stop()
-		#gst.main_quit()
 		gtk.main_quit()
 		
 	def main(self):
-		#gst.main()
 		gtk.main()
 
 

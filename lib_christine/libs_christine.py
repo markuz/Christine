@@ -289,6 +289,8 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 				gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
 
 	def isvideo(self):
+		if self.get_location() == None:
+			return False
 		ext = self.get_location().split(".").pop().lower()
 		if "video-codec" in self.tags.keys() or \
 			ext in video:
@@ -298,6 +300,8 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		#return self.discoverer.is_video
 		
 	def issound(self):
+		if self.get_location() == None:
+			return False
 		ext = self.get_location().split(".").pop().lower()
 		if "audio-codec" in self.tags.keys() or \
 				ext in sound:
