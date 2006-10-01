@@ -18,7 +18,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-import gnome,gst,gtk,gst.interfaces,random,sys,bonobo
+import pygst; pygst.require("0.10")
+import gnome,gtk,gst.interfaces,random,sys,bonobo
 import egg.trayicon
 from gnome import ui
 from lib_christine.libs_christine import *
@@ -1051,18 +1052,18 @@ class christine(gtk_misc):
 		self.title_label.set_markup("<big>%s</big>"%title)
 		self.window.set_title("%s - Christine"%title)
 		
-		notify_text = title
+		notify_text = "<big>%s</big>"%title
 		
 		if artist != "":
 			self.artist_button.set_label(artist)
-			notify_text += "by %s"%artist
+			notify_text += " by <big>%s</big>"%artist
 			self.artist_box.show_all()
 		else:
 			self.artist_box.hide()
 		if album != "":
 			self.album_button.set_label(album)
 			self.album_box.show_all()
-			notify_text += "from %s"%album
+			notify_text += " from <big>%s</big>"%album
 		else:
 			self.album_box.hide()
 		if self.current_iter != None:

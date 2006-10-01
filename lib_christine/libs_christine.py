@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
+import pygst; pygst.require("0.10")
 import os,gtk,gobject
 import cPickle as pickle
 import gst
