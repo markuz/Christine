@@ -117,21 +117,23 @@ class library(gtk_misc):
 		tv = self.tv
 		tvc = gtk.TreeViewColumn
 		
-		pix = gtk.CellRendererPixbuf()
-		icon = tvc("",pix,pixbuf=PIX)
-		#icon.set_sort_column_id(TYPE)
-		tv.append_column(icon)
-		
 		tn = tvc("Track",render,text=TN)
 		tn.set_sort_column_id(TN)
 		tn.set_visible(self.gconf.get_bool("ui/show_tn"))
 		tv.append_column(tn)
 	
-		name = tvc("Title",render,text=NAME)
+		pix = gtk.CellRendererPixbuf()
+		name = tvc("Title")
 		name.set_sort_column_id(NAME)
 		name.set_resizable(True)
 		name.set_fixed_width(150)
+		name.pack_start(pix)
+		rtext = gtk.CellRendererText()
+		name.pack_start(rtext,True)
+		name.add_attribute(pix,"pixbuf",PIX)
+		name.add_attribute(rtext,"text",NAME)
 		tv.append_column(name)
+		
 
 		artist = tvc("Artist",render,text=ARTIST)
 		artist.set_sort_column_id(ARTIST)
