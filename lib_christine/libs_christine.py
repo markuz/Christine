@@ -181,7 +181,10 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 			#print "set_location is done"
 		else:
 			#print file
-			error("file %s not found"%os.path.split(file)[1])
+			if file.split(":")[0] == "http":
+				self.playbin.set_property("uri",file)
+			else:
+				error("file %s not found"%os.path.split(file)[1])
 		#print "set_location check:",self.playbin.get_property("uri")
 		self.get_type()
 		self.expose_cb()
@@ -252,7 +255,10 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def get_location(self):
 		path = self.playbin.get_property("uri")
 		if path != None:
-			path = path[7:]
+			if path.split(":") == "file":
+				path = path[7:]
+			else:
+				return path
 		else:
 			path = None
 		#print "player.get_location:",path

@@ -19,6 +19,7 @@
 
 
 import gnome,gst,gtk,gst.interfaces,random,sys,bonobo
+import egg.trayicon
 from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
@@ -38,6 +39,7 @@ CONTROL_NONE) = range(4)
 class christine(gtk_misc):
 	def __init__(self):
 		gtk_misc.__init__(self)
+		self.trayicon()
 		gnomeprogram		= gnome.program_init("christine","0.0.1")
 		self.gtk_misc		= gtk_misc()
 		client				= ui.master_client()
@@ -492,7 +494,7 @@ class christine(gtk_misc):
 			
 
 	
-	def play(self):
+	def play(self,widget=None):
 		print "play:",self.STATE_PLAYING
 		if not self.STATE_PLAYING:
 			location = self.player.get_location()
@@ -1000,6 +1002,8 @@ class christine(gtk_misc):
 		return True
 	
 	def stream_length(self):
+		if self.player.get_location().split(":")[0] == "http":
+			return True
 		try:
 			self.total = self.player.query_duration(gst.FORMAT_TIME)[0]
 			print "stream_length:",self.total
@@ -1070,6 +1074,16 @@ class christine(gtk_misc):
 	
 #===============player section ends ===========
 	
+	def open_remote(self,widget):
+		xml = glade_xml("open_remote.glade")
+		dialog = xml["dialog"]
+		entry = xml["entry"]
+		response = dialog.run()
+		if response == gtk.RESPONSE_OK:
+			self.set_location(entry.get_text())
+			self.play()
+		dialog.destroy()
+	
 	def show_about(self,widget):
 		about()
 			
@@ -1081,6 +1095,28 @@ class christine(gtk_misc):
 		model, iter = selected.get_selected()
 		if iter != None:
 			show_properties(model.get_value(iter,PATH))
+	
+	def trayicon(self):
+		tray_icon = egg.trayicon.TrayIcon("Christine")
+		size = gtk.ICON_SIZE_SMALL_TOOLBAR
+		file_name = "/usr/share/christine/gui/pixmaps/logo.png"
+		icon = gtk.IconSet( gtk.gdk.pixbuf_new_from_file(file_name) )
+		event_box = gtk.EventBox()
+		a = event_box.set_events(gtk.gdk.POINTER_MOTION_MASK)
+		event_box.add( gtk.image_new_from_icon_set(icon, size) )
+		event_box.connect("button_press_event", self.show_tray_menu)
+		tray_icon.add(event_box)
+		tray_icon.show_all()
+	
+	def show_tray_menu(self,widget,event):
+		if event.button == 1:
+			xml = glade_xml("tray_menu.glade")
+			xml.signal_autoconnect(self)
+			popup = xml["menu"]
+			popup.popup(None,None,None,3,gtk.get_current_event_time())
+			popup.show_all()
+
+			
 
 	def main_quit(self,widget=None):
 		self.player.stop()

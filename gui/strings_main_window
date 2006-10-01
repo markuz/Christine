@@ -12,6 +12,7 @@ gchar *s = N_("Add a complete folder to the list");
 gchar *s = N_("Import Folder");
 gchar *s = N_("Import a file to the queue without add it to the list");
 gchar *s = N_("Import to queue");
+gchar *s = N_("Open remote");
 gchar *s = N_("Jump to some second on the song");
 gchar *s = N_("Jump _to");
 gchar *s = N_("_Jump to playing");
