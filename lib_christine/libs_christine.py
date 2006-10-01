@@ -255,7 +255,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def get_location(self):
 		path = self.playbin.get_property("uri")
 		if path != None:
-			if path.split(":") == "file":
+			if path.split(":")[0] == "file":
 				path = path[7:]
 			else:
 				return path
