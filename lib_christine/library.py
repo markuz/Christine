@@ -60,6 +60,7 @@ class library(gtk_misc):
 	
 	def gen_model(self,refresh=False):
 		print "lib_library.gen_model"
+		self.tv.freeze_child_notify()
 		if not refresh:
 			s = gobject.TYPE_STRING
 			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
@@ -111,6 +112,7 @@ class library(gtk_misc):
 					PLAY_COUNT,sounds[i]["play_count"])
 			#self.model.foreach(self.get_last_iter)
 			#self.iters.append([self.last_iter,i])
+		self.tv.freeze_child_notify()
 
 	def add_columns(self):
 		render = gtk.CellRendererText()
