@@ -30,6 +30,16 @@ from lib_christine.about import *
 
 print bonobo.activate()
 
+try:
+	import pynotify
+	pynotify.Urgency(0)
+	pynotify.init("christine")
+	PYNOTIFY = True
+except ImportError:
+	print "no pynotify available"
+	PYNOTIFY = False
+
+
 
 (CONTROL_SHUFFLE,
 CONTROL_REPEAT,
@@ -1040,14 +1050,19 @@ class christine(gtk_misc):
 		title = title.replace("&","&amp;")
 		self.title_label.set_markup("<big>%s</big>"%title)
 		self.window.set_title("%s - Christine"%title)
+		
+		notify_text = title
+		
 		if artist != "":
 			self.artist_button.set_label(artist)
+			notify_text += "by %s"%artist
 			self.artist_box.show_all()
 		else:
 			self.artist_box.hide()
 		if album != "":
 			self.album_button.set_label(album)
 			self.album_box.show_all()
+			notify_text += "from %s"%album
 		else:
 			self.album_box.hide()
 		if self.current_iter != None:
@@ -1059,6 +1074,12 @@ class christine(gtk_misc):
 						ARTIST,artist,
 						TN,track_number,
 						SEARCH,".".join([title,artist,album]))
+		if PYNOTIFY:
+			notify = pynotify.Notification(notify_text)
+			pixbuf = self.gen_pixbuf("logo.png")
+			notify.set_icon_from_pixbuf(pixbuf)
+			notify.show()
+
 		self.library.save()
 
 		t = self.player.type
