@@ -98,8 +98,8 @@ class christine_gconf:
 						"ui/show_play_count":True,
 						"ui/show_tn":True,
 						"ui/show_type":True}
-		self.string_keys = {"backend/audiosink":"esdsink",
-						"backend/videosink":"xvimagesink",
+		self.string_keys = {"backend/audiosink":"autoaudiosink",
+						"backend/videosink":"ximagesink",
 						"backend/video-aspect-ratio":"1/1",
 						"backend/vis-plugin":"goom"}
 		self.gconf = gconf.client_get_default()
