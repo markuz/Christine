@@ -16,7 +16,9 @@ scripts_DATA=__init__.py \
 	properties.glade \
 	treeview.glade \
 	treeview_reorderable.glade \
-	tray_menu.glade
+	tray_menu.glade \
+	open_remote.glade
+
 
 DISTFILES= Makefile.in $(scripts_DATA)
 
