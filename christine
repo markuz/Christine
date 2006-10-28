@@ -93,6 +93,7 @@ class christine(gtk_misc):
 		widget.hide()
 	
 	def win(self):
+
 		self.tmp_vbox = self.xml["tmp_vbox"]
 		self.menubar = self.xml["menubar"]
 		self.window = self.xml["main_window"]
@@ -421,7 +422,9 @@ class christine(gtk_misc):
 			self.lartist = model.get_value(iter,1)
 		else:
 			self.lartist = ""
+		self.library.tv.freeze_child_notify()
 		self.filter_model.refilter()
+		self.library.tv.thaw_child_notify()
 		
 	def clear_search_entry(self,widget):
 		self.search_box.set_text("")
@@ -576,18 +579,26 @@ class christine(gtk_misc):
 				self.paths_in_list = []
 				self.model.foreach(self.get_max_elements)
 				iter = int(len(self.elements)*random.random())
-				filename = self.model.get_value(self.elements[iter],
-						PATH)
-				if self.last_played != self.paths_in_list and (not filename in self.last_played or \
+				#print PATH
+				filename = self.model.get_value(self.elements[iter],PATH)
+				#if self.last_played != self.paths_in_list and (not filename in self.last_played or \
+				if (not filename in self.last_played or \
 					self.gconf.get_bool("control/repeat")):
 						self.set_location(filename)
 						#self.current_iter = self.elements[iter]
 						self.play_button.set_active(False)
 						self.play_button.set_active(True)
+						print "self.go_next1: play"
 				else:
-					self.set_scale_value("","",b=0)
-					self.set_location(filename)
+					#print "self.go_next1: stop"
+					#print locals(),"\nlast_played:",self.last_played,"\ncontrol/repeat:",self.gconf.get_bool("control/repeat"),"\n"
+					#self.set_scale_value("","",b=0)
+					#self.set_location(filename)
+					#self.play_button.set_active(False)
+					self.get_next_in_list()
 					self.play_button.set_active(False)
+					self.play_button.set_active(True)
+
 					
 			else:
 				self.get_next_in_list()
@@ -637,11 +648,15 @@ class christine(gtk_misc):
 	#	filename = model.get_value(iter,PATH)
 	
 	def search_by_path(self,model,path,iter,location):
+		iter = model.get_iter(path)
 		mlocation = model.get_value(iter,PATH)
+		#print model,iter,path
 		if mlocation == location:
 			self.current_iter = iter
+			return True
 			
 	def get_max_elements(self,model,path,iter):
+		iter = model.get_iter(path)
 		self.elements.append(iter)
 		self.paths_in_list.append(model.get_value(iter,PATH))
 		
@@ -674,6 +689,7 @@ class christine(gtk_misc):
 		self.current_iter = None
 		self.model.foreach(self.search_by_path,location)
 		if self.current_iter != None:
+			print self.current_iter
 			state = self.STATE_PLAYING
 			if self.STATE_PLAYING:
 				iter = self.get_natural_iter(self.current_iter)
@@ -812,25 +828,25 @@ class christine(gtk_misc):
 		for i in video:
 			v.append("*"+i)
 			v.append("*"+i.upper())
-		filter = gtk.FileFilter()
-		filter.set_name("All media files")
-		for i in [s,v]:
-			for i in i:
-				filter.add_pattern(i)
-		print s,v
-		fs.add_filter(filter)
+		#filter = gtk.FileFilter()
+		#filter.set_name("All media files")
+		#for i in [s,v]:
+		#	for i in i:
+		#		filter.add_pattern(i)
+		#print s,v
+		#fs.add_filter(filter)
 
-		filter = gtk.FileFilter()
-		filter.set_name("Sound files")
-		for i in s:
-			filter.add_pattern(i)
-		fs.add_filter(filter)
+		#filter = gtk.FileFilter()
+		#filter.set_name("Sound files")
+		#for i in s:
+		#	filter.add_pattern(i)
+		#fs.add_filter(filter)
 
-		filter1 = gtk.FileFilter()
-		filter1.set_name("Video files")
-		for i in v:
-			filter1.add_pattern(i)
-		fs.add_filter(filter1)
+		#filter1 = gtk.FileFilter()
+		#filter1.set_name("Video files")
+		#for i in v:
+		#	filter1.add_pattern(i)
+		#fs.add_filter(filter1)
 		response = fs.run()
 		files = fs.get_filenames()
 		fs.destroy()
@@ -989,7 +1005,7 @@ class christine(gtk_misc):
 			#self.player.pause()
 			self.go_next()
 		elif t == gst.MESSAGE_DURATION:
-			print b.parse_duration()
+			print "message: parse_duration():",b.parse_duration()
 		elif t == gst.MESSAGE_TAG:
 			print "gst.MESSAGE_TAG"
 			self.player.found_tag_cb(b.parse_tag())
@@ -1017,14 +1033,19 @@ class christine(gtk_misc):
 			return True
 		try:
 			self.total = self.player.query_duration(gst.FORMAT_TIME)[0]
-			print "stream_length:",self.total
+			#print "stream_length:",self.total
 			ts = self.total/gst.SECOND
-			self.stream_length_label.set_text("%02d:%02d"%divmod(ts,60))
+			text = "%02d:%02d"%divmod(ts,60)
+			self.stream_length_label.set_text(text)
 			ad = gtk.Adjustment(value=0,lower=0,upper=ts)
 			self.scale.set_adjustment(ad)
 			self.stream_error_count = 0
+			self.current_iter = None
+			self.natural_model.foreach(self.search_by_path,self.player.get_location())
+			if self.current_iter != None:
+				self.natural_model.set(self.current_iter,TIME,text)
 			return False
-		except:
+		except gst.QueryError:
 			self.stream_error_count += 1
 			if self.stream_error_count > 10:
 				l = self.player.get_location()
@@ -1076,10 +1097,18 @@ class christine(gtk_misc):
 						TN,track_number,
 						SEARCH,".".join([title,artist,album]))
 		if PYNOTIFY:
-			notify = pynotify.Notification(notify_text)
+			try:
+				self.notify.close()
+			except:
+				pass
+			self.notify = pynotify.Notification("christine")
+			self.notify.attach_to_widget(self.tray_icon)
+			self.notify.set_timeout(3000)
+
 			pixbuf = self.gen_pixbuf("logo.png")
-			notify.set_icon_from_pixbuf(pixbuf)
-			notify.show()
+			#self.notify.update(notify_text,"asdfasdfad")
+			self.notify.set_property("body",notify_text)
+			self.notify.show()
 
 		self.library.save()
 
@@ -1119,7 +1148,7 @@ class christine(gtk_misc):
 			show_properties(model.get_value(iter,PATH))
 	
 	def trayicon(self):
-		tray_icon = egg.trayicon.TrayIcon("Christine")
+		self.tray_icon = egg.trayicon.TrayIcon("Christine")
 		size = gtk.ICON_SIZE_SMALL_TOOLBAR
 		file_name = "/usr/share/christine/gui/pixmaps/logo.png"
 		icon = gtk.IconSet( gtk.gdk.pixbuf_new_from_file(file_name) )
@@ -1127,16 +1156,20 @@ class christine(gtk_misc):
 		a = event_box.set_events(gtk.gdk.POINTER_MOTION_MASK)
 		event_box.add( gtk.image_new_from_icon_set(icon, size) )
 		event_box.connect("button_press_event", self.show_tray_menu)
-		tray_icon.add(event_box)
-		tray_icon.show_all()
+		self.tray_icon.add(event_box)
+		self.tray_icon.show_all()
 	
 	def show_tray_menu(self,widget,event):
-		if event.button == 1:
+		if event.button == 3:
 			xml = glade_xml("tray_menu.glade")
 			xml.signal_autoconnect(self)
 			popup = xml["menu"]
 			popup.popup(None,None,None,3,gtk.get_current_event_time())
 			popup.show_all()
+		elif event.button == 1:
+			print "showing the windows"
+			self.window.hide()
+			self.window.show()
 
 			
 

@@ -31,7 +31,8 @@ ALBUM,
 ARTIST,
 TN,
 SEARCH,
-PLAY_COUNT)=range(9)
+PLAY_COUNT,
+TIME)=range(10)
 
 (VPATH,
 VNAME,
@@ -56,6 +57,7 @@ class library(gtk_misc):
 		self.tv.set_model(sort)
 		self.add_columns()
 		self.set_drag_n_drop()
+		gobject.timeout_add(500,self.stream_length)
 		
 	
 	def gen_model(self,refresh=False):
@@ -64,7 +66,7 @@ class library(gtk_misc):
 		if not refresh:
 			s = gobject.TYPE_STRING
 			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
-					s,s,s,s,int)
+					s,s,s,s,int,s)
 		else:
 			self.model.clear()
 		sounds = self.library_lib.get_sounds()
@@ -100,6 +102,9 @@ class library(gtk_misc):
 			if not sounds[i].has_key("play_count"):
 				sounds[i]["play_count"] = 0
 
+			if not sounds[i].has_key("duration"):
+				sounds[i]["duration"] = "00:00"
+
 			self.model.set(self.model.append(),
 					NAME,name,
 					PATH,i,
@@ -109,7 +114,8 @@ class library(gtk_misc):
 					ARTIST,artist,
 					TN,str(sounds[i]["track_number"]),
 					SEARCH,",".join([name,album,artist]),
-					PLAY_COUNT,sounds[i]["play_count"])
+					PLAY_COUNT,sounds[i]["play_count"],
+					TIME,sounds[i]["duration"])
 			#self.model.foreach(self.get_last_iter)
 			#self.iters.append([self.last_iter,i])
 		self.tv.freeze_child_notify()
@@ -129,7 +135,7 @@ class library(gtk_misc):
 		name.set_sort_column_id(NAME)
 		name.set_resizable(True)
 		name.set_fixed_width(150)
-		name.pack_start(pix)
+		name.pack_start(pix,False)
 		rtext = gtk.CellRendererText()
 		name.pack_start(rtext,True)
 		name.add_attribute(pix,"pixbuf",PIX)
@@ -161,11 +167,18 @@ class library(gtk_misc):
 		play.set_visible(self.gconf.get_bool("ui/show_play_count"))
 		tv.append_column(play)
 
+		length = tvc("Duration",render,text=TIME)
+		length.set_sort_column_id(TIME)
+		length.set_resizable(True)
+		length.set_visible(self.gconf.get_bool("ui/duration"))
+		tv.append_column(length)
+
 		self.gconf.notify_add("/apps/christine/ui/show_artist",self.gconf.toggle_visible,artist)
 		self.gconf.notify_add("/apps/christine/ui/show_album",self.gconf.toggle_visible,album)
 		self.gconf.notify_add("/apps/christine/ui/show_type",self.gconf.toggle_visible,type)
 		self.gconf.notify_add("/apps/christine/ui/show_tn",self.gconf.toggle_visible,tn)
 		self.gconf.notify_add("/apps/christine/ui/show_play_count",self.gconf.toggle_visible,play)
+		self.gconf.notify_add("/apps/christine/ui/duration",self.gconf.toggle_visible,length)
 		self.discoverer = discoverer()
 		self.discoverer.bus.add_watch(self.message_handler)
 
@@ -213,6 +226,20 @@ class library(gtk_misc):
 						SEARCH,",".join([name,album,artist]),
 						PLAY_COUNT,0)
 		return True
+
+	def stream_length(self,widget=None):
+		d = self.discoverer
+		try: 
+			if d.get_location().split(":")[0] == "http":
+				return True
+			total = d.query_duration(gst.FORMAT_TIME)[0]
+			ts = self.total/gst.SECOND
+			text = "%02d:%02d"%divmod(ts,60)
+			self.model.set(self.iters[d.get_location()],
+					TIME,text)
+			return False
+		except:
+			return True
 
 	def add1(self,file,prepend=False):
 		name   = ""
@@ -270,11 +297,12 @@ class library(gtk_misc):
 		
 		
 	def prepare_for_disk(self,model,path,iter):
-		name,artist,album,track_number,path,type,pc = model.get(iter,NAME,ARTIST,ALBUM,TN,PATH,TYPE,PLAY_COUNT)
+		name,artist,album,track_number,path,type,pc,duration = model.get(iter,NAME,ARTIST,ALBUM,TN,PATH,TYPE,PLAY_COUNT,TIME)
 		self.library_lib.append(path,{"name":name,
 				"type":type,"artist":artist,
 				"album":album,"track_number":track_number,
-				"play_count":pc})
+				"play_count":pc,
+				"duration":duration})
 		
 	def item_activated(self,widget,path,iter):
 		model = widget.get_model()
@@ -423,7 +451,7 @@ class queue(gtk_misc):
 		icon = gtk.TreeViewColumn("",pix,pixbuf=PIX)
 		icon.set_sort_column_id(TYPE)
 		#tv.append_column(icon)
-		name = gtk.TreeViewColumn("Title",render,markup=NAME)
+		name = gtk.TreeViewColumn("Queue",render,markup=NAME)
 		name.set_sort_column_id(NAME)
 		tv.append_column(name)
 
