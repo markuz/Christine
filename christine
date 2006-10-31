@@ -29,7 +29,7 @@ from lib_christine.preferences import *
 from lib_christine.show_properties import *
 from lib_christine.about import *
 
-print bonobo.activate()
+bonobo.activate()
 
 try:
 	import pynotify
@@ -50,7 +50,6 @@ CONTROL_NONE) = range(4)
 class christine(gtk_misc):
 	def __init__(self):
 		gtk_misc.__init__(self)
-		self.trayicon()
 		gnomeprogram		= gnome.program_init("christine","0.0.1")
 		self.gtk_misc		= gtk_misc()
 		client				= ui.master_client()
@@ -63,13 +62,13 @@ class christine(gtk_misc):
 		self.IS_FULLSCREEN = False
 		self.SHOW_BUTTONS = False
 		self.last_played = []
-		#self.player = player(self)
 		self.player = play10(self)
 		self.stream_error_count = 0
 		self.win()
 		self.player_init()
 		gobject.timeout_add(200,self.on_tick)
 		self.set_location_count = 0
+		self.trayicon()
 	
 	def player_init(self):
 		#self.player.play.connect("stream-length",self.stream_length)
@@ -423,17 +422,16 @@ class christine(gtk_misc):
 		else:
 			self.lartist = ""
 		self.library.tv.freeze_child_notify()
-		self.filter_model.refilter()
+		self.search_text = self.search_box.get_text().lower()
+		gobject.timeout_add(10,self.filter_model.refilter)
 		self.library.tv.thaw_child_notify()
 		
 	def clear_search_entry(self,widget):
 		self.search_box.set_text("")
 
 	def filter(self,model,iter):
-		text = self.search_box.get_text().lower()
-		value	= model.get_value(iter,SEARCH)
-		album	= model.get_value(iter,ALBUM)
-		artist	= model.get_value(iter,ARTIST)
+		text = self.search_text
+		value,album,artist	= model.get(iter,SEARCH,ALBUM,ARTIST)
 		lalbum  = self.lalbum
 		lartist = self.lartist
 		try:
@@ -441,49 +439,53 @@ class christine(gtk_misc):
 		except:
 			value = ""
 			
-		if lartist == "All Artists" and lalbum == "All Albums" \
-				and text =="":
-			return True
+		#if lartist == "All Artists" and lalbum == "All Albums" \
+		#		and text =="":
+		#	return True
 
+		if value.find(text) >=0 or text =="":
+			return True
+		else: 
+			return False
 		#if lalbum == "All Albums" and artist == lartist:
 		#	boolalbum = True
 		#else:
 		#	boolalbum = False
 		
-		lallowed = [album]
-		aallowed = [artist]
+		#lallowed = [album]
+		#aallowed = [artist]
 		
-		if lalbum == "All Albums":
-			lallowed.append("All Albums")
-		if lartist == "All Artist":
-			aallowed.append("All Artist")
-
-		if lalbum in lallowed:
-			boolalbum = True
-		else:
+		#if lalbum == "All Albums":
+		#	lallowed.append("All Albums")
+		#if lartist == "All Artist":
+		#	aallowed.append("All Artist")
+		#
+		#if lalbum in lallowed:
+		#	boolalbum = True
+		#else:
 			#print album,lalbum
-			boolalbum = False
+		#	boolalbum = False
 		
-		if lartist in aallowed:
-			boolartist = True
-		else:
+		#if lartist in aallowed:
+		#	boolartist = True
+		#else:
 			#print artist,lartist
-			boolartist = False
+		#	boolartist = False
 			
-		if value.find(text) >= 0 and (boolartist or boolalbum):
+		#if value.find(text) >= 0 and (boolartist or boolalbum):
 			#print "1"
-			allow = True
-		elif text =="":
-			if boolartist and album==lalbum:
+		#	allow = True
+		#elif text =="":
+		#	if boolartist and album==lalbum:
 			#	print "2"
-				allow = True
-			else:
-			#	print "3"
-				allow = False
-		else:
+		#		allow = True
+		#	else:
+		#	#	print "3"
+		#		allow = False
+		#else:
 			#print "4",lartist,lalbum,text,boolartist,boolalbum
-			allow = False
-		return allow
+		#	allow = False
+		#return allow
 		
 	def toggle_browser(self,widget):
 		if widget.get_active():
@@ -934,7 +936,7 @@ class christine(gtk_misc):
 		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(450,self.add_file,inc,queue)
+		gobject.timeout_add(1000,self.add_file,inc,queue)
 		self.add_win.run()
 			#self.path_exists = False
 			#self.model.foreach(self.exists,i)
@@ -1110,7 +1112,7 @@ class christine(gtk_misc):
 			self.notify.set_property("body",notify_text)
 			self.notify.show()
 
-		self.library.save()
+		gobject.timeout_add(500,self.library.save)
 
 		t = self.player.type
 	

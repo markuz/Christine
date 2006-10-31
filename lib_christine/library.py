@@ -80,24 +80,22 @@ class library(gtk_misc):
 		for i in keys:
 			pix = self.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-			#print sounds[i]
-			if len (sounds[i]["name"]) > limit:
-				name = sounds[i]["name"][:limit-3]+"..."
-				name = sounds[i]["name"]
-			else:
-				name = sounds[i]["name"]
-				
-			if len(sounds[i]["artist"]) > limit:
-				artist = sounds[i]["artist"][:limit-3]+"..."
-				artist = sounds[i]["artist"]
-			else:
-				artist = sounds[i]["artist"]
-				
-			if len(sounds[i]["album"]) > limit:
-				album = sounds[i]["album"][:limit-3]+"..."
-				album = sounds[i]["album"]
-			else:
-				album = sounds[i]["album"]
+			#if len (sounds[i]["name"]) > limit:
+			#	name = sounds[i]["name"][:limit-3]+"..."
+			#	name = sounds[i]["name"]
+			#else:
+			name = sounds[i]["name"]
+			#if len(sounds[i]["artist"]) > limit:
+			#	artist = sounds[i]["artist"][:limit-3]+"..."
+			#	artist = sounds[i]["artist"]
+			#else:
+			artist = sounds[i]["artist"]
+			#	
+			#if len(sounds[i]["album"]) > limit:
+			#	album = sounds[i]["album"][:limit-3]+"..."
+			album = sounds[i]["album"]
+			#else:
+			#	album = sounds[i]["album"]
 			
 			if not sounds[i].has_key("play_count"):
 				sounds[i]["play_count"] = 0
@@ -116,8 +114,6 @@ class library(gtk_misc):
 					SEARCH,",".join([name,album,artist]),
 					PLAY_COUNT,sounds[i]["play_count"],
 					TIME,sounds[i]["duration"])
-			#self.model.foreach(self.get_last_iter)
-			#self.iters.append([self.last_iter,i])
 		self.tv.freeze_child_notify()
 
 	def add_columns(self):
@@ -134,7 +130,8 @@ class library(gtk_misc):
 		name = tvc("Title")
 		name.set_sort_column_id(NAME)
 		name.set_resizable(True)
-		name.set_fixed_width(150)
+		name.set_fixed_width(250)
+		name.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
 		name.pack_start(pix,False)
 		rtext = gtk.CellRendererText()
 		name.pack_start(rtext,True)
@@ -146,12 +143,16 @@ class library(gtk_misc):
 		artist = tvc("Artist",render,text=ARTIST)
 		artist.set_sort_column_id(ARTIST)
 		artist.set_resizable(True)
+		artist.set_fixed_width(150)
+		artist.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
 		artist.set_visible(self.gconf.get_bool("ui/show_artist"))
 		tv.append_column(artist)
 		
 		album = tvc("Album",render,text=ALBUM)
 		album.set_sort_column_id(ALBUM)
 		album.set_resizable(True)
+		album.set_fixed_width(150)
+		album.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
 		album.set_visible(self.gconf.get_bool("ui/show_album"))
 		tv.append_column(album)
 		
@@ -184,6 +185,7 @@ class library(gtk_misc):
 
 	def add(self,file,prepend=False):
 		self.discoverer.set_location(file)
+		gobject.timeout_add(100,self.stream_length)
 		model = self.model
 		if prepend:
 			iter = model.prepend()
