@@ -182,7 +182,7 @@ class library(gtk_misc):
 		play.set_visible(self.gconf.get_bool("ui/show_play_count"))
 		tv.append_column(play)
 
-		length = tvc("Duration",render,text=TIME)
+		length = tvc("Lenght",render,text=TIME)
 		length.set_sort_column_id(TIME)
 		length.set_resizable(True)
 		length.set_visible(self.gconf.get_bool("ui/duration"))
