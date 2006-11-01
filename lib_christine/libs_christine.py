@@ -29,7 +29,7 @@ from lib_christine.gtk_misc import *
 
 
 
-GST_DELAY = 500
+GST_DELAY = 0
 wdir = os.environ["HOME"]+"/.christine/"
 CHRISTINE_AUDIO_EXT = sound = ["mp3","ogg","wma"]
 CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
@@ -332,6 +332,9 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		self.discoverer.set_property("volume",0.0)
 		#self.discoverer.set_property("delay",0)
 		self.bus = self.discoverer.get_bus()
+		self.query_duration = self.discoverer.query_duration
+		self.query_position = self.discoverer.query_position
+
 	
 
 	def watcher(self,bus,message):

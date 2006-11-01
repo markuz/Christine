@@ -691,7 +691,7 @@ class christine(gtk_misc):
 		self.current_iter = None
 		self.model.foreach(self.search_by_path,location)
 		if self.current_iter != None:
-			print self.current_iter
+			#print self.current_iter
 			state = self.STATE_PLAYING
 			if self.STATE_PLAYING:
 				iter = self.get_natural_iter(self.current_iter)
@@ -930,13 +930,13 @@ class christine(gtk_misc):
 		self.files_to_add = files
 		self.percentaje = 0
 		if len(files)>0:
-			inc = 1.0/len(files)
+			inc = (1.0/len(files))*2
 		else:
 			inc = 1
 		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(1000,self.add_file,inc,queue)
+		gobject.timeout_add(600,self.add_file,inc,queue)
 		self.add_win.run()
 			#self.path_exists = False
 			#self.model.foreach(self.exists,i)
@@ -945,33 +945,46 @@ class christine(gtk_misc):
 			#print self.path_exists
 		
 	def add_file(self,inc,queue=False):
-		print "christine.add_file.queue",queue
+		#print "christine.add_file.queue",queue
 		if self.IMPORTING and len(self.files_to_add)>0:
 			newfile = self.files_to_add.pop()
-			self.percentaje += inc
+			if len(self.files_to_add)>0:
+				newfile2 = self.files_to_add.pop()
+			else:
+				newfile2 = ""
+			if len(self.files_to_add) >0:
+				self.percentaje = 1 - ( len(self.files_to_add)/float(self.total_num_files))
+				print self.percentaje
+			else:
+				self.percentaje = 1
 			if self.percentaje >= 1.0:
 				self.percentaje == 0.99
 			self.add_progress.set_fraction(self.percentaje)
 			rest =self.total_num_files - len(self.files_to_add)
-			self.add_progress.set_text("%02d/%02d"%(rest,self.total_num_files))
+			text = "%02d/%02d"%(rest,self.total_num_files)
+			self.add_progress.set_text(text)
 			self.add_file_label.set_text(os.path.split(newfile)[1])
 			if not queue:
-				if not newfile in self.paths:
+				if not newfile in self.paths and not newfile2 in self.paths:
 					div,mod = divmod(len(self.files_to_add),10)
 					self.library.add(newfile)
+					#print "added:",newfile
+					gobject.timeout_add(250,self.library.add,newfile2)
+					#print "added:",newfile2
 					if mod == 0:
-						print "library save"
+					#	print "library save"
 						self.library.save()
 			else:
-				print "self.queue.add(%s)"%newfile
+				#print "self.queue.add(%s)"%newfile
 				self.queue.add(newfile)
-
 		else:
 			if not queue:
 				print "library save"
 				self.library.save()
 				#self.library.gen_model(True)
 				self.jump_to_playing()
+			self.library.gen_model(True)
+			self.jump_to_playing()
 			self.IMPORTING = False
 		return self.IMPORTING
 

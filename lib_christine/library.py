@@ -20,6 +20,7 @@
 
 import os,gtk,gobject
 import cPickle as pickle
+import gst, gst.interfaces
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 
@@ -58,10 +59,23 @@ class library(gtk_misc):
 		self.add_columns()
 		self.set_drag_n_drop()
 		gobject.timeout_add(500,self.stream_length)
-		
+		self.CURRENT_ITER = self.model.get_iter_first()
+		#gobject.timeout_add(1000,self.update_values)
+	
+	def update_values(self):
+		try:
+			self.CURRENT_ITER = self.model.iter_next(self.CURRENT_ITER)
+			path = self.model.get(self.CURRENT_ITER,PATH)
+			self.discoverer.set_location(path)
+			self.iters[self.discoverer.get_location()] = self.CURRENT_ITER
+			print locals()
+		except:
+			self.CURRENT_ITER = self.model.get_iter_first()
+		print self.discoverer.get_location()
+		return True
 	
 	def gen_model(self,refresh=False):
-		print "lib_library.gen_model"
+		#print "lib_library.gen_model"
 		self.tv.freeze_child_notify()
 		if not refresh:
 			s = gobject.TYPE_STRING
@@ -185,13 +199,19 @@ class library(gtk_misc):
 
 	def add(self,file,prepend=False):
 		self.discoverer.set_location(file)
-		gobject.timeout_add(100,self.stream_length)
+		#gobject.timeout_add(100,self.stream_length)
 		model = self.model
 		if prepend:
 			iter = model.prepend()
 		else:
 			iter = model.append()
+		name = os.path.split(file)[:1]
+		self.model.set(iter,
+				NAME,name,
+				PATH,file)
 		self.iters[file] = iter
+		path = self.model.get_path(iter)
+		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
 
 	def message_handler(self,a,b):
 		d = self.discoverer
@@ -232,16 +252,14 @@ class library(gtk_misc):
 	def stream_length(self,widget=None):
 		d = self.discoverer
 		try: 
-			if d.get_location().split(":")[0] == "http":
-				return True
 			total = d.query_duration(gst.FORMAT_TIME)[0]
 			ts = self.total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
 			self.model.set(self.iters[d.get_location()],
 					TIME,text)
-			return False
-		except:
-			return True
+		except gst.QueryError:
+			self.discoverer.set_location(d.get_location())
+		return True
 
 	def add1(self,file,prepend=False):
 		name   = ""
