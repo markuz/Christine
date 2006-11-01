@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Tue Oct 31 12:18:33 2006
+	Date: Wed Nov  1 00:04:22 2006
 	User: markuz
 	Host: cucusa
 -->
@@ -558,15 +558,11 @@
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                    <property name="shadow_type">GTK_SHADOW_IN</property>
+                    <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
                     <child>
                       <placeholder/>
                     </child>
                   </widget>
-                  <packing>
-                    <property name="resize">False</property>
-                    <property name="shrink">False</property>
-                  </packing>
                 </child>
                 <child>
                   <widget class="GtkHPaned" id="hpaned1">

@@ -1,3 +1,9 @@
+2006-10-31 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* christine: Import files improvement
+	* lib_christine/library.py: Import files improvement.
+	* gui/main_window.glade: Shrink in queue list.
+		- Fixed bug in search box packing method
+		- Browser and View Browser menuitem hided (This will dissappear soon)
 2006-08-29 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* christine: Rewrite the filter method in order to make
 	the browser work. Need more tests. refilter on new artist
