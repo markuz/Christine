@@ -148,7 +148,7 @@ class christine(gtk_misc):
 		self.music_sw.add(self.library.tv)
 		self.videobox = self.xml["videobox"]
 		self.main_viewer_place = self.xml["playerbox"]
-		self.main_viewer_place.hide_all()
+		self.main_viewer_place.show_all()
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
 		self.queue = queue(self)
@@ -174,7 +174,9 @@ class christine(gtk_misc):
 		self.CONTROL_STAT = self.gconf.get_int("control/CONTROL_STAT") -1
 		self.change_control()
 
-		self.toggle_visualization = self.xml["toggle_visualization"]
+		self.menuitem_toggle_visualization = self.xml["toggle_visualization"]
+		self.menuitem_toggle_visualization.set_active(self.gconf.get_bool("ui/visualization"))
+		self.toggle_show_player()
 		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		val = self.gconf.get_bool("ui/small_view")
 		self.small_view_menuitem.set_active(val)
@@ -348,6 +350,7 @@ class christine(gtk_misc):
 	def toggle_visualization(self,widget):
 		self.player.set_visualization_visible(widget.get_active())
 		self.gconf.set_value("ui/visualization",widget.get_active())
+		self.toggle_show_player()
 		if self.small_view_menuitem.get_active() and \
 				not widget.get_active():
 			self.toggle_small_view(self.small_view_menuitem)
@@ -364,7 +367,7 @@ class christine(gtk_misc):
 			self.window.fullscreen()
 			self.IS_FULLSCREEN = True
 		else:
-			if not self.player.isvideo():
+			if not self.player.isvideo() and not self.gconf.get_bool("ui/visualization"):
 				self.player.hide()
 			self.window.unfullscreen()
 			self.tmp_vbox.hide()
@@ -1129,12 +1132,19 @@ class christine(gtk_misc):
 		gobject.timeout_add(500,self.library.save)
 
 		t = self.player.type
+		self.toggle_show_player()
 	
+	def toggle_show_player(self,widget=None):
 		if self.player.isvideo():
 			self.main_viewer_place.show_all()
 		elif self.player.issound():
-			self.main_viewer_place.hide_all()
+			if self.gconf.get_bool("ui/visualization"):
+				self.main_viewer_place.show_all()
+			else:
+				self.main_viewer_place.hide_all()
+
 		else:
+			self.main_viewer_place.hide_all()
 			print "Not to miniviewer"
 
 

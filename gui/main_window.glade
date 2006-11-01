@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Wed Nov  1 00:04:22 2006
+	Date: Wed Nov  1 14:10:44 2006
 	User: markuz
 	Host: cucusa
 -->
@@ -292,7 +292,7 @@
                         <property name="label">Less volume</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="less_volume"/>
-                        <accelerator key="minus" modifiers="" signal="activate"/>
+                        <accelerator key="minus" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
                     </child>
                     <child>
@@ -301,7 +301,7 @@
                         <property name="label">More volume</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="more_volume"/>
-                        <accelerator key="plus" modifiers="" signal="activate"/>
+                        <accelerator key="plus" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
                     </child>
                     <child>
@@ -563,6 +563,9 @@
                       <placeholder/>
                     </child>
                   </widget>
+                  <packing>
+                    <property name="resize">False</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkHPaned" id="hpaned1">

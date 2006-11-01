@@ -165,7 +165,9 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def __connect(self):
 		self.playbin.set_property("video-sink",self.video_sink)
 		self.playbin.set_property("audio-sink",self.audio_sink)
+		self.playbin.set_property("vis-plugin",self.vis_plugin)
 
+	# player10 Set location
 	def set_location(self,file):
 		#print "self.tags={}"
 		self.tags = {}
@@ -221,17 +223,13 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.playbin.seek(nanos)
 		
 	def set_visualization_visible(self,active=False):
+		print "playbin.set_visualization_visible(",active,")"
 		if active:
-			#source =  self.playbin.get_property("source")
-			#print source
-			#if source != None:
-			#	source.link(self.vis_plugin)
-			#	self.vis_plugin.link(source)
 			self.playbin.set_property("vis-plugin",self.vis_plugin)
-			self.show()
+			self.should_show = True
 			self.expose_cb()
 		else:
-			self.playbin.set_property("vis-plugin",None)
+			#self.playbin.set_property("vis-plugin",None)
 			if self.type == "sound":
 				self.hide()
 				
@@ -285,9 +283,12 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		self.video_sink.set_xwindow_id(0L)
 		
 	def expose_cb(self, window=None, event=None):
-		self.video_sink.set_xwindow_id(self.window.xid)
-		if self.should_show:
-			self.show()
+		try:
+			self.video_sink.set_xwindow_id(self.window.xid)
+			if self.should_show:
+				self.show()
+		except:
+			pass
 		
 	
 	def seek_to(self,sec):
