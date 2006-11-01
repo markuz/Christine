@@ -969,17 +969,20 @@ class christine(gtk_misc):
 					div,mod = divmod(len(self.files_to_add),10)
 					self.library.add(newfile)
 					#print "added:",newfile
-					gobject.timeout_add(250,self.library.add,newfile2)
-					#print "added:",newfile2
+					if newfile2 != "":
+						gobject.timeout_add(250,self.library.add,newfile2)
+						#print "added:",newfile2
 					if mod == 0:
 					#	print "library save"
 						self.library.save()
 			else:
 				#print "self.queue.add(%s)"%newfile
 				self.queue.add(newfile)
+				if newfile2 != "":
+					gobject.timeout_add(250,self.queue.add,newfile2)
 		else:
 			if not queue:
-				print "library save",queue
+				#print "library save",queue
 				self.library.save()
 				self.library.gen_model(True)
 				self.jump_to_playing()
