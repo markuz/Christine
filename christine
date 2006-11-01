@@ -979,12 +979,10 @@ class christine(gtk_misc):
 				self.queue.add(newfile)
 		else:
 			if not queue:
-				print "library save"
+				print "library save",queue
 				self.library.save()
-				#self.library.gen_model(True)
+				self.library.gen_model(True)
 				self.jump_to_playing()
-			self.library.gen_model(True)
-			self.jump_to_playing()
 			self.IMPORTING = False
 		return self.IMPORTING
 
