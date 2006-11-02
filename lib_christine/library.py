@@ -135,7 +135,7 @@ class library(gtk_misc):
 		tv = self.tv
 		tvc = gtk.TreeViewColumn
 		
-		tn = tvc("Track",render,text=TN)
+		tn = tvc("T#",render,text=TN)
 		tn.set_sort_column_id(TN)
 		tn.set_visible(self.gconf.get_bool("ui/show_tn"))
 		tv.append_column(tn)

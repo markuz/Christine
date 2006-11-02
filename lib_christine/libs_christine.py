@@ -156,7 +156,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 		if aspect_ratio != None:
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 		vsink			= self.get_string("backend/vis-plugin") 
-		self.vis_plugin = gst.element_factory_make("goom")
+		self.vis_plugin = gst.element_factory_make(vsink)
 
 		self.__connect()
 		self.query_duration = self.playbin.query_duration
@@ -225,7 +225,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def set_visualization_visible(self,active=False):
 		print "playbin.set_visualization_visible(",active,")"
 		if active:
-			self.playbin.set_property("vis-plugin",self.vis_plugin)
+			#self.playbin.set_property("vis-plugin",self.vis_plugin)
 			self.should_show = True
 			self.expose_cb()
 		else:

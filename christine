@@ -54,6 +54,7 @@ class christine(gtk_misc):
 		self.gtk_misc		= gtk_misc()
 		client				= ui.master_client()
 		self.xml			= glade_xml("main_window.glade")
+		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		self.xml.signal_autoconnect(self)
 		self.main_vbox = self.xml["main_vbox"]
 		self.gconf = christine_gconf()
@@ -177,7 +178,6 @@ class christine(gtk_misc):
 		self.menuitem_toggle_visualization = self.xml["toggle_visualization"]
 		self.menuitem_toggle_visualization.set_active(self.gconf.get_bool("ui/visualization"))
 		self.toggle_show_player()
-		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		val = self.gconf.get_bool("ui/small_view")
 		self.small_view_menuitem.set_active(val)
 		self.toggle_small_view(self.small_view_menuitem)
