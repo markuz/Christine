@@ -49,6 +49,11 @@ CONTROL_NONE) = range(4)
 
 class christine(gtk_misc):
 	def __init__(self):
+		'''
+		Constructor, this method will init the gtk_misc parent class,
+		initialize the gnome ui client, create the xml interface descriptor,
+		initialize class variables and create some timeouts calls
+		'''
 		gtk_misc.__init__(self)
 		gnomeprogram		= gnome.program_init("christine","0.0.1")
 		self.gtk_misc		= gtk_misc()
@@ -58,69 +63,87 @@ class christine(gtk_misc):
 		self.xml.signal_autoconnect(self)
 		self.main_vbox = self.xml["main_vbox"]
 		self.gconf = christine_gconf()
-		self.moving_scale	= False
-		self.STATE_PLAYING = False
-		self.IS_FULLSCREEN = False
-		self.SHOW_BUTTONS = False
-		self.last_played = []
-		self.player = play10(self)
+		#Class variables 
+		self.moving_scale		= False
+		self.STATE_PLAYING		= False
+		self.IS_FULLSCREEN		= False
+		self.SHOW_BUTTONS		= False
+		self.last_played		= []
 		self.stream_error_count = 0
-		self.win()
-		self.player_init()
+		self.__player_init() # "Creating the player"
+		self.__win() # "Building" the window.
+		self.__trayicon()
+		# Timeout calls
 		gobject.timeout_add(200,self.on_tick)
 		self.set_location_count = 0
-		self.trayicon()
 	
-	def player_init(self):
-		#self.player.play.connect("stream-length",self.stream_length)
-		#self.player.play.connect("time-tick",self.on_tick)
-		#self.player.play.connect("eos",self.player.pause)
-		#self.player.play.connect("eos",self.go_next)
-		self.set_player_for_first_time()
+	def __player_init(self):
+		'''
+		Initialize the player and packs it into the main_viewer_place
+		'''
+		self.player = play10(self)
+		self.main_viewer_place = self.xml["playerbox"]
+		self.main_viewer_place.pack_start(self.player,True,True,0)
 		self.player.bus.add_watch(self.error_handler)
-		self.filename = ""
 	
-	def miniviewer(self):
-		self.mv_xml = glade_xml("miniviewer.glade")
-		self.mv_xml.signal_autoconnect(self)
-		self.miniviewer_window = self.mv_xml["mv_window"]
-		self.miniviewer_window.set_icon(self.gen_pixbuf("logo.png"))
-		self.miniviewer_window.hide()
-		self.miniviewer_place = self.mv_xml["videobox"]
-		self.miniviewer_tcontainer = self.mv_xml["toolbox_container"]
 
-	def hide_miniviewer(self,widget):
-		widget.hide()
+# This method is no longer in use, Will be deleted soon
+#	def miniviewer(self):
+#		self.mv_xml = glade_xml("miniviewer.glade")
+#		self.mv_xml.signal_autoconnect(self)
+#		self.miniviewer_window = self.mv_xml["mv_window"]
+#		self.miniviewer_window.set_icon(self.gen_pixbuf("logo.png"))
+#		self.miniviewer_window.hide()
+#		self.miniviewer_place = self.mv_xml["videobox"]
+#		self.miniviewer_tcontainer = self.mv_xml["toolbox_container"]
+
+#	def hide_miniviewer(self,widget):
+#		widget.hide()
 	
-	def win(self):
-
+	def __win(self):
+		'''
+		This method calls most of the common used 
+		interface descriptors (widgets) from self.xml.
+		Connects them to a callback (if needed) and 
+		call some other methods to show/hide them.
+		'''
+		# Calling some widget descriptors with no callback
+		# connected "by hand"
 		self.tmp_vbox = self.xml["tmp_vbox"]
 		self.menubar = self.xml["menubar"]
+		self.search_hbox = self.xml["search_hbox"]
+		self.search_box = self.xml["search_box"]
+		# Ends the call to widgets descriptors not connected
+		# by hadn
+
 		self.window = self.xml["main_window"]
-		#bonobo.
 		self.window.set_icon(self.gen_pixbuf("logo.png"))
 		self.play_button	= self.xml["play"]
 		self.play_menuitem = self.xml["play_menuitem"]
+		# Create the library by calling to libs_christine.library
+		# class
 		self.library = library(self)
 		self.treeview = self.library.tv
 		self.treeview.connect("button-press-event",self.pop_menu)
 		self.treeview.connect("key-press-event",self.key_press_handler)
-
-
-		self.search_hbox = self.xml["search_hbox"]
-		self.search_box = self.xml["search_box"]
-		
-		self.browser = self.xml["browser"]
-		self.browser_menuitem = self.xml["browser_menuitem"]
-		self.browser_menuitem.set_active(self.gconf.get_bool("ui/show_browser"))
-
+		# Models in the library are assigned to class variables
 		self.model = self.library.tv.get_model()
 		self.filter_model = self.model.get_model()
 		self.filter_model.set_visible_func(self.filter)
 		self.natural_model = self.filter_model.get_model()
 
 		self.current_iter = self.model.get_iter_first()
-		self.last_iter = []
+		#self.last_iter = []
+
+		#
+		# Browser probrably will be removed from christine
+		# but until we have that solved we create it, 
+		# However, access to it is not allowed from the 
+		# christine GUI.
+		#
+		self.browser = self.xml["browser"]
+		self.browser_menuitem = self.xml["browser_menuitem"]
+		self.browser_menuitem.set_active(self.gconf.get_bool("ui/show_browser"))
 
 		self.artist = mini_lists("Artist","All Artists")
 		self.artist.treeview.set_model(self.artist.model)
@@ -148,7 +171,6 @@ class christine(gtk_misc):
 		self.music_sw = self.xml["music_sw"]
 		self.music_sw.add(self.library.tv)
 		self.videobox = self.xml["videobox"]
-		self.main_viewer_place = self.xml["playerbox"]
 		self.main_viewer_place.show_all()
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
@@ -207,6 +229,7 @@ class christine(gtk_misc):
 
 		self.miniviewer_tcontainer = self.xml["toolbox_container"]
 		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
+	
 
 	def albums_refilter(self,treeview):
 		selection = treeview.get_selection()
@@ -261,8 +284,6 @@ class christine(gtk_misc):
 		else:
 			pass
 	
-	def set_player_for_first_time(self):
-		self.main_viewer_place.pack_start(self.player,True,True,0)
 		
 	def toolbar(self):
 		self.sortb = self.xml["sortb"]
@@ -538,6 +559,23 @@ class christine(gtk_misc):
 			self.set_location(self.last_played.pop())
 			self.play_button.set_active(False)
 			self.play_button.set_active(True)
+		else:
+			self.current_iter = None
+			self.model.foreach(self.search_by_path,self.gconf.get_string("backend/last_played"))
+			print "lat_played:",self.gconf.get_string("backend/last_played")
+			if self.current_iter != None:
+				path = self.model.get_path(self.current_iter)
+				print path
+				if path > 0:
+					path = (path[0] -1,)
+				print path
+				if path[0] > -1:
+					iter = self.model.get_iter(path)
+					location = self.model.get_value(iter,PATH)
+					print location
+					self.player.set_location(location)
+					self.play_button.set_active(False)
+					self.play_button.set_active(True)
 	
 	def toggle_control_none(self,widget):
 		if widget.get_active():
@@ -647,10 +685,6 @@ class christine(gtk_misc):
 				self.set_scale_value("","",b=0)
 				self.set_location(path)
 				self.play_button.set_active(False)
-	
-	#def go_prev(self,widget=None):
-	#	iter = self.last_iter.pop()
-	#	filename = model.get_value(iter,PATH)
 	
 	def search_by_path(self,model,path,iter,location):
 		iter = model.get_iter(path)
@@ -1173,7 +1207,7 @@ class christine(gtk_misc):
 		if iter != None:
 			show_properties(model.get_value(iter,PATH))
 	
-	def trayicon(self):
+	def __trayicon(self):
 		self.tray_icon = egg.trayicon.TrayIcon("Christine")
 		size = gtk.ICON_SIZE_SMALL_TOOLBAR
 		file_name = "/usr/share/christine/gui/pixmaps/logo.png"

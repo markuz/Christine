@@ -43,13 +43,10 @@ class library(gtk_misc):
 	def __init__(self,main):
 		self.iters = {}
 		gtk_misc.__init__(self)
-		#self.player = player(self)
-		self.player = play10(self)
 		self.xml = glade_xml("treeview.glade","ltv")
 		self.xml.signal_autoconnect(self)
 		self.gconf = christine_gconf()
 		self.main = main
-		self.play = self.main.player
 		self.tv = self.xml["ltv"]
 		self.library_lib = lib_library("music")
 		self.gen_model()
