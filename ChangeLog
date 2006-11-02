@@ -1,3 +1,5 @@
+2006-11-01 Marco Antonio Islas Cruz	<markuz@islascruz.org>
+	* lib_christine/libs_christine.py: vis-plugin fixup
 2006-10-31 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* christine: Import files improvement
 	* lib_christine/library.py: Import files improvement.

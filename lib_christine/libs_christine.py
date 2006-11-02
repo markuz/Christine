@@ -225,11 +225,23 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def set_visualization_visible(self,active=False):
 		print "playbin.set_visualization_visible(",active,")"
 		if active:
-			#self.playbin.set_property("vis-plugin",self.vis_plugin)
+			self.playbin.set_property("vis-plugin",self.vis_plugin)
+			# The try/except is to avoid a QueryError when
+			# there is no uri in the player.
+			try:
+				nanos = self.query_position(gst.FORMAT_TIME)[0]
+			except gst.QueryError:
+				nanos = 0
 			self.should_show = True
 			self.expose_cb()
+			self.playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
+				gst.SEEK_TYPE_SET,nanos,gst.SEEK_TYPE_NONE,-1)
+			if self.playbin.get_state() == gst.STATE_PLAYING:
+				sefl.pause()
+				self.playit()
+
 		else:
-			#self.playbin.set_property("vis-plugin",None)
+			self.playbin.set_property("vis-plugin",None)
 			if self.type == "sound":
 				self.hide()
 				
