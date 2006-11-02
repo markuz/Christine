@@ -165,7 +165,7 @@ class play10(gtk.DrawingArea,gtk_misc,christine_gconf):
 	def __connect(self):
 		self.playbin.set_property("video-sink",self.video_sink)
 		self.playbin.set_property("audio-sink",self.audio_sink)
-		self.playbin.set_property("vis-plugin",self.vis_plugin)
+		#self.playbin.set_property("vis-plugin",self.vis_plugin)
 
 	# player10 Set location
 	def set_location(self,file):
