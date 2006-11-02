@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Wed Nov  1 14:10:44 2006
+	Date: Thu Nov  2 11:58:49 2006
 	User: markuz
 	Host: cucusa
 -->
@@ -345,7 +345,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="ful_scren1">
                         <property name="visible">True</property>
-                        <property name="label">Ful Scren</property>
+                        <property name="label">Full Scren</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="toggle_full_screen"/>
                         <accelerator key="Return" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -362,6 +362,7 @@
                         <property name="label">Visualization</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="toggle_visualization"/>
+                        <accelerator key="v" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
                     </child>
                   </widget>
