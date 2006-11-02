@@ -562,7 +562,7 @@ class christine(gtk_misc):
 		else:
 			self.current_iter = None
 			self.model.foreach(self.search_by_path,self.gconf.get_string("backend/last_played"))
-			print "lat_played:",self.gconf.get_string("backend/last_played")
+			print "111last_played:",self.gconf.get_string("backend/last_played")
 			if self.current_iter != None:
 				path = self.model.get_path(self.current_iter)
 				print path
@@ -573,7 +573,10 @@ class christine(gtk_misc):
 					iter = self.model.get_iter(path)
 					location = self.model.get_value(iter,PATH)
 					print location
-					self.player.set_location(location)
+					self.set_location(location)
+					# This avoid the return to the last played song
+					# wich is the next in the list.
+					self.last_played.pop()
 					self.play_button.set_active(False)
 					self.play_button.set_active(True)
 	

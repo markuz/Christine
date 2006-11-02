@@ -1,5 +1,6 @@
 2006-11-02 Marco Antonio Islas Crfuz <markuz@islascruz.org>
 	* lib_christine_libs_christine.py: vis-plugin bugfix # #1589432
+	* christine: go_prev improvement
 2006-11-01 Marco Antonio Islas Cruz	<markuz@islascruz.org>
 	* lib_christine/libs_christine.py: vis-plugin fixup
 2006-10-31 Marco Antonio Islas Cruz <markuz@islascruz.org>
