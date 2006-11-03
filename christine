@@ -737,7 +737,7 @@ class christine(gtk_misc):
 		'''
 		iter = model.get_iter(path)
 		mlocation = model.get_value(iter,PATH)
-		#print model,iter,path
+		#print model,iter,path,path1
 		if mlocation == location:
 			self.current_iter = iter
 			return True
@@ -753,6 +753,10 @@ class christine(gtk_misc):
 		
 	
 	def on_scale_value_changed(self,scale,a,value=None):
+		'''
+		Callback on the value changed signal on 
+		position scale
+		'''
 		value = self.scale_value
 		self.moving_scale = False
 		if value < 0:
@@ -760,11 +764,18 @@ class christine(gtk_misc):
 		self.player.seek_to(value)
 		
 	def set_scale_value(self,scale,a,b):
+		'''
+		This method changes the scale
+		value
+		'''
 		self.moving_scale = True
 		self.scale_value = b
 		self.moving_scale = False
 	
 	def set_scale_to_value(self,value):
+		'''
+		This method changes the scale value
+		'''
 		if not self.moving_scale:
 			try:
 				self.scale.set_value(value)
@@ -773,6 +784,12 @@ class christine(gtk_misc):
 				self.scale.set_value(0)
 				
 	def jump_to_playing(self,widget=None,path=None):
+		'''
+		This method jumps and select the file
+		specified in the path.
+		If path is not specified then try to
+		select the playing one
+		'''
 		if path == None:
 			location = self.player.get_location()
 		else:
@@ -780,7 +797,6 @@ class christine(gtk_misc):
 		self.current_iter = None
 		self.model.foreach(self.search_by_path,location)
 		if self.current_iter != None:
-			#print self.current_iter
 			state = self.STATE_PLAYING
 			if self.STATE_PLAYING:
 				iter = self.get_natural_iter(self.current_iter)
@@ -793,6 +809,14 @@ class christine(gtk_misc):
 				self.treeview.set_cursor(path)
 	
 	def jump_to(self,widget):
+		'''
+		Creates a gtk.Dialog box where
+		the user specify the minute and second
+		where to the song/video should be.
+		'''
+		# if self.total is not defined then
+		# there is no media in player, so
+		# there is no way to "jump to" any place.
 		try:
 			a = self.total
 		except:
@@ -858,18 +882,27 @@ class christine(gtk_misc):
 		#return True
 
 	def less_volume(self,widget=None):
+		'''
+		Decrease the volume
+		'''
 		volume = self.volume_scale.get_value() - 0.1
 		if volume < 0:
 			volume = 0
 		self.volume_scale.set_value(volume)
 		
 	def more_volume(self,widget=None):
+		'''
+		Increase the volume
+		'''
 		volume = self.volume_scale.get_value() + 0.1
 		if volume > 1.0:
 			volume = 1.0
 		self.volume_scale.set_value(volume)
 		
 	def mute(self,widget):
+		'''
+		Set mute.
+		'''
 		if widget.get_active():
 			self.volume = self.volume_scale.get_value()
 			self.volume_scale.set_value(0.0)
@@ -881,12 +914,18 @@ class christine(gtk_misc):
 
 #===============libraty stuff begins=============
 	def add_artists(self,model,path,iter):
+		'''
+		Add artist.
+		This fills the artist model
+		'''
 		artist = model.get_value(iter,ARTIST)
-		#print "artist = self.artist.first_element","artist:'%s'"%artist
 		if not artist in self.artist.list:
 			self.artist_l.append(artist)
 			
 	def add_albums(self,model,path,iter):
+		'''
+		This fills the albums model
+		'''
 		album  = model.get_value(iter,ALBUM)
 		artist = model.get_value(iter,ARTIST)
 		#print "artist: '%s album:'%s'"%(artist,album)
@@ -902,6 +941,9 @@ class christine(gtk_misc):
 			self.albums.add(album,artist)
 			
 	def add_artists_sorted(self):
+		'''
+		add the artists in a sorted way
+		'''
 		self.artist.list.sort()
 		self.artist.list.append(self.artist.first_element)
 		
@@ -909,16 +951,26 @@ class christine(gtk_misc):
 			self.artist.add(i)
 
 	def import_file(self,widget,queue=False):
+		'''
+		Import a file or files
+		first argument is a widget, second argument
+		is an optional  boolean value that defines
+		if the files are going to queue or not
+		'''
 		xml = glade_xml("file_selector.glade")
 		fs = xml["fs"]
-		s = []
-		v = []
-		for i in sound:
-			s.append("*"+i)
-			s.append("*"+i.upper())
-		for i in video:
-			v.append("*"+i)
-			v.append("*"+i.upper())
+		# Until we know exactly wich files are
+		# able to be played with gstreamer
+		# we are not gonna impose any filter
+		# allowing the user to select any file
+		#s = []
+		#v = []
+		#for i in sound:
+		#	s.append("*"+i)
+		#	s.append("*"+i.upper())
+		#for i in video:
+		#	v.append("*"+i)
+		#	v.append("*"+i.upper())
 		#filter = gtk.FileFilter()
 		#filter.set_name("All media files")
 		#for i in [s,v]:
@@ -943,12 +995,21 @@ class christine(gtk_misc):
 		fs.destroy()
 		if response == gtk.RESPONSE_OK:
 			self.add_files(files=files,queue=queue)
+			# What I was saying, if queue is true
+			# send it to queue
 			if queue:
 				self.queue.save()
 			else:
 				self.library.save()
 	
 	def import_folder(self,widget):
+		'''
+		This is the "simple" way to import folders
+		Creates and rund a filechooser dialog to 
+		select the dir. 
+		A Checkbox let you set if the import will be
+		recursive.
+		'''
 		xml = glade_xml("dir_selector.glade")
 		ds = xml["ds"]
 		walk = xml["walk"]
@@ -964,6 +1025,11 @@ class christine(gtk_misc):
 			self.library.save()
 	
 	def add_dirs(self,dir):
+		'''
+		Recursive import, first and only argument
+		is the dir where to digg.
+		'''
+		#dig looking for files
 		a = os.walk(dir)
 		b = True
 		f = []
@@ -975,66 +1041,92 @@ class christine(gtk_misc):
 			except:
 				b = False
 		self.f = []
-		self.model.foreach(self.exists)
+		# create a temporal list with the path of
+		# the files already stored in the library
+		# to avoid duplicates
+		#self.model.foreach(lambda model,path,iter: self.f.append(model.get_value(iter,PATH)))
 		for i in filenames:
 			for path in i[1]:
-				ext = path.split(".").pop().lower()
-				exists = False
-				if os.path.join(i[0],path) in self.f:
-					exists = True
-				if (ext in sound or ext in video) and not exists:
-					f.append(os.path.join(i[0],path))
-				else:
-					print "skipping:",os.path.join(i[0],path)
+				#ext = path.split(".").pop().lower()
+				#exists = False
+				#if os.path.join(i[0],path) in self.f:
+				#	exists = True
+				# FIXME: at the moment only files with the right
+				# extension will be imported, 
+				# this extensions are defined in 
+				# libs_christine/libs_christine.py
+				# We need to know what files are supported by 
+				# gstreamer
+				#if (ext in sound or ext in video) and not exists:
+				f.append(os.path.join(i[0],path))
+				#else:
+				#	print "skipping:",os.path.join(i[0],path)
+		# Once we have the files to add, then use the add_files
+		# wrapper method to add them.
 		if len(f) > 0:
 			self.add_files(files = f)
 		else:
-			print f
+			#print f
+			pass
 			
-	def exists(self,model,path,iter):
-		self.f.append(model.get_value(iter,PATH))
-		
-
 	def add_dir(self,dir):
+		'''
+		This add a single directory, is simplier that add_dirs
+		because there is no need to dig.
+		'''
 		files = os.listdir(dir)
 		f = []
 		for i in files:
 			ext = i.split(".").pop()
+			# Again, only files with the right
+			# extension will be imported
 			if ext in [sound,video]:
 				f.append(i)
 		self.add_files(files = f)
 	
 	def add_files(self,widget=None,files=None,queue=False):
+		'''
+		Add files to the library or to the queue.
+		add_files(widget=None, files=None, queue=False)
+		'''
 		xml = glade_xml("add_files.glade")
 		xml.signal_autoconnect(self)
 		self.IMPORTING = True
 		self.add_win			= xml["main_window"]
 		self.add_file_label		= xml["file_label"]
+		self.add_file_label.set_text("None")
 		self.add_progress		= xml["progressbar"]
 		self.add_close_button	= xml["close"]
+		# Be sure that we are working with a list
+		# of files
 		if type(files) != type([]):
 			raise TypeError,"files must be List, got %s"%type(files)
-		#for i in files:
 		files.reverse()
-		self.files_to_add = files
-		self.percentaje = 0
-		if len(files)>0:
-			inc = (1.0/len(files))*2
-		else:
-			inc = 1
-		self.total_num_files = len(self.files_to_add)
 		self.paths = []
 		self.model.foreach(self.get_paths)
-		gobject.timeout_add(600,self.add_file,inc,queue)
+		self.files_to_add = []
+		for i in files:
+			if not i in files:
+				self.files_to_add.append(i)
+			else:
+				#print "skipping:",i
+				pass
+		self.percentaje = 0
+		self.total_num_files = len(self.files_to_add)
+		# Use a timer to avoid freezing 
+		gobject.timeout_add(600,self.__add_file,queue)
 		self.add_win.run()
-			#self.path_exists = False
-			#self.model.foreach(self.exists,i)
-			#if not self.path_exists:
-			#	self.library.add(i)
-			#print self.path_exists
 		
-	def add_file(self,inc,queue=False):
-		#print "christine.add_file.queue",queue
+	def __add_file(self,queue=False):
+		'''
+		Add a single file, to the library or queue.
+		the files are taken from the self.files_to_add
+		list. the only one argument is queue, wich defines
+		if the importing is to the queue
+		'''
+		# This method is the "hard" one in the importing files
+		# (or directories) We must be carefull in the code
+		# and everything must run as fast as we can
 		if self.IMPORTING and len(self.files_to_add)>0:
 			newfile = self.files_to_add.pop()
 			if len(self.files_to_add)>0:
@@ -1054,32 +1146,34 @@ class christine(gtk_misc):
 			self.add_progress.set_text(text)
 			self.add_file_label.set_text(os.path.split(newfile)[1])
 			if not queue:
-				if not newfile in self.paths and not newfile2 in self.paths:
+				#if not newfile in self.paths and not newfile2 in self.paths:
 					div,mod = divmod(len(self.files_to_add),10)
 					self.library.add(newfile)
-					#print "added:",newfile
 					if newfile2 != "":
 						gobject.timeout_add(250,self.library.add,newfile2)
-						#print "added:",newfile2
 					if mod == 0:
-					#	print "library save"
 						self.library.save()
 			else:
-				#print "self.queue.add(%s)"%newfile
 				self.queue.add(newfile)
 				if newfile2 != "":
 					gobject.timeout_add(250,self.queue.add,newfile2)
 		else:
 			if not queue:
-				#print "library save",queue
 				self.library.save()
-				self.library.gen_model(True)
-				self.jump_to_playing()
+				# Sorting the model
+				gobject.timeout_add(300,self.library.gen_model,True)
+				gobject.timeout_add(1000,self.jump_to_playing)
 			self.IMPORTING = False
 		return self.IMPORTING
 
 
 	def import_cancel(self,widget):
+		'''
+		Cancel de import stuff
+		'''
+		# Setting self.IMPORTING to false
+		# we break the import file timeout
+		# then destroy the add dialog.
 		self.IMPORTING = False
 		self.add_win.destroy()
 
@@ -1088,8 +1182,8 @@ class christine(gtk_misc):
 		loc = model.get_value(iter,PATH)
 		self.paths.append(loc)
 	
-	def import_to_queue(self,widget):
-		self.import_file("",True)
+	#def import_to_queue(self,widget):
+	#	self.import_file("",True)
 
 #===============libraty stuff ends=============
 			
@@ -1099,20 +1193,21 @@ class christine(gtk_misc):
 		#print dir (b),"\n"
 		#print t
 		if t == gst.MESSAGE_ERROR:
-			print "An error has ocurred"
-			print dir (b)
-			print b.parse_error()
+			#print "An error has ocurred"
+			#print dir (b)
+			#print b.parse_error()
 			error("".join([k for k in b.parse_error()[1]]))
-			print b.structure["debug"]
-			print b.src
+			#print b.structure["debug"]
+			#print b.src
 		if t == gst.MESSAGE_EOS:
-			print "self.error_handler: eos"
+			#print "self.error_handler: eos"
 			#self.player.pause()
 			self.go_next()
 		elif t == gst.MESSAGE_DURATION:
-			print "message: parse_duration():",b.parse_duration()
+			#print "message: parse_duration():",b.parse_duration()
+			pass
 		elif t == gst.MESSAGE_TAG:
-			print "gst.MESSAGE_TAG"
+			#print "gst.MESSAGE_TAG"
 			self.player.found_tag_cb(b.parse_tag())
 			self.set_tags()
 		return True
