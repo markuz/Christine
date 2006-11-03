@@ -674,10 +674,9 @@ class christine(gtk_misc):
 			# play behavior.
 			if self.CONTROL_STAT -1 == CONTROL_SHUFFLE:
 				self.elements = []
-				self.paths_in_list = []
 				self.model.foreach(self.get_max_elements)
-				iter = int(len(self.elements)*random.random())
-				filename = self.model.get_value(self.elements[iter],PATH)
+				iter = self.model.get_iter(int(len(self.elements)*random.random()))
+				filename = self.model.get_value(iter,PATH)
 				if (not filename in self.last_played or \
 					self.gconf.get_bool("control/repeat")):
 						self.set_location(filename)
@@ -744,9 +743,13 @@ class christine(gtk_misc):
 			return True
 			
 	def get_max_elements(self,model,path,iter):
-		iter = model.get_iter(path)
+		'''
+		Get the max elements being used in a 
+		model.foreach and storing all the iters
+		in a list self.elements
+		'''
+		#iter = model.get_iter(path)
 		self.elements.append(iter)
-		self.paths_in_list.append(model.get_value(iter,PATH))
 		
 	
 	def on_scale_value_changed(self,scale,a,value=None):
