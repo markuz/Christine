@@ -29,6 +29,7 @@ from lib_christine.preferences import *
 from lib_christine.show_properties import *
 from lib_christine.about import *
 
+
 bonobo.activate()
 
 try:
@@ -70,6 +71,7 @@ class christine(gtk_misc):
 		self.SHOW_BUTTONS		= False
 		self.last_played		= []
 		self.stream_error_count = 0
+		self.search_text		= ""
 		self.__player_init() # "Creating the player"
 		self.__win() # "Building" the window.
 		self.__trayicon()
@@ -113,6 +115,7 @@ class christine(gtk_misc):
 		self.menubar = self.xml["menubar"]
 		self.search_hbox = self.xml["search_hbox"]
 		self.search_box = self.xml["search_box"]
+		self.list_box = self.xml["lists_box"]
 		# Ends the call to widgets descriptors not connected
 		# by hadn
 
@@ -141,37 +144,39 @@ class christine(gtk_misc):
 		# However, access to it is not allowed from the 
 		# christine GUI.
 		#
-		self.browser = self.xml["browser"]
-		self.browser_menuitem = self.xml["browser_menuitem"]
-		self.browser_menuitem.set_active(self.gconf.get_bool("ui/show_browser"))
+		#self.browser = self.xml["browser"]
+		#self.browser_menuitem = self.xml["browser_menuitem"]
+		#self.browser_menuitem.set_active(self.gconf.get_bool("ui/show_browser"))
 
-		self.artist = mini_lists("Artist","All Artists")
-		self.artist.treeview.set_model(self.artist.model)
-		self.artist_frame = self.xml["artist_scroll"]
-		self.artist_frame.add(self.artist.treeview)
-		self.artist.treeview.connect("cursor-changed",self.albums_refilter)
-		model = self.artist.treeview.get_model()
-		arpath = model.get_path(model.get_iter_first())
+		#self.artist = mini_lists("Artist","All Artists")
+		#self.artist.treeview.set_model(self.artist.model)
+		#self.artist_frame = self.xml["artist_scroll"]
+		#self.artist_frame.add(self.artist.treeview)
+		#self.artist.treeview.connect("cursor-changed",self.albums_refilter)
+		#model = self.artist.treeview.get_model()
+		#arpath = model.get_path(model.get_iter_first())
 
 
-		self.albums = mini_lists("Albums","All Albums")
-		self.album_frame = self.xml["albums_scroll"]
-		self.album_frame.add(self.albums.treeview)
-		self.albums.treeview.connect("cursor-changed",self.search)
-		self.natural_model.foreach(self.add_albums)
-		self.add_artists_sorted()
-		model = self.albums.treeview.get_model()
-		path = model.get_path(model.get_iter_first())
-		self.albums.treeview.set_cursor(path,None)
+		#self.albums = mini_lists("Albums","All Albums")
+		#self.album_frame = self.xml["albums_scroll"]
+		#self.album_frame.add(self.albums.treeview)
+		#self.albums.treeview.connect("cursor-changed",self.search)
+		#self.natural_model.foreach(self.add_albums)
+		#self.add_artists_sorted()
+		#model = self.albums.treeview.get_model()
+		#path = model.get_path(model.get_iter_first())
+		#self.albums.treeview.set_cursor(path,None)
 
-		self.artist.treeview.set_cursor(arpath,None)
-		self.artist.treeview.scroll_to_cell(arpath,None,True,0,0)
-
+		#self.artist.treeview.set_cursor(arpath,None)
+		#self.artist.treeview.scroll_to_cell(arpath,None,True,0,0)
+		
+		# Ends browser stuff
 		
 		self.music_sw = self.xml["music_sw"]
 		self.music_sw.add(self.library.tv)
 		self.videobox = self.xml["videobox"]
 		self.main_viewer_place.show_all()
+
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
 		self.queue = queue(self)
@@ -181,18 +186,12 @@ class christine(gtk_misc):
 		self.queue.treeview.connect("key-press-event",self.queue_key_handler)
 		#=============queue begins
 	
-		self.list_box = self.xml["lists_box"]
-
 
 		self.control_button = self.xml["control_button"]
 		self.shuffle = self.xml["shuffle"]
-		#self.shuffle.set_active(False)
 		self.repeat = self.xml["repeat"]
-		#self.repeat.set_active(False)
 		self.both_sr = self.xml["both_sr"]
-		#self.both_sr.set_active(False)
 		self.none_sr = self.xml["none_sr"]
-		#self.none_sr.set_active(False)
 		
 		self.CONTROL_STAT = self.gconf.get_int("control/CONTROL_STAT") -1
 		self.change_control()
@@ -200,8 +199,7 @@ class christine(gtk_misc):
 		self.menuitem_toggle_visualization = self.xml["toggle_visualization"]
 		self.menuitem_toggle_visualization.set_active(self.gconf.get_bool("ui/visualization"))
 		self.toggle_show_player()
-		val = self.gconf.get_bool("ui/small_view")
-		self.small_view_menuitem.set_active(val)
+		self.small_view_menuitem.set_active(self.gconf.get_bool("ui/small_view"))
 		self.toggle_small_view(self.small_view_menuitem)
 
 		
@@ -221,7 +219,8 @@ class christine(gtk_misc):
 		self.toolbox_container = self.xml["toolbox_container"]
 		self.volume_scale = self.xml["volume_scale"]
 		volume = self.gconf.get_float("control/volume")
-		self.gconf.notify_add("/apps/christine/control/volume",self.gconf_change_volume)
+		self.gconf.notify_add("/apps/christine/control/volume",
+				self.gconf_change_volume)
 		if volume:
 			self.volume_scale.set_value(volume)
 		else:
@@ -231,20 +230,23 @@ class christine(gtk_misc):
 		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
 	
 
-	def albums_refilter(self,treeview):
-		selection = treeview.get_selection()
-		model,iter = selection.get_selected()
-		value = model.get_value(iter,0)
-		self.albums.text_to_search = value
-		alfmodel = self.albums.treeview.get_model()
-		almodel = alfmodel.get_model()
-		iter = almodel.get_iter_first()
-		almodel.set(iter,1,value)
-		alfmodel.refilter()
-		self.search()
+	#def albums_refilter(self,treeview):
+	#	selection = treeview.get_selection()
+	#	model,iter = selection.get_selected()
+	#	value = model.get_value(iter,0)
+	#	self.albums.text_to_search = value
+	#	alfmodel = self.albums.treeview.get_model()
+	#	almodel = alfmodel.get_model()
+	#	iter = almodel.get_iter_first()
+	#	almodel.set(iter,1,value)
+	#	alfmodel.refilter()
+	#	self.search()
 		
 
 	def queue_key_handler(self,widget,event):
+		'''
+		Handle the key-press-event in the queue list
+		'''
 		if event.keyval == 65535:
 			selection = self.queue.treeview.get_selection()
 			model,iter = selection.get_selected()
@@ -254,6 +256,9 @@ class christine(gtk_misc):
 		
 
 	def pop_menu(self,widget,event):
+		'''
+		handle the button-press-event in the library
+		'''
 		if event.button == 3:
 			xml = glade_xml("popmenu.glade")
 			xml.signal_autoconnect(self)
@@ -262,12 +267,22 @@ class christine(gtk_misc):
 			popup.show_all()
 
 	def popup_add_to_queue(self,widget):
+		'''
+		Add the selected item to the queue
+		'''
 		selection = self.treeview.get_selection()
 		model,iter, = selection.get_selected()
 		file = model.get_value(iter,PATH)
 		self.queue.add(file)
 	
 	def key_press_handler(self,treeview,event):
+		'''
+		Handle the key-press-event in the 
+		library. 
+		Current keys: Enter to activate the row
+		and 'q' to send the selected song to the 
+		queue
+		'''
 		if event.keyval == 65535:
 			selection = treeview.get_selection()
 			model,iter = selection.get_selected()
@@ -285,69 +300,78 @@ class christine(gtk_misc):
 			pass
 	
 		
-	def toolbar(self):
-		self.sortb = self.xml["sortb"]
-		self.gtk_misc.set_toolbutton_image(self.sortb,"usort.png")
-		self.repeatb = self.xml["repeatb"]
-		self.musicb = self.xml["musicb"]
-		self.musicb.connect("clicked",self.switch,"music")
-		self.gtk_misc.set_toolbutton_image(self.musicb,"sound.png")
-		self.videob = self.xml["videob"]
-		self.videob.connect("clicked",self.switch,"video")
-		self.gtk_misc.set_toolbutton_image(self.videob,"video.png")
+	#def toolbar(self):
+	#	self.sortb = self.xml["sortb"]
+	#	self.gtk_misc.set_toolbutton_image(self.sortb,"usort.png")
+	#	self.repeatb = self.xml["repeatb"]
+	#	self.musicb = self.xml["musicb"]
+	#	self.musicb.connect("clicked",self.switch,"music")
+	#	self.gtk_misc.set_toolbutton_image(self.musicb,"sound.png")
+	#	self.videob = self.xml["videob"]
+	#	self.videob.connect("clicked",self.switch,"video")
+	#	self.gtk_misc.set_toolbutton_image(self.videob,"video.png")
 
 
 	def set_location(self,filename):
-		#print "christine set_location:",filename,os.path.exists(filename)
+		'''
+		Set the location in the player and
+		perform some other required actions
+		'''
 		self.STATE_PLAYING = False
 		self.player.stop()
-		self.current_iter = None
-		self.natural_model.foreach(self.search_by_path,self.player.get_location())
+		self.current_iter = None	# current iter is a temporal variable
+									# that will hold a gtk.TreeIter
+									# should be setted to None 
+									# before using it.
+
+		self.natural_model.foreach(self.search_by_path,
+				self.player.get_location())
 		if self.current_iter != None:
 			pix = self.gtk_misc.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 			self.natural_model.set(self.current_iter,PIX,pix)
 		
+		# Search for the item in the library.
+		# if it exists then set it in the "backend/last_played"
+		# entry in gconf to be able to select it in the next
+		# christine start-up (and other functions) and
 		self.current_iter = None
 		self.natural_model.foreach(self.search_by_path,filename)
 		if self.current_iter != None:
-			count = self.natural_model.get_value(self.current_iter,PLAY_COUNT)
+			count = self.natural_model.get_value(self.current_iter,
+				PLAY_COUNT)
 			self.natural_model.set(self.current_iter,PLAY_COUNT,count+1)
 			self.library.save()
 			self.last_played.append(filename)
 			self.gconf.set_value("backend/last_played",filename)
 		self.player.set_location(filename)
-		#self.player.discoverer.connect("discovered",self.set_tags)
+		# enable the stream-length for the current song.
+		# this will be stopped when we get the length
 		gobject.timeout_add(300,self.stream_length)
+		# if we can't get the length, in more than 20
+		# times in the same song, then, jump to the
+		# next song.
 		if self.set_location_count > 20:
 			self.go_next()
 		else:
 			self.set_location_count +=1
 	
 	def stop(self,widget):
+		'''
+		stop the player
+		'''
 		self.player.stop()
 			
 
-	def switch(self,widget,who="music"):
-		if who == "music":
-			self.video_sw.hide()
-			self.music_sw.show()	
-			self.model = self.library.model
-		elif who== "video":
-			self.video_sw.show()
-			self.music_sw.hide()	
-			self.model = self.video_library.model
-		else:
-			raise ValueError,"Not allowed for %s"%music
-
-
-	def volume_change_value(self,widget,a=None,value=None):
+	def volume_change_value(self,widget):
+		'''
+		Callback for the volume scale widget.
+		'''
 		value = widget.get_value()
 		self.player.set_volume(value)
 		self.gconf.set_value("control/volume",value)
 	
 	def gconf_change_volume(self,client,cnx_id,entry,widget):
-		print entry.get_value().get_float()
 		self.volume_scale.set_value(entry.get_value().get_float())
 	
 	def toggle_small_view(self,widget):
@@ -356,7 +380,7 @@ class christine(gtk_misc):
 		if active:
 			self.list_box.hide()
 			self.search_hbox.hide()
-			self.window_size= self.window.get_size()
+			self.window_size = self.window.get_size()
 			self.window.unmaximize()
 			self.window.resize(10,10)
 		else:
@@ -456,60 +480,17 @@ class christine(gtk_misc):
 	def filter(self,model,iter):
 		text = self.search_text
 		value,album,artist	= model.get(iter,SEARCH,ALBUM,ARTIST)
-		lalbum  = self.lalbum
-		lartist = self.lartist
+		#lalbum  = self.lalbum
+		#lartist = self.lartist
 		try:
 			value = value.lower()
 		except:
 			value = ""
 			
-		#if lartist == "All Artists" and lalbum == "All Albums" \
-		#		and text =="":
-		#	return True
-
 		if value.find(text) >=0 or text =="":
 			return True
 		else: 
 			return False
-		#if lalbum == "All Albums" and artist == lartist:
-		#	boolalbum = True
-		#else:
-		#	boolalbum = False
-		
-		#lallowed = [album]
-		#aallowed = [artist]
-		
-		#if lalbum == "All Albums":
-		#	lallowed.append("All Albums")
-		#if lartist == "All Artist":
-		#	aallowed.append("All Artist")
-		#
-		#if lalbum in lallowed:
-		#	boolalbum = True
-		#else:
-			#print album,lalbum
-		#	boolalbum = False
-		
-		#if lartist in aallowed:
-		#	boolartist = True
-		#else:
-			#print artist,lartist
-		#	boolartist = False
-			
-		#if value.find(text) >= 0 and (boolartist or boolalbum):
-			#print "1"
-		#	allow = True
-		#elif text =="":
-		#	if boolartist and album==lalbum:
-			#	print "2"
-		#		allow = True
-		#	else:
-		#	#	print "3"
-		#		allow = False
-		#else:
-			#print "4",lartist,lalbum,text,boolartist,boolalbum
-		#	allow = False
-		#return allow
 		
 	def toggle_browser(self,widget):
 		if widget.get_active():

@@ -23,6 +23,7 @@ import cPickle as pickle
 import gst, gst.interfaces
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
+#import pdb
 
 (PATH,
 NAME,
@@ -312,9 +313,23 @@ class library(gtk_misc):
 		self.model.foreach(self.prepare_for_disk)
 		self.library_lib.save()
 		
-		
+	#pdb.set_trace()
 	def prepare_for_disk(self,model,path,iter):
-		name,artist,album,track_number,path,type,pc,duration = model.get(iter,NAME,ARTIST,ALBUM,TN,PATH,TYPE,PLAY_COUNT,TIME)
+		(name,
+		artist,
+		album,
+		track_number,
+		path,
+		type,
+		pc,
+		duration) = model.get(iter,NAME,
+					ARTIST,
+					ALBUM,
+					TN,
+					PATH,
+					TYPE,
+					PLAY_COUNT,
+					TIME)
 		self.library_lib.append(path,{"name":name,
 				"type":type,"artist":artist,
 				"album":album,"track_number":track_number,
