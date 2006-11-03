@@ -375,6 +375,14 @@ class christine(gtk_misc):
 		self.volume_scale.set_value(entry.get_value().get_float())
 	
 	def toggle_small_view(self,widget):
+		'''
+		Toggle between the small and the large view.
+		'''
+		#
+		# The need to use the "self.window.get_size()" will be
+		# erased in the future, window size will be saved in
+		# gconf.
+		#
 		active = widget.get_active()
 		self.gconf.set_value("ui/small_view",active)
 		if active:
@@ -393,26 +401,36 @@ class christine(gtk_misc):
 			self.window.resize(w,h)
 
 	def toggle_visualization(self,widget):
+		'''
+		This show/hide the visualization.
+		'''
 		self.player.set_visualization_visible(widget.get_active())
 		self.gconf.set_value("ui/visualization",widget.get_active())
 		self.toggle_show_player()
+		# Be shure that we are not in small view mode.
 		if self.small_view_menuitem.get_active() and \
 				not widget.get_active():
 			self.toggle_small_view(self.small_view_menuitem)
 	
 	def toggle_full_screen(self,widget=None):
+		'''
+		Set the full Screen mode
+		'''
+		# Only if we are not in FullScreen and we are playing a video.
+		# FIXME: We must enable the full screen if christine has
+		# visualization enabled.
 		if not self.IS_FULLSCREEN and self.player.isvideo():
 			self.videobox.hide()
 			self.main_viewer_place.remove(self.player)
-			#self.player.unparent()
-			#self.miniviewer_tcontainer.unparent()
 			self.tmp_vbox.pack_start(self.player,True,True,2)
 			self.tmp_vbox.show_all()
-			#self.main_vbox.pack_start(self.miniviewer_tcontainer,False,False,2)
 			self.window.fullscreen()
 			self.IS_FULLSCREEN = True
-		else:
-			if not self.player.isvideo() and not self.gconf.get_bool("ui/visualization"):
+		else: # Non-full screen mode.
+			# hide if we are not playing a video nor
+			# visualization.
+			if not self.player.isvideo() \
+					and not self.gconf.get_bool("ui/visualization"):
 				self.player.hide()
 			self.window.unfullscreen()
 			self.tmp_vbox.hide()
@@ -424,14 +442,15 @@ class christine(gtk_misc):
 			self.IS_FULLSCREEN = False
 			
 	def on_main_window_event(self,player,event):
+		'''
+		Handler for the events in the window
+		'''
 		if event.type == gtk.gdk.KEY_PRESS:
 			if event.keyval == 103:
 				self.show_hide_playbuttons()
-				#return True
 			elif event.keyval == 65366:
 				if self.IS_FULLSCREEN:
 					self.go_next()
-				#	return True
 			elif event.keyval == 65365:
 				if self.IS_FULLSCREEN:
 					self.go_prev()
@@ -439,9 +458,12 @@ class christine(gtk_misc):
 			elif event.keyval == 102:
 				if self.IS_FULLSCREEN:
 					self.toggle_full_screen()
-				#	return True
 			
 	def show_hide_playbuttons(self,widget=None):
+		'''
+		This show/hide the player buttons. Suppossed to work only on 
+		fullscreen mode,
+		'''
 		if not self.IS_FULLSCREEN:
 			return True
 		if self.SHOW_BUTTONS:
@@ -452,56 +474,80 @@ class christine(gtk_misc):
 			self.miniviewer_tcontainer.hide()
 			self.menubar.hide()
 			self.SHOW_BUTTONS = True
-#==================== search stuff begins ===============================
 
+#==================== search stuff begins ===============================
 	def on_find_activate(self,widget):
+		'''
+		Set the focus on the Search entry.
+		'''
 		self.search_box.grab_focus()
 
 	def search(self,widget=None):
-		selection = self.albums.treeview.get_selection()
-		model,iter = selection.get_selected()
-		if iter!=None:
-			self.lalbum = model.get_value(iter,0)
-		else:
-			self.lalbum = ""
-		model,iter = self.artist.treeview.get_selection().get_selected()
-		if iter !=None:
-			self.lartist = model.get_value(iter,1)
-		else:
-			self.lartist = ""
+		'''
+		Perform the actions to make a search.
+		'''
+		## Get the selection, model, and iter
+		#selection = self.albums.treeview.get_selection()
+		#model,iter = selection.get_selected()
+		#if iter!=None:
+		#	self.lalbum = model.get_value(iter,0)
+		#else:
+		#	self.lalbum = ""
+		#model,iter = self.artist.treeview.get_selection().get_selected()
+		#if iter !=None:
+		#	self.lartist = model.get_value(iter,1)
+		#else:
+		#	self.lartist = ""
 		self.library.tv.freeze_child_notify()
+		# Store the text that is in search box into the self.search_text
+		# variable
 		self.search_text = self.search_box.get_text().lower()
-		gobject.timeout_add(10,self.filter_model.refilter)
+		# Since we are using a filter model (in the library) we can use
+		# the refilter method in the filter model to show only
+		# the rows that we need.
+		#gobject.timeout_add(10,self.filter_model.refilter)
+		self.filter_model.refilter()
 		self.library.tv.thaw_child_notify()
 		
 	def clear_search_entry(self,widget):
 		self.search_box.set_text("")
 
 	def filter(self,model,iter):
-		text = self.search_text
-		value,album,artist	= model.get(iter,SEARCH,ALBUM,ARTIST)
-		#lalbum  = self.lalbum
-		#lartist = self.lartist
+		'''
+		This method is called by the library.refilter filtered model method.
+		This code should be as simple as we can, we must do everythin
+		as fast as we can.
+		'''
+		value	= model.get(iter,SEARCH)[0]
 		try:
 			value = value.lower()
 		except:
 			value = ""
 			
-		if value.find(text) >=0 or text =="":
+		if value.find(self.search_text) >=0 \
+				or self.search_text =="":
 			return True
 		else: 
 			return False
 		
-	def toggle_browser(self,widget):
-		if widget.get_active():
-			self.browser.show()
-		else:
-			self.browser.hide()
-		self.gconf.set_value("ui/show_browser",widget.get_active())
+	
+	#def toggle_browser(self,widget):
+	#	if widget.get_active():
+	#		self.browser.show()
+	#	else:
+	#		self.browser.hide()
+	#	self.gconf.set_value("ui/show_browser",widget.get_active())
 
 #==================== search stuff ends==================================
 #====================Play stuff==================================
 	def switch_play(self,widget):
+		'''
+		This metod enable/disable the playing. Works for the 
+		menuitem and for the play button.
+		'''
+		#
+		# is really needed two controls? 
+		#
 		active = widget.get_active()
 		if not active:
 			self.player.pause()
@@ -510,16 +556,20 @@ class christine(gtk_misc):
 			self.play()
 			self.STATE_PLAYING = True
 			self.jump_to_playing()
+		# Sync the two controls.
 		self.play_menuitem.set_active(active)
 		self.play_button.set_active(active)
 			
 
 	
 	def play(self,widget=None):
-		print "play:",self.STATE_PLAYING
+		'''
+		Play!!, but only if the state is not already playing.
+		'''
 		if not self.STATE_PLAYING:
 			location = self.player.get_location()
-			print "location:",location
+			# and only if location is not None, if it is the case then
+			# go for one file to play.
 			if location == None:
 				self.go_next()
 			self.player.playit()
@@ -527,14 +577,18 @@ class christine(gtk_misc):
 	
 		
 	def get_natural_iter(self,iter):
+		'''
+		This returns a natural iter, the iter in the low level model 
+		gtk.ListStore in library.
+		'''
 		fiter = self.model.convert_iter_to_child_iter(None,iter)
 		return self.filter_model.convert_iter_to_child_iter(fiter)
 	
-	def go_next(self,widget=None):
-		#gobject.timeout_add(100,self.go_next1)
-		self.set_location_count = 0
-		self.go_next1()
 	def go_prev(self,widget=None):
+		'''
+		Go to play the previous song. If no previous song was played in the 
+		current session, then plays the previous song in the library.
+		'''
 		if len(self.last_played) > 1:
 			location = self.last_played.pop()
 			self.set_location(self.last_played.pop())
@@ -542,18 +596,15 @@ class christine(gtk_misc):
 			self.play_button.set_active(True)
 		else:
 			self.current_iter = None
-			self.model.foreach(self.search_by_path,self.gconf.get_string("backend/last_played"))
-			print "111last_played:",self.gconf.get_string("backend/last_played")
+			self.model.foreach(self.search_by_path,
+					self.gconf.get_string("backend/last_played"))
 			if self.current_iter != None:
 				path = self.model.get_path(self.current_iter)
-				print path
 				if path > 0:
 					path = (path[0] -1,)
-				print path
 				if path[0] > -1:
 					iter = self.model.get_iter(path)
 					location = self.model.get_value(iter,PATH)
-					print location
 					self.set_location(location)
 					# This avoid the return to the last played song
 					# wich is the next in the list.
@@ -561,6 +612,14 @@ class christine(gtk_misc):
 					self.play_button.set_active(False)
 					self.play_button.set_active(True)
 	
+	#
+	# Next toggle_control_* functions where suppossed to be the controls
+	# for the behavior in christine. I'm thinking about simplifying it
+	# just to "shuffle/no-shuffle" mode and asume that shuffle mode is
+	# with "repeat".
+	#
+	# So, I'm not gonna comment this methods XD
+
 	def toggle_control_none(self,widget):
 		if widget.get_active():
 			print "none"
@@ -586,9 +645,19 @@ class christine(gtk_misc):
 			self.CONTROL_STAT=CONTROL_REPEAT
 			self.change_control()
 			#self.CONTROL_STAT=CONTROL_BOTH
+	#
+	###########################
+	#
 
-
-	def go_next1(self,widget=None):
+	def go_next(self,widget=None):
+		'''
+		Find a new file to play. in some cases relay on self.get_next_in_list
+		'''
+		# resetting the self.set_location_count to 0 as we have a new
+		# file :-)
+		self.set_location_count = 0
+		# Look for a file in the queue. Iter should not be None in the case
+		# there where something in the queue
 		model = self.queue.treeview.get_model()
 		iter = model.get_iter_first()
 		if type(iter) == gtk.TreeIter:
@@ -601,32 +670,23 @@ class christine(gtk_misc):
 			self.play_button.set_active(False)
 			self.play_button.set_active(True)
 		else:
+			# FIXME: I got to fix this when I know what to do with the 
+			# play behavior.
 			if self.CONTROL_STAT -1 == CONTROL_SHUFFLE:
 				self.elements = []
 				self.paths_in_list = []
 				self.model.foreach(self.get_max_elements)
 				iter = int(len(self.elements)*random.random())
-				#print PATH
 				filename = self.model.get_value(self.elements[iter],PATH)
-				#if self.last_played != self.paths_in_list and (not filename in self.last_played or \
 				if (not filename in self.last_played or \
 					self.gconf.get_bool("control/repeat")):
 						self.set_location(filename)
-						#self.current_iter = self.elements[iter]
 						self.play_button.set_active(False)
 						self.play_button.set_active(True)
-						print "self.go_next1: play"
 				else:
-					#print "self.go_next1: stop"
-					#print locals(),"\nlast_played:",self.last_played,"\ncontrol/repeat:",self.gconf.get_bool("control/repeat"),"\n"
-					#self.set_scale_value("","",b=0)
-					#self.set_location(filename)
-					#self.play_button.set_active(False)
 					self.get_next_in_list()
 					self.play_button.set_active(False)
 					self.play_button.set_active(True)
-
-					
 			else:
 				self.get_next_in_list()
 
@@ -642,8 +702,10 @@ class christine(gtk_misc):
 			
 			
 	def get_next_in_list(self):
+		'''
+		Gets the next item in list.
+		'''
 		path = self.gconf.get_string("backend/last_played")
-		print "get_next_in_list: path",path
 		if path == None:
 			filename = self.gconf.get_string("backend/last_played")
 			self.current_iter = None
@@ -652,7 +714,6 @@ class christine(gtk_misc):
 				iter = self.model.get_iter_first()
 				filename = self.model.get_value(iter,PATH)
 			self.set_location(filename)
-			print "get_next_in_list:",self.player.get_location()
 		else:
 			self.current_iter = None
 			self.model.foreach(self.search_by_path,path)
@@ -671,6 +732,10 @@ class christine(gtk_misc):
 				self.play_button.set_active(False)
 	
 	def search_by_path(self,model,path,iter,location):
+		'''
+		search location in the model, if it found it then it will
+		store the iter where it was found in self.current_iter
+		'''
 		iter = model.get_iter(path)
 		mlocation = model.get_value(iter,PATH)
 		#print model,iter,path
