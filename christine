@@ -1182,8 +1182,8 @@ class christine(gtk_misc):
 		loc = model.get_value(iter,PATH)
 		self.paths.append(loc)
 	
-	#def import_to_queue(self,widget):
-	#	self.import_file("",True)
+	def import_to_queue(self,widget):
+		self.import_file("",True)
 
 #===============libraty stuff ends=============
 			
