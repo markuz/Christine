@@ -1187,7 +1187,7 @@ class christine(gtk_misc):
 #===============libraty stuff ends=============
 			
 #===============player section begins===========
-	def __message__handler(self,a,b,c=None,d=None):
+	def __message_handler(self,a,b,c=None,d=None):
 		'''
 		Handle the messages from self.player
 		'''
@@ -1196,9 +1196,9 @@ class christine(gtk_misc):
 			error("".join([k for k in b.parse_error()[1]]))
 		if t == gst.MESSAGE_EOS:
 			self.go_next()
-		elif t == gst.MESSAGE_DURATION:
+		#elif t == gst.MESSAGE_DURATION:
 			#print "message: parse_duration():",b.parse_duration()
-			pass
+		#	pass
 		elif t == gst.MESSAGE_TAG:
 			self.player.found_tag_cb(b.parse_tag())
 			self.set_tags()
@@ -1206,7 +1206,10 @@ class christine(gtk_misc):
 
 
 	def on_tick(self):
-		try:
+			'''
+			Update the time showed in the player
+			'''
+		#try:
 			nanos = self.player.query_position(gst.FORMAT_TIME)[0]
 			ts = nanos / gst.SECOND
 			time = "%02d:%02d" % divmod(ts,60)
@@ -1216,9 +1219,9 @@ class christine(gtk_misc):
 				print ts
 				ts = long(0)
 			self.set_scale_to_value(int(ts))
-		except:
-			pass
-		return True
+		#except:
+		#	pass
+			return True
 	
 	def stream_length(self):
 		if self.player.get_location().split(":")[0] == "http":
