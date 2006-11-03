@@ -1106,11 +1106,10 @@ class christine(gtk_misc):
 		self.model.foreach(self.get_paths)
 		self.files_to_add = []
 		for i in files:
-			if not i in files:
+			if not i in self.paths:
 				self.files_to_add.append(i)
 			else:
-				#print "skipping:",i
-				pass
+				print "skipping:",i
 		self.percentaje = 0
 		self.total_num_files = len(self.files_to_add)
 		# Use a timer to avoid freezing 
