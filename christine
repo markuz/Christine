@@ -86,7 +86,7 @@ class christine(gtk_misc):
 		self.player = play10(self)
 		self.main_viewer_place = self.xml["playerbox"]
 		self.main_viewer_place.pack_start(self.player,True,True,0)
-		self.player.bus.add_watch(self.error_handler)
+		self.player.bus.add_watch(self.__message_handler)
 	
 
 # This method is no longer in use, Will be deleted soon
@@ -1187,26 +1187,19 @@ class christine(gtk_misc):
 #===============libraty stuff ends=============
 			
 #===============player section begins===========
-	def error_handler(self,a,b,c=None,d=None):
+	def __message__handler(self,a,b,c=None,d=None):
+		'''
+		Handle the messages from self.player
+		'''
 		t = b.type
-		#print dir (b),"\n"
-		#print t
 		if t == gst.MESSAGE_ERROR:
-			#print "An error has ocurred"
-			#print dir (b)
-			#print b.parse_error()
 			error("".join([k for k in b.parse_error()[1]]))
-			#print b.structure["debug"]
-			#print b.src
 		if t == gst.MESSAGE_EOS:
-			#print "self.error_handler: eos"
-			#self.player.pause()
 			self.go_next()
 		elif t == gst.MESSAGE_DURATION:
 			#print "message: parse_duration():",b.parse_duration()
 			pass
 		elif t == gst.MESSAGE_TAG:
-			#print "gst.MESSAGE_TAG"
 			self.player.found_tag_cb(b.parse_tag())
 			self.set_tags()
 		return True
