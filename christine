@@ -73,6 +73,7 @@ class christine(gtk_misc):
 		self.stream_error_count = 0
 		self.search_text		= ""
 		self.total				= 0
+		self.NATURAL_ITER		= None
 		self.__player_init() # "Creating the player"
 		self.__win() # "Building" the window.
 		self.__trayicon()
@@ -199,7 +200,7 @@ class christine(gtk_misc):
 
 		self.menuitem_toggle_visualization = self.xml["toggle_visualization"]
 		self.menuitem_toggle_visualization.set_active(self.gconf.get_bool("ui/visualization"))
-		self.toggle_show_player()
+		self.show_hide_player()
 		self.small_view_menuitem.set_active(self.gconf.get_bool("ui/small_view"))
 		self.toggle_small_view(self.small_view_menuitem)
 
@@ -319,6 +320,7 @@ class christine(gtk_misc):
 		perform some other required actions
 		'''
 		self.STATE_PLAYING = False
+		self.NATURAL_ITER = None
 		self.player.stop()
 		self.current_iter = None	# current iter is a temporal variable
 									# that will hold a gtk.TreeIter
@@ -339,6 +341,7 @@ class christine(gtk_misc):
 		self.current_iter = None
 		self.natural_model.foreach(self.search_by_path,filename)
 		if self.current_iter != None:
+			self.NATURAL_ITER = self.current_iter.copy()
 			count = self.natural_model.get_value(self.current_iter,
 				PLAY_COUNT)
 			self.natural_model.set(self.current_iter,PLAY_COUNT,count+1)
@@ -407,7 +410,7 @@ class christine(gtk_misc):
 		'''
 		self.player.set_visualization_visible(widget.get_active())
 		self.gconf.set_value("ui/visualization",widget.get_active())
-		self.toggle_show_player()
+		self.show_hide_player()
 		# Be shure that we are not in small view mode.
 		if self.small_view_menuitem.get_active() and \
 				not widget.get_active():
@@ -1239,10 +1242,12 @@ class christine(gtk_misc):
 			ad = gtk.Adjustment(value=0,lower=0,upper=ts)
 			self.scale.set_adjustment(ad)
 			self.stream_error_count = 0
-			self.current_iter = None
-			self.natural_model.foreach(self.search_by_path,self.player.get_location())
-			if self.current_iter != None:
-				self.natural_model.set(self.current_iter,TIME,text)
+			if self.NATURAL_ITER != None:
+				time,path = self.natural_model.get(self.NATURAL_ITER,
+						TIME,PATH)
+				if time != text:
+					self.natural_model.set(self.NATURAL_ITER,TIME,text)
+					self.library.save()
 			return False
 		except gst.QueryError:
 			self.stream_error_count += 1
@@ -1258,11 +1263,7 @@ class christine(gtk_misc):
 		'''
 		Update the current media tags in the library
 		'''
-		location = self.player.get_location()
-		self.current_iter = None
-		self.natural_model.foreach(self.search_by_path,location)
-		iter = self.current_iter
-		track_number = ""
+		#track_number = ""
 		title  = self.player.get_tag("title").replace("_"," ")
 		artist = self.player.get_tag("artist")
 		album  = self.player.get_tag("album")
@@ -1271,12 +1272,15 @@ class christine(gtk_misc):
 			title = os.path.split(self.player.get_location())[1]
 			title = ".".join(title.split(".")[:-1])
 
-		title = title.replace("&","&amp;")
+		# stript_xml_entities is a method inherited from
+		# gtk_misc
+		title = self.strip_xml_entities(title)
 		self.title_label.set_markup("<big>%s</big>"%title)
 		self.window.set_title("%s - Christine"%title)
 		
 		notify_text = "<big>%s</big>"%title
-		
+		# Shoe or hide deppending if there are something
+		# to show or hide
 		if artist != "":
 			self.artist_button.set_label(artist)
 			notify_text += " by <big>%s</big>"%artist
@@ -1289,15 +1293,24 @@ class christine(gtk_misc):
 			notify_text += " from <big>%s</big>"%album
 		else:
 			self.album_box.hide()
-		if self.current_iter != None:
-			#iter = self.get_natural_iter(iter)
+		# Updating the info in library, only if 
+		# it is avaylable.
+		if self.NATURAL_ITER != None:
 			if title != "":
-				self.natural_model.set(iter,
+				self.natural_model.set(self.NATURAL_ITER,
 						NAME,title,
 						ALBUM,album,
 						ARTIST,artist,
 						TN,track_number,
 						SEARCH,".".join([title,artist,album]))
+			title1,artist1,album1,tc = self.natural_model.get(self.NATURAL_ITER,
+				NAME,ARTIST,ALBUM,TN)
+			if title != title1 \
+				or artist != artist1 \
+				or album != album \
+				or track_number != tc:
+				gobject.timeout_add(500,self.library.save)
+
 		if PYNOTIFY:
 			try:
 				self.notify.close()
@@ -1311,13 +1324,10 @@ class christine(gtk_misc):
 			#self.notify.update(notify_text,"asdfasdfad")
 			self.notify.set_property("body",notify_text)
 			self.notify.show()
-
-		gobject.timeout_add(500,self.library.save)
-
-		t = self.player.type
-		self.toggle_show_player()
+		#t = self.player.type
+		self.show_hide_player()
 	
-	def toggle_show_player(self,widget=None):
+	def show_hide_player(self,widget=None):
 		if self.player.isvideo():
 			self.main_viewer_place.show_all()
 		elif self.player.issound():
@@ -1335,6 +1345,11 @@ class christine(gtk_misc):
 #===============player section ends ===========
 	
 	def open_remote(self,widget):
+		'''
+		Open a dialog to select a remote location.
+		'''
+		#It works, but we are not able to run mp3u 
+		#playlist, so, no radio :-(.
 		xml = glade_xml("open_remote.glade")
 		dialog = xml["dialog"]
 		entry = xml["entry"]
@@ -1345,18 +1360,30 @@ class christine(gtk_misc):
 		dialog.destroy()
 	
 	def show_about(self,widget):
+		'''
+		Show the aboud dialog
+		'''
 		about()
 			
 	def show_preferences(self,widget):
+		'''
+		Show the preferences dialog
+		'''
 		preferences()
 	
 	def show_properties(self,widget):
+		'''
+		Show the selected media properties
+		'''
 		selected = self.treeview.get_selection()
 		model, iter = selected.get_selected()
 		if iter != None:
 			show_properties(model.get_value(iter,PATH))
 	
 	def __trayicon(self):
+		'''
+		Show the trayicon button
+		'''
 		self.tray_icon = egg.trayicon.TrayIcon("Christine")
 		size = gtk.ICON_SIZE_SMALL_TOOLBAR
 		file_name = "/usr/share/christine/gui/pixmaps/logo.png"
@@ -1364,18 +1391,27 @@ class christine(gtk_misc):
 		event_box = gtk.EventBox()
 		a = event_box.set_events(gtk.gdk.POINTER_MOTION_MASK)
 		event_box.add( gtk.image_new_from_icon_set(icon, size) )
-		event_box.connect("button_press_event", self.show_tray_menu)
+		event_box.connect("button_press_event", self.__trayicon_event_handler)
 		self.tray_icon.add(event_box)
 		self.tray_icon.show_all()
 	
-	def show_tray_menu(self,widget,event):
+	def __trayicon_event_handler(self,widget,event):
+		'''
+		Handle the tryicon button-press-event
+		'''
 		if event.button == 3:
+			# If the event is a button press event
+			# and it was the third button then show
+			# a popup menu.
 			xml = glade_xml("tray_menu.glade")
 			xml.signal_autoconnect(self)
 			popup = xml["menu"]
 			popup.popup(None,None,None,3,gtk.get_current_event_time())
 			popup.show_all()
 		elif event.button == 1:
+			# This hide and then show the window, 
+			# Intended when you want to show the window
+			# in your current workspace.
 			print "showing the windows"
 			self.window.hide()
 			self.window.show()
