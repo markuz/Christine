@@ -497,7 +497,7 @@ class queue(gtk_misc):
 		'''
 		Save the current library
 		'''
-		print "save"
+		print "queue save"
 		self.pos = 0
 		self.model.foreach(self.prepare_for_disk)
 		self.library.save()
