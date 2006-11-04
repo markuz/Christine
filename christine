@@ -72,6 +72,7 @@ class christine(gtk_misc):
 		self.last_played		= []
 		self.stream_error_count = 0
 		self.search_text		= ""
+		self.total				= 0
 		self.__player_init() # "Creating the player"
 		self.__win() # "Building" the window.
 		self.__trayicon()
@@ -347,7 +348,7 @@ class christine(gtk_misc):
 		self.player.set_location(filename)
 		# enable the stream-length for the current song.
 		# this will be stopped when we get the length
-		gobject.timeout_add(300,self.stream_length)
+		gobject.timeout_add(300,self.__stream_length)
 		# if we can't get the length, in more than 20
 		# times in the same song, then, jump to the
 		# next song.
@@ -817,9 +818,7 @@ class christine(gtk_misc):
 		# if self.total is not defined then
 		# there is no media in player, so
 		# there is no way to "jump to" any place.
-		try:
-			a = self.total
-		except:
+		if self.total == 0:
 			return False
 		xml = glade_xml("jump_to.glade")
 		dialog = xml["dialog"]
@@ -1206,10 +1205,10 @@ class christine(gtk_misc):
 
 
 	def on_tick(self):
-			'''
-			Update the time showed in the player
-			'''
-		#try:
+		'''
+		Update the time showed in the player
+		'''
+		try:
 			nanos = self.player.query_position(gst.FORMAT_TIME)[0]
 			ts = nanos / gst.SECOND
 			time = "%02d:%02d" % divmod(ts,60)
@@ -1219,16 +1218,21 @@ class christine(gtk_misc):
 				print ts
 				ts = long(0)
 			self.set_scale_to_value(int(ts))
-		#except:
-		#	pass
-			return True
+		# Taking care only in gst.QueryError
+		# other errors are raised
+		except gst.QueryError:
+			pass
+		return True
 	
-	def stream_length(self):
+	def __stream_length(self):
+		'''
+		Catches the lenght of the media and update it in the 
+		player
+		'''
 		if self.player.get_location().split(":")[0] == "http":
 			return True
 		try:
 			self.total = self.player.query_duration(gst.FORMAT_TIME)[0]
-			#print "stream_length:",self.total
 			ts = self.total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
 			self.stream_length_label.set_text(text)
@@ -1247,10 +1251,13 @@ class christine(gtk_misc):
 				self.set_location(l)
 				self.play_button.set_active(False)
 				self.play_button.set_active(True)
-			print "stream_length: error"
+			#print "stream_length: error"
 			return True
 		
 	def set_tags(self,widget="",b=""):
+		'''
+		Update the current media tags in the library
+		'''
 		location = self.player.get_location()
 		self.current_iter = None
 		self.natural_model.foreach(self.search_by_path,location)
