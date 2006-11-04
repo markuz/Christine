@@ -1,3 +1,9 @@
+2006-11-04 Marco Antonio Islas Crfuz <markuz@islascruz.org>
+	* christine:
+	Fixed a HUGE bug that let you re-import some songs if you 
+	previosly filter the library model. Since the search was made in the 
+	top level model the number of files change on every search.
+	Using the low level model uses all the files.
 2006-11-02 Marco Antonio Islas Crfuz <markuz@islascruz.org>
 	* lib_christine_libs_christine.py: vis-plugin bugfix # #1589432
 	* christine: go_prev improvement

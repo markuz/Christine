@@ -89,7 +89,6 @@ class christine(gtk_misc):
 		self.main_viewer_place = self.xml["playerbox"]
 		self.main_viewer_place.pack_start(self.player,True,True,0)
 		self.player.bus.add_watch(self.__message_handler)
-	
 
 # This method is no longer in use, Will be deleted soon
 #	def miniviewer(self):
@@ -415,6 +414,15 @@ class christine(gtk_misc):
 		if self.small_view_menuitem.get_active() and \
 				not widget.get_active():
 			self.toggle_small_view(self.small_view_menuitem)
+		if not widget.get_active() and self.IS_FULLSCREEN:
+			print "self.list_box.show()"
+			self.videobox.show()
+			self.tmp_vbox.hide()
+		if self.IS_FULLSCREEN:
+			self.IS_FULLSCREEN = False
+			self.toggle_full_screen()
+			self.window.fullscreen()
+			self.IS_FULLSCREEN = True
 	
 	def toggle_full_screen(self,widget=None):
 		'''
@@ -423,13 +431,20 @@ class christine(gtk_misc):
 		# Only if we are not in FullScreen and we are playing a video.
 		# FIXME: We must enable the full screen if christine has
 		# visualization enabled.
-		if not self.IS_FULLSCREEN and self.player.isvideo():
-			self.videobox.hide()
-			self.main_viewer_place.remove(self.player)
-			self.tmp_vbox.pack_start(self.player,True,True,2)
-			self.tmp_vbox.show_all()
-			self.window.fullscreen()
-			self.IS_FULLSCREEN = True
+		if not self.IS_FULLSCREEN:
+			if (self.player.isvideo() or \
+				self.gconf.get_bool("ui/visualization")):
+				self.videobox.hide()
+				self.main_viewer_place.remove(self.player)
+				self.tmp_vbox.pack_start(self.player,True,True,2)
+				self.tmp_vbox.show_all()
+				self.window.fullscreen()
+				self.IS_FULLSCREEN = True
+			else:
+				print "Full screen with no visualization!!"
+				self.window.fullscreen()
+				self.IS_FULLSCREEN = True
+				pass
 		else: # Non-full screen mode.
 			# hide if we are not playing a video nor
 			# visualization.
@@ -439,7 +454,8 @@ class christine(gtk_misc):
 			self.window.unfullscreen()
 			self.tmp_vbox.hide()
 			self.tmp_vbox.remove(self.player)
-			self.set_player_for_first_time()
+			#self.set_player_for_first_time()
+			self.main_viewer_place.pack_start(self.player,True,True,0)
 			self.miniviewer_tcontainer.show()
 			self.menubar.show()
 			self.videobox.show()
@@ -1105,7 +1121,7 @@ class christine(gtk_misc):
 			raise TypeError,"files must be List, got %s"%type(files)
 		files.reverse()
 		self.paths = []
-		self.model.foreach(self.get_paths)
+		self.natural_model.foreach(self.get_paths)
 		self.files_to_add = []
 		for i in files:
 			if not i in self.paths:
@@ -1118,6 +1134,10 @@ class christine(gtk_misc):
 		gobject.timeout_add(600,self.__add_file,queue)
 		self.add_win.run()
 		
+	def get_paths(self,model,path,iter):
+		loc = model.get_value(iter,PATH)
+		self.paths.append(loc)
+
 	def __add_file(self,queue=False):
 		'''
 		Add a single file, to the library or queue.
@@ -1136,7 +1156,6 @@ class christine(gtk_misc):
 				newfile2 = ""
 			if len(self.files_to_add) >0:
 				self.percentaje = 1 - ( len(self.files_to_add)/float(self.total_num_files))
-				print self.percentaje
 			else:
 				self.percentaje = 1
 			if self.percentaje >= 1.0:
@@ -1179,9 +1198,6 @@ class christine(gtk_misc):
 		self.add_win.destroy()
 
 		
-	def get_paths(self,model,path,iter):
-		loc = model.get_value(iter,PATH)
-		self.paths.append(loc)
 	
 	def import_to_queue(self,widget):
 		self.import_file("",True)
