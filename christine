@@ -1341,9 +1341,9 @@ class christine(gtk_misc):
 				self.notify.close()
 			except:
 				pass
-			self.notify = pynotify.Notification("christine","",self.wdir+"logo.png")
-			print self.wdir+"logo.png"
-			self.notify.attach_to_widget(self.tray_icon,)
+			self.notify = pynotify.Notification("christine","",
+					os.path.join(self.wdir,"logo.png"),self.tray_icon)
+			#self.notify.attach_to_widget(self.tray_icon)
 			self.notify.set_timeout(3000)
 
 			pixbuf = self.gen_pixbuf("logo.png")
