@@ -19,7 +19,7 @@
 
 
 
-import gtk, os, gobject, gconf
+import gtk, os, gobject, gconf, os.path
 import gtk.glade
 class glade_xml:
 	def __init__(self,file,root=None):
@@ -54,8 +54,8 @@ class glade_xml:
 
 class gtk_misc:
 	def __init__(self):
-		if os.path.isdir("./gui/pixmaps/"):
-			self.wdir = "./gui/pixmaps/"
+		if os.path.isdir(os.path.join(os.getcwd(),"./gui/pixmaps/")):
+			self.wdir = os.path.join(os.getcwd(),"./gui/pixmaps/")
 		else:
 			self.wdir = "@datadir@/christine/gui/pixmaps"
 

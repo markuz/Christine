@@ -130,7 +130,7 @@ class christine(gtk_misc):
 		self.treeview = self.library.tv
 		self.treeview.connect("button-press-event",self.pop_menu)
 		self.treeview.connect("key-press-event",self.key_press_handler)
-		self.treeview.connect("item-activated",self.item_activated)
+		self.treeview.connect("row-activated",self.item_activated)
 		# Models in the library are assigned to class variables
 		self.model = self.library.tv.get_model()
 		self.filter_model = self.model.get_model()
@@ -304,10 +304,10 @@ class christine(gtk_misc):
 		model = widget.get_model()
 		iter = model.get_iter(path)
 		filename = model.get_value(iter,PATH)
-		self.main.set_location(filename)
-		self.main.play_button.set_active(False)
-		self.main.play_button.set_active(True)
-		self.main.filename = filename
+		self.set_location(filename)
+		self.play_button.set_active(False)
+		self.play_button.set_active(True)
+		self.filename = filename
 
 		
 	#def toolbar(self):
@@ -1341,8 +1341,9 @@ class christine(gtk_misc):
 				self.notify.close()
 			except:
 				pass
-			self.notify = pynotify.Notification("christine")
-			self.notify.attach_to_widget(self.tray_icon)
+			self.notify = pynotify.Notification("christine","",self.wdir+"logo.png")
+			print self.wdir+"logo.png"
+			self.notify.attach_to_widget(self.tray_icon,)
 			self.notify.set_timeout(3000)
 
 			pixbuf = self.gen_pixbuf("logo.png")
