@@ -130,6 +130,7 @@ class christine(gtk_misc):
 		self.treeview = self.library.tv
 		self.treeview.connect("button-press-event",self.pop_menu)
 		self.treeview.connect("key-press-event",self.key_press_handler)
+		self.treeview.connect("item-activated",self.item_activated)
 		# Models in the library are assigned to class variables
 		self.model = self.library.tv.get_model()
 		self.filter_model = self.model.get_model()
@@ -299,7 +300,15 @@ class christine(gtk_misc):
 			self.queue.add(name)
 		else:
 			pass
-	
+	def item_activated(self,widget,path,iter):
+		model = widget.get_model()
+		iter = model.get_iter(path)
+		filename = model.get_value(iter,PATH)
+		self.main.set_location(filename)
+		self.main.play_button.set_active(False)
+		self.main.play_button.set_active(True)
+		self.main.filename = filename
+
 		
 	#def toolbar(self):
 	#	self.sortb = self.xml["sortb"]
@@ -693,9 +702,9 @@ class christine(gtk_misc):
 			# FIXME: I got to fix this when I know what to do with the 
 			# play behavior.
 			if self.CONTROL_STAT -1 == CONTROL_SHUFFLE:
-				self.elements = []
+				self.elements = 0
 				self.model.foreach(self.get_max_elements)
-				iter = self.model.get_iter(int(len(self.elements)*random.random()))
+				iter = self.model.get_iter((self.elements*random.random(),))
 				filename = self.model.get_value(iter,PATH)
 				if (not filename in self.last_played or \
 					self.gconf.get_bool("control/repeat")):
@@ -769,7 +778,7 @@ class christine(gtk_misc):
 		in a list self.elements
 		'''
 		#iter = model.get_iter(path)
-		self.elements.append(iter)
+		self.elements+=1
 		
 	
 	def on_scale_value_changed(self,scale,a,value=None):

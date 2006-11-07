@@ -40,8 +40,20 @@ TIME)=range(10)
 VNAME,
 VPIX) = range(3)
 
+
+##
+## Since library and queue are more or less the same 
+## thing. I guess we need to use a base class for 
+## both lists (and other lists)
+##
+
 class library(gtk_misc):
 	def __init__(self,main):
+		'''
+		Constructor, load the 
+		glade ui description for a simple treeview
+		and set some class variables
+		'''
 		self.iters = {}
 		gtk_misc.__init__(self)
 		self.xml = glade_xml("treeview.glade","ltv")
@@ -60,17 +72,17 @@ class library(gtk_misc):
 		self.CURRENT_ITER = self.model.get_iter_first()
 		#gobject.timeout_add(1000,self.update_values)
 	
-	def update_values(self):
-		try:
-			self.CURRENT_ITER = self.model.iter_next(self.CURRENT_ITER)
-			path = self.model.get(self.CURRENT_ITER,PATH)
-			self.discoverer.set_location(path)
-			self.iters[self.discoverer.get_location()] = self.CURRENT_ITER
-			print locals()
-		except:
-			self.CURRENT_ITER = self.model.get_iter_first()
-		print self.discoverer.get_location()
-		return True
+	#def update_values(self):
+	#	try:
+	#		self.CURRENT_ITER = self.model.iter_next(self.CURRENT_ITER)
+	#		path = self.model.get(self.CURRENT_ITER,PATH)
+	#		self.discoverer.set_location(path)
+	#		self.iters[self.discoverer.get_location()] = self.CURRENT_ITER
+	#		print locals()
+	#	except:
+	#		self.CURRENT_ITER = self.model.get_iter_first()
+	#	print self.discoverer.get_location()
+	#	return True
 	
 	def gen_model(self,refresh=False):
 		#print "lib_library.gen_model"
@@ -92,22 +104,9 @@ class library(gtk_misc):
 		for i in keys:
 			pix = self.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-			#if len (sounds[i]["name"]) > limit:
-			#	name = sounds[i]["name"][:limit-3]+"..."
-			#	name = sounds[i]["name"]
-			#else:
 			name = sounds[i]["name"]
-			#if len(sounds[i]["artist"]) > limit:
-			#	artist = sounds[i]["artist"][:limit-3]+"..."
-			#	artist = sounds[i]["artist"]
-			#else:
 			artist = sounds[i]["artist"]
-			#	
-			#if len(sounds[i]["album"]) > limit:
-			#	album = sounds[i]["album"][:limit-3]+"..."
 			album = sounds[i]["album"]
-			#else:
-			#	album = sounds[i]["album"]
 			
 			if not sounds[i].has_key("play_count"):
 				sounds[i]["play_count"] = 0
@@ -215,14 +214,11 @@ class library(gtk_misc):
 		d = self.discoverer
 		t = b.type
 		if t == gst.MESSAGE_TAG:
-			#print a,b,d.get_location(),self.model.get_path(self.iters[d.get_location()])
 			self.discoverer.found_tags_cb(b.parse_tag())
 			name	= d.get_tag("title")
 			album	= d.get_tag("album")
 			artist	= d.get_tag("artist")
 			tn		= d.get_tag("track-number")
-			#if name != "":
-			#	del self.discoverer
 			pix = self.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 			if name == "":
@@ -259,48 +255,56 @@ class library(gtk_misc):
 			self.discoverer.set_location(d.get_location())
 		return True
 
-	def add1(self,file,prepend=False):
-		name   = ""
-		artist = ""
-		album  = ""
-		track_number = 0
+	#def add1(self,file,prepend=False):
+	#	name   = ""
+	#	artist = ""
+	#	album  = ""
+	#	track_number = 0
+	#	
+	#	pix = self.gen_pixbuf("blank.png")
+	#	pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+	#
+	#	if name == "":
+	#		n = os.path.split(file)[1].split(".")
+	#		name = ".".join([k for k in n[:-1]])
+	#	model = self.model
+	#	if prepend:
+	#		iter = model.prepend()
+	#	else:
+	#		iter = model.append()
+	#	model.set(iter,
+	#				NAME,name,
+	#				PATH,file,
+	#				TYPE,"sound",
+	#				PIX, pix,
+	#				ALBUM,album,
+	#				ARTIST,artist,
+	#				TN,str(track_number),
+	#				SEARCH,",".join([name,album,artist]))
+	#	model.foreach(self.get_last_iter)
+	#	self.iters.append([self.last_iter,file])
 
-		pix = self.gen_pixbuf("blank.png")
-		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-
-		if name == "":
-			n = os.path.split(file)[1].split(".")
-			name = ".".join([k for k in n[:-1]])
-		model = self.model
-		if prepend:
-			iter = model.prepend()
-		else:
-			iter = model.append()
-		model.set(iter,
-					NAME,name,
-					PATH,file,
-					TYPE,"sound",
-					PIX, pix,
-					ALBUM,album,
-					ARTIST,artist,
-					TN,str(track_number),
-					SEARCH,",".join([name,album,artist]))
-		model.foreach(self.get_last_iter)
-		self.iters.append([self.last_iter,file])
-
-	def get_last_iter(self,model,path,iter):
-		self.last_iter = iter
+	def get_last_iter(self):
+		'''
+		library.get_last_iter() -> None
+		Assign the last iter in the low level model (self.model)
+		in self.last_iter.
+		'''
+		self.model.foreach(lambda model,path,iter: self.last_iter = iter)
 		
-	def set_tags(self):
-		if len(self.iters) > 0:
-			iter,path = self.iters.pop()
-			self.iter = iter
-			self.discoverer.set_location(path)
-			self.save()
-		return True
+	#def set_tags(self):
+	#	if len(self.iters) > 0:
+	#		iter,path = self.iters.pop()
+	#		self.iter = iter
+	#		self.discoverer.set_location(path)
+	#		self.save()
+	#	return True
 			
 
 	def remove(self,iter):
+		'''
+		Remove the selected iter from the library.
+		'''
 		key = self.model.get_value(iter,PATH)
 		self.library_lib.remove(key)
 		self.model.remove(iter)
@@ -309,7 +313,7 @@ class library(gtk_misc):
 		'''
 		Save the current library
 		'''
-		#self.library_lib.clear()
+		self.library_lib.clear()
 		self.model.foreach(self.prepare_for_disk)
 		self.library_lib.save()
 		
@@ -336,16 +340,6 @@ class library(gtk_misc):
 				"play_count":pc,
 				"duration":duration})
 		
-	def item_activated(self,widget,path,iter):
-		model = widget.get_model()
-		iter = model.get_iter(path)
-		filename = model.get_value(iter,PATH)
-		self.main.set_location(filename)
-		#self.main.player.playit()
-		#self.main.STATE_PLAYING = True
-		self.main.play_button.set_active(False)
-		self.main.play_button.set_active(True)
-		self.main.filename = filename
 
 	def key_press_handler(self,treeview,event):
 		if event.keyval == 65535:
@@ -356,6 +350,9 @@ class library(gtk_misc):
 			self.library_lib.remove(name)
 			self.save()
 			
+	
+	# Need some help in the next functions
+	# They need to be retouched to work fine.
 	def set_drag_n_drop(self):
 		 self.tv.connect("drag_motion",self.check_contexts)
 		 self.tv.connect("drag_drop",self.dnd_handler)
@@ -371,17 +368,15 @@ class library(gtk_misc):
 		selection.set("STRING",8,text)
 		return
 		
-		 
-
 	def check_contexts(self,treeview,context,selection,info,timestamp):
 		context.drag_status(gtk.gdk.ACTION_COPY,timestamp)
 		return True
+
 	def dnd_handler(self,treeview,context,selection,info,timestamp,b=None,c=None):
-		'''
-		'''
 		tgt = treeview.drag_dest_find_target(context,[("STRING",0,0)])
 		data = treeview.drag_get_data(context,tgt)
 		return True
+
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
 		treeview.emit_stop_by_name("drag_data_received")
 		target = treeview.drag_dest_find_target(context,[("STRING",0,0)])
@@ -572,58 +567,3 @@ class queue(gtk_misc):
 		return result
 		
 
-class mini_lists:
-	def __init__(self,header,first_element):
-		self.xml = glade_xml("treeview.glade","ltv")
-		self.treeview = self.xml["ltv"]
-		self.header = header
-		self.first_element = first_element
-		self.list = []
-		self.text_to_search = ""
-		self.gen_model()
-		self.add_column()
-		filter = self.model.filter_new()
-		filter.set_visible_func(self.filter)
-		self.treeview.set_model(filter)
-		
-	def gen_model(self,refresh=False):
-		if refresh:
-			self.model.clear()
-		else:
-			self.model = gtk.ListStore(gobject.TYPE_STRING,
-					gobject.TYPE_STRING)
-		self.add(self.first_element,"")
-			
-	def add(self,artist,parent=""):
-		iter = self.model.append()
-		self.model.set(iter,
-				0,artist,
-				1,parent)
-		if not artist in self.list:
-			self.list.append(artist)
-		
-	def add_column(self):
-		artist = gtk.TreeViewColumn(self.header,
-				gtk.CellRendererText(),
-				text=0)
-		self.treeview.append_column(artist)
-		
-	def filter(self,model,iter):
-		value = model.get_value(iter,1)
-		album = model.get_value(iter,0)
-		if value == self.text_to_search \
-				or self.text_to_search == "All Artists" \
-				or album == "All Albums":
-			return True
-		else:
-			return False
-	
-class sources(gtk_misc):
-	def __init__(self):
-		gtk_misc.__init__(self)
-		self.xml = glade_xml("treeview.glade","ltv")
-		self.treeview = self.xml["ltv"]
-	
-	def gen_model(self):
-		self.model = gtk.ListStore(gtk.gdk.Pixbuf,str)
-		

@@ -20,14 +20,17 @@
 
 
 import gtk, os, gobject, gconf
-
+import gtk.glade
 class glade_xml:
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of initialize gtk.glade.XML'''
-		import gtk.glade
 		if os.path.isdir("./locale/"):
 			locale_dir= "./locale"
 		else:
+			# this variable is configurable
+			# running the configure and make scripts
+			# the resulting file will be gtk_misc.py 
+			# without the leading ".in"
 			locale_dir = "@datadir@/locale"
 		if os.path.isdir("./gui/"):	
 			self.wdir = "./gui/"
