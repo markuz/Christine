@@ -126,7 +126,7 @@ class christine(gtk_misc):
 		self.play_menuitem = self.xml["play_menuitem"]
 		# Create the library by calling to libs_christine.library
 		# class
-		self.library = library(self)
+		self.library = library()
 		self.treeview = self.library.tv
 		self.treeview.connect("button-press-event",self.pop_menu)
 		self.treeview.connect("key-press-event",self.key_press_handler)
@@ -181,11 +181,12 @@ class christine(gtk_misc):
 
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
-		self.queue = queue(self)
+		self.queue = queue()
 		self.queue_sw.add(self.queue.treeview)
 		self.queue_sw.hide()
 		gobject.timeout_add(500,self.check_queue)
 		self.queue.treeview.connect("key-press-event",self.queue_key_handler)
+		self.queue.treeview.connect("row-activated",self.item_activated)
 		#=============queue begins
 	
 

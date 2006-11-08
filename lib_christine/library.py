@@ -48,7 +48,7 @@ VPIX) = range(3)
 ##
 
 class library(gtk_misc):
-	def __init__(self,main):
+	def __init__(self):
 		'''
 		Constructor, load the 
 		glade ui description for a simple treeview
@@ -59,7 +59,6 @@ class library(gtk_misc):
 		self.xml = glade_xml("treeview.glade","ltv")
 		self.xml.signal_autoconnect(self)
 		self.gconf = christine_gconf()
-		self.main = main
 		self.tv = self.xml["ltv"]
 		self.library_lib = lib_library("music")
 		self.gen_model()
@@ -391,9 +390,8 @@ class library(gtk_misc):
 		return True
 
 class queue(gtk_misc):
-	def __init__(self,main):
+	def __init__(self):
 		gtk_misc.__init__(self)
-		self.main = main
 		self.iters = {}
 		self.discoverer = discoverer()
 		self.discoverer.bus.add_watch(self.message_handler)
@@ -506,15 +504,15 @@ class queue(gtk_misc):
 		self.library.append(self.pos,{"path":path,"name":name,"type":"sound","extra":[]})
 		self.pos += 1
 		
-	def item_activated(self,widget,path,iter):
-		model = widget.get_model()
-		iter = model.get_iter(path)
-		filename = model.get_value(iter,PATH)
-		self.main.set_location(filename)
-		self.main.player.set_location(filename)
-		self.main.play_button.set_active(False)
-		self.main.play_button.set_active(True)
-		self.main.filename = filename
+	#def item_activated(self,widget,path,iter):
+	#	model = widget.get_model()
+	#	iter = model.get_iter(path)
+	#	filename = model.get_value(iter,PATH)
+	#	self.main.set_location(filename)
+	#	self.main.player.set_location(filename)
+	#	self.main.play_button.set_active(False)
+	#	self.main.play_button.set_active(True)
+	#	self.main.filename = filename
 	
 	def key_press_handler(self,widget,event,key):
 		print widget,event,key
