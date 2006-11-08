@@ -1342,7 +1342,7 @@ class christine(gtk_misc):
 			except:
 				pass
 			self.notify = pynotify.Notification("christine","",
-					os.path.join(self.wdir,"logo.png"),self.tray_icon)
+					os.path.join(self.wdir,"logo22.png"),self.tray_icon)
 			#self.notify.attach_to_widget(self.tray_icon)
 			self.notify.set_timeout(3000)
 
