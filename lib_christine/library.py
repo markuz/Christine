@@ -289,9 +289,11 @@ class library(gtk_misc):
 		Assign the last iter in the low level model (self.model)
 		in self.last_iter.
 		'''
-		self.model.foreach(self.__get_last_iter)
-	def __get_last_iter(self,mode,path,iter):
-		self.last_iter = iter
+		#self.model.foreach(self.__get_last_iter)
+		path = len(self.model)
+		self.last_iter = model.get_iter(path)
+	#def __get_last_iter(self,mode,path,iter):
+	#	self.last_iter = iter
 		
 	#def set_tags(self):
 	#	if len(self.iters) > 0:
