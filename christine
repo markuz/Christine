@@ -20,7 +20,6 @@
 
 import pygst; pygst.require("0.10")
 import gnome,gtk,gst.interfaces,random,sys,bonobo
-import egg.trayicon
 from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
@@ -1301,6 +1300,7 @@ class christine(gtk_misc):
 
 		# stript_xml_entities is a method inherited from
 		# gtk_misc
+		tooltext = title
 		title = self.strip_xml_entities(title)
 		self.title_label.set_markup("<big>%s</big>"%title)
 		self.window.set_title("%s - Christine"%title)
@@ -1311,6 +1311,7 @@ class christine(gtk_misc):
 		if artist != "":
 			self.artist_button.set_label(artist)
 			notify_text += " by <big>%s</big>"%artist
+			tooltext += "\nby %s"%artist
 			self.artist_box.show_all()
 		else:
 			self.artist_box.hide()
@@ -1318,6 +1319,7 @@ class christine(gtk_misc):
 			self.album_button.set_label(album)
 			self.album_box.show_all()
 			notify_text += " from <big>%s</big>"%album
+			tooltext += "\nfrom %s"%album
 		else:
 			self.album_box.hide()
 		# Updating the info in library, only if 
@@ -1344,13 +1346,14 @@ class christine(gtk_misc):
 			except:
 				pass
 			self.notify = pynotify.Notification("christine","",
-					os.path.join(self.wdir,"logo22.png"),self.tray_icon)
+					os.path.join(self.wdir,"logo22.png"))
 			#self.notify.attach_to_widget(self.tray_icon)
 			self.notify.set_timeout(3000)
 
 			pixbuf = self.gen_pixbuf("logo.png")
 			#self.notify.update(notify_text,"asdfasdfad")
 			self.notify.set_property("body",notify_text)
+			self.tray_icon.set_tooltip(tooltext)
 			self.notify.show()
 		#t = self.player.type
 		self.show_hide_player()
@@ -1410,24 +1413,19 @@ class christine(gtk_misc):
 	
 	def __trayicon(self):
 		'''
-		Show the trayicon button
+		Show the trya icon 
 		'''
-		self.tray_icon = egg.trayicon.TrayIcon("Christine")
-		size = gtk.ICON_SIZE_SMALL_TOOLBAR
-		file_name = "/usr/share/christine/gui/pixmaps/logo.png"
-		icon = gtk.IconSet( gtk.gdk.pixbuf_new_from_file(file_name) )
-		event_box = gtk.EventBox()
-		a = event_box.set_events(gtk.gdk.POINTER_MOTION_MASK)
-		event_box.add( gtk.image_new_from_icon_set(icon, size) )
-		event_box.connect("button_press_event", self.__trayicon_event_handler)
-		self.tray_icon.add(event_box)
-		self.tray_icon.show_all()
+		self.tray_icon = gtk.StatusIcon()
+		self.tray_icon.set_from_file(os.path.join(self.wdir,"logo22.png"))
+		#pixbuf = self.tray_icon.get_pixbuf()
+		#self.timage = gtk.Image()
+		#self.timage.set_from_pixbuf(pixbuf)
+
+		self.tray_icon.connect("popup-menu",self.__trayicon_event_handler)
+		self.tray_icon.connect("activate",self.__trayicon_activated)
 	
-	def __trayicon_event_handler(self,widget,event):
-		'''
-		Handle the tryicon button-press-event
-		'''
-		if event.button == 3:
+	def __trayicon_event_handler(self,widget,button,activate_time):
+		if button == 3:
 			# If the event is a button press event
 			# and it was the third button then show
 			# a popup menu.
@@ -1436,11 +1434,10 @@ class christine(gtk_misc):
 			popup = xml["menu"]
 			popup.popup(None,None,None,3,gtk.get_current_event_time())
 			popup.show_all()
-		elif event.button == 1:
-			# This hide and then show the window, 
-			# Intended when you want to show the window
-			# in your current workspace.
-			print "showing the windows"
+	def __trayicon_activated(self,statusicon):
+		#	# This hide and then show the window, 
+		#	# Intended when you want to show the window
+		#	# in your current workspace.
 			self.window.hide()
 			self.window.show()
 

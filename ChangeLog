@@ -1,3 +1,10 @@
+2006-11-10 Marco Antonio Islas Cruz	<markuz@islascruz.org>
+	* christine:
+	Tray Icon is no longer be showed by the "egg.tryicon" module
+	we will use the new gtk.StatusIcon "widget?". Just to keep
+	the gtk stuff in the place and adopt the new stuff just
+	to avoid breaking thing in the future.
+	There are some minor changes in christine.
 2006-11-04 Marco Antonio Islas Crfuz <markuz@islascruz.org>
 	* christine:
 	Fixed a HUGE bug that let you re-import some songs if you 
