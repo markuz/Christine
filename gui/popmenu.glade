@@ -1,73 +1,90 @@
-<?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
-<!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!-- Generated with glade3
+	Version: 3.0.1
+	Date: Fri Nov 10 14:13:37 2006
+	User: markuz
+	Host: cucusa
+-->
 <glade-interface>
-
-<widget class="GtkMenu" id="menu">
-
-  <child>
-    <widget class="GtkImageMenuItem" id="add_to_queue1">
-      <property name="visible">True</property>
-      <property name="label" translatable="yes">Add to queue</property>
-      <property name="use_underline">True</property>
-      <signal name="activate" handler="popup_add_to_queue" last_modification_time="Sat, 29 Apr 2006 17:02:00 GMT"/>
-      <accelerator key="q" modifiers="0" signal="activate"/>
-
-      <child internal-child="image">
-	<widget class="GtkImage" id="image7">
-	  <property name="visible">True</property>
-	  <property name="stock">gtk-add</property>
-	  <property name="icon_size">1</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	</widget>
-      </child>
-    </widget>
-  </child>
-
-  <child>
-    <widget class="GtkSeparatorMenuItem" id="separator1">
-      <property name="visible">True</property>
-    </widget>
-  </child>
-
-  <child>
-    <widget class="GtkMenuItem" id="properties1">
-      <property name="visible">True</property>
-      <property name="label" translatable="yes">Properties</property>
-      <property name="use_underline">True</property>
-      <signal name="activate" handler="show_properties" last_modification_time="Sat, 10 Jun 2006 03:38:12 GMT"/>
-    </widget>
-  </child>
-
-  <child>
-    <widget class="GtkSeparatorMenuItem" id="separator2">
-      <property name="visible">True</property>
-    </widget>
-  </child>
-
-  <child>
-    <widget class="GtkImageMenuItem" id="remove1">
-      <property name="visible">True</property>
-      <property name="label" translatable="yes">Remove</property>
-      <property name="use_underline">True</property>
-      <signal name="activate" handler="on_remove1_activate" last_modification_time="Sat, 29 Apr 2006 16:54:18 GMT"/>
-
-      <child internal-child="image">
-	<widget class="GtkImage" id="image8">
-	  <property name="visible">True</property>
-	  <property name="stock">gtk-delete</property>
-	  <property name="icon_size">1</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	</widget>
-      </child>
-    </widget>
-  </child>
-</widget>
-
+  <widget class="GtkMenu" id="menu">
+    <child>
+      <widget class="GtkImageMenuItem" id="add_to_queue1">
+        <property name="visible">True</property>
+        <property name="label">Add to queue</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="popup_add_to_queue"/>
+        <accelerator key="q" modifiers="" signal="activate"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="image7">
+            <property name="visible">True</property>
+            <property name="stock">gtk-add</property>
+            <property name="icon_size">1</property>
+          </widget>
+        </child>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="separator1">
+        <property name="visible">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="properties1">
+        <property name="visible">True</property>
+        <property name="label">Properties</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="show_properties"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="separator2">
+        <property name="visible">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkImageMenuItem" id="remove1">
+        <property name="visible">True</property>
+        <property name="label">Remove</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_remove1_activate"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="stock">gtk-delete</property>
+            <property name="icon_size">1</property>
+          </widget>
+        </child>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
+        <property name="visible">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="menuitem1">
+        <property name="visible">True</property>
+        <property name="label">Misc</property>
+        <child>
+          <widget class="GtkMenu" id="menu1">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkImageMenuItem" id="imagemenuitem1">
+                <property name="visible">True</property>
+                <property name="label">Delete from disk</property>
+                <signal name="activate" handler="delete_file_from_disk"/>
+                <child internal-child="image">
+                  <widget class="GtkImage" id="menu-item-image3">
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK</property>
+                    <property name="stock">gtk-delete</property>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+          </widget>
+        </child>
+      </widget>
+    </child>
+  </widget>
 </glade-interface>

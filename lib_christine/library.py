@@ -391,6 +391,19 @@ class library(gtk_misc):
 				install_gui(text,self)
 		return True
 
+	def delete_from_disk(self,iter):
+		dialog = glade_xml("delete_file_from_disk_dialog.glade")["dialog"]
+		response = dialog.run()
+		path = self.model.get_value(iter,PATH)
+		if response == gtk.RESPONSE_OK:
+			try:
+				os.unlink(path)
+				self.remove(iter)
+				self.save()
+			except IOError:
+				error("cannot delete file: %s"%path)
+		dialog.destroy()
+
 class queue(gtk_misc):
 	def __init__(self):
 		gtk_misc.__init__(self)
