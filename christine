@@ -27,6 +27,7 @@ from lib_christine.library import *
 from lib_christine.preferences import *
 from lib_christine.show_properties import *
 from lib_christine.about import *
+from lib_christine.player import *
 
 
 bonobo.activate()
@@ -84,7 +85,7 @@ class christine(gtk_misc):
 		'''
 		Initialize the player and packs it into the main_viewer_place
 		'''
-		self.player = play10(self)
+		self.player = player(self)
 		self.main_viewer_place = self.xml["playerbox"]
 		self.main_viewer_place.pack_start(self.player,True,True,0)
 		self.player.bus.add_watch(self.__message_handler)
@@ -252,9 +253,10 @@ class christine(gtk_misc):
 		if event.keyval == 65535:
 			selection = self.queue.treeview.get_selection()
 			model,iter = selection.get_selected()
-			name = model.get_value(iter,NAME)
-			self.queue.remove(iter)
-			self.queue.save()
+			if iter != None:
+				name = model.get_value(iter,NAME)
+				self.queue.remove(iter)
+				self.queue.save()
 		
 
 	def pop_menu(self,widget,event):
@@ -776,7 +778,7 @@ class christine(gtk_misc):
 		#print model,iter,path,path1
 		if mlocation == location:
 			self.current_iter = iter
-			return True
+			return False
 			
 	#def get_max_elements(self,model,path,iter):
 	#	'''

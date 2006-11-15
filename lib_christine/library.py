@@ -23,6 +23,7 @@ import cPickle as pickle
 import gst, gst.interfaces
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
+from lib_christine.discoverer import *
 #import pdb
 
 (PATH,
@@ -34,11 +35,11 @@ ARTIST,
 TN,
 SEARCH,
 PLAY_COUNT,
-TIME)=range(10)
+TIME)=xrange(10)
 
 (VPATH,
 VNAME,
-VPIX) = range(3)
+VPIX) = xrange(3)
 
 
 ##
@@ -93,20 +94,12 @@ class library(gtk_misc):
 		else:
 			self.model.clear()
 		sounds = self.library_lib.get_sounds()
-		soundpix = self.gen_pixbuf("sound.png")
-		soundpix = soundpix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		videopix = self.gen_pixbuf("video.png")
-		videopix = videopix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		keys = sounds.keys()
 		keys.sort()
 		limit = 20
+		pix = self.gen_pixbuf("blank.png")
+		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		for i in keys:
-			pix = self.gen_pixbuf("blank.png")
-			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-			name = sounds[i]["name"]
-			artist = sounds[i]["artist"]
-			album = sounds[i]["album"]
-			
 			if not sounds[i].has_key("play_count"):
 				sounds[i]["play_count"] = 0
 
@@ -114,14 +107,15 @@ class library(gtk_misc):
 				sounds[i]["duration"] = "00:00"
 
 			self.model.set(self.model.append(),
-					NAME,name,
+					NAME,sounds[i]["name"],
 					PATH,i,
 					TYPE,sounds[i]["type"],
 					PIX, pix,
-					ALBUM,album,
-					ARTIST,artist,
+					ALBUM,sounds[i]["album"],
+					ARTIST,sounds[i]["artist"],
 					TN,str(sounds[i]["track_number"]),
-					SEARCH,",".join([name,album,artist]),
+					SEARCH,",".join([sounds[i]["name"],sounds[i]["album"],
+									sounds[i]["artist"]]),
 					PLAY_COUNT,sounds[i]["play_count"],
 					TIME,sounds[i]["duration"])
 		self.tv.freeze_child_notify()
@@ -317,6 +311,7 @@ class library(gtk_misc):
 		Save the current library
 		'''
 		self.library_lib.clear()
+		self.append = self.library_lib.append
 		self.model.foreach(self.prepare_for_disk)
 		self.library_lib.save()
 		
@@ -337,7 +332,7 @@ class library(gtk_misc):
 					TYPE,
 					PLAY_COUNT,
 					TIME)
-		self.library_lib.append(path,{"name":name,
+		self.append(path,{"name":name,
 				"type":type,"artist":artist,
 				"album":album,"track_number":track_number,
 				"play_count":pc,
@@ -429,7 +424,6 @@ class queue(gtk_misc):
 			p = gtk.gdk.Pixbuf
 			self.model = gtk.ListStore(s,s,s)
 		keys = self.library.keys()
-		print self.library.files
 		keys.sort()
 		for i in keys:
 			print i, self.library[i]["name"]
@@ -500,7 +494,7 @@ class queue(gtk_misc):
 	def remove(self,iter):
 		path = self.model.get_value(iter,PATH)
 		self.model.remove(iter)
-		self.library.files = {}
+		self.library.clear()
 		self.save()
 	
 	def save(self):

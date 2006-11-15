@@ -1,3 +1,12 @@
+2006-11-15 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* General:
+	Little speed improvements
+	* lib_christine/player.py:
+	First upload
+	* lib_christine/player:
+	First Upload
+	* lib_christine/player:
+	First Upload
 2006-11-10 Marco Antonio Islas Cruz	<markuz@islascruz.org>
 	* christine:
 	Tray Icon is no longer be showed by the "egg.tryicon" module
