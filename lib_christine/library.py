@@ -86,7 +86,7 @@ class library(gtk_misc):
 	
 	def gen_model(self,refresh=False):
 		#print "lib_library.gen_model"
-		self.tv.freeze_child_notify()
+		#self.tv.freeze_child_notify()
 		if not refresh:
 			s = gobject.TYPE_STRING
 			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
@@ -118,7 +118,7 @@ class library(gtk_misc):
 									sounds[i]["artist"]]),
 					PLAY_COUNT,sounds[i]["play_count"],
 					TIME,sounds[i]["duration"])
-		self.tv.freeze_child_notify()
+		#self.tv.freeze_child_notify()
 
 	def add_columns(self):
 		render = gtk.CellRendererText()
@@ -277,15 +277,15 @@ class library(gtk_misc):
 	#	model.foreach(self.get_last_iter)
 	#	self.iters.append([self.last_iter,file])
 
-	def get_last_iter(self):
-		'''
-		library.get_last_iter() -> None
-		Assign the last iter in the low level model (self.model)
-		in self.last_iter.
-		'''
-		#self.model.foreach(self.__get_last_iter)
-		path = len(self.model)
-		self.last_iter = model.get_iter(path)
+	#def get_last_iter(self):
+	#	'''
+	#	library.get_last_iter() -> None
+	#	Assign the last iter in the low level model (self.model)
+	#	in self.last_iter.
+	#	'''
+	#	#self.model.foreach(self.__get_last_iter)
+	#	path = len(self.model)
+	#	self.last_iter = model.get_iter(path)
 	#def __get_last_iter(self,mode,path,iter):
 	#	self.last_iter = iter
 		

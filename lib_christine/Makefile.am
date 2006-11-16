@@ -6,7 +6,10 @@ library.py \
 libs_christine.py \
 preferences.py \
 show_properties.py \
-about.py
+about.py \
+discoverer.py \
+player.py \
+gst_base.py
 
 DISTFILES= Makefile.in $(scripts_DATA)
 

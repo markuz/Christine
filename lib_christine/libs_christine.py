@@ -26,7 +26,6 @@ import cPickle as pickle
 
 from lib_christine.gtk_misc import *
 from lib_christine.gst_base import *
-#from lib_christine.discoverer import *
 
 class sanity:
 	'''
