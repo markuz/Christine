@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-from lib_christine.libs_christine import *
+from lib_christine.discoverer import *
 from lib_christine.gtk_misc import *
 
 class show_properties(gtk_misc):

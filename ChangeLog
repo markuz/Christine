@@ -1,3 +1,7 @@
+2006-11-19 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* lib_christine/show_properties.py:
+	Fixed the import fault (doesn't import discoverer) and
+	the properties option was not working
 2006-11-15 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* General:
 	Little speed improvements

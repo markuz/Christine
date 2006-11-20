@@ -30,10 +30,13 @@ class preferences(gtk_misc):
 		self.gconf = christine_gconf()
 		self.xml = glade_xml("preferences.glade")
 		self.audiosink = self.xml["audiosink"]
+		self.audiosink.connect("changed",self.update_sink,"audiosink")
 		self.videosink = self.xml["videosink"]
+		self.videosink.connect("changed", self.update_sink,"videosink")
 		self.select_sinks()
 		dialog	 = self.xml["main_window"]
 		dialog.set_icon(self.gen_pixbuf("logo.png"))
+		self.set_checkboxes()
 		dialog.run()
 		dialog.destroy()
 
@@ -41,7 +44,47 @@ class preferences(gtk_misc):
 		videosink = self.gconf.get_string("backend/videosink")
 		audiosink = self.gconf.get_string("backend/audiosink")
 		audio_m = self.audiosink.get_model()
-		video_m = self.videonsink.get_model()
-		for i in audio_m[0]:
-			if i == audiosink:
-				pass	
+		video_m = self.videosink.get_model()
+		a = 0
+		for i in audio_m:
+			if i[0] == audiosink:
+				self.audiosink.set_active(a)
+				break
+			a += 1
+		a = 0
+		for i in video_m:
+			if i[0] == videosink:
+				self.videosink.set_active(a)
+				break
+			a += 1
+	def update_sink(self,combobox,sink):
+		path = combobox.get_active()
+		model = combobox.get_model()
+		selected = model.get_value(model.get_iter(path),0)
+		self.gconf.set_value("backend/%s"%sink,selected)
+	
+	def set_checkboxes(self):
+		self.artist = self.xml["artist"]
+		self.artist.set_active(self.gconf.get_bool("ui/show_artist"))
+		self.artist.connect("toggled",self.gconf.toggle,"ui/show_artist")
+
+		self.album = self.xml["album"]
+		self.album.set_active(self.gconf.get_bool("ui/show_album"))
+		self.album.connect("toggled",self.gconf.toggle,"ui/show_album")
+
+		self.type = self.xml["type"]
+		self.type.set_active(self.gconf.get_bool("ui/show_type"))
+		self.type.connect("toggled",self.gconf.toggle,"ui/show_type")
+
+		self.length = self.xml["length"]
+		self.length.set_active(self.gconf.get_bool("ui/show_length"))
+		self.length.connect("toggled",self.gconf.toggle,"ui/show_length")
+	
+		self.track_number = self.xml["track_number"]
+		self.track_number.set_active(self.gconf.get_bool("ui/show_tn"))
+		self.track_number.connect("toggled",self.gconf.toggle,"ui/show_tn")
+		
+		self.play_count = self.xml["play_count"]
+		self.play_count.set_active(self.gconf.get_bool("ui/show_play_count"))
+		self.play_count.connect("toggled",self.gconf.toggle,"ui/show_play_count")
+

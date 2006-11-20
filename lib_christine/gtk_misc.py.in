@@ -99,6 +99,7 @@ class christine_gconf:
 						"ui/show_album":True,
 						"ui/show_play_count":True,
 						"ui/show_tn":True,
+						"ui/show_length":True,
 						"ui/show_type":True}
 		self.string_keys = {"backend/audiosink":"autoaudiosink",
 						"backend/videosink":"ximagesink",
@@ -114,13 +115,18 @@ class christine_gconf:
 		widget.set_active(entry.get_value.get_bool())
 	
 	def toggle_visible(self,client,cnx_id,entry,widget):
-		if entry.get_value().get_bool():
-			widget.show()
+		if type(widget) != gtk.TreeViewColumn:
+			if entry.get_value().get_bool():
+				widget.show()
+			else:
+				widget.hide()
+		elif type(widget) == gtk.TreeViewColumn:
+			widget.set_visible(entry.get_value().get_bool())
 		else:
-			widget.hide()
+			raise TypeError("How should I show/hide this widget:",widget)
 		
 	def toggle(self,widget,entry):
-		self.gconf.set_value(entry,widget.get_active())
+		self.set_value(entry,widget.get_active())
 	
 	def set_initial_values(self):
 		if not self.get_bool("has_initial_keys"):

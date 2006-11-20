@@ -175,7 +175,7 @@ class library(gtk_misc):
 		length = tvc("Lenght",render,text=TIME)
 		length.set_sort_column_id(TIME)
 		length.set_resizable(True)
-		length.set_visible(self.gconf.get_bool("ui/duration"))
+		length.set_visible(self.gconf.get_bool("ui/show_length"))
 		tv.append_column(length)
 
 		self.gconf.notify_add("/apps/christine/ui/show_artist",self.gconf.toggle_visible,artist)
@@ -183,7 +183,7 @@ class library(gtk_misc):
 		self.gconf.notify_add("/apps/christine/ui/show_type",self.gconf.toggle_visible,type)
 		self.gconf.notify_add("/apps/christine/ui/show_tn",self.gconf.toggle_visible,tn)
 		self.gconf.notify_add("/apps/christine/ui/show_play_count",self.gconf.toggle_visible,play)
-		self.gconf.notify_add("/apps/christine/ui/duration",self.gconf.toggle_visible,length)
+		self.gconf.notify_add("/apps/christine/ui/show_length",self.gconf.toggle_visible,length)
 		self.discoverer = discoverer()
 		self.discoverer.bus.add_watch(self.message_handler)
 
