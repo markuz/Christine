@@ -29,6 +29,7 @@ from lib_christine.show_properties import *
 from lib_christine.about import *
 from lib_christine.player import *
 
+import thread
 
 bonobo.activate()
 
@@ -1188,7 +1189,7 @@ class christine(gtk_misc):
 					div,mod = divmod(len(self.files_to_add),10)
 					self.library.add(newfile)
 					if newfile2 != "":
-						gobject.timeout_add(250,self.library.add,newfile2)
+						self.library.add(newfile2,False,2)
 					if mod == 0:
 						self.library.save()
 			else:
@@ -1301,6 +1302,9 @@ class christine(gtk_misc):
 		title  = self.player.get_tag("title").replace("_"," ")
 		artist = self.player.get_tag("artist")
 		album  = self.player.get_tag("album")
+		genre  = self.player.get_tag("genre")
+		if type(genre) == type([]):
+			genre = ",".join(genre)
 		track_number = self.player.get_tag("track-number")
 		if title == "":
 			title = os.path.split(self.player.get_location())[1]
@@ -1339,7 +1343,8 @@ class christine(gtk_misc):
 						ALBUM,album,
 						ARTIST,artist,
 						TN,track_number,
-						SEARCH,".".join([title,artist,album]))
+						SEARCH,".".join([title,artist,album,genre]),
+						GENRE,genre)
 			title1,artist1,album1,tc = self.natural_model.get(self.NATURAL_ITER,
 				NAME,ARTIST,ALBUM,TN)
 			if title != title1 \

@@ -100,6 +100,7 @@ class christine_gconf:
 						"ui/show_play_count":True,
 						"ui/show_tn":True,
 						"ui/show_length":True,
+						"ui/show_genre":True,
 						"ui/show_type":True}
 		self.string_keys = {"backend/audiosink":"autoaudiosink",
 						"backend/videosink":"ximagesink",

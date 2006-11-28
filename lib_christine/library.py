@@ -35,7 +35,8 @@ ARTIST,
 TN,
 SEARCH,
 PLAY_COUNT,
-TIME)=xrange(10)
+TIME,
+GENRE)=xrange(11)
 
 (VPATH,
 VNAME,
@@ -68,7 +69,8 @@ class library(gtk_misc):
 		self.tv.set_model(sort)
 		self.add_columns()
 		self.set_drag_n_drop()
-		gobject.timeout_add(500,self.stream_length)
+		gobject.timeout_add(600,self.stream_length)
+		gobject.timeout_add(600,self.stream_length,None,2)
 		self.CURRENT_ITER = self.model.get_iter_first()
 		#gobject.timeout_add(1000,self.update_values)
 	
@@ -90,7 +92,7 @@ class library(gtk_misc):
 		if not refresh:
 			s = gobject.TYPE_STRING
 			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
-					s,s,s,s,int,s)
+					s,s,s,s,int,s,s)
 		else:
 			self.model.clear()
 		sounds = self.library_lib.get_sounds()
@@ -105,6 +107,8 @@ class library(gtk_misc):
 
 			if not sounds[i].has_key("duration"):
 				sounds[i]["duration"] = "00:00"
+			if not sounds[i].has_key("genre"):
+				sounds[i]["genre"] = ""
 
 			self.model.set(self.model.append(),
 					NAME,sounds[i]["name"],
@@ -117,7 +121,8 @@ class library(gtk_misc):
 					SEARCH,",".join([sounds[i]["name"],sounds[i]["album"],
 									sounds[i]["artist"]]),
 					PLAY_COUNT,sounds[i]["play_count"],
-					TIME,sounds[i]["duration"])
+					TIME,sounds[i]["duration"],
+					GENRE, sounds[i]["genre"])
 		#self.tv.freeze_child_notify()
 
 	def add_columns(self):
@@ -172,11 +177,18 @@ class library(gtk_misc):
 		play.set_visible(self.gconf.get_bool("ui/show_play_count"))
 		tv.append_column(play)
 
-		length = tvc("Lenght",render,text=TIME)
+		length = tvc("lenght",render,text=TIME)
 		length.set_sort_column_id(TIME)
 		length.set_resizable(True)
 		length.set_visible(self.gconf.get_bool("ui/show_length"))
 		tv.append_column(length)
+
+		genre = tvc("Genre",render,text=GENRE)
+		genre.set_sort_column_id(GENRE)
+		genre.set_resizable(True)
+		genre.set_visible(self.gconf.get_bool("ui/show_genre"))
+		tv.append_column(genre)
+
 
 		self.gconf.notify_add("/apps/christine/ui/show_artist",self.gconf.toggle_visible,artist)
 		self.gconf.notify_add("/apps/christine/ui/show_album",self.gconf.toggle_visible,album)
@@ -184,36 +196,54 @@ class library(gtk_misc):
 		self.gconf.notify_add("/apps/christine/ui/show_tn",self.gconf.toggle_visible,tn)
 		self.gconf.notify_add("/apps/christine/ui/show_play_count",self.gconf.toggle_visible,play)
 		self.gconf.notify_add("/apps/christine/ui/show_length",self.gconf.toggle_visible,length)
+		self.gconf.notify_add("/apps/christine/ui/show_genre",self.gconf.toggle_visible,genre)
 		self.discoverer = discoverer()
 		self.discoverer.bus.add_watch(self.message_handler)
+		self.discoverer2 = discoverer()
+		self.discoverer2.bus.add_watch(self.message_handler)
 
-	def add(self,file,prepend=False):
-		self.discoverer.set_location(file)
+
+	def add(self,file,prepend=False,n=1):
+		if n == 1:
+			self.discoverer.set_location(file)
+		else:
+			self.discoverer2.set_location(file)
 		#gobject.timeout_add(100,self.stream_length)
 		model = self.model
+		if type(file) == type(()):
+			file = file[0]
+		if not os.path.isfile(file):
+			return True
 		if prepend:
 			iter = model.prepend()
 		else:
 			iter = model.append()
 		name = os.path.split(file)[:1]
+		if type(name) == type(()):
+			name = name[0]
+		pix = self.gen_pixbuf("blank.png")
+		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.model.set(iter,
 				NAME,name,
+				PIX,pix,
 				PATH,file)
 		self.iters[file] = iter
 		path = self.model.get_path(iter)
 		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
 
-	def message_handler(self,a,b):
-		d = self.discoverer
+	def message_handler(self,bus,b):
+		if bus == self.discoverer.bus:
+			d = self.discoverer
+		else:
+			d = self.discoverer2
 		t = b.type
 		if t == gst.MESSAGE_TAG:
-			self.discoverer.found_tags_cb(b.parse_tag())
+			d.found_tags_cb(b.parse_tag())
 			name	= d.get_tag("title")
 			album	= d.get_tag("album")
 			artist	= d.get_tag("artist")
 			tn		= d.get_tag("track-number")
-			pix = self.gen_pixbuf("blank.png")
-			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+			genre	= d.get_tag("genre")
 			if name == "":
 				n = os.path.split(d.get_location())[1].split(".")
 				name = ".".join([k for k in n[:-1]])
@@ -228,75 +258,29 @@ class library(gtk_misc):
 						NAME,name,
 						PATH,d.get_location(),
 						TYPE,t,
-						PIX, pix,
 						ALBUM,album,
 						ARTIST,artist,
 						TN,str(tn),
 						SEARCH,",".join([name,album,artist]),
-						PLAY_COUNT,0)
+						PLAY_COUNT,0,
+						GENRE,genre)
 		return True
 
-	def stream_length(self,widget=None):
-		d = self.discoverer
+	def stream_length(self,widget=None,n=1):
+		if n==1:
+			d = self.discoverer
+		else:
+			d = self.discoverer2
 		try: 
 			total = d.query_duration(gst.FORMAT_TIME)[0]
-			ts = self.total/gst.SECOND
+			ts = total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
 			self.model.set(self.iters[d.get_location()],
 					TIME,text)
 		except gst.QueryError:
-			self.discoverer.set_location(d.get_location())
+			d.set_location(d.get_location())
 		return True
 
-	#def add1(self,file,prepend=False):
-	#	name   = ""
-	#	artist = ""
-	#	album  = ""
-	#	track_number = 0
-	#	
-	#	pix = self.gen_pixbuf("blank.png")
-	#	pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-	#
-	#	if name == "":
-	#		n = os.path.split(file)[1].split(".")
-	#		name = ".".join([k for k in n[:-1]])
-	#	model = self.model
-	#	if prepend:
-	#		iter = model.prepend()
-	#	else:
-	#		iter = model.append()
-	#	model.set(iter,
-	#				NAME,name,
-	#				PATH,file,
-	#				TYPE,"sound",
-	#				PIX, pix,
-	#				ALBUM,album,
-	#				ARTIST,artist,
-	#				TN,str(track_number),
-	#				SEARCH,",".join([name,album,artist]))
-	#	model.foreach(self.get_last_iter)
-	#	self.iters.append([self.last_iter,file])
-
-	#def get_last_iter(self):
-	#	'''
-	#	library.get_last_iter() -> None
-	#	Assign the last iter in the low level model (self.model)
-	#	in self.last_iter.
-	#	'''
-	#	#self.model.foreach(self.__get_last_iter)
-	#	path = len(self.model)
-	#	self.last_iter = model.get_iter(path)
-	#def __get_last_iter(self,mode,path,iter):
-	#	self.last_iter = iter
-		
-	#def set_tags(self):
-	#	if len(self.iters) > 0:
-	#		iter,path = self.iters.pop()
-	#		self.iter = iter
-	#		self.discoverer.set_location(path)
-	#		self.save()
-	#	return True
-			
 
 	def remove(self,iter):
 		'''
@@ -324,19 +308,22 @@ class library(gtk_misc):
 		path,
 		type,
 		pc,
-		duration) = model.get(iter,NAME,
+		duration,
+		genre) = model.get(iter,NAME,
 					ARTIST,
 					ALBUM,
 					TN,
 					PATH,
 					TYPE,
 					PLAY_COUNT,
-					TIME)
+					TIME,
+					GENRE)
 		self.append(path,{"name":name,
 				"type":type,"artist":artist,
 				"album":album,"track_number":track_number,
 				"play_count":pc,
-				"duration":duration})
+				"duration":duration,
+				"genre":genre})
 		
 
 	def key_press_handler(self,treeview,event):
