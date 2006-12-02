@@ -9,7 +9,8 @@ show_properties.py \
 about.py \
 discoverer.py \
 player.py \
-gst_base.py
+gst_base.py \
+display.py
 
 DISTFILES= Makefile.in $(scripts_DATA)
 

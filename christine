@@ -28,6 +28,7 @@ from lib_christine.preferences import *
 from lib_christine.show_properties import *
 from lib_christine.about import *
 from lib_christine.player import *
+from lib_christine.display import *
 
 import thread
 
@@ -125,6 +126,12 @@ class christine(gtk_misc):
 		self.window.set_icon(self.gen_pixbuf("logo.png"))
 		self.play_button	= self.xml["play"]
 		self.play_menuitem = self.xml["play_menuitem"]
+		# Create the display and attach it to the main
+		# window
+		box = self.xml["cdisplaybox"]
+		self.display = display()
+		box.pack_start(self.display,True,True,0)
+		self.display.show()
 		# Create the library by calling to libs_christine.library
 		# class
 		self.library = library()
@@ -210,10 +217,10 @@ class christine(gtk_misc):
 		self.title_label	= self.xml["title_label"]
 		self.artist_button	= self.xml["artist_button"]
 		self.artist_box		= self.xml["artist_box"]
-		self.artist_box.hide()
+		#self.artist_box.hide()
 		self.album_button	= self.xml["album_button"]
 		self.album_box		= self.xml["album_box"]
-		self.album_box.hide()
+		#self.album_box.hide()
 		
 
 		self.scale = self.xml["scale"]
@@ -1255,6 +1262,11 @@ class christine(gtk_misc):
 			if ts < 0:
 				print ts
 				ts = long(0)
+			if nanos > 0 and self.total > 0:
+				t = nanos/float(self.total)
+				if t >= 0 and t <=1:
+					self.display.set_scale(t)
+				self.display.set_text("%s/%s"%(time,time_total))
 			self.set_scale_to_value(int(ts))
 		# Taking care only in gst.QueryError
 		# other errors are raised
@@ -1314,26 +1326,23 @@ class christine(gtk_misc):
 		# gtk_misc
 		tooltext = title
 		title = self.strip_xml_entities(title)
-		self.title_label.set_markup("<big>%s</big>"%title)
+		#self.title_label.set_markup("<big>%s</big>"%title)
 		self.window.set_title("%s - Christine"%title)
 		
 		notify_text = "<big>%s</big>"%title
 		# Shoe or hide deppending if there are something
 		# to show or hide
 		if artist != "":
-			self.artist_button.set_label(artist)
+			#self.artist_button.set_label(artist)
 			notify_text += " by <big>%s</big>"%artist
 			tooltext += "\nby %s"%artist
-			self.artist_box.show_all()
-		else:
-			self.artist_box.hide()
+			#self.artist_box.show_all()
 		if album != "":
-			self.album_button.set_label(album)
-			self.album_box.show_all()
+			#self.album_button.set_label(album)
+			#self.album_box.show_all()
 			notify_text += " from <big>%s</big>"%album
 			tooltext += "\nfrom %s"%album
-		else:
-			self.album_box.hide()
+			#self.album_box.hide()
 		# Updating the info in library, only if 
 		# it is avaylable.
 		if self.NATURAL_ITER != None:
@@ -1368,6 +1377,7 @@ class christine(gtk_misc):
 			self.notify.set_property("body",notify_text)
 			self.tray_icon.set_tooltip(tooltext)
 			self.notify.show()
+		self.display.set_song(tooltext.replace("\n"," "))
 		#t = self.player.type
 		self.show_hide_player()
 	

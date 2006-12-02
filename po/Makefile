@@ -31,8 +31,8 @@ top_builddir = ..
 
 prefix = /usr
 exec_prefix = ${prefix}
-datadir = ${prefix}/share
-datarootdir = @datarootdir@
+datadir = ${datarootdir}
+datarootdir = ${prefix}/share
 libdir = ${exec_prefix}/lib
 localedir = $(libdir)/locale
 gnulocaledir = $(datadir)/locale
@@ -55,7 +55,7 @@ INTLTOOL_EXTRACT = $(top_builddir)/intltool-extract
 MSGMERGE = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --dist
 GENPOT   = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --pot
 
-DEFS = -DPACKAGE_NAME=\"christine\" -DPACKAGE_TARNAME=\"christine\" -DPACKAGE_VERSION=\"0.0.1\" -DPACKAGE_STRING=\"christine\ 0.0.1\" -DPACKAGE_BUGREPORT=\"markuz@islascruz.org\" -DPACKAGE=\"christine\" -DVERSION=\"0.0.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_LOCALE_H=1 -DHAVE_LC_MESSAGES=1 -DHAVE_BIND_TEXTDOMAIN_CODESET=1 -DHAVE_GETTEXT=1 -DHAVE_DCGETTEXT=1 -DENABLE_NLS=1 
+DEFS = -DPACKAGE_NAME=\"christine\" -DPACKAGE_TARNAME=\"christine\" -DPACKAGE_VERSION=\"0.0.1\" -DPACKAGE_STRING=\"christine\ 0.0.1\" -DPACKAGE_BUGREPORT=\"markuz@islascruz.org\" -DPACKAGE=\"christine\" -DVERSION=\"0.0.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_LOCALE_H=1 -DHAVE_LC_MESSAGES=1 -DHAVE_BIND_TEXTDOMAIN_CODESET=1 -DHAVE_GETTEXT=1 -DHAVE_DCGETTEXT=1 -DENABLE_NLS=1
 CFLAGS = -O2 -march=k8 -mtune=k8
 CPPFLAGS = 
 
