@@ -131,7 +131,7 @@ class christine(gtk_misc):
 		box = self.xml["cdisplaybox"]
 		self.display = display()
 		box.pack_start(self.display,True,True,0)
-		self.display.show()
+		self.display.show_all()
 		# Create the library by calling to libs_christine.library
 		# class
 		self.library = library()

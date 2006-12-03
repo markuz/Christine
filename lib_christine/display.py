@@ -12,21 +12,18 @@ LINE_WIDTH = 0.5
 class display(gtk.DrawingArea):
 	def __init__(self,text=""):
 		gtk.DrawingArea.__init__(self)
-		#print self.get_property("events").value_nicks
 		self.set_property("events",gtk.gdk.EXPOSURE_MASK|
 								gtk.gdk.POINTER_MOTION_MASK|
 								gtk.gdk.BUTTON_PRESS_MASK)
-		self.connect("expose-event",self.expose)
 		self.connect("button-press-event",self.__button_press_event)
-		#self.connect("motion-notify-event",self.__motion_notify)
+		self.connect("expose-event",self.expose_event)
 		self.__song = ""
 		self.__text = ""
 		self.wpos = 0
 		self.width = 0
 		self.set_text(text)
-		#fontw,fonth = self._layout.get_pixel_size()
 		self.set_size_request(300,42)
-		#gobject.timeout_add(200,self.__motion_notify)
+
 	
 	def set_text(self,text):
 		self.__text = text
@@ -38,7 +35,6 @@ class display(gtk.DrawingArea):
 	
 	def __button_press_event(self,widget,event):
 		x,y = self.get_pointer()
-		#width = self.width * width
 		minx,miny = self._layout.get_pixel_size()
 		minx = miny
 		width = self.w-miny-(BORDER_WIDTH*3)
@@ -57,46 +53,24 @@ class display(gtk.DrawingArea):
 		print "maxx,maxy:",maxx,maxy
 		print "======================"
 
-	
-
 	def __motion_notify(self,widget,event):
-		print self.get_pointer()
 		return True
 	
-	def expose(self,widget,event):
-		try:
-			self.area = event.area
-		except:
-			pass
-		self.create_context()
-		self.draw(self.context)
-		return False
+	def expose_event(self,widget,event):
+		x,y,w,h = self.allocation
+		self.x,self.y,self.w,self.h = self.allocation
 
-	
-	def create_context(self):
 		self.context = self.window.cairo_create()
-		(self.x,
-		self.y,
-		self.w,
-		self.h) = self.area
-		self.context.rectangle(BORDER_WIDTH, 
-							BORDER_WIDTH,
-							self.area.width -2*BORDER_WIDTH, 
-							self.area.height -2*BORDER_WIDTH)
-		self.context.clip()
-	
-	def draw(self,context):
-		rect = self.get_allocation()
-		x = rect.x
-		y = rect.y
-		w = rect.width 
-		h = rect.height 
-		context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
+		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
 				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
-		context.set_source_rgb(1,1,1)
-		context.fill_preserve()
-		context.set_source_rgb(0,0,0)
-		context.stroke()
+		self.context.clip()
+
+		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
+				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
+		self.context.set_source_rgb(1,1,1)
+		self.context.fill_preserve()
+		self.context.set_source_rgb(0,0,0)
+		self.context.stroke()
 
 		# Write text
 		x,y,w,h = self.allocation
@@ -107,24 +81,21 @@ class display(gtk.DrawingArea):
 		self.context.update_layout(self._layout)
 		self.context.show_layout(self._layout)
 
-		
-
 		fw,fh = self._layout.get_pixel_size()
 		width = self.w-fh-(BORDER_WIDTH*3)
-		#print width,self.w,fh
-		context.rectangle(fh,(BORDER_WIDTH*2)+fh,
+		self.context.rectangle(fh,(BORDER_WIDTH*2)+fh,
 				width,BORDER_WIDTH)
-		context.set_line_width(LINE_WIDTH)
-		context.set_source_rgb(0,0,0)
-		context.stroke()
+		self.context.set_line_width(LINE_WIDTH)
+		self.context.set_source_rgb(0,0,0)
+		self.context.stroke()
 		
 		width = self.width * width
-		context.rectangle(fh,(BORDER_WIDTH*2)+fh,
+		self.context.rectangle(fh,(BORDER_WIDTH*2)+fh,
 				width,BORDER_WIDTH)
-		context.set_source_rgb(0,0,0)
-		context.fill_preserve()
-		context.set_source_rgb(0,0,0)
-		context.stroke()
+		self.context.set_source_rgb(0,0,0)
+		self.context.fill_preserve()
+		self.context.set_source_rgb(0,0,0)
+		self.context.stroke()
 		
 		layout = self.create_pango_layout(self.__text)
 		x,y,w,h = self.allocation
@@ -133,29 +104,7 @@ class display(gtk.DrawingArea):
 		layout.set_font_description(pango.FontDescription("Sans Serif 8"))
 		self.context.update_layout(layout)
 		self.context.show_layout(layout)
-
-
-
-
 		
-	def write_text(self):
-		x,y,w,h = self.allocation
-		fontw,fonth = self._layout.get_pixel_size()
-		self.context.move_to((w-fontw)/2,(fonth)/2)
-		self._layout = self.create_pango_layout(self.__text)
-		self._layout.set_font_description(pango.FontDescription("Sans Serif 8"))
-		self.context.update_layout(self._layout)
-		self.context.show_layout(self._layout)
-
-	def move_text(self):
-		if self.wpos > self.allocation.width:
-			self.wpos = 0
-		self.wpos += POS_INCREMENT
-		#print self.wpos,self.allocation.width
-		self.create_context()
-		self.draw(self.context)
-		return True
-
 	def set_scale(self,value):
 		try:
 			value = float(value)
@@ -164,8 +113,7 @@ class display(gtk.DrawingArea):
 		if value > 1.0 or value < 0.0:
 			raise ValueError("value > 1.0 or value < 0.0")
 		self.width = value
-		self.create_context()
-		self.draw(self.context)
+		self.emit("expose-event",gtk.gdk.Event(gtk.gdk.EXPOSE))
 
 
 class window:
