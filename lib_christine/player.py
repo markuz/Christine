@@ -93,7 +93,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			#print "set_location is done"
 		else:
 			#print file
-			if file.split(":")[0] == "http":
+			if file.split(":")[0] in ["http","dvd"]:
 				self.playbin.set_property("uri",file)
 			else:
 				error("file %s not found"%os.path.split(file)[1])

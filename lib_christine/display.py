@@ -24,6 +24,8 @@ class display(gtk.DrawingArea):
 		self.set_text(text)
 		self.set_size_request(300,42)
 
+	def value_changed(self,widget):
+		print value_changed
 	
 	def set_text(self,text):
 		self.__text = text
@@ -47,7 +49,7 @@ class display(gtk.DrawingArea):
 			print value,maxx -minx
 			self.set_scale(value)
 			self.set_text("%f"%value)
-		print "withh:",width
+		print "width:",width
 		print "xy:",x,y
 		print "minx,miny:",minx,miny
 		print "maxx,maxy:",maxx,maxy

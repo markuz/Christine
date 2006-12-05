@@ -1237,7 +1237,7 @@ class christine(gtk_misc):
 		'''
 		t = b.type
 		if t == gst.MESSAGE_ERROR:
-			error("".join([k for k in b.parse_error()[1]]))
+			error(b.parse_error()[1])
 		if t == gst.MESSAGE_EOS:
 			self.go_next()
 		#elif t == gst.MESSAGE_DURATION:
@@ -1246,6 +1246,12 @@ class christine(gtk_misc):
 		elif t == gst.MESSAGE_TAG:
 			self.player.found_tag_cb(b.parse_tag())
 			self.set_tags()
+		elif t == gst.MESSAGE_BUFFERING:
+			percent = 0
+			percent = b.structure["buffer-percent"]
+			print percent
+			self.display.set_text("%d"%percent)
+			self.display.set_scale(percent/100)
 		return True
 
 
