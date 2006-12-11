@@ -7,7 +7,7 @@ import gtk, cairo, pango, gobject
 
 BORDER_WIDTH = 3
 POS_INCREMENT = 3
-LINE_WIDTH = 0.5 
+LINE_WIDTH = 2
 
 class display(gtk.DrawingArea):
 	def __init__(self,text=""):
@@ -88,6 +88,7 @@ class display(gtk.DrawingArea):
 		self.context.rectangle(fh,(BORDER_WIDTH*2)+fh,
 				width,BORDER_WIDTH)
 		self.context.set_line_width(LINE_WIDTH)
+		self.context.set_line_cap(cairo.LINE_CAP_BUTT)
 		self.context.set_source_rgb(0,0,0)
 		self.context.stroke()
 		
@@ -100,7 +101,6 @@ class display(gtk.DrawingArea):
 		self.context.stroke()
 		
 		layout = self.create_pango_layout(self.__text)
-		x,y,w,h = self.allocation
 		fontw,fonth = layout.get_pixel_size()
 		self.context.move_to((w-fontw)/2,(fonth+33)/2)
 		layout.set_font_description(pango.FontDescription("Sans Serif 8"))
