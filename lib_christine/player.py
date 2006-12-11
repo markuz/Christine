@@ -214,6 +214,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	
 	def seek_to(self,sec):
 		sec = long(sec)*gst.SECOND
+		print sec
 		self.playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
 

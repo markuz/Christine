@@ -17,6 +17,10 @@ class display(gtk.DrawingArea):
 								gtk.gdk.BUTTON_PRESS_MASK)
 		self.connect("button-press-event",self.__button_press_event)
 		self.connect("expose-event",self.expose_event)
+		gobject.signal_new("value-changed",self,
+				gobject.SIGNAL_RUN_LAST,
+				gobject.TYPE_NONE,
+				(gobject.TYPE_PYOBJECT,))
 		self.__song = ""
 		self.__text = ""
 		self.wpos = 0
@@ -24,9 +28,6 @@ class display(gtk.DrawingArea):
 		self.set_text(text)
 		self.set_size_request(300,42)
 
-	def value_changed(self,widget):
-		print value_changed
-	
 	def set_text(self,text):
 		self.__text = text
 
@@ -46,14 +47,17 @@ class display(gtk.DrawingArea):
 		if x >= minx and x <= maxx \
 				and y >= miny and y <= maxy:
 			value = (x-minx)*1.0/(width)
-			print value,maxx -minx
 			self.set_scale(value)
-			self.set_text("%f"%value)
-		print "width:",width
-		print "xy:",x,y
-		print "minx,miny:",minx,miny
-		print "maxx,maxy:",maxx,maxy
-		print "======================"
+			self.__value = value
+			#self.set_text("%f"%value)
+			self.emit("value-changed",self)
+		#print "width:",width
+		#print "xy:",x,y
+		#print "minx,miny:",minx,miny
+		#print "maxx,maxy:",maxx,maxy
+		#print "======================"
+	def get_value(self):
+		return self.__value
 
 	def __motion_notify(self,widget,event):
 		return True
