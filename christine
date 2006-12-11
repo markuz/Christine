@@ -47,8 +47,7 @@ except ImportError:
 
 (CONTROL_SHUFFLE,
 CONTROL_REPEAT,
-CONTROL_BOTH,
-CONTROL_NONE) = range(4)
+CONTROL_NONE) = range(3)
 
 class christine(gtk_misc):
 	def __init__(self):
@@ -679,12 +678,6 @@ class christine(gtk_misc):
 			self.CONTROL_STAT=CONTROL_SHUFFLE
 			self.change_control()
 			#self.CONTROL_STAT=CONTROL_REPEAT
-	def toggle_control_both_sr(self,widget):
-		if widget.get_active():
-			print "both"
-			self.CONTROL_STAT=CONTROL_BOTH
-			self.change_control()
-			#self.CONTROL_STAT=CONTROL_NONE
 	def toggle_control_repeat(self,widget):
 		if widget.get_active():
 			print "repeat"
@@ -718,7 +711,7 @@ class christine(gtk_misc):
 		else:
 			# FIXME: I got to fix this when I know what to do with the 
 			# play behavior.
-			if self.CONTROL_STAT -1 == CONTROL_SHUFFLE:
+			if self.shuffle.get_active():
 				self.elements = 0
 				#self.model.foreach(self.get_max_elements)
 				self.elements = len (self.model) - 1
@@ -908,19 +901,15 @@ class christine(gtk_misc):
 		t = self.CONTROL_STAT
 		print t
 		if t == CONTROL_SHUFFLE:
-			self.shuffle.set_active(True)
+			#self.shuffle.set_active(True)
 			self.CONTROL_STAT = CONTROL_REPEAT
 			pix = "usort.png"
 		elif t == CONTROL_REPEAT:
-			self.repeat.set_active(True)
-			self.CONTROL_STAT = CONTROL_BOTH
-			pix = "logo.png"
-		elif t == CONTROL_BOTH:
-			self.both_sr.set_active(True)
+			#self.repeat.set_active(True)
 			self.CONTROL_STAT = CONTROL_NONE
-			pix = "video.png"
+			pix = "logo.png"
 		else:
-			self.CONTROL_STAT = CONTROL_SHUFFLE
+			#self.CONTROL_STAT = CONTROL_SHUFFLE
 			self.none_sr.set_active(True)
 			pix = "sort.png"
 		pix = self.gen_pixbuf(pix)
