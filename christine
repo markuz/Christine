@@ -20,6 +20,7 @@
 
 import pygst; pygst.require("0.10")
 import gnome,gtk,gst.interfaces,random,sys,bonobo
+import gtk.gdk
 from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
@@ -29,6 +30,7 @@ from lib_christine.show_properties import *
 from lib_christine.about import *
 from lib_christine.player import *
 from lib_christine.display import *
+from lib_christine.sources_list import *
 
 import thread
 
@@ -44,7 +46,6 @@ except ImportError:
 	PYNOTIFY = False
 
 
-
 (CONTROL_SHUFFLE,
 CONTROL_REPEAT,
 CONTROL_NONE) = range(3)
@@ -56,6 +57,7 @@ class christine(gtk_misc):
 		initialize the gnome ui client, create the xml interface descriptor,
 		initialize class variables and create some timeouts calls
 		'''
+		sanity()
 		gtk_misc.__init__(self)
 		gnomeprogram		= gnome.program_init("christine","0.0.1")
 		self.gtk_misc		= gtk_misc()
@@ -136,6 +138,7 @@ class christine(gtk_misc):
 		# class
 		self.library = library()
 		self.treeview = self.library.tv
+		self.treeview.show()
 		self.treeview.connect("button-press-event",self.pop_menu)
 		self.treeview.connect("key-press-event",self.key_press_handler)
 		self.treeview.connect("row-activated",self.item_activated)
@@ -186,7 +189,11 @@ class christine(gtk_misc):
 		self.music_sw.add(self.library.tv)
 		self.videobox = self.xml["videobox"]
 		self.main_viewer_place.show_all()
-
+		
+		sources_sw = self.xml["sources_sw"]
+		self.sources_list = sources_list()
+		self.sources_list.treeview.show()
+		sources_sw.add(self.sources_list.treeview)
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
 		self.queue = queue()
@@ -1376,6 +1383,7 @@ class christine(gtk_misc):
 			self.notify = pynotify.Notification("christine","",
 					os.path.join(self.wdir,"logo22.png"))
 			#self.notify.attach_to_widget(self.tray_icon)
+			#self.notify.attach_to_status_icon(self.tray_icon)
 			self.notify.set_timeout(3000)
 
 			pixbuf = self.gen_pixbuf("logo.png")

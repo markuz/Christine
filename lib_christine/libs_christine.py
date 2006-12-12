@@ -33,6 +33,7 @@ class sanity:
 	'''
 	def __init__(self):
 		self.__check_christine_dir()
+		self.__check_sources_dir()
 
 	def __check_christine_dir(self):
 		if not os.path.exists(wdir):
@@ -41,6 +42,14 @@ class sanity:
 			if os.path.isfile(wdir):
 				os.unlink(wdir)
 				self.__check_christine_dir()
+	def __check_sources_dir(self):
+		sdir = os.path.join(wdir,"sources")
+		if not os.path.exists(sdir):
+			os.mkdir (sdir)
+		else:
+			if os.path.isfile(sdir):
+				os.unlink(sdir)
+				self.__check_sources_dir()
 
 
 class lib_library(object):
