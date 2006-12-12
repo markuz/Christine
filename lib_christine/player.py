@@ -134,22 +134,23 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	def set_visualization_visible(self,active=False):
 		print "playbin.set_visualization_visible(",active,")"
 		if active:
-			self.playbin.set_property("vis-plugin",self.vis_plugin)
-			# The try/except is to avoid a QueryError when
-			# there is no uri in the player.
-			try:
+			if self.get_location() != None:
 				nanos = self.query_position(gst.FORMAT_TIME)[0]
-			except gst.QueryError:
-				nanos = 0
+			else:
+				return True
+			self.playbin.set_property("vis-plugin",self.vis_plugin)
+			self.video_sink.set_property("force-aspect-ratio",False)
 			self.should_show = True
 			self.expose_cb()
 			self.playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,nanos,gst.SEEK_TYPE_NONE,-1)
-			if self.playbin.get_state() == gst.STATE_PLAYING:
-				sefl.pause()
-				self.playit()
+			state = self.playbin.get_state()
+			#if gst.STATE_PLAYING == state[1]:
+			#	self.pause()
+			#	gobject.timeout_add(800,self.playit)
 
 		else:
+			self.video_sink.set_property("force-aspect-ratio",True)
 			self.playbin.set_property("vis-plugin",None)
 			if self.type == "sound":
 				self.hide()
@@ -204,17 +205,14 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.video_sink.set_xwindow_id(0L)
 		
 	def expose_cb(self, window=None, event=None):
-		try:
-			self.video_sink.set_xwindow_id(self.window.xid)
-			if self.should_show:
-				self.show()
-		except:
-			pass
-		
+		self.video_sink.set_xwindow_id(self.window.xid)
+		if self.should_show:
+			self.show()
+			print "display:",self.video_sink.get_property("display")
+			
 	
 	def seek_to(self,sec):
 		sec = long(sec)*gst.SECOND
-		print sec
 		self.playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
 

@@ -200,7 +200,13 @@ class christine(gtk_misc):
 
 		self.control_button = self.xml["control_button"]
 		self.shuffle = self.xml["shuffle"]
+		self.shuffle.set_active(self.gconf.get_bool("control/shuffle"))
+		self.shuffle.connect("toggled", lambda widget: self.gconf.set_value("control/shuffle",widget.get_active()))
+		self.gconf.notify_add("/apps/christine/control/shuffle",self.gconf.toggle_widget,self.shuffle)
 		self.repeat = self.xml["repeat"]
+		self.repeat.set_active(self.gconf.get_bool("control/repeat"))
+		self.repeat.connect("toggled", lambda widget: self.gconf.set_value("control/repeat",widget.get_active()))
+		self.gconf.notify_add("/apps/christine/control/repeat",self.gconf.toggle_widget,self.repeat)
 		self.both_sr = self.xml["both_sr"]
 		self.none_sr = self.xml["none_sr"]
 		

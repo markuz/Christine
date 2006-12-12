@@ -113,7 +113,7 @@ class christine_gconf:
 		self.notify_add = self.gconf.notify_add
 	
 	def toggle_widget(self,client,cnx_id,entry,widget):
-		widget.set_active(entry.get_value.get_bool())
+		widget.set_active(entry.get_value().get_bool())
 	
 	def toggle_visible(self,client,cnx_id,entry,widget):
 		if type(widget) != gtk.TreeViewColumn:
