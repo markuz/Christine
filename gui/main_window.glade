@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Tue Dec 12 14:40:49 2006
+	Date: Tue Dec 12 15:33:06 2006
 	User: markuz
 	Host: cucusa
 -->
@@ -449,6 +449,7 @@
                         <property name="visible">True</property>
                         <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
                         <child>
                           <placeholder/>
                         </child>

@@ -1383,7 +1383,7 @@ class christine(gtk_misc):
 			self.notify = pynotify.Notification("christine","",
 					os.path.join(self.wdir,"logo22.png"))
 			#self.notify.attach_to_widget(self.tray_icon)
-			#self.notify.attach_to_status_icon(self.tray_icon)
+			self.notify.attach_to_status_icon(self.tray_icon)
 			self.notify.set_timeout(3000)
 
 			pixbuf = self.gen_pixbuf("logo.png")
