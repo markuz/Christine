@@ -10,7 +10,8 @@ about.py \
 discoverer.py \
 player.py \
 gst_base.py \
-display.py
+display.py \
+sources_list.py
 
 DISTFILES= Makefile.in $(scripts_DATA)
 

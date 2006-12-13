@@ -93,19 +93,6 @@ class christine(gtk_misc):
 		self.main_viewer_place.pack_start(self.player,True,True,0)
 		self.player.bus.add_watch(self.__message_handler)
 
-# This method is no longer in use, Will be deleted soon
-#	def miniviewer(self):
-#		self.mv_xml = glade_xml("miniviewer.glade")
-#		self.mv_xml.signal_autoconnect(self)
-#		self.miniviewer_window = self.mv_xml["mv_window"]
-#		self.miniviewer_window.set_icon(self.gen_pixbuf("logo.png"))
-#		self.miniviewer_window.hide()
-#		self.miniviewer_place = self.mv_xml["videobox"]
-#		self.miniviewer_tcontainer = self.mv_xml["toolbox_container"]
-
-#	def hide_miniviewer(self,widget):
-#		widget.hide()
-	
 	def __win(self):
 		'''
 		This method calls most of the common used 
@@ -193,6 +180,7 @@ class christine(gtk_misc):
 		sources_sw = self.xml["sources_sw"]
 		self.sources_list = sources_list()
 		self.sources_list.treeview.show()
+		self.sources_list.treeview.connect("cursor-changed",self.update_library_with_source)
 		sources_sw.add(self.sources_list.treeview)
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
@@ -227,12 +215,12 @@ class christine(gtk_misc):
 		self.toggle_small_view(self.small_view_menuitem)
 
 		
-		self.title_label	= self.xml["title_label"]
-		self.artist_button	= self.xml["artist_button"]
-		self.artist_box		= self.xml["artist_box"]
+		#self.title_label	= self.xml["title_label"]
+		#self.artist_button	= self.xml["artist_button"]
+		#self.artist_box		= self.xml["artist_box"]
 		#self.artist_box.hide()
-		self.album_button	= self.xml["album_button"]
-		self.album_box		= self.xml["album_box"]
+		#self.album_button	= self.xml["album_button"]
+		#self.album_box		= self.xml["album_box"]
 		#self.album_box.hide()
 		
 
@@ -1234,6 +1222,9 @@ class christine(gtk_misc):
 	
 	def import_to_queue(self,widget):
 		self.import_file("",True)
+	
+	def update_library_with_source(self,treeview):
+		print "update librar with source"
 
 #===============libraty stuff ends=============
 			
@@ -1484,6 +1475,7 @@ class christine(gtk_misc):
 		
 	def main(self):
 		gtk.main()
+	
 
 
 if __name__ == "__main__":

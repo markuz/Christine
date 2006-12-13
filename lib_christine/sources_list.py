@@ -19,8 +19,11 @@
 
 
 from lib_christine.gtk_misc import *
+import ConfigParser
 
-(LIST_NAME,) = xrange(1)
+(LIST_NAME,
+LIST_TYPE,
+LIST_PIXBUF) = xrange(3)
 
 class sources_list (gtk_misc):
 	def __init__(self):
@@ -32,7 +35,7 @@ class sources_list (gtk_misc):
 		self.__append_columns()
 	
 	def __gen_model(self):
-		self.model = gtk.ListStore(str)
+		self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
 		p = os.path.join(os.environ["HOME"],".christine","sources")
 		files = os.listdir(p)
 		print files,len(files)
@@ -41,14 +44,43 @@ class sources_list (gtk_misc):
 				print "lista vacia"
 				break # Exit loop if there is nothing in the list.
 			fname = files.pop()
-			if os.path.isfile(os.path.join(os.environ["HOME"],".christine","sources",fname)):
-				iter = self.model.append()
-				self.model.set(iter,LIST_NAME,fname)
+			file = os.path.join(os.environ["HOME"],".christine","sources",fname)
+			if os.path.isfile(os.path.join(file)):
+				cp = ConfigParser.ConfigParser()
+				try:
+					cp.read(file)
+				except:
+					pass
+				if cp.has_section("source"):
+					iter = self.model.append()
+					name = cp.get("source","name")
+					if cp.has_option("source","icon"):
+						icon = cp.get("source","icon")
+					else:
+						iconf = ""
+					pixbuf = self.gen_pixbuf(icon)
+					pixbuf = pixbuf.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+					ltype = cp.get("source","type")
+					self.model.set(iter,LIST_NAME,fname,
+							LIST_TYPE,ltype,
+							LIST_PIXBUF,pixbuf)
 			else:
 				print "no es archivo!!",fname
 
 	def __append_columns(self):
-		render = gtk.CellRendererText()
-		source = gtk.TreeViewColumn("Source",render,text=LIST_NAME)
-		source.set_visible(True)
-		self.treeview.append_column(source)
+		column = gtk.TreeViewColumn("Source")
+		text = gtk.CellRendererText()
+		pix= gtk.CellRendererPixbuf()
+		column.pack_start(pix,False)
+		column.pack_start(text,True)
+		column.add_attribute(text,"text",LIST_NAME)
+		column.add_attribute(pix,"pixbuf",LIST_PIXBUF)
+		self.treeview.append_column(column)
+		
+
+		
+
+
+
+
+	

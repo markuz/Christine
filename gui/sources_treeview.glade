@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Tue Dec 12 13:07:45 2006
+	Date: Tue Dec 12 21:26:00 2006
 	User: markuz
 	Host: cucusa
 -->
@@ -11,6 +11,7 @@
     <child>
       <widget class="GtkTreeView" id="treeview">
         <property name="visible">True</property>
+        <property name="rules_hint">True</property>
       </widget>
     </child>
   </widget>

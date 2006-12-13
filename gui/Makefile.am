@@ -18,7 +18,8 @@ scripts_DATA=__init__.py \
 	treeview_reorderable.glade \
 	tray_menu.glade \
 	open_remote.glade \
-	delete_file_from_disk_dialog.glade
+	delete_file_from_disk_dialog.glade \
+	sources_treeview.glade
 
 
 DISTFILES= Makefile.in $(scripts_DATA)

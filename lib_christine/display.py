@@ -12,6 +12,7 @@ LINE_WIDTH = 2
 class display(gtk.DrawingArea):
 	def __init__(self,text=""):
 		gtk.DrawingArea.__init__(self)
+		self.__DRAWING = False
 		self.set_property("events",gtk.gdk.EXPOSURE_MASK|
 								gtk.gdk.POINTER_MOTION_MASK|
 								gtk.gdk.BUTTON_PRESS_MASK)
@@ -63,6 +64,9 @@ class display(gtk.DrawingArea):
 		return True
 	
 	def expose_event(self,widget,event):
+		if self.__DRAWING:
+			return True
+		self.DRAWING = True
 		x,y,w,h = self.allocation
 		self.x,self.y,self.w,self.h = self.allocation
 
@@ -110,6 +114,7 @@ class display(gtk.DrawingArea):
 		layout.set_font_description(pango.FontDescription("Sans Serif 8"))
 		self.context.update_layout(layout)
 		self.context.show_layout(layout)
+		self.__DRAWING = False
 		
 	def set_scale(self,value):
 		try:
