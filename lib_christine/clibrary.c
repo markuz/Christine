@@ -62,11 +62,12 @@ clibrary_fill_model(PyObject *self,PyObject *args){
 	if (!PyDict_Check(sounds))
 		return NULL;
 	keys = PyDict_Keys(sounds);
+	PyList_Sort(keys);
 	length = PyList_Size(keys);
-	while (PyDict_Next(sounds,&pos,&path,&temp)){
-	//while (cont < length){
-		//path = PyList_GetItem(keys,cont);
-		//temp = PyDict_GetItem(sounds,path);
+	//while (PyDict_Next(sounds,&pos,&path,&temp)){
+	while (cont < length){
+		path = PyList_GetItem(keys,cont);
+		temp = PyDict_GetItem(sounds,path);
 		if (!PyDict_Contains(temp,PyString_FromString("play_count")))
 			PyDict_SetItemString(temp,"play_count",Py_BuildValue("i",0));
 		if (!PyDict_Contains(temp,PyString_FromString("duration")))
