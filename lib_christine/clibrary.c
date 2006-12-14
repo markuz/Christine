@@ -54,18 +54,19 @@ set_set(PyObject *self, PyObject *args){
 static PyObject *
 clibrary_fill_model(PyObject *self,PyObject *args){
 	PyObject *sounds,*keys,*temp, *append_result, *arglist, *result,*path;
-	PyObject *search=NULL,*path1;
-	long int cont = 0;
-	long int length = 0;
+	PyObject *search=NULL;
+	int cont = 0, pos=0;
+	int length = 0;
 	if (!PyArg_ParseTuple(args,"O",&sounds))
 		return NULL;
 	if (!PyDict_Check(sounds))
 		return NULL;
 	keys = PyDict_Keys(sounds);
 	length = PyList_Size(keys);
-	while (cont < length){
-		path = PyList_GetItem(keys,cont);
-		temp = PyDict_GetItem(sounds,path);
+	while (PyDict_Next(sounds,&pos,&path,&temp)){
+	//while (cont < length){
+		//path = PyList_GetItem(keys,cont);
+		//temp = PyDict_GetItem(sounds,path);
 		if (!PyDict_Contains(temp,PyString_FromString("play_count")))
 			PyDict_SetItemString(temp,"play_count",Py_BuildValue("i",0));
 		if (!PyDict_Contains(temp,PyString_FromString("duration")))
@@ -82,18 +83,14 @@ clibrary_fill_model(PyObject *self,PyObject *args){
 			return NULL;
 		//Building the arglist for the set method
 		search = PyString_FromString(" ");
-		/*
-		PyString_Concat(search,PyDict_GetItemString(temp,"name"));
-		PyString_Concat(search,PyDict_GetItemString(temp,"album"));
-		PyString_Concat(search,PyDict_GetItemString(temp,"artist"));
-		*/
-		if (search == NULL)
+		
+		PyString_Concat(&search,PyDict_GetItemString(temp,"name"));
+		PyString_Concat(&search,PyDict_GetItemString(temp,"album"));
+		PyString_Concat(&search,PyDict_GetItemString(temp,"artist"));
+
+		if (search == NULL) // Check that the search sfuff is not empty
 			return NULL;
 		
-		path1 = PyDict_GetItem(temp,path);
-		//if (path1 == NULL)
-		//	return NULL;
-
 		arglist = Py_BuildValue("(OiOiOiOiOiOiOiOiOiOiO)",iter,
 				1,PyDict_GetItemString(temp,"name"),
 				0,path,
@@ -106,20 +103,19 @@ clibrary_fill_model(PyObject *self,PyObject *args){
 				9,PyDict_GetItemString(temp,"duration"),
 				10,PyDict_GetItemString(temp,"genre")
 				);
-		if (arglist == NULL){
-			printf ("Fallo al crear la lista de argumentos!!");
+		if (arglist == NULL)
 			return NULL;
-		}
 		append_result = PyEval_CallObject(set,arglist);
 		Py_DECREF(arglist);
-		Py_DECREF(temp);
-		Py_DECREF(search);
-		Py_DECREF(path);
 		if (append_result == NULL)
 			return NULL;
 		Py_DECREF(iter);
 		Py_DECREF(append_result);
-		cont++;
+		/*
+		Py_DECREF(temp);
+		Py_DECREF(search);
+		Py_DECREF(path);*/
+		//cont++;
 	}
 	Py_INCREF(Py_None);
 	result = Py_None;
