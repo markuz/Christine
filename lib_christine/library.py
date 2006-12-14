@@ -88,11 +88,13 @@ class library(gtk_misc):
 	#	return True
 	
 	def gen_model(self,refresh=False):
-		if "--clibrary" in sys.argv:
-			print "cgen_model"
-			self.cgen_model(refresh)
+		if "--plibrary" in sys.argv:
+			print "using python library code,"
+			self.pen_model(refresh)
 		else:
-			print "pgen_model"
+			print "using C library code,"
+			print "if you want to use Python code run christine with"
+			print "--plibrary option"
 			self.pgen_model(refresh)
 
 	def pgen_model(self,refresh=False):
