@@ -38,10 +38,8 @@ class sources_list (gtk_misc):
 		self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
 		p = os.path.join(os.environ["HOME"],".christine","sources")
 		files = os.listdir(p)
-		print files,len(files)
 		while True:
 			if len(files) == 0:
-				print "lista vacia"
 				break # Exit loop if there is nothing in the list.
 			fname = files.pop()
 			file = os.path.join(os.environ["HOME"],".christine","sources",fname)
@@ -64,8 +62,6 @@ class sources_list (gtk_misc):
 					self.model.set(iter,LIST_NAME,fname,
 							LIST_TYPE,ltype,
 							LIST_PIXBUF,pixbuf)
-			else:
-				print "no es archivo!!",fname
 
 	def __append_columns(self):
 		column = gtk.TreeViewColumn("Source")

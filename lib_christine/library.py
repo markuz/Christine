@@ -18,12 +18,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-import os,gtk,gobject
+import os,gtk,gobject,sys
 import cPickle as pickle
 import gst, gst.interfaces
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.discoverer import *
+from lib_christine import clibrary
 #import pdb
 
 (PATH,
@@ -87,6 +88,14 @@ class library(gtk_misc):
 	#	return True
 	
 	def gen_model(self,refresh=False):
+		if "--clibrary" in sys.argv:
+			print "cgen_model"
+			self.cgen_model(refresh)
+		else:
+			print "pgen_model"
+			self.pgen_model(refresh)
+
+	def pgen_model(self,refresh=False):
 		#print "lib_library.gen_model"
 		#self.tv.freeze_child_notify()
 		if not refresh:
@@ -95,6 +104,7 @@ class library(gtk_misc):
 					s,s,s,s,int,s,s)
 		else:
 			self.model.clear()
+		append = self.model.append
 		sounds = self.library_lib.get_sounds()
 		keys = sounds.keys()
 		keys.sort()
@@ -110,7 +120,53 @@ class library(gtk_misc):
 			if not sounds[i].has_key("genre"):
 				sounds[i]["genre"] = ""
 
-			self.model.set(self.model.append(),
+			self.model.set(append(),
+					NAME,sounds[i]["name"],
+					PATH,i,
+					TYPE,sounds[i]["type"],
+					PIX, pix,
+					ALBUM,sounds[i]["album"],
+					ARTIST,sounds[i]["artist"],
+					TN,str(sounds[i]["track_number"]),
+					SEARCH,",".join([sounds[i]["name"],sounds[i]["album"],
+									sounds[i]["artist"]]),
+					PLAY_COUNT,sounds[i]["play_count"],
+					TIME,sounds[i]["duration"],
+					GENRE, sounds[i]["genre"])
+		#self.tv.freeze_child_notify()
+
+	def cgen_model(self,refresh=False):
+		#print "lib_library.gen_model"
+		#self.tv.freeze_child_notify()
+		if not refresh:
+			s = gobject.TYPE_STRING
+			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
+					s,s,s,s,int,s,s)
+		else:
+			self.model.clear()
+		append = self.model.append
+		sounds = self.library_lib.get_sounds()
+		clibrary.set_create_iter(append)
+		clibrary.set_set(self.model.set)
+		clibrary.fill_model(sounds)
+		return True
+		# Do nothing in this method
+		# from this poing
+		keys = sounds.keys()
+		keys.sort()
+		limit = 20
+		pix = self.gen_pixbuf("blank.png")
+		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+		for i in keys:
+			if not sounds[i].has_key("play_count"):
+				sounds[i]["play_count"] = 0
+
+			if not sounds[i].has_key("duration"):
+				sounds[i]["duration"] = "00:00"
+			if not sounds[i].has_key("genre"):
+				sounds[i]["genre"] = ""
+
+			self.model.set(append(),
 					NAME,sounds[i]["name"],
 					PATH,i,
 					TYPE,sounds[i]["type"],

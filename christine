@@ -240,6 +240,8 @@ class christine(gtk_misc):
 
 		self.miniviewer_tcontainer = self.xml["toolbox_container"]
 		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
+		if "-q" in sys.argv:
+			sys.exit()
 	
 
 	#def albums_refilter(self,treeview):

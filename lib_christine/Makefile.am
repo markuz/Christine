@@ -11,12 +11,15 @@ discoverer.py \
 player.py \
 gst_base.py \
 display.py \
-sources_list.py
+sources_list.py \
+clibrary.so
 
 DISTFILES= Makefile.in $(scripts_DATA)
 
 pkgdatadir=${datadir}
 pkgsysconfdir=${sysconfdir}
+pythonlibdir = @prefix@/include/python@PYTHON_VERSION@/
+usr_libdir = @includedir@
 
 programname=@PROGRAM_NAME@
 version=@VERSION@
@@ -34,6 +37,9 @@ gtk_misc.py: Makefile $(srcdir)/gtk_misc.py.in
 about.py: Makefile $(srcdir)/about.py.in
 	$(edit) $(srcdir)/about.py.in > about.py
 
+clibrary.so: Makefile $(srcdir)/clibrary.c
+	gcc -pedantic -WAll ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
+
 all: all-am
 
 all-am: 
@@ -41,3 +47,4 @@ all-am:
 clean:
 	rm gtk_misc.py
 	rm about.py
+	rm clibrary.so
