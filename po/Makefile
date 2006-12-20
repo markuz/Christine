@@ -17,12 +17,11 @@
 # We have the following line for use by intltoolize:
 # INTLTOOL_MAKEFILE
 
-GETTEXT_PACKAGE = christine
-PACKAGE = christine
+GETTEXT_PACKAGE = PROGRAM_NAME
+PACKAGE = PROGRAM_NAME
 VERSION = 0.0.1
 
 SHELL = /bin/sh
-
 
 srcdir = .
 top_srcdir = ..
@@ -34,9 +33,8 @@ exec_prefix = ${prefix}
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 libdir = ${exec_prefix}/lib
-localedir = $(libdir)/locale
-gnulocaledir = $(datadir)/locale
-gettextsrcdir = $(datadir)/glib-2.0/gettext/po
+DATADIRNAME = share
+itlocaledir = $(prefix)/$(DATADIRNAME)/locale
 subdir = po
 install_sh = /home/markuz/programacion/python/christine/christine/install-sh
 # Automake >= 1.8 provides mkdir -p --.
@@ -46,7 +44,6 @@ mkdir_p = $(install_sh) -d
 INSTALL = /usr/bin/ginstall -c
 INSTALL_DATA = ${INSTALL} -m 644
 
-CC = gcc
 GMSGFMT = /usr/bin/msgfmt
 MSGFMT = /usr/bin/msgfmt
 XGETTEXT = /usr/bin/xgettext
@@ -55,29 +52,40 @@ INTLTOOL_EXTRACT = $(top_builddir)/intltool-extract
 MSGMERGE = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --dist
 GENPOT   = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --pot
 
-DEFS = -DPACKAGE_NAME=\"christine\" -DPACKAGE_TARNAME=\"christine\" -DPACKAGE_VERSION=\"0.0.1\" -DPACKAGE_STRING=\"christine\ 0.0.1\" -DPACKAGE_BUGREPORT=\"markuz@islascruz.org\" -DPACKAGE=\"christine\" -DVERSION=\"0.0.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_LOCALE_H=1 -DHAVE_LC_MESSAGES=1 -DHAVE_BIND_TEXTDOMAIN_CODESET=1 -DHAVE_GETTEXT=1 -DHAVE_DCGETTEXT=1 -DENABLE_NLS=1
-CFLAGS = -O2 -march=k8 -mtune=k8
-CPPFLAGS = 
+ALL_LINGUAS = es_ES
 
-INCLUDES = -I.. -I$(top_srcdir)/intl
+PO_LINGUAS=$(shell if test -r $(srcdir)/LINGUAS; then grep -v "^\#" $(srcdir)/LINGUAS; fi)
 
-COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(XCFLAGS)
+POFILES=$(shell if test -n "$(PO_LINGUAS)"; then LINGUAS="$(PO_LINGUAS)"; else LINGUAS="$(ALL_LINGUAS)"; fi; for lang in $$LINGUAS; do printf "$$lang.po "; done)
 
-SOURCES = 
-POFILES =  es_ES.po
-GMOFILES =  es_ES.gmo
-DISTFILES = ChangeLog Makefile.in.in POTFILES.in \
-$(POFILES) $(SOURCES)
+DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(POFILES)
 EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
 
 POTFILES = \
-CATOBJEXT = .gmo
+	../gui/about.glade \ \
+	../gui/add_files.glade \ \
+	../gui/delete_file_from_disk_dialog.glade \ \
+	../gui/dir_selector.glade \ \
+	../gui/error.glade \ \
+	../gui/file_selector.glade \ \
+	../gui/icon_view.glade \ \
+	../gui/jump_to.glade \ \
+	../gui/main_window.glade \ \
+	../gui/miniviewer.glade \ \
+	../gui/open_remote.glade \ \
+	../gui/popmenu.glade \ \
+	../gui/preferences.glade \ \
+	../gui/properties.glade \ \
+	../gui/sources_treeview.glade \ \
+	../gui/tray_menu.glade \ \
+	../gui/treeview.glade \ \
+	../gui/treeview_reorderable.glade
+#This Gets Replace for some reason
+
+CATALOGS=$(shell if test -n "$(PO_LINGUAS)"; then LINGUAS="$(PO_LINGUAS)"; else LINGUAS="$(ALL_LINGUAS)"; fi; for lang in $$LINGUAS; do printf "$$lang.gmo "; done)
 
 .SUFFIXES:
-.SUFFIXES: .c .o .po .pox .gmo .mo .msg .cat
-
-.c.o:
-	$(COMPILE) $<
+.SUFFIXES: .po .pox .gmo .mo .msg .cat
 
 .po.pox:
 	$(MAKE) $(GETTEXT_PACKAGE).pot
@@ -103,76 +111,63 @@ all-no:
 $(GETTEXT_PACKAGE).pot: $(POTFILES)
 	$(GENPOT)
 
-install: install-exec install-data
-install-exec:
+install: install-data
 install-data: install-data-yes
 install-data-no: all
 install-data-yes: all
-	$(mkdir_p) $(DESTDIR)$(datadir)
-	@catalogs='$(CATALOGS)'; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  case "$$cat" in \
-	    *.gmo) destdir=$(gnulocaledir);; \
-	    *)     destdir=$(localedir);; \
-	  esac; \
-	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
-	  dir=$(DESTDIR)$$destdir/$$lang/LC_MESSAGES; \
+	$(mkdir_p) $(DESTDIR)$(itlocaledir)
+	if test -n "$(PO_LINGUAS)"; then \
+	  linguas="$(PO_LINGUAS)"; \
+	else \
+	  linguas="$(ALL_LINGUAS)"; \
+	fi; \
+	for lang in $$linguas; do \
+	  dir=$(DESTDIR)$(itlocaledir)/$$lang/LC_MESSAGES; \
 	  $(mkdir_p) $$dir; \
-	  if test -r $$cat; then \
-	    $(INSTALL_DATA) $$cat $$dir/$(GETTEXT_PACKAGE).mo; \
-	    echo "installing $$cat as $$dir/$(GETTEXT_PACKAGE).mo"; \
+	  if test -r $$lang.gmo; then \
+	    $(INSTALL_DATA) $$lang.gmo $$dir/$(GETTEXT_PACKAGE).mo; \
+	    echo "installing $$lang.gmo as $$dir/$(GETTEXT_PACKAGE).mo"; \
 	  else \
-	    $(INSTALL_DATA) $(srcdir)/$$cat $$dir/$(GETTEXT_PACKAGE).mo; \
-	    echo "installing $(srcdir)/$$cat as" \
+	    $(INSTALL_DATA) $(srcdir)/$$lang.gmo $$dir/$(GETTEXT_PACKAGE).mo; \
+	    echo "installing $(srcdir)/$$lang.gmo as" \
 		 "$$dir/$(GETTEXT_PACKAGE).mo"; \
 	  fi; \
-	  if test -r $$cat.m; then \
-	    $(INSTALL_DATA) $$cat.m $$dir/$(GETTEXT_PACKAGE).mo.m; \
-	    echo "installing $$cat.m as $$dir/$(GETTEXT_PACKAGE).mo.m"; \
+	  if test -r $$lang.gmo.m; then \
+	    $(INSTALL_DATA) $$lang.gmo.m $$dir/$(GETTEXT_PACKAGE).mo.m; \
+	    echo "installing $$lang.gmo.m as $$dir/$(GETTEXT_PACKAGE).mo.m"; \
 	  else \
-	    if test -r $(srcdir)/$$cat.m ; then \
-	      $(INSTALL_DATA) $(srcdir)/$$cat.m \
+	    if test -r $(srcdir)/$$lang.gmo.m ; then \
+	      $(INSTALL_DATA) $(srcdir)/$$lang.gmo.m \
 		$$dir/$(GETTEXT_PACKAGE).mo.m; \
-	      echo "installing $(srcdir)/$$cat as" \
+	      echo "installing $(srcdir)/$$lang.gmo.m as" \
 		   "$$dir/$(GETTEXT_PACKAGE).mo.m"; \
 	    else \
 	      true; \
 	    fi; \
 	  fi; \
 	done
-	if test "$(PACKAGE)" = "glib"; then \
-	  $(mkdir_p) $(DESTDIR)$(gettextsrcdir); \
-	  $(INSTALL_DATA) $(srcdir)/Makefile.in.in \
-			  $(DESTDIR)$(gettextsrcdir)/Makefile.in.in; \
-	else \
-	  : ; \
-	fi
+
+# Empty stubs to satisfy archaic automake needs
+dvi info tags TAGS ID:
 
 # Define this as empty until I found a useful application.
 installcheck:
 
 uninstall:
-	catalogs='$(CATALOGS)'; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
-	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo; \
-	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo.m; \
-	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo; \
-	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo.m; \
+	if test -n "$(PO_LINGUAS)"; then \
+	  linguas="$(PO_LINGUAS)"; \
+	else \
+	  linguas="$(ALL_LINGUAS)"; \
+	fi; \
+	for lang in $$linguas; do \
+	  rm -f $(DESTDIR)$(itlocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo; \
+	  rm -f $(DESTDIR)$(itlocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo.m; \
 	done
-	if test "$(PACKAGE)" = "glib"; then \
-	  rm -f $(DESTDIR)$(gettextsrcdir)/Makefile.in.in; \
-	fi
 
 check: all $(GETTEXT_PACKAGE).pot
 
-dvi info tags TAGS ID:
-
 mostlyclean:
-	rm -f core core.* *.pox $(GETTEXT_PACKAGE).pot *.old.po cat-id-tbl.tmp
-	rm -fr *.o
+	rm -f *.pox $(GETTEXT_PACKAGE).pot *.old.po cat-id-tbl.tmp
 	rm -f .intltool-merge-cache
 
 clean: mostlyclean
@@ -186,7 +181,7 @@ maintainer-clean: distclean
 	@echo "it deletes files that may require special tools to rebuild."
 	rm -f Makefile.in.in
 
-distdir = ../$(GETTEXT_PACKAGE)-$(VERSION)/$(subdir)
+distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
 dist distdir: $(DISTFILES)
 	dists="$(DISTFILES)"; \
 	extra_dists="$(EXTRA_DISTFILES)"; \
@@ -202,10 +197,12 @@ dist distdir: $(DISTFILES)
 update-po: Makefile
 	$(MAKE) $(GETTEXT_PACKAGE).pot
 	tmpdir=`pwd`; \
-	catalogs='$(CATALOGS)'; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
+	if test -n "$(PO_LINGUAS)"; then \
+	  linguas="$(PO_LINGUAS)"; \
+	else \
+	  linguas="$(ALL_LINGUAS)"; \
+	fi; \
+	for lang in $$linguas; do \
 	  echo "$$lang:"; \
 	  result="`$(MSGMERGE) -o $$tmpdir/$$lang.new.po $$lang`"; \
 	  if $$result; then \
@@ -221,7 +218,7 @@ update-po: Makefile
 	      fi; \
 	    fi; \
 	  else \
-	    echo "msgmerge for $$cat failed!"; \
+	    echo "msgmerge for $$lang.gmo failed!"; \
 	    rm -f $$tmpdir/$$lang.new.po; \
 	  fi; \
 	done

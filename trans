@@ -5,5 +5,5 @@
 
 echo "es_ES.po"
 xgettext -p po -j -o es_ES.po -l --keyword=translate --keyword=N_  --omit-header lib_christine/*py gui/string*
-echo "christine.po"
-xgettext -p po -j -o christine.pot -l --keyword=translate --keyword=N_  lib_christine/*py gui/string*
+#echo "christine.po"
+#xgettext -p po -j -o christine.pot -l --keyword=translate --keyword=N_  lib_christine/*py gui/string*

@@ -24,21 +24,15 @@ import gtk.glade
 class glade_xml:
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of initialize gtk.glade.XML'''
-		if os.path.isdir("./locale/"):
-			locale_dir= "./locale"
-		else:
-			# this variable is configurable
-			# running the configure and make scripts
-			# the resulting file will be gtk_misc.py 
-			# without the leading ".in"
-			locale_dir = "@datadir@/locale"
+		locale_dir = "@datadir@/locale"
+		print locale_dir
 		if os.path.isdir("./gui/"):	
 			self.wdir = "./gui/"
 		else:
 			self.wdir = "@datadir@/christine/gui/"
+		self.xml = gtk.glade.XML(os.path.join(self.wdir,file),root)
 		gtk.glade.bindtextdomain("@programname@",locale_dir)
 		gtk.glade.textdomain("@programname@")
-		self.xml = gtk.glade.XML(os.path.join(self.wdir,file),root)
 		self.get_widget = self.xml.get_widget
 
 	def __getitem__(self,widget):

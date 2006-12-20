@@ -1,5 +1,5 @@
-AC_INIT(christine,0.0.1,markuz@islascruz.org)
-AM_INIT_AUTOMAKE(christine,0.0.1)
+AC_INIT("christine","0.0.1",markuz@islascruz.org)
+AM_INIT_AUTOMAKE(PROGRAM_NAME,VERSION)
 
 AC_CONFIG_SRCDIR(lib_christine)
 AC_CONFIG_SRCDIR(gui)
@@ -7,11 +7,11 @@ AC_CONFIG_SRCDIR(gui)
 AM_MAINTAINER_MODE
 
 AC_PATH_X
-
+AC_HEADER_STDC
+AC_PROG_CC
 AC_HEADER_STDC
 
 AM_MAINTAINER_MODE
-
 AM_PATH_PYTHON
 
 PKG_CHECK_MODULES(pygtk, pygtk-2.0)
@@ -27,10 +27,11 @@ AC_SUBST(pygtk_LIBS)
 
 PROGRAM_NAME="christine"
 VERSION="0.0.1"
+
 AC_SUBST(PROGRAM_NAME)
 AC_SUBST(VERSION)
 
-GETTEXT_PACKAGE=christine
+GETTEXT_PACKAGE=PROGRAM_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS="es_ES"
 AC_SUBST(ALL_LINGUAS)
@@ -44,7 +45,9 @@ Makefile
 lib_christine/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
+po/Makefile.in
 po/Makefile
+po/POTFILES
 intltool-extract
 intltool-merge
 intltool-update

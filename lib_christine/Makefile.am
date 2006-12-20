@@ -12,7 +12,8 @@ player.py \
 gst_base.py \
 display.py \
 sources_list.py \
-clibrary.so
+trans.py \
+clibrary.so 
 
 DISTFILES= Makefile.in $(scripts_DATA)
 
@@ -37,6 +38,9 @@ gtk_misc.py: Makefile $(srcdir)/gtk_misc.py.in
 about.py: Makefile $(srcdir)/about.py.in
 	$(edit) $(srcdir)/about.py.in > about.py
 
+trans.py: Makefile $(srcdir)/trans.py.in
+	$(edit) $(srcdir)/trans.py.in > trans.py
+
 clibrary.so: Makefile $(srcdir)/clibrary.c
 	gcc -pedantic -WAll ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
 
@@ -48,3 +52,4 @@ clean:
 	rm gtk_misc.py
 	rm about.py
 	rm clibrary.so
+	rm trans.py

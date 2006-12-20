@@ -55,8 +55,8 @@ class christine(gtk_misc):
 		'''
 		sanity()
 		gtk_misc.__init__(self)
-		props = { gnome.PARAM_APP_DATADIR : '/usr/share'}
-		gnomeprogram		= gnome.program_init("christine","0.0.1",properties=props)
+		props = { gnome.PARAM_APP_DATADIR : '@datadir@'}
+		gnomeprogram		= gnome.program_init("@programname@","@VERSION@",properties=props)
 		self.gtk_misc		= gtk_misc()
 		client				= ui.master_client()
 		self.xml			= glade_xml("main_window.glade")
