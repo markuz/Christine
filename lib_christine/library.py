@@ -95,7 +95,7 @@ class library(gtk_misc):
 			print "using C library code,"
 			print "if you want to use Python code run christine with"
 			print "--plibrary option"
-			self.pgen_model(refresh)
+			self.cgen_model(refresh)
 
 	def pgen_model(self,refresh=False):
 		#print "lib_library.gen_model"

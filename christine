@@ -34,7 +34,9 @@ from lib_christine.display import *
 from lib_christine.sources_list import *
 
 bonobo.activate()
-
+props = { gnome.PARAM_APP_DATADIR : '/usr/share'}
+gnomeprogram		= gnome.program_init("christine","0.0.1",properties=props)
+client				= ui.master_client()
 try:
 	import pynotify
 	pynotify.Urgency(0)
@@ -55,10 +57,7 @@ class christine(gtk_misc):
 		'''
 		sanity()
 		gtk_misc.__init__(self)
-		props = { gnome.PARAM_APP_DATADIR : '/usr/share'}
-		gnomeprogram		= gnome.program_init("christine","0.0.1",properties=props)
 		self.gtk_misc		= gtk_misc()
-		client				= ui.master_client()
 		self.xml			= glade_xml("main_window.glade")
 		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		self.xml.signal_autoconnect(self)

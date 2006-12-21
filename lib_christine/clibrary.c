@@ -116,7 +116,7 @@ clibrary_fill_model(PyObject *self,PyObject *args){
 		Py_DECREF(temp);
 		Py_DECREF(search);
 		Py_DECREF(path);*/
-		//cont++;
+		cont++;
 	}
 	Py_INCREF(Py_None);
 	result = Py_None;
