@@ -17,8 +17,8 @@
 # We have the following line for use by intltoolize:
 # INTLTOOL_MAKEFILE
 
-GETTEXT_PACKAGE = PROGRAM_NAME
-PACKAGE = PROGRAM_NAME
+GETTEXT_PACKAGE = christine
+PACKAGE = christine
 VERSION = 0.0.1
 
 SHELL = /bin/sh

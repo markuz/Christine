@@ -15,15 +15,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gui/strings_about:7 gui/strings_main_window:7
+#: gui/strings_about:7 gui/strings_main_window:7 gui/about.glade:9
 msgid "Christine"
 msgstr ""
 
-#: gui/strings_about:8
+#: gui/strings_about:8 gui/about.glade:10
 msgid "2006 (c) Marco Antonio Islas Cruz"
 msgstr ""
 
-#: gui/strings_about:9
+#: gui/strings_about:9 gui/about.glade:11
 msgid "A small and cute media player for GNOME"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgid ""
 "proprietary programs.  \n"
 msgstr ""
 
-#: gui/strings_about:39
+#: gui/strings_about:39 gui/about.glade:45
 msgid "translator-credits"
 msgstr ""
 
@@ -125,17 +125,20 @@ msgstr ""
 msgid "_Next"
 msgstr "Siguie_nte"
 
-#: gui/strings_main_window:23
+#: gui/strings_main_window:23 gui/properties.glade:192
+#: gui/properties.glade:220 gui/properties.glade:248 gui/properties.glade:276
+#: gui/properties.glade:304 gui/properties.glade:332 gui/properties.glade:360
+#: gui/properties.glade:388 gui/properties.glade:416 gui/properties.glade:640
 msgid "None"
-msgstr ""
+msgstr "Ninguno"
 
 #: gui/strings_main_window:24
 msgid "Shuffle"
-msgstr ""
+msgstr "Al azar"
 
 #: gui/strings_main_window:25
 msgid "Repeat"
-msgstr ""
+msgstr "Repetir"
 
 #: gui/strings_main_window:26
 msgid "Shuffle + Repeat"
@@ -189,18 +192,199 @@ msgstr ""
 msgid "button2"
 msgstr ""
 
-#: gui/strings_main_window:39
+#: gui/strings_main_window:39 gui/main_window.glade:387
 msgid "Find"
 msgstr "Buscar"
 
-#: gui/strings_main_window:40
+#: gui/strings_main_window:40 gui/main_window.glade:528
 msgid "<b>Artists</b>"
 msgstr ""
 
-#: gui/strings_main_window:41
+#: gui/strings_main_window:41 gui/main_window.glade:557
 msgid "<b>Albums</b>"
 msgstr ""
 
 #: gui/strings_main_window:42 gui/strings_main_window:43
+#: gui/main_window.glade:629 gui/main_window.glade:654
 msgid "00:00"
+msgstr ""
+
+#: gui/add_files.glade:55
+msgid "Importing:"
+msgstr "Importando"
+
+#: gui/add_files.glade:65
+msgid "label2"
+msgstr ""
+
+#: gui/add_files.glade:102
+msgid "<b>Importing files</b>"
+msgstr ""
+
+#: gui/delete_file_from_disk_dialog.glade:35
+msgid ""
+"Are you sure?\n"
+"This cannot be undone"
+msgstr "Esta usted seguro \n Esto no se puede deshacer"
+
+#: gui/delete_file_from_disk_dialog.glade:55
+msgid "gtk-cancel"
+msgstr ""
+
+#: gui/delete_file_from_disk_dialog.glade:63
+msgid "gtk-ok"
+msgstr ""
+
+#: gui/dir_selector.glade:13
+msgid "Select a folder"
+msgstr "Seleccione una carpeta"
+
+#: gui/dir_selector.glade:77
+msgid "Include subfolders"
+msgstr "Incluir subcarpetas"
+
+#: gui/error.glade:8
+msgid "Error"
+msgstr ""
+
+#: gui/error.glade:82
+msgid "Error text"
+msgstr ""
+
+#: gui/file_selector.glade:13
+msgid "Select your files"
+msgstr ""
+
+#: gui/icon_view.glade:8 gui/treeview_reorderable.glade:8
+msgid "window1"
+msgstr ""
+
+#: gui/jump_to.glade:8
+msgid "Jump to time"
+msgstr "Brincar al tiempo"
+
+#: gui/jump_to.glade:98
+msgid ":"
+msgstr ""
+
+#: gui/miniviewer.glade:10
+msgid "video player"
+msgstr ""
+
+#: gui/open_remote.glade:8
+msgid "Open Remote"
+msgstr ""
+
+#: gui/open_remote.glade:77
+msgid "Location"
+msgstr ""
+
+#: gui/preferences.glade:41 gui/properties.glade:500
+msgid "Artist"
+msgstr ""
+
+#: gui/preferences.glade:54 gui/properties.glade:528
+msgid "Album"
+msgstr ""
+
+#: gui/preferences.glade:68
+msgid "Type"
+msgstr ""
+
+#: gui/preferences.glade:81
+msgid "Length"
+msgstr ""
+
+#: gui/preferences.glade:91 gui/properties.glade:584
+msgid "Track number"
+msgstr ""
+
+#: gui/preferences.glade:101
+msgid "Play count"
+msgstr ""
+
+#: gui/preferences.glade:115
+msgid "<b>View</b>"
+msgstr ""
+
+#: gui/preferences.glade:138
+msgid "Library"
+msgstr ""
+
+#: gui/preferences.glade:164
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+msgstr ""
+
+#: gui/preferences.glade:184
+msgid "<b>Audiosink</b>"
+msgstr ""
+
+#: gui/preferences.glade:208
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+
+#: gui/preferences.glade:226
+msgid "<b>Videosink</b>"
+msgstr ""
+
+#: gui/preferences.glade:247
+msgid "Backend"
+msgstr ""
+
+#: gui/properties.glade:9
+msgid "Properties"
+msgstr ""
+
+#: gui/properties.glade:69
+msgid "File"
+msgstr ""
+
+#: gui/properties.glade:108
+msgid "Audio codec"
+msgstr ""
+
+#: gui/properties.glade:136
+msgid "Mode"
+msgstr ""
+
+#: gui/properties.glade:164
+msgid "Bitrate"
+msgstr ""
+
+#: gui/properties.glade:444
+msgid "Date"
+msgstr ""
+
+#: gui/properties.glade:472
+msgid "Genre"
+msgstr ""
+
+#: gui/properties.glade:556
+msgid "Title"
+msgstr ""
+
+#: gui/properties.glade:612
+msgid "Video codec"
+msgstr ""
+
+#: gui/tray_menu.glade:11
+msgid "Play or pause the player"
+msgstr ""
+
+#: gui/tray_menu.glade:12
+msgid "Play/Pause"
+msgstr ""
+
+#: gui/tray_menu.glade:33
+msgid "Next"
+msgstr ""
+
+#: gui/tray_menu.glade:54
+msgid "Previous"
 msgstr ""
