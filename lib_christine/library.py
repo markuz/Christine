@@ -88,9 +88,15 @@ class library(gtk_misc):
 	#	return True
 	
 	def gen_model(self,refresh=False):
+		if not refresh:
+			s = gobject.TYPE_STRING
+			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
+					s,s,s,s,int,s,s)
+		else:
+			self.model.clear()
 		if "--plibrary" in sys.argv:
 			print "using python library code,"
-			self.pen_model(refresh)
+			self.pgen_model(refresh)
 		else:
 			print "using C library code,"
 			print "if you want to use Python code run christine with"
@@ -98,14 +104,6 @@ class library(gtk_misc):
 			self.cgen_model(refresh)
 
 	def pgen_model(self,refresh=False):
-		#print "lib_library.gen_model"
-		#self.tv.freeze_child_notify()
-		if not refresh:
-			s = gobject.TYPE_STRING
-			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
-					s,s,s,s,int,s,s)
-		else:
-			self.model.clear()
 		append = self.model.append
 		sounds = self.library_lib.get_sounds()
 		keys = sounds.keys()
@@ -138,50 +136,14 @@ class library(gtk_misc):
 		#self.tv.freeze_child_notify()
 
 	def cgen_model(self,refresh=False):
-		#print "lib_library.gen_model"
-		#self.tv.freeze_child_notify()
-		if not refresh:
-			s = gobject.TYPE_STRING
-			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
-					s,s,s,s,int,s,s)
-		else:
-			self.model.clear()
+		self.tv.freeze_child_notify()
 		append = self.model.append
 		sounds = self.library_lib.get_sounds()
 		clibrary.set_create_iter(append)
 		clibrary.set_set(self.model.set)
 		clibrary.fill_model(sounds)
+		self.tv.freeze_child_notify()
 		return True
-		# Do nothing in this method
-		# from this poing
-		keys = sounds.keys()
-		keys.sort()
-		limit = 20
-		pix = self.gen_pixbuf("blank.png")
-		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		for i in keys:
-			if not sounds[i].has_key("play_count"):
-				sounds[i]["play_count"] = 0
-
-			if not sounds[i].has_key("duration"):
-				sounds[i]["duration"] = "00:00"
-			if not sounds[i].has_key("genre"):
-				sounds[i]["genre"] = ""
-
-			self.model.set(append(),
-					NAME,sounds[i]["name"],
-					PATH,i,
-					TYPE,sounds[i]["type"],
-					PIX, pix,
-					ALBUM,sounds[i]["album"],
-					ARTIST,sounds[i]["artist"],
-					TN,str(sounds[i]["track_number"]),
-					SEARCH,",".join([sounds[i]["name"],sounds[i]["album"],
-									sounds[i]["artist"]]),
-					PLAY_COUNT,sounds[i]["play_count"],
-					TIME,sounds[i]["duration"],
-					GENRE, sounds[i]["genre"])
-		#self.tv.freeze_child_notify()
 
 	def add_columns(self):
 		render = gtk.CellRendererText()

@@ -19,10 +19,10 @@
 
 
 import pygst; pygst.require("0.10")
-import gnome,gtk,gst.interfaces,random,sys,bonobo
+import gtk,gst.interfaces,random,sys,bonobo
 import gtk.gdk
-from gnome import ui
 from lib_christine.trans import *
+from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.library import *
@@ -33,10 +33,6 @@ from lib_christine.player import *
 from lib_christine.display import *
 from lib_christine.sources_list import *
 
-bonobo.activate()
-props = { gnome.PARAM_APP_DATADIR : '/usr/share'}
-gnomeprogram		= gnome.program_init("christine","0.0.1",properties=props)
-client				= ui.master_client()
 try:
 	import pynotify
 	pynotify.Urgency(0)
@@ -1479,6 +1475,7 @@ class christine(gtk_misc):
 
 if __name__ == "__main__":
 	t = trans()
+	translate = t.trans
 	a = christine()
 	if len(sys.argv) > 1:
 		for i in sys.argv[1:]:

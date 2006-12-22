@@ -19,10 +19,10 @@
 
 
 import pygst; pygst.require("0.10")
-import gnome,gtk,gst.interfaces,random,sys,bonobo
+import gtk,gst.interfaces,random,sys,bonobo
 import gtk.gdk
-from gnome import ui
 from lib_christine.trans import *
+from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.library import *
@@ -33,10 +33,6 @@ from lib_christine.player import *
 from lib_christine.display import *
 from lib_christine.sources_list import *
 
-bonobo.activate()
-props = { gnome.PARAM_APP_DATADIR : '@datadir@'}
-gnomeprogram		= gnome.program_init("@programname@","@VERSION@",properties=props)
-client				= ui.master_client()
 try:
 	import pynotify
 	pynotify.Urgency(0)
@@ -57,7 +53,6 @@ class christine(gtk_misc):
 		'''
 		sanity()
 		gtk_misc.__init__(self)
-		self.gtk_misc		= gtk_misc()
 		self.xml			= glade_xml("main_window.glade")
 		self.small_view_menuitem = self.xml["small_view_menuitem"]
 		self.xml.signal_autoconnect(self)
@@ -353,7 +348,7 @@ class christine(gtk_misc):
 		self.natural_model.foreach(self.search_by_path,
 				self.player.get_location())
 		if self.current_iter != None:
-			pix = self.gtk_misc.gen_pixbuf("blank.png")
+			pix = self.gen_pixbuf("blank.png")
 			pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 			self.natural_model.set(self.current_iter,PIX,pix)
 		
@@ -844,7 +839,7 @@ class christine(gtk_misc):
 			state = self.STATE_PLAYING
 			if self.STATE_PLAYING:
 				iter = self.get_natural_iter(self.current_iter)
-				pix = self.gtk_misc.gen_pixbuf("sound.png")
+				pix = self.gen_pixbuf("sound.png")
 				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 				self.natural_model.set(iter,PIX,pix)
 			path = self.model.get_path(self.current_iter)
@@ -1479,6 +1474,7 @@ class christine(gtk_misc):
 
 if __name__ == "__main__":
 	t = trans()
+	translate = t.trans
 	a = christine()
 	if len(sys.argv) > 1:
 		for i in sys.argv[1:]:

@@ -245,15 +245,15 @@ msgstr "Incluir subcarpetas"
 
 #: gui/error.glade:8
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #: gui/error.glade:82
 msgid "Error text"
-msgstr ""
+msgstr "Texto de error"
 
 #: gui/file_selector.glade:13
 msgid "Select your files"
-msgstr ""
+msgstr "Seleccione sus archivos"
 
 #: gui/icon_view.glade:8 gui/treeview_reorderable.glade:8
 msgid "window1"
@@ -265,7 +265,7 @@ msgstr "Brincar al tiempo"
 
 #: gui/jump_to.glade:98
 msgid ":"
-msgstr ""
+msgstr "Ir a"
 
 #: gui/miniviewer.glade:10
 msgid "video player"
@@ -273,43 +273,43 @@ msgstr ""
 
 #: gui/open_remote.glade:8
 msgid "Open Remote"
-msgstr ""
+msgstr "Abrir remoto"
 
 #: gui/open_remote.glade:77
 msgid "Location"
-msgstr ""
+msgstr "Locacion"
 
 #: gui/preferences.glade:41 gui/properties.glade:500
 msgid "Artist"
-msgstr ""
+msgstr "Artista"
 
 #: gui/preferences.glade:54 gui/properties.glade:528
 msgid "Album"
-msgstr ""
+msgstr "Album"
 
 #: gui/preferences.glade:68
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: gui/preferences.glade:81
 msgid "Length"
-msgstr ""
+msgstr "Duracion"
 
 #: gui/preferences.glade:91 gui/properties.glade:584
 msgid "Track number"
-msgstr ""
+msgstr "Numero de cancion"
 
 #: gui/preferences.glade:101
 msgid "Play count"
-msgstr ""
+msgstr "Numero de reproducciones"
 
 #: gui/preferences.glade:115
 msgid "<b>View</b>"
-msgstr ""
+msgstr "<b>Ver</b>"
 
 #: gui/preferences.glade:138
 msgid "Library"
-msgstr ""
+msgstr "Biblioteca"
 
 #: gui/preferences.glade:164
 msgid ""
@@ -339,11 +339,11 @@ msgstr ""
 
 #: gui/properties.glade:9
 msgid "Properties"
-msgstr ""
+msgstr "Propiedades"
 
 #: gui/properties.glade:69
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #: gui/properties.glade:108
 msgid "Audio codec"
@@ -351,7 +351,7 @@ msgstr ""
 
 #: gui/properties.glade:136
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 #: gui/properties.glade:164
 msgid "Bitrate"
@@ -359,15 +359,15 @@ msgstr ""
 
 #: gui/properties.glade:444
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #: gui/properties.glade:472
 msgid "Genre"
-msgstr ""
+msgstr "Genero"
 
 #: gui/properties.glade:556
 msgid "Title"
-msgstr ""
+msgstr "Titulo"
 
 #: gui/properties.glade:612
 msgid "Video codec"
@@ -375,16 +375,16 @@ msgstr ""
 
 #: gui/tray_menu.glade:11
 msgid "Play or pause the player"
-msgstr ""
+msgstr "Activa o detiene el reproductor"
 
 #: gui/tray_menu.glade:12
 msgid "Play/Pause"
-msgstr ""
+msgstr "Reproducir/Pausar"
 
 #: gui/tray_menu.glade:33
 msgid "Next"
-msgstr ""
+msgstr "Siguiente"
 
 #: gui/tray_menu.glade:54
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"

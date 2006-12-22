@@ -50,20 +50,13 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 
 		#self.bus.add_watch(self.error_handler)
 		#self.playbin.connect("error",self.error_handler)
-		asink			= self.get_string("backend/audiosink")
-		self.audio_sink = gst.element_factory_make(asink)
-		#print "asink",asink
-		if asink == "alsasink":
-			self.audio_sink.set_property("device","hw:0")
-		vsink			= self.get_string("backend/videosink") 
-		aspect_ratio	= self.get_string("backend/aspect-ratio")
+		self.__update_audiosink()
+		self.__update_videosink()
+		self.__update_aspect_ratio()
+		self.notify_add("/apps/christine/backend/audiosink",self.__update_audiosink)
+		self.notify_add("/apps/christine/backend/videosink",self.__update_videosink)
+		self.notify_add("/apps/christine/backend/aspect-ratio",self.__update_aspect_ratio)
 
-		self.video_sink = gst.element_factory_make(vsink)
-		if vsink == "xvimagesink" or vsink == "ximagesink":
-			self.video_sink.set_property("force-aspect-ratio",True)
-
-		if aspect_ratio != None:
-			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 		vsink			= self.get_string("backend/vis-plugin") 
 		self.vis_plugin = gst.element_factory_make(vsink)
 
@@ -75,6 +68,38 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.playbin.set_property("video-sink",self.video_sink)
 		self.playbin.set_property("audio-sink",self.audio_sink)
 		#self.playbin.set_property("vis-plugin",self.vis_plugin)
+
+	def __update_audiosink(self,client="",cnx_id="",entry="",userdata=""):
+		state = self.get_state()[1]
+		if self.get_location()!= None:
+			self.pause()
+		asink			= self.get_string("backend/audiosink")
+		self.audio_sink = gst.element_factory_make(asink)
+		#print "asink",asink
+		if asink == "alsasink":
+			self.audio_sink.set_property("device","hw:0")
+		if gst.State(gst.STATE_PLAYING) == state:
+			self.playit()
+
+	def __update_videosink(self,client="",cnx_id="",entry="",userdata=""):
+		state = self.get_state()[1]
+		if self.get_location()!= None:
+			self.pause()
+		vsink = self.get_string("backend/videosink") 
+		self.video_sink = gst.element_factory_make(vsink)
+		self.playbin.set_property("video-sink",self.video_sink)
+		if vsink == "xvimagesink" or vsink == "ximagesink":
+			self.video_sink.set_property("force-aspect-ratio",True)
+		if gst.State(gst.STATE_PLAYING) == state:
+			self.playit()
+			self.expose_cb()
+
+
+	def __update_aspect_ratio(self,client="",cnx_id="",entry="",userdata=""):
+		aspect_ratio	= self.get_string("backend/aspect-ratio")
+		if aspect_ratio != None:
+			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
+
 
 	# player10 Set location
 	def set_location(self,file):
