@@ -4,7 +4,7 @@
 #
 
 echo "es.po"
-xgettext -p po -o christine.pot -l --keyword=translate --keyword=N_  --from-code=Glade --omit-header lib_christine/*py gui/*glade
+xgettext -p po -o christine.pot -l --keyword=translate --keyword=N_  --from-code=Glade lib_christine/*py gui/*glade
 xgettext -p po -j -o es.po -l --keyword=translate --keyword=N_  --from-code=Glade --omit-header lib_christine/*py gui/*glade
 #echo "christine.po"
 #xgettext -p po -j -o christine.pot -l --keyword=translate --keyword=N_  lib_christine/*py gui/string*
