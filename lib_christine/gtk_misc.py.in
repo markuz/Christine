@@ -23,7 +23,8 @@ import gtk, os, gobject, gconf, os.path
 import gtk.glade
 class glade_xml:
 	def __init__(self,file,root=None):
-		'''constructor, receives the name of initialize gtk.glade.XML'''
+		'''constructor, receives the name of the interface descriptor 
+		and then initialize gtk.glade.XML'''
 		locale_dir = "@datadir@/locale/"
 		print locale_dir
 		if os.path.isdir("./gui/"):	
@@ -37,9 +38,11 @@ class glade_xml:
 
 	def __getitem__(self,widget):
 		'''
-		returns the widget acording to the name of the widget
+		returns the widget according to the name of the widget.
+		This lets the instance work like a dictionary
 		'''
 		return self.xml.get_widget(widget)
+
 	def signal_autoconnect(self,signals):
 		'''
 		Signal autoconnect wrapper.
