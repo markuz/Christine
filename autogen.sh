@@ -16,9 +16,19 @@ PKG_NAME="Christine"
     exit 1
 }
 
+echo "gettextize -f --copy"
 gettextize -f --copy
+echo "intltoolize --force --copy --automake"
 intltoolize --force --copy --automake
+echo "aclocal -I m4"
 aclocal -I m4
+echo "automake --add-missing --copy --gnu"
 automake --add-missing --copy --gnu
+echo "autoconf"
 autoconf
+
+echo "sh configure --prefix=/usr"
+sh configure --prefix=/usr 
+echo "make"
+make 
 

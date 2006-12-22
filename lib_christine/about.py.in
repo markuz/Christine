@@ -32,3 +32,5 @@ class about(gtk_misc):
 		about.set_logo(pix)
 		about.set_name("@programname@")
 		about.set_version("@version@")
+		about.run()
+		about.destroy()

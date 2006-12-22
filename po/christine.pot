@@ -1,199 +1,218 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid ""
-msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-26 12:10-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
-
-#: gui/strings_about:7 gui/strings_main_window:7
+#: gui/about.glade:9
 msgid "Christine"
 msgstr ""
 
-#: gui/strings_about:8
+#: gui/about.glade:10
 msgid "2006 (c) Marco Antonio Islas Cruz"
 msgstr ""
 
-#: gui/strings_about:9
+#: gui/about.glade:11
 msgid "A small and cute media player for GNOME"
 msgstr ""
 
-#: gui/strings_about:10
-msgid ""
-"\t\t    GNU GENERAL PUBLIC LICENSE\n"
-"\t\t       Version 2, June 1991\n"
-"\n"
-" Copyright (C) 1989, 1991 Free Software Foundation, Inc.\n"
-"                       59 Temple Place, Suite 330, Boston, MA  02111-1307  "
-"USA\n"
-" Everyone is permitted to copy and distribute verbatim copies\n"
-" of this license document, but changing it is not allowed.\n"
-"\n"
-"\n"
-"    Christine\n"
-"    Copyright (C) 2006  Marco Antonio Islas Cruz <markuz@islascruz.org>\n"
-"\n"
-"    This program is free software; you can redistribute it and/or modify\n"
-"    it under the terms of the GNU General Public License as published by\n"
-"    the Free Software Foundation; version 2 of the License.\n"
-"\n"
-"    This program is distributed in the hope that it will be useful,\n"
-"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"    GNU General Public License for more details.\n"
-"\n"
-"    You should have received a copy of the GNU General Public License\n"
-"    along with this program; if not, write to the Free Software\n"
-"    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
-"USA\n"
-"\n"
-"\n"
-"This General Public License does not permit incorporating Christine into\n"
-"proprietary programs.  \n"
-msgstr ""
-
-#: gui/strings_about:39
+#: gui/about.glade:45
 msgid "translator-credits"
 msgstr ""
 
-#: gui/strings_main_window:8
-msgid "_Media"
+#: gui/add_files.glade:55
+msgid "Importing:"
 msgstr ""
 
-#: gui/strings_main_window:9
-msgid "Add a file to the list"
+#: gui/add_files.glade:65
+msgid "label2"
 msgstr ""
 
-#: gui/strings_main_window:10
-msgid "Import File"
+#: gui/add_files.glade:102
+msgid "<b>Importing files</b>"
 msgstr ""
 
-#: gui/strings_main_window:11
-msgid "Add a complete folder to the list"
+#: gui/delete_file_from_disk_dialog.glade:35
+msgid ""
+"Are you sure?\n"
+"This cannot be undone"
 msgstr ""
 
-#: gui/strings_main_window:12
-msgid "Import Folder"
+#: gui/delete_file_from_disk_dialog.glade:55
+msgid "gtk-cancel"
 msgstr ""
 
-#: gui/strings_main_window:13
-msgid "Import a file to the queue without add it to the list"
+#: gui/delete_file_from_disk_dialog.glade:63
+msgid "gtk-ok"
 msgstr ""
 
-#: gui/strings_main_window:14
-msgid "Import to queue"
+#: gui/dir_selector.glade:13
+msgid "Select a folder"
 msgstr ""
 
-#: gui/strings_main_window:15
-msgid "Jump to some second on the song"
+#: gui/dir_selector.glade:77
+msgid "Include subfolders"
 msgstr ""
 
-#: gui/strings_main_window:16
-msgid "Jump _to"
+#: gui/error.glade:8
+msgid "Error"
 msgstr ""
 
-#: gui/strings_main_window:17
-msgid "_Jump to playing"
+#: gui/error.glade:82
+msgid "Error text"
 msgstr ""
 
-#: gui/strings_main_window:18
-msgid "_Control"
+#: gui/file_selector.glade:13
+msgid "Select your files"
 msgstr ""
 
-#: gui/strings_main_window:19
-msgid "Play"
+#: gui/icon_view.glade:8 gui/treeview_reorderable.glade:8
+msgid "window1"
 msgstr ""
 
-#: gui/strings_main_window:20
-msgid "_Next"
+#: gui/jump_to.glade:8
+msgid "Jump to time"
 msgstr ""
 
-#: gui/strings_main_window:21
-msgid "Prev"
+#: gui/jump_to.glade:98
+msgid ":"
 msgstr ""
 
-#: gui/strings_main_window:22
-msgid "None"
+#: gui/main_window.glade:387
+msgid "Find"
 msgstr ""
 
-#: gui/strings_main_window:23
-msgid "Shuffle"
-msgstr ""
-
-#: gui/strings_main_window:24
-msgid "Repeat"
-msgstr ""
-
-#: gui/strings_main_window:25
-msgid "Shuffle + Repeat"
-msgstr ""
-
-#: gui/strings_main_window:26
-msgid "Less volume"
-msgstr ""
-
-#: gui/strings_main_window:27
-msgid "More volume"
-msgstr ""
-
-#: gui/strings_main_window:28
-msgid "Mute"
-msgstr ""
-
-#: gui/strings_main_window:29
-msgid "_Small view"
-msgstr ""
-
-#: gui/strings_main_window:30
-msgid "Browser"
-msgstr ""
-
-#: gui/strings_main_window:31
-msgid "Visualization"
-msgstr ""
-
-#: gui/strings_main_window:32
-msgid "<big>Not playing</big>"
-msgstr ""
-
-#: gui/strings_main_window:33
-msgid "from"
-msgstr ""
-
-#: gui/strings_main_window:34
-msgid "button1"
-msgstr ""
-
-#: gui/strings_main_window:35
-msgid "by"
-msgstr ""
-
-#: gui/strings_main_window:36
-msgid "button2"
-msgstr ""
-
-#: gui/strings_main_window:37
-msgid "Search"
-msgstr ""
-
-#: gui/strings_main_window:38
+#: gui/main_window.glade:528
 msgid "<b>Artists</b>"
 msgstr ""
 
-#: gui/strings_main_window:39
+#: gui/main_window.glade:557
 msgid "<b>Albums</b>"
 msgstr ""
 
-#: gui/strings_main_window:40 gui/strings_main_window:41
+#: gui/main_window.glade:630 gui/main_window.glade:655
 msgid "00:00"
+msgstr ""
+
+#: gui/miniviewer.glade:10
+msgid "video player"
+msgstr ""
+
+#: gui/open_remote.glade:8
+msgid "Open Remote"
+msgstr ""
+
+#: gui/open_remote.glade:77
+msgid "Location"
+msgstr ""
+
+#: gui/preferences.glade:41 gui/properties.glade:500
+msgid "Artist"
+msgstr ""
+
+#: gui/preferences.glade:54 gui/properties.glade:528
+msgid "Album"
+msgstr ""
+
+#: gui/preferences.glade:68
+msgid "Type"
+msgstr ""
+
+#: gui/preferences.glade:81
+msgid "Length"
+msgstr ""
+
+#: gui/preferences.glade:91 gui/properties.glade:584
+msgid "Track number"
+msgstr ""
+
+#: gui/preferences.glade:101
+msgid "Play count"
+msgstr ""
+
+#: gui/preferences.glade:115
+msgid "<b>View</b>"
+msgstr ""
+
+#: gui/preferences.glade:138
+msgid "Library"
+msgstr ""
+
+#: gui/preferences.glade:164
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+msgstr ""
+
+#: gui/preferences.glade:184
+msgid "<b>Audiosink</b>"
+msgstr ""
+
+#: gui/preferences.glade:208
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+
+#: gui/preferences.glade:226
+msgid "<b>Videosink</b>"
+msgstr ""
+
+#: gui/preferences.glade:247
+msgid "Backend"
+msgstr ""
+
+#: gui/properties.glade:9
+msgid "Properties"
+msgstr ""
+
+#: gui/properties.glade:69
+msgid "File"
+msgstr ""
+
+#: gui/properties.glade:108
+msgid "Audio codec"
+msgstr ""
+
+#: gui/properties.glade:136
+msgid "Mode"
+msgstr ""
+
+#: gui/properties.glade:164
+msgid "Bitrate"
+msgstr ""
+
+#: gui/properties.glade:192 gui/properties.glade:220 gui/properties.glade:248
+#: gui/properties.glade:276 gui/properties.glade:304 gui/properties.glade:332
+#: gui/properties.glade:360 gui/properties.glade:388 gui/properties.glade:416
+#: gui/properties.glade:640
+msgid "None"
+msgstr ""
+
+#: gui/properties.glade:444
+msgid "Date"
+msgstr ""
+
+#: gui/properties.glade:472
+msgid "Genre"
+msgstr ""
+
+#: gui/properties.glade:556
+msgid "Title"
+msgstr ""
+
+#: gui/properties.glade:612
+msgid "Video codec"
+msgstr ""
+
+#: gui/tray_menu.glade:11
+msgid "Play or pause the player"
+msgstr ""
+
+#: gui/tray_menu.glade:12
+msgid "Play/Pause"
+msgstr ""
+
+#: gui/tray_menu.glade:33
+msgid "Next"
+msgstr ""
+
+#: gui/tray_menu.glade:54
+msgid "Previous"
 msgstr ""
