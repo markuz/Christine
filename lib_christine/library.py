@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: UTF8 -*-
+# -*- coding: UTF-8 -*-
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -24,6 +24,7 @@ import gst, gst.interfaces
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.discoverer import *
+from lib_christine.trans import *
 from lib_christine import clibrary
 #import pdb
 
@@ -150,13 +151,13 @@ class library(gtk_misc):
 		tv = self.tv
 		tvc = gtk.TreeViewColumn
 		
-		tn = tvc("T#",render,text=TN)
+		tn = tvc(translate("T#"),render,text=TN)
 		tn.set_sort_column_id(TN)
 		tn.set_visible(self.gconf.get_bool("ui/show_tn"))
 		tv.append_column(tn)
 	
 		pix = gtk.CellRendererPixbuf()
-		name = tvc("Title")
+		name = tvc(translate("Title"))
 		name.set_sort_column_id(NAME)
 		name.set_resizable(True)
 		name.set_fixed_width(250)
@@ -169,7 +170,7 @@ class library(gtk_misc):
 		tv.append_column(name)
 		
 
-		artist = tvc("Artist",render,text=ARTIST)
+		artist = tvc(translate("Artist"),render,text=ARTIST)
 		artist.set_sort_column_id(ARTIST)
 		artist.set_resizable(True)
 		artist.set_fixed_width(150)
@@ -177,7 +178,7 @@ class library(gtk_misc):
 		artist.set_visible(self.gconf.get_bool("ui/show_artist"))
 		tv.append_column(artist)
 		
-		album = tvc("Album",render,text=ALBUM)
+		album = tvc(translate("Album"),render,text=ALBUM)
 		album.set_sort_column_id(ALBUM)
 		album.set_resizable(True)
 		album.set_fixed_width(150)
@@ -185,25 +186,25 @@ class library(gtk_misc):
 		album.set_visible(self.gconf.get_bool("ui/show_album"))
 		tv.append_column(album)
 		
-		type = tvc("Type",render,text=TYPE)
+		type = tvc(translate("Type"),render,text=TYPE)
 		type.set_sort_column_id(TYPE)
 		type.set_resizable(True)
 		type.set_visible(self.gconf.get_bool("ui/show_type"))
 		tv.append_column(type)
 
-		play = tvc("Count",render,text=PLAY_COUNT)
+		play = tvc(translate("Count"),render,text=PLAY_COUNT)
 		play.set_sort_column_id(PLAY_COUNT)
 		play.set_resizable(True)
 		play.set_visible(self.gconf.get_bool("ui/show_play_count"))
 		tv.append_column(play)
 
-		length = tvc("lenght",render,text=TIME)
+		length = tvc(translate("Lenght"),render,text=TIME)
 		length.set_sort_column_id(TIME)
 		length.set_resizable(True)
 		length.set_visible(self.gconf.get_bool("ui/show_length"))
 		tv.append_column(length)
 
-		genre = tvc("Genre",render,text=GENRE)
+		genre = tvc(translate("Genre"),render,text=GENRE)
 		genre.set_sort_column_id(GENRE)
 		genre.set_resizable(True)
 		genre.set_visible(self.gconf.get_bool("ui/show_genre"))
@@ -494,7 +495,7 @@ class queue(gtk_misc):
 		icon = gtk.TreeViewColumn("",pix,pixbuf=PIX)
 		icon.set_sort_column_id(TYPE)
 		#tv.append_column(icon)
-		name = gtk.TreeViewColumn("Queue",render,markup=NAME)
+		name = gtk.TreeViewColumn(translate("Queue"),render,markup=NAME)
 		name.set_sort_column_id(NAME)
 		tv.append_column(name)
 

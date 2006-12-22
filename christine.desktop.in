@@ -2,8 +2,8 @@
 Name=Christine Media Player
 Comment=Gstreamer Based Media Player
 Icon=@datadir@/christine/gui/pixmaps/logo.png
-Exec=christine
-TryExec=christine
+Exec=@programname@
+TryExec=@programname@
 Terminal=false
 Type=Application
 Version=@VERSION@

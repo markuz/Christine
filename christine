@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: UTF8 -*-
+# -*- coding: UTF-8 -*-
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -18,10 +18,10 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
+from lib_christine.trans import *
 import pygst; pygst.require("0.10")
 import gtk,gst.interfaces,random,sys,bonobo
 import gtk.gdk
-from lib_christine.trans import *
 from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *

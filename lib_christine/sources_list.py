@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: UTF8 -*-
+# -*- coding: UTF-8 -*-
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>

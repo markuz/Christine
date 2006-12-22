@@ -206,6 +206,7 @@ msgstr ""
 
 #: gui/strings_main_window:42 gui/strings_main_window:43
 #: gui/main_window.glade:629 gui/main_window.glade:654
+#: gui/main_window.glade:630 gui/main_window.glade:655
 msgid "00:00"
 msgstr ""
 
@@ -225,7 +226,9 @@ msgstr ""
 msgid ""
 "Are you sure?\n"
 "This cannot be undone"
-msgstr "Esta usted seguro \n Esto no se puede deshacer"
+msgstr ""
+"Esta usted seguro \n"
+" Esto no se puede deshacer"
 
 #: gui/delete_file_from_disk_dialog.glade:55
 msgid "gtk-cancel"
@@ -280,14 +283,16 @@ msgid "Location"
 msgstr "Locacion"
 
 #: gui/preferences.glade:41 gui/properties.glade:500
+#: lib_christine/library.py:173
 msgid "Artist"
 msgstr "Artista"
 
 #: gui/preferences.glade:54 gui/properties.glade:528
+#: lib_christine/library.py:181
 msgid "Album"
 msgstr "Album"
 
-#: gui/preferences.glade:68
+#: gui/preferences.glade:68 lib_christine/library.py:189
 msgid "Type"
 msgstr "Tipo"
 
@@ -361,11 +366,11 @@ msgstr ""
 msgid "Date"
 msgstr "Fecha"
 
-#: gui/properties.glade:472
+#: gui/properties.glade:472 lib_christine/library.py:207
 msgid "Genre"
 msgstr "Genero"
 
-#: gui/properties.glade:556
+#: gui/properties.glade:556 lib_christine/library.py:160
 msgid "Title"
 msgstr "Titulo"
 
@@ -388,3 +393,19 @@ msgstr "Siguiente"
 #: gui/tray_menu.glade:54
 msgid "Previous"
 msgstr "Anterior"
+
+#: lib_christine/library.py:154
+msgid "T#"
+msgstr ""
+
+#: lib_christine/library.py:195
+msgid "Count"
+msgstr ""
+
+#: lib_christine/library.py:201
+msgid "Lenght"
+msgstr ""
+
+#: lib_christine/library.py:498
+msgid "Queue"
+msgstr ""
