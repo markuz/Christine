@@ -103,26 +103,16 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 
 	# player10 Set location
 	def set_location(self,file):
-		#print "self.tags={}"
 		self.tags = {}
 		if os.path.isfile(file):
 			self.playbin.set_state(gst.STATE_READY)
 			nfile = "file://"+file
-			#print "nfile:",nfile
-			#print "self.playbin.set_property(\"uri\",nfile)"
 			self.playbin.set_property("uri",nfile)
-			#self.discoverer = gst.extend.discoverer.Discoverer(file)
-			#gobject.timeout_add(500,self.print_discover)
-			#print "self.pause()"
-			#self.pause()
-			#print "set_location is done"
 		else:
-			#print file
 			if file.split(":")[0] in ["http","dvd"]:
 				self.playbin.set_property("uri",file)
 			else:
 				error("file %s not found"%os.path.split(file)[1])
-		#print "set_location check:",self.playbin.get_property("uri")
 		self.get_type()
 		self.expose_cb()
 			
@@ -180,6 +170,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			self.video_sink.set_property("force-aspect-ratio",True)
 			self.playbin.set_property("vis-plugin",None)
 			if self.type == "sound":
+				self.should_show = False
 				self.hide()
 				
 	def set_volume(self,volume):
