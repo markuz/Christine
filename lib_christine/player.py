@@ -67,7 +67,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	def __connect(self):
 		self.playbin.set_property("video-sink",self.video_sink)
 		self.playbin.set_property("audio-sink",self.audio_sink)
-		#self.playbin.set_property("vis-plugin",self.vis_plugin)
+		self.playbin.set_property("vis-plugin",self.vis_plugin)
 
 	def __update_audiosink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
@@ -167,12 +167,14 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			self.video_sink.set_property("force-aspect-ratio",False)
 			self.should_show = True
 			self.expose_cb()
-			self.playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
-				gst.SEEK_TYPE_SET,nanos,gst.SEEK_TYPE_NONE,-1)
-			state = self.playbin.get_state()
-			#if gst.STATE_PLAYING == state[1]:
-			#	self.pause()
-			#	gobject.timeout_add(800,self.playit)
+			state = self.playbin.get_state()[1]
+			self.pause()
+			self.set_location(self.get_location())
+			self.seek_to(nanos/gst.SECOND)
+			print state
+			if gst.State(gst.STATE_PLAYING) == state:
+				print "a tocar!!"
+				self.playit()
 
 		else:
 			self.video_sink.set_property("force-aspect-ratio",True)
