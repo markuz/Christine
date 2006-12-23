@@ -28,7 +28,7 @@ echo "autoconf"
 autoconf
 
 echo "sh configure --prefix=/usr"
-sh configure --prefix=/usr 
+sh configure --prefix=/usr
 echo "make"
 make 
 

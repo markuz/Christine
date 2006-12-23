@@ -33,7 +33,10 @@ class sanity:
 	'''
 	def __init__(self):
 		self.__check_christine_dir()
-		self.__check_sources_dir()
+		self.__check_dir(os.path.join(wdir,"sources"))
+		self.__check_dir(os.path.join(wdir,"plugins"))
+		if os.getgid() == 0:
+			self.__check_dir(os.path.join("/usr/share","christine","plugins"))
 
 	def __check_christine_dir(self):
 		if not os.path.exists(wdir):
@@ -42,14 +45,15 @@ class sanity:
 			if os.path.isfile(wdir):
 				os.unlink(wdir)
 				self.__check_christine_dir()
-	def __check_sources_dir(self):
-		sdir = os.path.join(wdir,"sources")
-		if not os.path.exists(sdir):
-			os.mkdir (sdir)
+
+	def __check_dir(self,dir):
+		if not os.path.exists(dir):
+			os.mkdir (dir)
 		else:
-			if os.path.isfile(sdir):
-				os.unlink(sdir)
-				self.__check_sources_dir()
+			if os.path.isfile(dir):
+				os.unlink(dir)
+				self.__check_sources_dir(dir)
+
 
 
 class lib_library(object):

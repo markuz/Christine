@@ -13,6 +13,7 @@ gst_base.py \
 display.py \
 sources_list.py \
 trans.py \
+plugins.py \
 clibrary.so 
 
 DISTFILES= Makefile.in $(scripts_DATA)
@@ -41,6 +42,12 @@ about.py: Makefile $(srcdir)/about.py.in
 trans.py: Makefile $(srcdir)/trans.py.in
 	$(edit) $(srcdir)/trans.py.in > trans.py
 
+plugins.py: Makefile $(srcdir)/plugins.py.in
+	$(edit) $(srcdir)/plugins.py.in > plugins.py
+
+libs_christine.py: Makefile $(srcdir)/libs_christine.py.in
+	$(edit) $(srcdir)/libs_christine.py.in > libs_christine.py
+
 clibrary.so: Makefile $(srcdir)/clibrary.c
 	gcc -WAll ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
 
@@ -53,3 +60,5 @@ clean:
 	rm about.py
 	rm clibrary.so
 	rm trans.py
+	rm plugins.py
+	rm libs_christine.py

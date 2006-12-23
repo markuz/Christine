@@ -19,12 +19,15 @@
 import os
 
 class plugins:
-	def __init__(self):
+	def __init__(self,main):
 		self.plugins_dir = ["@datadir@/christine/plugins",
 							os.path.join(os.environ["HOME"],
-										"chrstine","plugins")]
+										".christine","plugins")]
 		plugins = []
 		for i in self.plugins_dir:
-			files = os.listdir(i)
-			files = [k for k in files if k.split(".")[:1] == "py"]
-			print files
+			if os.path.exists(i):
+				files = os.listdir(i)
+				[plugins.append(k) for k in files if k.split(".")[1:][0] == "py"]
+				print plugins
+			else:
+				print "no existe",i

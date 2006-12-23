@@ -26,7 +26,6 @@ class glade_xml:
 		'''constructor, receives the name of the interface descriptor 
 		and then initialize gtk.glade.XML'''
 		locale_dir = "@datadir@/locale/"
-		print locale_dir
 		if os.path.isdir("./gui/"):	
 			self.wdir = "./gui/"
 		else:
@@ -150,7 +149,7 @@ class christine_gconf:
 
 	def set_value(self,key,value):
 		t = type(value)
-		print "set:",os.path.join(self.dir,key),value
+		#print "set:",os.path.join(self.dir,key),value
 		if t == type(1):
 			self.gconf.set_int(os.path.join(self.dir,key),value)
 		elif t == type(""):

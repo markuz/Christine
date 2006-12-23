@@ -29,14 +29,13 @@ from lib_christine.gst_base import *
 class discoverer(gtk.DrawingArea,christine_gconf):
 	def __init__(self):
 		#print "discoverer: new instance"
-		gtk.DrawingArea.__init__(self)
+		#gtk.DrawingArea.__init__(self)
 		christine_gconf.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
 		#asink			= self.get_string("backend/audiosink")
 		self.discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
-		video_sink = gst.element_factory_make("xvimagesink")
-		video_sink.set_property("display","null")
-		video_sink.set_property("force-aspect-ratio",True)
+		video_sink = gst.element_factory_make("fakesink")
+		#video_sink.set_property("display","null")
 		self.discoverer.set_property("video-sink",video_sink)
 		self.discoverer.set_property("volume",0.0)
 		#self.discoverer.set_property("delay",0)
@@ -54,7 +53,8 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 	
 	def set_location(self,file):
 		self.tags = {}
-		self.discoverer.set_property("uri","file://%s"%file)
+		self.location = file
+		self.discoverer.set_property("uri","file://%s"%self.location)
 		self.discoverer.set_state(gst.STATE_READY)
 		self.discoverer.set_state(gst.STATE_PAUSED)
 		self.discoverer.set_state(gst.STATE_PLAYING)
@@ -64,13 +64,14 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
-		if "video-codec" or ext in CHRISTINE_VIDEO_EXT:
-			self.is_video = True
-		elif "audio-codec" or ext in CHRISTINE_AUDIO_EXT:
-			self.is_audio = True
+		#if "video-codec" or ext in CHRISTINE_VIDEO_EXT:
+		#	self.is_video = True
+		#elif "audio-codec" or ext in CHRISTINE_AUDIO_EXT:
+		#	self.is_audio = True
 		#print self.tags
 		
 	def get_location(self):
+		return self.location
 		path = self.discoverer.get_property("uri")
 		if path != None:
 			path = path[7:]

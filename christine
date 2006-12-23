@@ -20,7 +20,7 @@
 
 from lib_christine.trans import *
 import pygst; pygst.require("0.10")
-import gtk,gst.interfaces,random,sys,bonobo
+import gtk,gst.interfaces,random,sys,thread
 import gtk.gdk
 from gnome import ui
 from lib_christine.libs_christine import *
@@ -32,6 +32,7 @@ from lib_christine.about import *
 from lib_christine.player import *
 from lib_christine.display import *
 from lib_christine.sources_list import *
+from lib_christine.plugins import *
 
 try:
 	import pynotify
@@ -73,6 +74,7 @@ class christine(gtk_misc):
 		self.__trayicon()
 		# Timeout calls
 		gobject.timeout_add(500,self.on_tick)
+		self.plugins = plugins(self)
 		self.set_location_count = 0
 	
 	def __player_init(self):
@@ -1171,39 +1173,37 @@ class christine(gtk_misc):
 		# and everything must run as fast as we can
 		if self.IMPORTING and len(self.files_to_add)>0:
 			newfile = self.files_to_add.pop()
-			if len(self.files_to_add)>0:
-				newfile2 = self.files_to_add.pop()
+			if not queue:
+				#if not newfile in self.paths and not newfile2 in self.paths:
+					f = len(self.files_to_add)
+					div,mod = divmod(f,10)
+					self.library.add(newfile)
+					if f > 0:
+						self.library.add(self.files_to_add.pop(),False,2)
+					if mod == 0:
+						library.save()
 			else:
-				newfile2 = ""
-			if len(self.files_to_add) >0:
-				self.percentaje = 1 - ( len(self.files_to_add)/float(self.total_num_files))
+				self.queue.add(newfile)
+				if len(self.files_to_add)>0:
+					self.queue.add(self.files_to_add.pop())
+			f = len(self.files_to_add)
+			if f >0:
+				self.percentaje = 1 - ( f /float(self.total_num_files))
 			else:
 				self.percentaje = 1
 			if self.percentaje >= 1.0:
 				self.percentaje == 0.99
 			self.add_progress.set_fraction(self.percentaje)
-			rest =self.total_num_files - len(self.files_to_add)
+			rest = self.total_num_files - f
 			text = "%02d/%02d"%(rest,self.total_num_files)
 			self.add_progress.set_text(text)
 			self.add_file_label.set_text(os.path.split(newfile)[1])
-			if not queue:
-				#if not newfile in self.paths and not newfile2 in self.paths:
-					div,mod = divmod(len(self.files_to_add),10)
-					self.library.add(newfile)
-					if newfile2 != "":
-						self.library.add(newfile2,False,2)
-					if mod == 0:
-						self.library.save()
-			else:
-				self.queue.add(newfile)
-				if newfile2 != "":
-					gobject.timeout_add(250,self.queue.add,newfile2)
+
 		else:
 			if not queue:
 				self.library.save()
 				# Sorting the model
-				gobject.timeout_add(300,self.library.gen_model,True)
-				gobject.timeout_add(1000,self.jump_to_playing)
+				self.library.gen_model(True)
 			self.IMPORTING = False
 		return self.IMPORTING
 

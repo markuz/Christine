@@ -71,8 +71,8 @@ class library(gtk_misc):
 		self.tv.set_model(sort)
 		self.add_columns()
 		self.set_drag_n_drop()
-		gobject.timeout_add(600,self.stream_length)
-		gobject.timeout_add(600,self.stream_length,None,2)
+		self.blank_pix = self.gen_pixbuf("blank.png")
+		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.CURRENT_ITER = self.model.get_iter_first()
 		#gobject.timeout_add(1000,self.update_values)
 	
@@ -96,15 +96,15 @@ class library(gtk_misc):
 		else:
 			self.model.clear()
 		if "--plibrary" in sys.argv:
-			print "using python library code,"
-			self.pgen_model(refresh)
+			#print "using python library code,"
+			self.pgen_model()
 		else:
-			print "using C library code,"
-			print "if you want to use Python code run christine with"
-			print "--plibrary option"
-			self.cgen_model(refresh)
+			#print "using C library code,"
+			#print "if you want to use Python code run christine with"
+			#print "--plibrary option"
+			self.cgen_model()
 
-	def pgen_model(self,refresh=False):
+	def pgen_model(self):
 		append = self.model.append
 		sounds = self.library_lib.get_sounds()
 		keys = sounds.keys()
@@ -136,14 +136,12 @@ class library(gtk_misc):
 					GENRE, sounds[i]["genre"])
 		#self.tv.freeze_child_notify()
 
-	def cgen_model(self,refresh=False):
-		self.tv.freeze_child_notify()
+	def cgen_model(self):
 		append = self.model.append
 		sounds = self.library_lib.get_all()
 		clibrary.set_create_iter(append)
 		clibrary.set_set(self.model.set)
 		clibrary.fill_model(sounds)
-		self.tv.freeze_child_notify()
 		return True
 
 	def add_columns(self):
@@ -223,18 +221,17 @@ class library(gtk_misc):
 		self.discoverer2 = discoverer()
 		self.discoverer2.bus.add_watch(self.message_handler)
 
-
 	def add(self,file,prepend=False,n=1):
 		if n == 1:
 			self.discoverer.set_location(file)
 		else:
 			self.discoverer2.set_location(file)
-		#gobject.timeout_add(100,self.stream_length)
 		model = self.model
 		if type(file) == type(()):
 			file = file[0]
 		if not os.path.isfile(file):
-			return True
+			return False
+		gobject.timeout_add(100,self.stream_length,n)
 		if prepend:
 			iter = model.prepend()
 		else:
@@ -242,15 +239,14 @@ class library(gtk_misc):
 		name = os.path.split(file)[1]
 		if type(name) == type(()):
 			name = name[0]
-		pix = self.gen_pixbuf("blank.png")
-		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.model.set(iter,
 				NAME,name,
-				PIX,pix,
+				PIX,self.blank_pix,
 				PATH,file)
 		self.iters[file] = iter
-		path = self.model.get_path(iter)
-		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
+		#path = self.model.get_path(iter)
+		#self.tv.scroll_to_cell(path,None,True,0.5,0.5)
+		return False
 
 	def message_handler(self,bus,b):
 		if bus == self.discoverer.bus:
@@ -259,6 +255,10 @@ class library(gtk_misc):
 			d = self.discoverer2
 		t = b.type
 		if t == gst.MESSAGE_TAG:
+			iter = self.iters[d.location]
+			name = self.model.get_value(iter,NAME)
+			if name == os.path.split(d.location[1]):
+				return True
 			d.found_tags_cb(b.parse_tag())
 			name	= d.get_tag("title")
 			album	= d.get_tag("album")
@@ -266,18 +266,18 @@ class library(gtk_misc):
 			tn		= d.get_tag("track-number")
 			genre	= d.get_tag("genre")
 			if name == "":
-				n = os.path.split(d.get_location())[1].split(".")
+				n = os.path.split(d.location)[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			model = self.model
 			if d.get_tag("video-codec") != "" or \
-					os.path.splitext(d.get_location())[1] in CHRISTINE_VIDEO_EXT:
+					os.path.splitext(d.location)[1] in CHRISTINE_VIDEO_EXT:
 				t = "video"
 			else:
 				t = "audio"
 					
-			model.set(self.iters[d.get_location()],
+			model.set(self.iters[d.location],
 						NAME,name,
-						PATH,d.get_location(),
+						PATH,d.location,
 						TYPE,t,
 						ALBUM,album,
 						ARTIST,artist,
@@ -296,10 +296,12 @@ class library(gtk_misc):
 			total = d.query_duration(gst.FORMAT_TIME)[0]
 			ts = total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
-			self.model.set(self.iters[d.get_location()],
+			self.model.set(self.iters[d.location],
 					TIME,text)
+			return False
 		except gst.QueryError:
-			d.set_location(d.get_location())
+			#d.set_location(d.location)
+			pass
 		return True
 
 
@@ -462,9 +464,9 @@ class queue(gtk_misc):
 				name += "\n by <i>%s</i>"%artist
 
 			model = self.model
-			model.set(self.iters[d.get_location()],
+			model.set(self.iters[d.location],
 			#model.set(self.iters,
-						PATH,d.get_location(),
+						PATH,d.location,
 						NAME,name,
 						TYPE,"sound")
 			self.save()
