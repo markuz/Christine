@@ -75,6 +75,13 @@ clibrary_fill_model(PyObject *self,PyObject *args){
 		if (!PyDict_Contains(temp,PyString_FromString("genre")))
 			PyDict_SetItemString(temp,"genre",Py_BuildValue("s"," "));
 
+		if (!PyDict_Contains(temp,PyString_FromString("name")))
+			PyDict_SetItemString(temp,"name",Py_BuildValue("s"," "));
+		if (!PyDict_Contains(temp,PyString_FromString("album")))
+			PyDict_SetItemString(temp,"album",Py_BuildValue("s"," "));
+		if (!PyDict_Contains(temp,PyString_FromString("artist")))
+			PyDict_SetItemString(temp,"artist",Py_BuildValue("s"," "));
+
 		// evalutaing the create_iter
 		arglist = Py_BuildValue("()");
 		iter = PyEval_CallObject(create_iter,arglist);
@@ -84,10 +91,14 @@ clibrary_fill_model(PyObject *self,PyObject *args){
 			return NULL;
 		//Building the arglist for the set method
 		search = PyString_FromString(" ");
-		
-		PyString_Concat(&search,PyDict_GetItemString(temp,"name"));
-		PyString_Concat(&search,PyDict_GetItemString(temp,"album"));
-		PyString_Concat(&search,PyDict_GetItemString(temp,"artist"));
+		if (PyDict_GetItemString(temp,"name") != Py_None)
+			PyString_Concat(&search,PyDict_GetItemString(temp,"name"));
+		if (PyDict_GetItemString(temp,"album") != Py_None)
+			PyString_Concat(&search,PyDict_GetItemString(temp,"album"));
+		if (PyDict_GetItemString(temp,"artist") != Py_None)
+			PyString_Concat(&search,PyDict_GetItemString(temp,"artist"));
+		if (PyDict_GetItemString(temp,"type") != Py_None)
+			PyString_Concat(&search,PyDict_GetItemString(temp,"type"));
 
 		if (search == NULL) // Check that the search sfuff is not empty
 			return NULL;

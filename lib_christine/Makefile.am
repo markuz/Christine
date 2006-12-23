@@ -42,7 +42,7 @@ trans.py: Makefile $(srcdir)/trans.py.in
 	$(edit) $(srcdir)/trans.py.in > trans.py
 
 clibrary.so: Makefile $(srcdir)/clibrary.c
-	gcc -pedantic -WAll ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
+	gcc -WAll ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
 
 all: all-am
 

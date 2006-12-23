@@ -104,6 +104,8 @@ class lib_library(object):
 		if ext in video:
 			return "video"
 	
+	def get_all(self):
+		return self.__files
 	def get_sounds(self):
 		a = {}
 		for i in self.keys():

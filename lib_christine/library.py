@@ -139,7 +139,7 @@ class library(gtk_misc):
 	def cgen_model(self,refresh=False):
 		self.tv.freeze_child_notify()
 		append = self.model.append
-		sounds = self.library_lib.get_sounds()
+		sounds = self.library_lib.get_all()
 		clibrary.set_create_iter(append)
 		clibrary.set_set(self.model.set)
 		clibrary.fill_model(sounds)
