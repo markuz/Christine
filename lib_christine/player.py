@@ -67,7 +67,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	def __connect(self):
 		self.playbin.set_property("video-sink",self.video_sink)
 		self.playbin.set_property("audio-sink",self.audio_sink)
-		self.playbin.set_property("vis-plugin",self.vis_plugin)
+		#self.playbin.set_property("vis-plugin",self.vis_plugin)
 
 	def __update_audiosink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
