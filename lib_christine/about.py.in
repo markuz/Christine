@@ -32,5 +32,6 @@ class about(gtk_misc):
 		about.set_logo(pix)
 		about.set_name("@programname@")
 		about.set_version("@version@")
+		about.set_icon(self.gen_pixbuf("logo.png"))
 		about.run()
 		about.destroy()

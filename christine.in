@@ -994,6 +994,7 @@ class christine(gtk_misc):
 		'''
 		xml = glade_xml("file_selector.glade")
 		fs = xml["fs"]
+		fs.set_icon(self.gen_pixbuf("logo.png"))
 		# Until we know exactly wich files are
 		# able to be played with gstreamer
 		# we are not gonna impose any filter
@@ -1047,6 +1048,7 @@ class christine(gtk_misc):
 		'''
 		xml = glade_xml("dir_selector.glade")
 		ds = xml["ds"]
+		ds.set_icon(self.gen_pixbuf("logo"))
 		walk = xml["walk"]
 		response = ds.run()
 		filenames = ds.get_filenames()
@@ -1407,6 +1409,7 @@ class christine(gtk_misc):
 		#playlist, so, no radio :-(.
 		xml = glade_xml("open_remote.glade")
 		dialog = xml["dialog"]
+		dialog.set_icon(self.gen_pixbuf("logo.png"))
 		entry = xml["entry"]
 		response = dialog.run()
 		if response == gtk.RESPONSE_OK:

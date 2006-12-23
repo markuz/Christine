@@ -77,7 +77,7 @@ class display(gtk.DrawingArea):
 
 		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
 				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
-		self.context.set_source_rgb(1,1,1)
+		self.context.set_source_rgba(1,1,1,1)
 		self.context.fill_preserve()
 		self.context.set_source_rgb(0,0,0)
 		self.context.stroke()

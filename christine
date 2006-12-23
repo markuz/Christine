@@ -842,6 +842,7 @@ class christine(gtk_misc):
 				pix = self.gen_pixbuf("sound.png")
 				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 				self.natural_model.set(iter,PIX,pix)
+			self.current_iter = None
 			self.model.foreach(self.search_by_path,location)
 			path = self.model.get_path(self.current_iter)
 			if path != None:
@@ -993,6 +994,7 @@ class christine(gtk_misc):
 		'''
 		xml = glade_xml("file_selector.glade")
 		fs = xml["fs"]
+		fs.set_icon(self.gen_pixbuf("logo.png"))
 		# Until we know exactly wich files are
 		# able to be played with gstreamer
 		# we are not gonna impose any filter
@@ -1046,6 +1048,7 @@ class christine(gtk_misc):
 		'''
 		xml = glade_xml("dir_selector.glade")
 		ds = xml["ds"]
+		ds.set_icon(self.gen_pixbuf("logo"))
 		walk = xml["walk"]
 		response = ds.run()
 		filenames = ds.get_filenames()
@@ -1314,6 +1317,7 @@ class christine(gtk_misc):
 		artist = self.player.get_tag("artist")
 		album  = self.player.get_tag("album")
 		genre  = self.player.get_tag("genre")
+		t = self.player.type
 		if type(genre) == type([]):
 			genre = ",".join(genre)
 		track_number = self.player.get_tag("track-number")
@@ -1351,7 +1355,7 @@ class christine(gtk_misc):
 						ALBUM,album,
 						ARTIST,artist,
 						TN,track_number,
-						SEARCH,".".join([title,artist,album,genre]),
+						SEARCH,".".join([title,artist,album,genre,t]),
 						GENRE,genre)
 			title1,artist1,album1,tc = self.natural_model.get(self.NATURAL_ITER,
 				NAME,ARTIST,ALBUM,TN)
@@ -1406,6 +1410,7 @@ class christine(gtk_misc):
 		#playlist, so, no radio :-(.
 		xml = glade_xml("open_remote.glade")
 		dialog = xml["dialog"]
+		dialog.set_icon(self.gen_pixbuf("logo.png"))
 		entry = xml["entry"]
 		response = dialog.run()
 		if response == gtk.RESPONSE_OK:
