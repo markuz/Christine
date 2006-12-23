@@ -558,14 +558,16 @@ class christine(gtk_misc):
 		This code should be as simple as we can, we must do everythin
 		as fast as we can.
 		'''
+		if self.search_text == "":
+			self.jump_to_playing()
+			return True
 		value	= model.get(iter,SEARCH)[0]
 		try:
 			value = value.lower()
 		except:
 			value = ""
 			
-		if value.find(self.search_text) >=0 \
-				or self.search_text =="":
+		if value.find(self.search_text) >=0:
 			return True
 		else: 
 			return False
@@ -1048,7 +1050,7 @@ class christine(gtk_misc):
 		'''
 		xml = glade_xml("dir_selector.glade")
 		ds = xml["ds"]
-		ds.set_icon(self.gen_pixbuf("logo"))
+		ds.set_icon(self.gen_pixbuf("logo.png"))
 		walk = xml["walk"]
 		response = ds.run()
 		filenames = ds.get_filenames()
@@ -1317,7 +1319,6 @@ class christine(gtk_misc):
 		artist = self.player.get_tag("artist")
 		album  = self.player.get_tag("album")
 		genre  = self.player.get_tag("genre")
-		t = self.player.type
 		if type(genre) == type([]):
 			genre = ",".join(genre)
 		track_number = self.player.get_tag("track-number")
@@ -1355,7 +1356,7 @@ class christine(gtk_misc):
 						ALBUM,album,
 						ARTIST,artist,
 						TN,track_number,
-						SEARCH,".".join([title,artist,album,genre,t]),
+						SEARCH,".".join([title,artist,album,genre]),
 						GENRE,genre)
 			title1,artist1,album1,tc = self.natural_model.get(self.NATURAL_ITER,
 				NAME,ARTIST,ALBUM,TN)

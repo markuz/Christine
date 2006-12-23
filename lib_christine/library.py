@@ -239,7 +239,7 @@ class library(gtk_misc):
 			iter = model.prepend()
 		else:
 			iter = model.append()
-		name = os.path.split(file)[:1]
+		name = os.path.split(file)[1]
 		if type(name) == type(()):
 			name = name[0]
 		pix = self.gen_pixbuf("blank.png")
