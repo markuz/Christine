@@ -400,12 +400,12 @@ msgstr ""
 
 #: lib_christine/library.py:195
 msgid "Count"
-msgstr ""
+msgstr "Contador"
 
 #: lib_christine/library.py:201
 msgid "Lenght"
-msgstr ""
+msgstr "Duracion"
 
 #: lib_christine/library.py:498
 msgid "Queue"
-msgstr ""
+msgstr "Cola"
