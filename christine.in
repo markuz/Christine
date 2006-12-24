@@ -779,10 +779,7 @@ class christine(gtk_misc):
 		'''
 		iter = model.get_iter(path)
 		mlocation = model.get_value(iter,PATH)
-		print [model,mlocation,location,iter]
 		if mlocation == location:
-			#print "lo he encontrado!"
-			#raw_input("presione enter para continuar")
 			self.current_iter = iter
 			
 	#def get_max_elements(self,model,path,iter):

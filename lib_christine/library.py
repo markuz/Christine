@@ -220,8 +220,6 @@ class library(gtk_misc):
 		self.discoverer.bus.add_watch(self.message_handler)
 		self.discoverer2 = discoverer()
 		self.discoverer2.bus.add_watch(self.message_handler)
-		gobject.timeout_add(600,self.stream_length,1)
-		gobject.timeout_add(600,self.stream_length,2)
 
 	def add(self,file,prepend=False,n=1):
 		print file
@@ -229,6 +227,7 @@ class library(gtk_misc):
 			self.discoverer.set_location(file)
 		else:
 			self.discoverer2.set_location(file)
+		gobject.timeout_add(100,self.stream_length,n)
 		if type(file) == type(()):
 			file = file[0]
 		if not os.path.isfile(file):
@@ -246,8 +245,8 @@ class library(gtk_misc):
 				PATH,file)
 		self.iters[file] = iter
 		#print file, self.model.get_value(iter,PATH),self.iters[file]
-		#path = self.model.get_path(iter)
-		#self.tv.scroll_to_cell(path,None,True,0.5,0.5)
+		path = self.model.get_path(iter)
+		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
 		return False
 
 	def message_handler(self,bus,b):
@@ -301,7 +300,6 @@ class library(gtk_misc):
 			text = "%02d:%02d"%divmod(ts,60)
 			self.model.set(self.iters[d.get_location()],
 					TIME,text)
-			return False
 		except gst.QueryError:
 			#d.set_location(d.get_location())
 			pass
