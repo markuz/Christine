@@ -245,6 +245,7 @@ class library(gtk_misc):
 				PIX,self.blank_pix,
 				PATH,file)
 		self.iters[file] = iter
+		#print file, self.model.get_value(iter,PATH),self.iters[file]
 		#path = self.model.get_path(iter)
 		#self.tv.scroll_to_cell(path,None,True,0.5,0.5)
 		return False

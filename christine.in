@@ -69,6 +69,7 @@ class christine(gtk_misc):
 		self.search_text		= ""
 		self.total				= 0
 		self.NATURAL_ITER		= None
+		self.IMPORTING			= False
 		self.__player_init() # "Creating the player"
 		self.__win() # "Building" the window.
 		self.__trayicon()
@@ -563,7 +564,7 @@ class christine(gtk_misc):
 		if self.IMPORTING:
 			return True
 		if self.search_text == "":
-			self.jump_to_playing()
+		#	self.jump_to_playing()
 			return True
 		value	= model.get(iter,SEARCH)[0]
 		try:
@@ -778,11 +779,11 @@ class christine(gtk_misc):
 		'''
 		iter = model.get_iter(path)
 		mlocation = model.get_value(iter,PATH)
-		#print model,iter,path,path1
-		print model,mlocation,location
+		print [model,mlocation,location,iter]
 		if mlocation == location:
+			#print "lo he encontrado!"
+			#raw_input("presione enter para continuar")
 			self.current_iter = iter
-			return False
 			
 	#def get_max_elements(self,model,path,iter):
 	#	'''
