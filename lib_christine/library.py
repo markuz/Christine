@@ -220,22 +220,23 @@ class library(gtk_misc):
 		self.discoverer.bus.add_watch(self.message_handler)
 		self.discoverer2 = discoverer()
 		self.discoverer2.bus.add_watch(self.message_handler)
+		gobject.timeout_add(600,self.stream_length,1)
+		gobject.timeout_add(600,self.stream_length,2)
 
 	def add(self,file,prepend=False,n=1):
+		print file
 		if n == 1:
 			self.discoverer.set_location(file)
 		else:
 			self.discoverer2.set_location(file)
-		model = self.model
 		if type(file) == type(()):
 			file = file[0]
 		if not os.path.isfile(file):
 			return False
-		gobject.timeout_add(100,self.stream_length,n)
 		if prepend:
-			iter = model.prepend()
+			iter = self.model.prepend()
 		else:
-			iter = model.append()
+			iter = self.model.append()
 		name = os.path.split(file)[1]
 		if type(name) == type(()):
 			name = name[0]
@@ -255,9 +256,9 @@ class library(gtk_misc):
 			d = self.discoverer2
 		t = b.type
 		if t == gst.MESSAGE_TAG:
-			iter = self.iters[d.location]
+			iter = self.iters[d.get_location()]
 			name = self.model.get_value(iter,NAME)
-			if name == os.path.split(d.location[1]):
+			if name == os.path.split(d.get_location()[1]):
 				return True
 			d.found_tags_cb(b.parse_tag())
 			name	= d.get_tag("title")
@@ -266,18 +267,17 @@ class library(gtk_misc):
 			tn		= d.get_tag("track-number")
 			genre	= d.get_tag("genre")
 			if name == "":
-				n = os.path.split(d.location)[1].split(".")
+				n = os.path.split(d.get_location())[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			model = self.model
 			if d.get_tag("video-codec") != "" or \
-					os.path.splitext(d.location)[1] in CHRISTINE_VIDEO_EXT:
+					os.path.splitext(d.get_location())[1] in CHRISTINE_VIDEO_EXT:
 				t = "video"
 			else:
 				t = "audio"
 					
-			model.set(self.iters[d.location],
+			model.set(self.iters[d.get_location()],
 						NAME,name,
-						PATH,d.location,
 						TYPE,t,
 						ALBUM,album,
 						ARTIST,artist,
@@ -285,6 +285,8 @@ class library(gtk_misc):
 						SEARCH,",".join([name,album,artist]),
 						PLAY_COUNT,0,
 						GENRE,genre)
+		if t == gst.MESSAGE_ERROR:
+			print b.parse_error()
 		return True
 
 	def stream_length(self,widget=None,n=1):
@@ -296,11 +298,11 @@ class library(gtk_misc):
 			total = d.query_duration(gst.FORMAT_TIME)[0]
 			ts = total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
-			self.model.set(self.iters[d.location],
+			self.model.set(self.iters[d.get_location()],
 					TIME,text)
 			return False
 		except gst.QueryError:
-			#d.set_location(d.location)
+			#d.set_location(d.get_location())
 			pass
 		return True
 
@@ -464,9 +466,9 @@ class queue(gtk_misc):
 				name += "\n by <i>%s</i>"%artist
 
 			model = self.model
-			model.set(self.iters[d.location],
+			model.set(self.iters[d.get_location()],
 			#model.set(self.iters,
-						PATH,d.location,
+						PATH,d.get_location(),
 						NAME,name,
 						TYPE,"sound")
 			self.save()

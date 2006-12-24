@@ -560,6 +560,8 @@ class christine(gtk_misc):
 		This code should be as simple as we can, we must do everythin
 		as fast as we can.
 		'''
+		if self.IMPORTING:
+			return True
 		if self.search_text == "":
 			self.jump_to_playing()
 			return True
@@ -777,6 +779,7 @@ class christine(gtk_misc):
 		iter = model.get_iter(path)
 		mlocation = model.get_value(iter,PATH)
 		#print model,iter,path,path1
+		print model,mlocation,location
 		if mlocation == location:
 			self.current_iter = iter
 			return False
@@ -846,13 +849,11 @@ class christine(gtk_misc):
 				pix = self.gen_pixbuf("sound.png")
 				pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 				self.natural_model.set(iter,PIX,pix)
-			self.current_iter = None
-			self.model.foreach(self.search_by_path,location)
 			path = self.model.get_path(self.current_iter)
 			if path != None:
 				self.treeview.scroll_to_cell(path,None,True,0.5,0.5)
 				self.treeview.set_cursor(path)
-	
+
 	def jump_to(self,widget):
 		'''
 		Creates a gtk.Dialog box where
@@ -1156,6 +1157,7 @@ class christine(gtk_misc):
 		# Use a timer to avoid freezing 
 		gobject.timeout_add(600,self.__add_file,queue)
 		self.add_win.run()
+
 		
 	def get_paths(self,model,path,iter):
 		loc = model.get_value(iter,PATH)
@@ -1177,11 +1179,13 @@ class christine(gtk_misc):
 				#if not newfile in self.paths and not newfile2 in self.paths:
 					f = len(self.files_to_add)
 					div,mod = divmod(f,10)
+					print div,mod
 					self.library.add(newfile)
 					if f > 0:
-						self.library.add(self.files_to_add.pop(),False,2)
-					if mod == 0:
-						library.save()
+						gobject.timeout_add(250,self.library.add,self.files_to_add.pop(),False,2)
+					if mod == 1:
+						print "library.save()"
+						self.library.save()
 			else:
 				self.queue.add(newfile)
 				if len(self.files_to_add)>0:
@@ -1203,7 +1207,7 @@ class christine(gtk_misc):
 			if not queue:
 				self.library.save()
 				# Sorting the model
-				self.library.gen_model(True)
+				#self.library.gen_model(True)
 			self.IMPORTING = False
 		return self.IMPORTING
 

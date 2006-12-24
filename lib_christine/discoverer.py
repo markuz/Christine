@@ -32,6 +32,7 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		#gtk.DrawingArea.__init__(self)
 		christine_gconf.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
+		self.discoverer.set_property("delay",GST_DELAY)
 		#asink			= self.get_string("backend/audiosink")
 		self.discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
 		video_sink = gst.element_factory_make("fakesink")
@@ -71,7 +72,6 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		#print self.tags
 		
 	def get_location(self):
-		return self.location
 		path = self.discoverer.get_property("uri")
 		if path != None:
 			path = path[7:]
