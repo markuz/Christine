@@ -88,3 +88,11 @@ class preferences(gtk_misc):
 		self.play_count.set_active(self.gconf.get_bool("ui/show_play_count"))
 		self.play_count.connect("toggled",self.gconf.toggle,"ui/show_play_count")
 
+		self.notify_area = self.xml["notification_area"]
+		self.notify_area.set_active(self.gconf.get_bool("ui/show_in_notification_area"))
+		self.notify_area.connect("toggled",self.gconf.toggle,"ui/show_in_notification_area")
+
+		self.libnotify = self.xml["pynotify"]
+		self.libnotify.set_active(self.gconf.get_bool("ui/show_pynotify"))
+		self.libnotify.connect("toggled",self.gconf.toggle,"ui/show_pynotify")
+

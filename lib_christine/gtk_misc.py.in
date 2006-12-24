@@ -97,6 +97,8 @@ class christine_gconf:
 						"ui/show_tn":True,
 						"ui/show_length":True,
 						"ui/show_genre":True,
+						"ui/show_in_notification_area":True,
+						"ui/show_pynotify":True,
 						"ui/show_type":True}
 		self.string_keys = {"backend/audiosink":"autoaudiosink",
 						"backend/videosink":"ximagesink",

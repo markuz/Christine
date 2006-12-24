@@ -72,7 +72,9 @@ class christine(gtk_misc):
 		self.IMPORTING			= False
 		self.__player_init() # "Creating the player"
 		self.__win() # "Building" the window.
-		self.__trayicon()
+		if self.gconf.get_bool("ui/show_in_notification_area"):
+			self.__trayicon()
+		self.gconf.notify_add("/apps/christine/ui/show_in_notification_area",lambda cl,cnx,entry,widget: self.tray_icon.set_visible(entry.get_value().get_bool()))
 		# Timeout calls
 		gobject.timeout_add(500,self.on_tick)
 		self.plugins = plugins(self)
@@ -1370,7 +1372,7 @@ class christine(gtk_misc):
 				or track_number != tc:
 				gobject.timeout_add(500,self.library.save)
 
-		if PYNOTIFY:
+		if PYNOTIFY and self.gconf.get_bool("ui/show_pynotify"):
 			try:
 				self.notify.close()
 			except:
@@ -1378,13 +1380,13 @@ class christine(gtk_misc):
 			self.notify = pynotify.Notification("christine","",
 					os.path.join(self.wdir,"logo22.png"))
 			#self.notify.attach_to_widget(self.tray_icon)
-			self.notify.attach_to_status_icon(self.tray_icon)
+			if self.gconf.get_bool("ui/show_in_notification_area"):
+				self.notify.attach_to_status_icon(self.tray_icon)
+				self.tray_icon.set_tooltip(tooltext)
 			self.notify.set_timeout(3000)
-
 			pixbuf = self.gen_pixbuf("logo.png")
 			#self.notify.update(notify_text,"asdfasdfad")
 			self.notify.set_property("body",notify_text)
-			self.tray_icon.set_tooltip(tooltext)
 			self.notify.show()
 		self.display.set_song(tooltext.replace("\n"," "))
 		#t = self.player.type
@@ -1450,12 +1452,9 @@ class christine(gtk_misc):
 		'''
 		self.tray_icon = gtk.StatusIcon()
 		self.tray_icon.set_from_file(os.path.join(self.wdir,"logo22.png"))
-		#pixbuf = self.tray_icon.get_pixbuf()
-		#self.timage = gtk.Image()
-		#self.timage.set_from_pixbuf(pixbuf)
-
 		self.tray_icon.connect("popup-menu",self.__trayicon_event_handler)
 		self.tray_icon.connect("activate",self.__trayicon_activated)
+		self.tray_icon.set_visible(self.gconf.get_bool("ui/show_in_notification_area"))
 	
 	def __trayicon_event_handler(self,widget,button,activate_time):
 		if button == 3:
