@@ -544,6 +544,8 @@ class christine(gtk_misc):
 		# Store the text that is in search box into the self.search_text
 		# variable
 		self.search_text = self.search_box.get_text().lower()
+		if self.search == "":
+			self.jump_to_playing()
 		# Since we are using a filter model (in the library) we can use
 		# the refilter method in the filter model to show only
 		# the rows that we need.
@@ -564,7 +566,6 @@ class christine(gtk_misc):
 		if self.IMPORTING:
 			return True
 		if self.search_text == "":
-		#	self.jump_to_playing()
 			return True
 		value	= model.get(iter,SEARCH)[0]
 		try:
@@ -1180,7 +1181,7 @@ class christine(gtk_misc):
 					print div,mod
 					self.library.add(newfile)
 					if f > 0:
-						gobject.timeout_add(250,self.library.add,self.files_to_add.pop(),False,2)
+						self.library.add(self.files_to_add.pop(),False,2)
 					if mod == 1:
 						print "library.save()"
 						self.library.save()

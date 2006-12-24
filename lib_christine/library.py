@@ -220,6 +220,8 @@ class library(gtk_misc):
 		self.discoverer.bus.add_watch(self.message_handler)
 		self.discoverer2 = discoverer()
 		self.discoverer2.bus.add_watch(self.message_handler)
+		gobject.timeout_add(100,self.stream_length,None,1)
+		gobject.timeout_add(200,self.stream_length,None,2)
 
 	def add(self,file,prepend=False,n=1):
 		print file
@@ -227,7 +229,6 @@ class library(gtk_misc):
 			self.discoverer.set_location(file)
 		else:
 			self.discoverer2.set_location(file)
-		gobject.timeout_add(100,self.stream_length,n)
 		if type(file) == type(()):
 			file = file[0]
 		if not os.path.isfile(file):
