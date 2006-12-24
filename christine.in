@@ -1322,6 +1322,7 @@ class christine(gtk_misc):
 		artist = self.player.get_tag("artist")
 		album  = self.player.get_tag("album")
 		genre  = self.player.get_tag("genre")
+		t = self.player.type
 		if type(genre) == type([]):
 			genre = ",".join(genre)
 		track_number = self.player.get_tag("track-number")
@@ -1359,7 +1360,7 @@ class christine(gtk_misc):
 						ALBUM,album,
 						ARTIST,artist,
 						TN,track_number,
-						SEARCH,".".join([title,artist,album,genre]),
+						SEARCH,".".join([title,artist,album,genre,t]),
 						GENRE,genre)
 			title1,artist1,album1,tc = self.natural_model.get(self.NATURAL_ITER,
 				NAME,ARTIST,ALBUM,TN)
