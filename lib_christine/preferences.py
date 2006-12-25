@@ -88,6 +88,11 @@ class preferences(gtk_misc):
 		self.play_count.set_active(self.gconf.get_bool("ui/show_play_count"))
 		self.play_count.connect("toggled",self.gconf.toggle,"ui/show_play_count")
 
+		self.genre = self.xml["genre"]
+		self.genre.set_active(self.gconf.get_bool("ui/show_genre"))
+		self.genre.connect("toggled",self.gconf.toggle,"ui/show_genre")
+
+
 		self.notify_area = self.xml["notification_area"]
 		self.notify_area.set_active(self.gconf.get_bool("ui/show_in_notification_area"))
 		self.notify_area.connect("toggled",self.gconf.toggle,"ui/show_in_notification_area")
