@@ -74,7 +74,8 @@ class christine(gtk_misc):
 		self.__win() # "Building" the window.
 		if self.gconf.get_bool("ui/show_in_notification_area"):
 			self.__trayicon()
-		self.gconf.notify_add("/apps/christine/ui/show_in_notification_area",lambda cl,cnx,entry,widget: self.tray_icon.set_visible(entry.get_value().get_bool()))
+		self.gconf.notify_add("/apps/christine/ui/show_in_notification_area",
+				lambda cl,cnx,entry,widget: self.tray_icon.set_visible(entry.get_value().get_bool()))
 		# Timeout calls
 		gobject.timeout_add(500,self.on_tick)
 		self.plugins = plugins(self)

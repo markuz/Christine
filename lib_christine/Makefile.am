@@ -16,7 +16,15 @@ trans.py \
 plugins.py \
 clibrary.so 
 
-DISTFILES= Makefile.in $(scripts_DATA)
+DISTFILES= Makefile.in \
+		   gtk_misc.py.in \
+		   about.py.in \
+		   trans.py.in \
+		   libs_christine.py.in \
+		   clibrary.c \
+		   plugins.py.in \
+		   $(scripts_DATA) 
+
 
 pkgdatadir=${datadir}
 pkgsysconfdir=${sysconfdir}
@@ -49,7 +57,7 @@ libs_christine.py: Makefile $(srcdir)/libs_christine.py.in
 	$(edit) $(srcdir)/libs_christine.py.in > libs_christine.py
 
 clibrary.so: Makefile $(srcdir)/clibrary.c
-	gcc -WAll ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
+	gcc -Wall ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
 
 all: all-am
 

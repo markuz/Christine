@@ -2,7 +2,7 @@ SUBDIRS = lib_christine gui po
 
 bin_SCRIPTS = christine
 
-EXTRA_DIST = config.rpath mkinstalldirs m4/ChangeLog  mkinstalldirs m4/ChangeLog christine.desktop.in
+EXTRA_DIST = config.rpath mkinstalldirs m4/ChangeLog  mkinstalldirs m4/ChangeLog christine.desktop.in christine.in
 
 program_name = @program_name@
 PROGRAM_NAME = @PROGRAM_NAME@
