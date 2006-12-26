@@ -1,5 +1,5 @@
-AC_INIT("christine","0.0.1",markuz@islascruz.org)
-AM_INIT_AUTOMAKE("christine","0.0.1")
+AC_INIT("christine","0.0.2",markuz@islascruz.org)
+AM_INIT_AUTOMAKE("christine","0.0.2")
 
 AC_CONFIG_SRCDIR(lib_christine)
 AC_CONFIG_SRCDIR(gui)
@@ -26,7 +26,7 @@ AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
 
 PROGRAM_NAME="christine"
-VERSION="0.0.1"
+VERSION="0.0.2"
 
 AC_SUBST(PROGRAM_NAME)
 AC_SUBST(VERSION)

@@ -55,7 +55,7 @@ static PyObject *
 clibrary_fill_model(PyObject *self,PyObject *args){
 	PyObject *sounds,*keys,*temp, *append_result, *arglist, *result,*path;
 	PyObject *search=NULL;
-	int cont = 0, pos=0;
+	int cont = 0;
 	int length = 0;
 	if (!PyArg_ParseTuple(args,"O",&sounds))
 		return NULL;

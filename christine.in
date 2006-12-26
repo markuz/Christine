@@ -32,7 +32,7 @@ from lib_christine.about import *
 from lib_christine.player import *
 from lib_christine.display import *
 from lib_christine.sources_list import *
-from lib_christine.plugins import *
+#from lib_christine.plugins import *
 
 try:
 	import pynotify
@@ -78,7 +78,7 @@ class christine(gtk_misc):
 				lambda cl,cnx,entry,widget: self.tray_icon.set_visible(entry.get_value().get_bool()))
 		# Timeout calls
 		gobject.timeout_add(500,self.on_tick)
-		self.plugins = plugins(self)
+		#self.plugins = christine_plugins(self)
 		self.set_location_count = 0
 	
 	def __player_init(self):
