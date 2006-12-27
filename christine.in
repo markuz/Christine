@@ -1068,7 +1068,9 @@ class christine(gtk_misc):
 				if walk.get_active():
 					self.add_dirs(i)
 				else:
-					self.add_dir(i)
+					files = [os.path.join(i,k) for k in os.listdir(i) if os.path.isfile(os.path.join(i,k))]
+					if len(files) >0:
+						self.add_files(files = files)
 			self.library.save()
 	
 	def add_dirs(self,dir):
