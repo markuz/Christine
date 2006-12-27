@@ -302,13 +302,7 @@ class christine(gtk_misc):
 		queue
 		'''
 		if event.keyval == 65535:
-			selection = treeview.get_selection()
-			model,iter = selection.get_selected()
-			name = model.get_value(iter,NAME)
-			niter = self.get_natural_iter(iter)
-			self.natural_model.remove(niter)
-			self.library.remove(niter)
-			self.library.save()
+			self.remove_from_library()
 		elif event.keyval == 113:
 			selection = treeview.get_selection()
 			model,iter = selection.get_selected()
@@ -316,6 +310,15 @@ class christine(gtk_misc):
 			self.queue.add(name)
 		else:
 			pass
+	def remove_from_library(self,widget=None):
+		selection = self.treeview.get_selection()
+		model,iter = selection.get_selected()
+		name = model.get_value(iter,NAME)
+		niter = self.get_natural_iter(iter)
+		self.natural_model.remove(niter)
+		self.library.remove(niter)
+		self.library.save()
+
 	def item_activated(self,widget,path,iter):
 		model = widget.get_model()
 		iter = model.get_iter(path)
