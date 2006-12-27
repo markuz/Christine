@@ -103,6 +103,7 @@ class christine_gconf:
 		self.string_keys = {"backend/audiosink":"autoaudiosink",
 						"backend/videosink":"ximagesink",
 						"backend/video-aspect-ratio":"1/1",
+						"backend/allowed_files":"mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav",
 						"backend/vis-plugin":"goom"}
 		self.gconf = gconf.client_get_default()
 		self.gconf.add_dir(self.dir,gconf.CLIENT_PRELOAD_RECURSIVE)

@@ -22,6 +22,7 @@
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.library import *
+from lib_christine.trans import *
 
 
 class preferences(gtk_misc):
@@ -29,16 +30,67 @@ class preferences(gtk_misc):
 		gtk_misc.__init__(self)
 		self.gconf = christine_gconf()
 		self.xml = glade_xml("preferences.glade")
+		self.xml.signal_autoconnect(self)
 		self.audiosink = self.xml["audiosink"]
 		self.audiosink.connect("changed",self.update_sink,"audiosink")
 		self.videosink = self.xml["videosink"]
 		self.videosink.connect("changed", self.update_sink,"videosink")
+		self.fmodel = gtk.ListStore(str)
+		self.ftreeview = self.xml["ftreeview"]
+		self.ftreeview.set_model(self.fmodel)
+		self.fadd = self.xml["fadd"]
+		self.fdel = self.xml["fdel"]
+		self.update_fmodel()
+		self.__set_fcolumns()
+		self.gconf.notify_add("/apps/christine/backend/allowed_files",lambda a,b,c,d:self.update_fmodel())
 		self.select_sinks()
 		dialog	 = self.xml["main_window"]
 		dialog.set_icon(self.gen_pixbuf("logo.png"))
 		self.set_checkboxes()
 		dialog.run()
 		dialog.destroy()
+	
+	def on_cursor_changed(self,render,path,value):
+		iter = self.fmodel.get_iter(path)
+		self.fmodel.set_value(iter,0,value)
+		self.__save_fmodel()
+
+	def update_fmodel(self):
+		self.fmodel.clear()
+		extensions = self.gconf.get_string("backend/allowed_files").split(",")
+		extensions.sort()
+		if len(extensions) < 1:
+			return True
+		while len(extensions) > 0:
+			ext = extensions.pop()
+			iter = self.fmodel.append()
+			self.fmodel.set(iter,0,ext)
+
+	def __set_fcolumns(self):
+		render = gtk.CellRendererText()
+		render.set_property("editable",True)
+		render.connect("edited",self.on_cursor_changed)
+		column = gtk.TreeViewColumn("Extension",render,text = 0)
+		self.ftreeview.append_column(column)
+
+	def add_extension(self,widget):
+		print "add_extension"
+		iter = self.fmodel.append()
+		self.fmodel.set(iter,0,translate("New extension"))
+		self.__save_fmodel()
+	
+	def remove_extension(self,widget):
+		selection = self.ftreeview.get_selection()
+		model,iter = selection.get_selected()
+		if iter != None:
+			model.remove(iter)
+			self.__save_fmodel()
+	
+	def __save_fmodel(self):
+		 exts = ",".join([self.fmodel.get_value(k.iter,0) for k in self.fmodel])
+		 self.gconf.set_value("backend/allowed_files",exts)
+
+
 
 	def select_sinks(self):
 		videosink = self.gconf.get_string("backend/videosink")
