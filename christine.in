@@ -1096,18 +1096,18 @@ class christine(gtk_misc):
 		#self.model.foreach(lambda model,path,iter: self.f.append(model.get_value(iter,PATH)))
 		for i in filenames:
 			for path in i[1]:
-				#ext = path.split(".").pop().lower()
-				#exists = False
-				#if os.path.join(i[0],path) in self.f:
-				#	exists = True
+				ext = path.split(".").pop().lower()
+				exists = False
+				if os.path.join(i[0],path) in self.f:
+					exists = True
 				# FIXME: at the moment only files with the right
 				# extension will be imported, 
 				# this extensions are defined in 
 				# libs_christine/libs_christine.py
 				# We need to know what files are supported by 
 				# gstreamer
-				#if (ext in sound or ext in video) and not exists:
-				f.append(os.path.join(i[0],path))
+				if (ext in self.gconf.get_string("backend/allowed_files").split(",")) and not exists:
+					f.append(os.path.join(i[0],path))
 				#else:
 				#	print "skipping:",os.path.join(i[0],path)
 		# Once we have the files to add, then use the add_files
@@ -1190,7 +1190,7 @@ class christine(gtk_misc):
 					self.library.add(newfile)
 					if f > 0:
 						self.library.add(self.files_to_add.pop(),False,2)
-					if mod == 1:
+					if mod == 1 or mod == 0:
 						print "library.save()"
 						self.library.save()
 			else:
