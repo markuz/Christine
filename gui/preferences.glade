@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Wed Dec 27 15:18:35 2006
+	Date: Wed Dec 27 19:54:15 2006
 	User: markuz
 	Host: cucusa
 -->
@@ -359,6 +359,7 @@ xvimagesink</property>
                             <child>
                               <widget class="GtkTreeView" id="ftreeview">
                                 <property name="visible">True</property>
+                                <property name="headers_visible">False</property>
                                 <property name="rules_hint">True</property>
                               </widget>
                             </child>

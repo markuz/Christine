@@ -16,18 +16,68 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 
-import os
+import os,sys
+from lib_christine.trans import *
+from lib_christine.gtk_misc import *
 
-class plugins:
+sys.path.append(os.path.join(os.environ["HOME"],
+		".christine",))
+sys.path.append(":@datadir@/christine/")
+
+import uplugins
+try:
+	import cplugins
+except ImportError:
+	#error(translate("There is no shared plugins"))
+	pass
+
+def importName(modulename,name):
+	#print modulename,name
+	try: 
+		module = __import__(modulename,globals(),locals(),[name])
+	except ImportError:
+		return None
+	return vars(module)[name]
+
+class interface:
+	pass
+
+class christine_plugins(gtk_misc):
 	def __init__(self,main):
-		self.plugins_dir = ["@datadir@/christine/plugins",
-							os.path.join(os.environ["HOME"],
-										".christine","plugins")]
-		plugins = []
-		for i in self.plugins_dir:
-			if os.path.exists(i):
-				files = os.listdir(i)
-				[plugins.append(k) for k in files if k.split(".")[1:][0] == "py"]
-				print plugins
-			else:
-				print "no existe",i
+		gtk_misc.__init__(self)
+		self.main = main
+		self.plugins = {}
+		self.__create_interface()
+		files = os.listdir(os.path.join(os.environ["HOME"],
+			".christine","uplugins"))
+		files = [".".join(k.split(".")[:-1]) for k in files if k.split(".")[-1] == "py" and ".".join(k.split(".")[:-1]) != "__init__"]
+		self.__imports(files)
+	
+	def __create_interface(self):
+		self.interface = interface
+		self.interface.datadir = "@datadir@"
+		self.interface.list_vbox = self.main.list_vbox
+		self.interface.pack = self.pack
+		self.interface.write = self.write
+	
+	def pack(self,widget,item,start=False,expand=False,fill=False,border=0):
+		element = getattr(self.interface,item)
+		if start:
+			pack = element.pack_start
+		else:
+			pack = element.pack_end
+		pack(widget,expand,fill,border)
+
+	
+	def write(self,text):
+		print text
+	
+
+	def __imports(self,plugins):
+		for i in plugins:
+			module = importName("uplugins",i)
+			a = module.Handler(self.interface)
+			name = a.values["name"]
+			self.plugins[name] = a.values
+			if a.values["active"]:
+				a.start()

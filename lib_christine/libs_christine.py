@@ -34,7 +34,7 @@ class sanity:
 	def __init__(self):
 		self.__check_christine_dir()
 		self.__check_dir(os.path.join(wdir,"sources"))
-		self.__check_dir(os.path.join(wdir,"plugins"))
+		self.__check_dir(os.path.join(wdir,"uplugins"))
 		if os.getgid() == 0:
 			self.__check_dir(os.path.join("/usr/share","christine","plugins"))
 
