@@ -31,6 +31,7 @@ class sources_list (gtk_misc):
 		self.xml = glade_xml("sources_treeview.glade","treeview")
 		self.__gen_model()
 		self.treeview = self.xml["treeview"]
+		self.treeview.set_headers_visible(False)
 		self.treeview.set_model(self.model)
 		self.__append_columns()
 	

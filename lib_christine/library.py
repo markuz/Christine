@@ -421,6 +421,7 @@ class queue(gtk_misc):
 		self.xml = glade_xml("treeview_reorderable.glade","ltv")
 		self.xml.signal_autoconnect(self)
 		self.treeview = self.xml["ltv"]
+		self.treeview.set_headers_visible(False)
 		#self.treeview.set_reorderable(True)
 		self.gen_model()
 		self.treeview.set_model(self.model)

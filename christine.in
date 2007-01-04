@@ -43,6 +43,9 @@ except ImportError:
 	print "no pynotify available"
 	PYNOTIFY = False
 
+if gtk.gtk_version < (2,10,0):
+	print translate("Gtk+ 2.10 or better is required");
+	sys.exit()
 
 
 class christine(gtk_misc):
@@ -184,7 +187,7 @@ class christine(gtk_misc):
 		self.queue_sw = self.xml["queue_sw"]
 		self.queue = queue()
 		self.queue_sw.add(self.queue.treeview)
-		self.queue_sw.hide()
+		#self.queue_sw.hide()
 		gobject.timeout_add(500,self.check_queue)
 		self.queue.treeview.connect("key-press-event",self.queue_key_handler)
 		self.queue.treeview.connect("row-activated",self.item_activated)
@@ -740,6 +743,7 @@ class christine(gtk_misc):
 				self.get_next_in_list()
 
 	def	check_queue(self):
+		return True
 		model = self.queue.treeview.get_model()
 		if model != None:
 			b = model.get_iter_first()

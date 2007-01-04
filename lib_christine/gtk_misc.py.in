@@ -107,6 +107,7 @@ class christine_gconf:
 						"backend/vis-plugin":"goom"}
 		self.gconf = gconf.client_get_default()
 		self.gconf.add_dir(self.dir,gconf.CLIENT_PRELOAD_RECURSIVE)
+		self.gconf.set_error_handling(gconf.CLIENT_HANDLE_ALL)
 		self.set_initial_values()
 	
 		self.notify_add = self.gconf.notify_add
@@ -138,6 +139,10 @@ class christine_gconf:
 	
 	def __getitem__(self,key,value):
 		pass
+	
+	def get(self,key):
+		return self.gconf.get(os.path.join(self.dir,key))
+
 	def get_bool(self,key):
 		return self.gconf.get_bool(os.path.join(self.dir,key))
 

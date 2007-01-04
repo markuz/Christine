@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Sun Dec 31 23:35:13 2006
+	Date: Tue Jan  2 23:57:55 2007
 	User: markuz
 	Host: cucusa
 -->
@@ -441,25 +441,13 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child>
-                  <widget class="GtkVPaned" id="vpaned2">
+                  <widget class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkScrolledWindow" id="sources_sw">
-                        <property name="width_request">150</property>
-                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="resize">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkVBox" id="list_vbox">
+                      <widget class="GtkNotebook" id="notebook1">
                         <property name="visible">True</property>
+                        <property name="tab_pos">GTK_POS_LEFT</property>
+                        <property name="scrollable">True</property>
                         <child>
                           <widget class="GtkScrolledWindow" id="queue_sw">
                             <property name="width_request">150</property>
@@ -472,8 +460,68 @@
                               <placeholder/>
                             </child>
                           </widget>
+                          <packing>
+                            <property name="tab_expand">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label1">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Queue</property>
+                            <property name="angle">90</property>
+                          </widget>
+                          <packing>
+                            <property name="type">tab</property>
+                            <property name="tab_expand">False</property>
+                            <property name="tab_fill">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkScrolledWindow" id="sources_sw">
+                            <property name="width_request">150</property>
+                            <property name="visible">True</property>
+                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                            <property name="tab_expand">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label2">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Sources</property>
+                            <property name="angle">90</property>
+                          </widget>
+                          <packing>
+                            <property name="type">tab</property>
+                            <property name="position">1</property>
+                            <property name="tab_expand">False</property>
+                            <property name="tab_fill">False</property>
+                          </packing>
                         </child>
                       </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkVBox" id="list_vbox">
+                        <property name="visible">True</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
