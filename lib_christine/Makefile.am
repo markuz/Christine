@@ -66,6 +66,7 @@ all-am:
 clean:
 	rm gtk_misc.py
 	rm about.py
+	rm clibrary.o
 	rm clibrary.so
 	rm trans.py
 	rm plugins.py

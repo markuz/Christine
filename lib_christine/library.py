@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-import os,gtk,gobject,sys
+import os,gtk,gobject,sys,pango
 import cPickle as pickle
 import gst, gst.interfaces
 from lib_christine.libs_christine import *
@@ -51,7 +51,7 @@ VPIX) = xrange(3)
 ## both lists (and other lists)
 ##
 
-class library(gtk_misc):
+class library(gtk_misc,gtk.DrawingArea):
 	def __init__(self):
 		'''
 		Constructor, load the 
@@ -60,7 +60,12 @@ class library(gtk_misc):
 		'''
 		self.iters = {}
 		gtk_misc.__init__(self)
+		gtk.DrawingArea.__init__(self)
 		self.xml = glade_xml("treeview.glade","ltv")
+		gobject.signal_new("tags-found",self,
+				gobject.SIGNAL_RUN_LAST,
+				gobject.TYPE_NONE,
+				(gobject.TYPE_PYOBJECT,))
 		self.xml.signal_autoconnect(self)
 		self.gconf = christine_gconf()
 		self.tv = self.xml["ltv"]
@@ -146,6 +151,7 @@ class library(gtk_misc):
 
 	def add_columns(self):
 		render = gtk.CellRendererText()
+		render.set_property("ellipsize",pango.ELLIPSIZE_END)
 		tv = self.tv
 		tvc = gtk.TreeViewColumn
 		
@@ -162,6 +168,7 @@ class library(gtk_misc):
 		name.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
 		name.pack_start(pix,False)
 		rtext = gtk.CellRendererText()
+		rtext.set_property("ellipsize",pango.ELLIPSIZE_END)
 		name.pack_start(rtext,True)
 		name.add_attribute(pix,"pixbuf",PIX)
 		name.add_attribute(rtext,"text",NAME)
@@ -224,7 +231,6 @@ class library(gtk_misc):
 		gobject.timeout_add(200,self.stream_length,None,2)
 
 	def add(self,file,prepend=False,n=1):
-		print file
 		if n == 1:
 			self.discoverer.set_location(file)
 		else:
@@ -246,9 +252,14 @@ class library(gtk_misc):
 				PATH,file)
 		self.iters[file] = iter
 		#print file, self.model.get_value(iter,PATH),self.iters[file]
+		#gobject.timeout_add(3000,self.NEXT)
 		path = self.model.get_path(iter)
 		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
 		return False
+
+	def NEXT(self):
+		print "NEXT"
+		self.emit("tags-found",self)
 
 	def message_handler(self,bus,b):
 		if bus == self.discoverer.bus:
@@ -286,6 +297,8 @@ class library(gtk_misc):
 						SEARCH,",".join([name,album,artist]),
 						PLAY_COUNT,0,
 						GENRE,genre)
+			print "tags found"
+			self.emit("tags-found",self)
 		if t == gst.MESSAGE_ERROR:
 			print b.parse_error()
 		return True

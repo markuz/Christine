@@ -38,7 +38,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.type = "sound"
 		self.__create_playbin()
 		#self.__create_fakeplay()
-	
 		
 	def __create_playbin(self):
 		self.playbin	= gst.element_factory_make("playbin")

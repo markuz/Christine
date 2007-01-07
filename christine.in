@@ -22,6 +22,7 @@ from lib_christine.trans import *
 import pygst; pygst.require("0.10")
 import gtk,gst.interfaces,random,sys,thread
 import gtk.gdk
+import time
 from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
@@ -117,10 +118,10 @@ class christine(gtk_misc):
 		self.play_menuitem = self.xml["play_menuitem"]
 		# Create the display and attach it to the main
 		# window
-		box = self.xml["cdisplaybox"]
+		self.cdisplaybox = self.xml["cdisplaybox"]
 		self.display = display()
 		self.display.connect("value-changed",self.on_scale_value_changed)
-		box.pack_start(self.display,True,True,0)
+		self.cdisplaybox.pack_start(self.display,True,True,0)
 		self.display.show_all()
 		# Create the library by calling to libs_christine.library
 		# class
@@ -1167,21 +1168,26 @@ class christine(gtk_misc):
 		self.percentaje = 0
 		self.total_num_files = len(self.files_to_add)
 		# Use a timer to avoid freezing 
-		gobject.timeout_add(600,self.__add_file,queue)
+		#gobject.timeout_add(600,self.__add_file,queue)
+		self.__add_file(queue)
+		import thread
+		self.library.connect("tags-found",self.__add_file)
 		self.add_win.run()
 
 		
 	def get_paths(self,model,path,iter):
 		loc = model.get_value(iter,PATH)
 		self.paths.append(loc)
-
-	def __add_file(self,queue=False):
+	
+	def __add_file(self,queue=False,user_data=None):
 		'''
 		Add a single file, to the library or queue.
 		the files are taken from the self.files_to_add
 		list. the only one argument is queue, wich defines
 		if the importing is to the queue
 		'''
+		if type(queue) != type(True):
+			queue = False
 		# This method is the "hard" one in the importing files
 		# (or directories) We must be carefull in the code
 		# and everything must run as fast as we can
@@ -1192,9 +1198,10 @@ class christine(gtk_misc):
 					f = len(self.files_to_add)
 					div,mod = divmod(f,10)
 					print div,mod
+					print newfile
 					self.library.add(newfile)
-					if f > 0:
-						self.library.add(self.files_to_add.pop(),False,2)
+					#if f > 0:
+						#self.library.add(self.files_to_add.pop(),False,2)
 					if mod == 1 or mod == 0:
 						print "library.save()"
 						self.library.save()
