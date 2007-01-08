@@ -32,7 +32,7 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		#gtk.DrawingArea.__init__(self)
 		christine_gconf.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
-		self.discoverer.set_property("delay",GST_DELAY)
+		#self.discoverer.set_property("delay",GST_DELAY)
 		#asink			= self.get_string("backend/audiosink")
 		self.discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
 		video_sink = gst.element_factory_make("fakesink")
@@ -60,6 +60,7 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		self.discoverer.set_state(gst.STATE_PAUSED)
 		self.discoverer.set_state(gst.STATE_PLAYING)
 		self.discoverer.set_state(gst.STATE_PAUSED)
+		return False
 		
 	def found_tags_cb(self,tags):
 		if len(tags.keys()) > 0:

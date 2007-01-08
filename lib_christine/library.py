@@ -297,11 +297,16 @@ class library(gtk_misc,gtk.DrawingArea):
 						SEARCH,",".join([name,album,artist]),
 						PLAY_COUNT,0,
 						GENRE,genre)
-			print "tags found"
-			self.emit("tags-found",self)
+
+			#print "tags found",d.tags
+			self.emit_signal("tags-found")
 		if t == gst.MESSAGE_ERROR:
 			print b.parse_error()
 		return True
+
+	def emit_signal(self,signal):
+		self.emit(signal,self)
+		return False
 
 	def stream_length(self,widget=None,n=1):
 		if n==1:
