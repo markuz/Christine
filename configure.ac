@@ -43,6 +43,7 @@ IT_PROG_INTLTOOL
 AC_CONFIG_FILES([
 Makefile
 lib_christine/Makefile
+cplugins/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
 po/Makefile.in

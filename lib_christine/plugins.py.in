@@ -28,7 +28,7 @@ import uplugins
 try:
 	import cplugins
 except ImportError:
-	#error(translate("There is no shared plugins"))
+	print translate("There is no shared plugins")
 	pass
 
 def importName(modulename,name):
@@ -51,7 +51,11 @@ class christine_plugins(gtk_misc):
 		files = os.listdir(os.path.join(os.environ["HOME"],
 			".christine","uplugins"))
 		files = [".".join(k.split(".")[:-1]) for k in files if k.split(".")[-1] == "py" and ".".join(k.split(".")[:-1]) != "__init__"]
-		self.__imports(files)
+		self.__imports(files,"uplugins")
+		files = os.listdir("@datadir@/christine/cplugins")
+		files = [".".join(k.split(".")[:-1]) for k in files if k.split(".")[-1] == "py" and ".".join(k.split(".")[:-1]) != "__init__"]
+		self.__imports(files,"cplugins")
+
 	
 	def __create_interface(self):
 		self.interface = interface
@@ -73,9 +77,9 @@ class christine_plugins(gtk_misc):
 		print text
 	
 
-	def __imports(self,plugins):
+	def __imports(self,plugins,package):
 		for i in plugins:
-			module = importName("uplugins",i)
+			module = importName(package,i)
 			a = module.Handler(self.interface)
 			name = a.values["name"]
 			self.plugins[name] = a.values

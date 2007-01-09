@@ -51,7 +51,7 @@ VPIX) = xrange(3)
 ## both lists (and other lists)
 ##
 
-class library(gtk_misc,gtk.DrawingArea):
+class library(gtk_misc,gtk.Widget):
 	def __init__(self):
 		'''
 		Constructor, load the 
@@ -60,7 +60,7 @@ class library(gtk_misc,gtk.DrawingArea):
 		'''
 		self.iters = {}
 		gtk_misc.__init__(self)
-		gtk.DrawingArea.__init__(self)
+		#gtk.DrawingArea.__init__(self)
 		self.xml = glade_xml("treeview.glade","ltv")
 		gobject.signal_new("tags-found",self,
 				gobject.SIGNAL_RUN_LAST,
