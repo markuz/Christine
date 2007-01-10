@@ -22,14 +22,10 @@ from lib_christine.gtk_misc import *
 
 sys.path.append(os.path.join(os.environ["HOME"],
 		".christine",))
-sys.path.append(":@datadir@/christine/")
-
+sys.path.append("@datadir@/christine")
+print sys.path
 import uplugins
-try:
-	import cplugins
-except ImportError:
-	print translate("There is no shared plugins")
-	pass
+import cplugins
 
 def importName(modulename,name):
 	#print modulename,name
@@ -80,8 +76,9 @@ class christine_plugins(gtk_misc):
 	def __imports(self,plugins,package):
 		for i in plugins:
 			module = importName(package,i)
-			a = module.Handler(self.interface)
-			name = a.values["name"]
-			self.plugins[name] = a.values
-			if a.values["active"]:
-				a.start()
+			if module != None:
+				a = module.Handler(self.interface)
+				name = a.values["name"]
+				self.plugins[name] = a.values
+				if a.values["active"]:
+					a.start()
