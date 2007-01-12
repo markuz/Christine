@@ -619,7 +619,6 @@ class christine(gtk_misc):
 		self.play_menuitem.set_active(active)
 		self.play_button.set_active(active)
 			
-
 	
 	def play(self,widget=None):
 		'''
@@ -634,6 +633,10 @@ class christine(gtk_misc):
 			self.player.playit()
 			path = self.player.get_location()
 	
+	def tray_play(self,widget=None):
+		self.play_button.set_active(True)
+	def pause(self,widget=None):
+		self.play_button.set_active(False)
 		
 	def get_natural_iter(self,iter):
 		'''

@@ -23,7 +23,6 @@ from lib_christine.gtk_misc import *
 sys.path.append(os.path.join(os.environ["HOME"],
 		".christine",))
 sys.path.append("@datadir@/christine")
-print sys.path
 import uplugins
 import cplugins
 
