@@ -26,10 +26,10 @@ set_create_iter(PyObject *self, PyObject *args){
 		Py_XINCREF(temp);
 		Py_XDECREF(create_iter);
 		create_iter = temp;
-		Py_INCREF(Py_None);
-		result = Py_None;
-		return result;
 	}
+	Py_INCREF(Py_None);
+	result = Py_None;
+	return result;
 }
 
 static PyObject *
@@ -45,10 +45,11 @@ set_set(PyObject *self, PyObject *args){
 		Py_XINCREF(temp);
 		Py_XDECREF(set);
 		set = temp;
-		Py_INCREF(Py_None);
-		result = Py_None;
-		return result;
 	}
+	Py_INCREF(Py_None);
+	result = Py_None;
+	return result;
+
 }
 
 static PyObject *
