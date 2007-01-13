@@ -28,7 +28,6 @@ from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.library import *
 from lib_christine.preferences import *
-from lib_christine.show_properties import *
 from lib_christine.about import *
 from lib_christine.player import *
 from lib_christine.display import *

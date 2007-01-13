@@ -5,7 +5,6 @@ gtk_misc.py \
 library.py \
 libs_christine.py \
 preferences.py \
-show_properties.py \
 about.py \
 discoverer.py \
 player.py \

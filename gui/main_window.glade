@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Fri Jan 12 18:47:53 2007
+	Date: Fri Jan 12 22:03:02 2007
 	User: markuz
 	Host: cucusa
 -->
@@ -146,15 +146,6 @@
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="edit1_menu">
-                    <child>
-                      <widget class="GtkImageMenuItem" id="properties1">
-                        <property name="visible">True</property>
-                        <property name="label">gtk-properties</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <signal name="activate" handler="show_properties"/>
-                      </widget>
-                    </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="find1">
                         <property name="visible">True</property>
