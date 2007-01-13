@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Fri Jan 12 22:03:02 2007
+	Date: Fri Jan 12 22:21:31 2007
 	User: markuz
 	Host: cucusa
 -->
@@ -167,6 +167,13 @@
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="show_preferences"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="asdf">
+                        <property name="visible">True</property>
+                        <property name="label">menuitem1</property>
+                        <property name="use_underline">True</property>
                       </widget>
                     </child>
                   </widget>
