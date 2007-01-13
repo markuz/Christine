@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Tue Jan  2 23:57:55 2007
+	Date: Fri Jan 12 18:47:53 2007
 	User: markuz
 	Host: cucusa
 -->
@@ -22,7 +22,7 @@
           <widget class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkMenuItem" id="music1">
+              <widget class="GtkMenuItem" id="media_menu">
                 <property name="visible">True</property>
                 <property name="label">_Media</property>
                 <property name="use_underline">True</property>
@@ -140,7 +140,7 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="edit1">
+              <widget class="GtkMenuItem" id="edit_menu">
                 <property name="visible">True</property>
                 <property name="label">_Edit</property>
                 <property name="use_underline">True</property>
@@ -183,7 +183,7 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="control1">
+              <widget class="GtkMenuItem" id="control_menu">
                 <property name="visible">True</property>
                 <property name="label">_Control</property>
                 <property name="use_underline">True</property>
@@ -292,7 +292,7 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="view1">
+              <widget class="GtkMenuItem" id="view_menu">
                 <property name="visible">True</property>
                 <property name="label">_View</property>
                 <property name="use_underline">True</property>
@@ -344,7 +344,7 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="help1">
+              <widget class="GtkMenuItem" id="help_menu">
                 <property name="visible">True</property>
                 <property name="label">_Help</property>
                 <property name="use_underline">True</property>

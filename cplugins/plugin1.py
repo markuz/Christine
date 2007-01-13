@@ -7,10 +7,8 @@ class Handler(gtk_misc):
 		gtk_misc.__init__(self)
 		self.gconf = christine_gconf()
 		active = self.gconf.gconf.key_is_writable("/apps/christine/plugins/plugin_demo")
-		print active
 		if active == None:
 			self.gconf.set_value("plugins/plugin_demo",True)
-		print "active:",active
 		self.values = {
 				"name": "Demo plugin",
 				"active": active,

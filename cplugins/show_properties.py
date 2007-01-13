@@ -20,27 +20,41 @@
 
 from lib_christine.discoverer import *
 from lib_christine.gtk_misc import *
+from lib_christine.library import *
 
 class Handler(gtk_misc):
-	def __init__(self,file):
-		self.file = file
+	def __init__(self,interface):
+		self.interface = interface
 		self.discoverer = discoverer()
-		self.discoverer.set_location(file)
 		self.discoverer.bus.add_watch(self.message_handler)
 		gtk_misc.__init__(self)
+		self.gconf = christine_gconf()
+		active = self.gconf.gconf.key_is_writable("/apps/christine/plugins/show_properties")
+		if active == None:
+			self.gconf.set_value("plugins/show_properties",True)
 		self.values = {
 				"name":"Show Properties",
 				"active":True,
 				"Author": "Marco Antonio Islas Cruz",
 				"ref":self
 				}
-
+		menuitem = gtk.MenuItem("properties1")
+		menuitem.show()
+		menuitem.connect("activate",self.show)
+		self.interface.menus["edit"].append(menuitem)
+	
 	def start(self):
-		return True
+		pass
+
+	def show(self,widget):
+		selection = self.interface.library_treeview.get_selection()
+		model,iter = selection.get_selected()
+		file = model.get_value(iter,PATH)
+		self.discoverer.set_location(file)
 		xml				= glade_xml("properties.glade")
-		dialog			= xml["dialog"]
+		self.dialog			= xml["dialog"]
 		self.file		= xml["file"]
-		self.file.set_text(file)
+		#self.file.set_text(file)
 		self.title		= xml["title"]
 		self.tn			= xml["tn"]
 		self.album		= xml["album"]
@@ -51,8 +65,8 @@ class Handler(gtk_misc):
 		self.vcodec		= xml["vcodec"]
 		self.mode		= xml["mode"]
 		self.bitrate	= xml["bitrate"]
-		dialog.run()
-		dialog.destroy()
+		self.dialog.run()
+		self.dialog.destroy()
 		
 	def message_handler(self,a,b):
 		if b.type == gst.MESSAGE_TAG:
