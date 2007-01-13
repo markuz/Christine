@@ -107,7 +107,6 @@ class christine(gtk_misc):
 		self.menus = {}
 		for i in ["media","edit","control","help"]:
 			self.menus["%s"%i] = self.xml["%s_menu"%i].get_submenu()
-		print self.menus
 		self.search_hbox = self.xml["search_hbox"]
 		self.search_box = self.xml["search_box"]
 		self.list_box = self.xml["lists_box"]

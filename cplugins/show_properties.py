@@ -38,8 +38,11 @@ class Handler(gtk_misc):
 				"Author": "Marco Antonio Islas Cruz",
 				"ref":self
 				}
-		menuitem = gtk.MenuItem("properties1")
-		menuitem.show()
+		menuitem = gtk.ImageMenuItem("properties1")
+		image = gtk.Image()
+		image.set_from_stock(gtk.STOCK_PROPERTIES,gtk.ICON_SIZE_MENU)
+		menuitem.set_image(image)
+		menuitem.show_all()
 		menuitem.connect("activate",self.show)
 		self.interface.menus["edit"].append(menuitem)
 	
