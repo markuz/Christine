@@ -1292,13 +1292,12 @@ class christine(gtk_misc):
 			time_total = "%02d:%02d" %divmod(self.total/gst.SECOND,60)
 			self.time.set_text("%s"%(time))
 			if ts < 0:
-				print ts
 				ts = long(0)
 			if nanos > 0 and self.total > 0:
 				t = nanos/float(self.total)
+				self.display.set_text("%s/%s"%(time,time_total))
 				if t >= 0 and t <=1:
 					self.display.set_scale(t)
-				self.display.set_text("%s/%s"%(time,time_total))
 			self.set_scale_to_value(int(ts))
 		# Taking care only in gst.QueryError
 		# other errors are raised
