@@ -172,8 +172,6 @@
                     <child>
                       <widget class="GtkSeparatorMenuItem" id="asdf">
                         <property name="visible">True</property>
-                        <property name="label">menuitem1</property>
-                        <property name="use_underline">True</property>
                       </widget>
                     </child>
                   </widget>
