@@ -38,17 +38,21 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.type = "sound"
 		self.__create_playbin()
 		#self.__create_fakeplay()
+		gobject.timeout_add(5000, self.__check_screensaver)
+	
+	def __check_screensaver(self):
+		if self.should_show: 
+			a = os.popen("xscreensaver-command -deactivate")
+			print a.read()
+		return True
 		
 	def __create_playbin(self):
 		self.playbin	= gst.element_factory_make("playbin")
-		#self.playbin.set_state(gst.STATE_READY)
 		self.playbin.set_property("delay",GST_DELAY)
 		self.play		= self.playbin
 		self.bus		= self.playbin.get_bus()
 		
 
-		#self.bus.add_watch(self.error_handler)
-		#self.playbin.connect("error",self.error_handler)
 		self.__update_audiosink()
 		self.__update_videosink()
 		self.__update_aspect_ratio()
@@ -68,7 +72,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	def __connect(self):
 		self.playbin.set_property("audio-sink",self.audio_sink_pack)
 		self.playbin.set_property("video-sink",self.video_sink)
-		#self.playbin.set_property("vis-plugin",self.vis_plugin)
 
 	def __update_audiosink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
@@ -83,7 +86,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.audio_sink_pack.add_pad(self.audio_ghost)
 		self.playbin.set_property("audio-sink",self.audio_sink_pack)
 
-		#print "asink",asink
 		if asink == "alsasink":
 			self.audio_sink.set_property("device","hw:0")
 		if gst.State(gst.STATE_PLAYING) == state:
@@ -96,7 +98,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		vsink = self.get_string("backend/videosink") 
 		self.video_sink = gst.element_factory_make(vsink)
 		self.playbin.set_property("video-sink",self.video_sink)
-		if vsink == "xvimagesink" or vsink == "ximagesink":
+		if vsink in ["xvimagesink","ximagesink"]:
 			self.video_sink.set_property("force-aspect-ratio",True)
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playit()
@@ -248,6 +250,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		ext = self.get_location().split(".").pop().lower()
 		if "video-codec" in self.tags.keys() or \
 			ext in video:
+			self.should_show = True
 			return True
 		else:
 			return False
