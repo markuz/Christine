@@ -55,6 +55,8 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.notify_add("/apps/christine/backend/audiosink",self.__update_audiosink)
 		self.notify_add("/apps/christine/backend/videosink",self.__update_videosink)
 		self.notify_add("/apps/christine/backend/aspect-ratio",self.__update_aspect_ratio)
+		self.__update_audiosink()
+		self.__update_videosink()
 
 		vsink			= self.get_string("backend/vis-plugin") 
 		self.vis_plugin = gst.element_factory_make(vsink)
@@ -64,16 +66,23 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.query_position = self.playbin.query_position
 
 	def __connect(self):
+		self.playbin.set_property("audio-sink",self.audio_sink_pack)
 		self.playbin.set_property("video-sink",self.video_sink)
-		self.playbin.set_property("audio-sink",self.audio_sink)
 		#self.playbin.set_property("vis-plugin",self.vis_plugin)
 
 	def __update_audiosink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
+		self.audio_sink_pack = gst.element_factory_make("bin")
 		if self.get_location()!= None:
 			self.pause()
 		asink			= self.get_string("backend/audiosink")
 		self.audio_sink = gst.element_factory_make(asink)
+		self.audio_sink_pack.add(self.audio_sink)
+
+		self.audio_ghost = gst.GhostPad("sink",self.audio_sink.get_pad("sink"))
+		self.audio_sink_pack.add_pad(self.audio_ghost)
+		self.playbin.set_property("audio-sink",self.audio_sink_pack)
+
 		#print "asink",asink
 		if asink == "alsasink":
 			self.audio_sink.set_property("device","hw:0")
