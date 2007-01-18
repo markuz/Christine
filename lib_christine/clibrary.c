@@ -169,7 +169,7 @@ initclibrary(void)
 	(void) Py_InitModule("clibrary", clibrary_methods);
 }
 
-int main(char argc, char *argv[]){
+int main(int argc, char *argv[]){
 	initclibrary();
 	return 0;
 }

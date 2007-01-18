@@ -13,8 +13,8 @@ display.py \
 sources_list.py \
 trans.py \
 plugins.py \
-clibrary.so \
-christine.py
+christine.py \
+clibrary.so
 
 DISTFILES= Makefile.in \
 		   gtk_misc.py.in \
