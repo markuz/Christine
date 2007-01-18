@@ -13,7 +13,8 @@ display.py \
 sources_list.py \
 trans.py \
 plugins.py \
-clibrary.so 
+clibrary.so \
+christine.py
 
 DISTFILES= Makefile.in \
 		   gtk_misc.py.in \
@@ -58,8 +59,8 @@ libs_christine.py: Makefile $(srcdir)/libs_christine.py.in
 clibrary.so: Makefile $(srcdir)/clibrary.c
 	gcc -Wall ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
 
-christine: Makefile $(srcdir)/christine.py.in
-	    $(edit) $(srcdir)/christine.py.in > christinea.py
+christine.py: Makefile $(srcdir)/christine.py.in
+	    $(edit) $(srcdir)/christine.py.in > christine.py
 
 all: all-am
 
