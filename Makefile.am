@@ -12,6 +12,9 @@ desktop_DATA = christine.desktop
 
 prefix = @prefix@
 sysconfdir = @sysconfdir@
+pythonincludedir = @prefix@/include/python@PYTHON_VERSION@/
+pythonlibdir = @prefix@/lib/python@PYTHON_VERSION@/config/
+usr_libdir = @includedir@
 
 edit = sed \
 	   -e 's,@datadir\@,$(pkgdatadir),g' \
@@ -28,7 +31,8 @@ all: all-am
 
 christine.desktop: Makefile $(srcdir)/christine.desktop.in
 	$(edit) $(srcdir)/christine.desktop.in > christine.desktop
-christine: Makefile $(srcdir)/christine.in
-	$(edit) $(srcdir)/christine.in > christine
+
+christine: Makefile $(srcdir)/christine.c
+	gcc -Wall ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o && gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython2.4.a -lnsl -ldl -lreadline -ltermcap -lieee -lpthread -lutil -lm -o christine
 
 ACLOCAL_AMFLAGS = -I m4

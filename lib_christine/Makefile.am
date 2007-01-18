@@ -58,6 +58,9 @@ libs_christine.py: Makefile $(srcdir)/libs_christine.py.in
 clibrary.so: Makefile $(srcdir)/clibrary.c
 	gcc -Wall ${CFLAGS} -I${pythonlibdir} -I${usr_libdir} -c -o clibrary.o clibrary.c && gcc -shared clibrary.o -o clibrary.so -L${pythonlibdir}
 
+christine: Makefile $(srcdir)/christine.py.in
+	    $(edit) $(srcdir)/christine.py.in > christinea.py
+
 all: all-am
 
 all-am: 
