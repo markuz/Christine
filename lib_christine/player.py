@@ -62,8 +62,8 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.__update_audiosink()
 		self.__update_videosink()
 
-		vsink			= self.get_string("backend/vis-plugin") 
-		self.vis_plugin = gst.element_factory_make(vsink)
+		self.vis_plugin = None
+
 
 		self.__connect()
 		self.query_duration = self.playbin.query_duration
@@ -114,12 +114,14 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	# player10 Set location
 	def set_location(self,file):
 		self.tags = {}
+		self.playbin.set_property("vis-plugin",self.vis_plugin)
 		if os.path.isfile(file):
 			self.playbin.set_state(gst.STATE_READY)
 			nfile = "file://"+file
 			self.playbin.set_property("uri",nfile)
 		else:
-			if file.split(":")[0] in ["http","dvd"]:
+			print file.split(":")[0]
+			if file.split(":")[0] in ["http","dvd","vcd"]:
 				self.playbin.set_property("uri",file)
 			else:
 				error("file %s not found"%os.path.split(file)[1])
@@ -157,28 +159,34 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.playbin.seek(nanos)
 		
 	def set_visualization_visible(self,active=False):
-		print "playbin.set_visualization_visible(",active,")"
-		if active:
+			print "playbin.set_visualization_visible(",active,")"
+		#if active:
 			if self.get_location() != None:
 				nanos = self.query_position(gst.FORMAT_TIME)[0]
 			else:
 				return True
+			if active:
+				vsink			= self.get_string("backend/vis-plugin") 
+				self.vis_plugin = gst.element_factory_make(vsink)
+				self.video_sink.set_property("force-aspect-ratio",False)
+			else:
+				self.vis_plugin = None
+				self.video_sink.set_property("force-aspect-ratio",True)
 			self.playbin.set_property("vis-plugin",self.vis_plugin)
-			self.video_sink.set_property("force-aspect-ratio",False)
 			self.should_show = True
 			self.expose_cb()
 			state = self.playbin.get_state()[1]
 			self.pause()
 			self.set_location(self.get_location())
 			self.seek_to(nanos/gst.SECOND)
-			print state
 			if gst.State(gst.STATE_PLAYING) == state:
 				print "a tocar!!"
 				self.playit()
 
-		else:
-			self.video_sink.set_property("force-aspect-ratio",True)
-			self.playbin.set_property("vis-plugin",None)
+		#else:
+		#	self.video_sink.set_property("force-aspect-ratio",True)
+		#	self.vis_plugin = None
+		#	self.playbin.set_property("vis-plugin",self.vis_plugin)
 			if self.type == "sound":
 				self.should_show = False
 				self.hide()

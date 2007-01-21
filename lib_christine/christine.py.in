@@ -1425,7 +1425,6 @@ class christine(gtk_misc):
 
 		else:
 			self.main_viewer_place.hide_all()
-			print "Not to miniviewer"
 
 
 	

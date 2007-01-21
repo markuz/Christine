@@ -4,6 +4,9 @@ main(int argc, char *argv[])
 {
   Py_Initialize();
   PyRun_SimpleString("from lib_christine.christine import *\n"
+					 "import sys,os\n"
+					 "sys.path.insert(0,os.getcwd())\n"
+					 "#print sys.path\n"
                      "a = christine()\n"
 					 "a.main()\n");
   Py_Finalize();

@@ -2,7 +2,8 @@ SUBDIRS = lib_christine gui po cplugins
 
 bin_SCRIPTS = christine
 
-EXTRA_DIST = config.rpath mkinstalldirs m4/ChangeLog  mkinstalldirs m4/ChangeLog christine.desktop.in christine.in
+EXTRA_DIST = config.rpath mkinstalldirs m4/ChangeLog  mkinstalldirs m4/ChangeLog christine.desktop.in christine.c
+DIST_FILES = ${EXTRA_DIST}
 
 program_name = @program_name@
 PROGRAM_NAME = @PROGRAM_NAME@
@@ -12,8 +13,8 @@ desktop_DATA = christine.desktop
 
 prefix = @prefix@
 sysconfdir = @sysconfdir@
-pythonincludedir = @prefix@/include/python@PYTHON_VERSION@/
-pythonlibdir = @prefix@/lib/python@PYTHON_VERSION@/config/
+pythonincludedir = @PYTHON_INCLUDE_DIR@
+pythonlibdir = @PYTHON_LIB_DIR@/../config
 usr_libdir = @includedir@
 
 edit = sed \
@@ -33,6 +34,7 @@ christine.desktop: Makefile $(srcdir)/christine.desktop.in
 	$(edit) $(srcdir)/christine.desktop.in > christine.desktop
 
 christine: Makefile $(srcdir)/christine.c
-	gcc -Wall ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o && gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython2.4.a -lnsl -ldl -lreadline -ltermcap -lieee -lpthread -lutil -lm -o christine
+	gcc -Wall ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o
+	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython2.4.a -lnsl -ldl -lreadline -ltermcap -lieee -lpthread -lutil -lm -o christine
 
 ACLOCAL_AMFLAGS = -I m4

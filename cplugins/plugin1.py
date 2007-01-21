@@ -26,4 +26,3 @@ class Handler(gtk_misc):
 		image.set_from_pixbuf(pixbuf)
 		self.interface.pack(image,"list_vbox",False,False,2)
 		image.show()
-		self.interface.write("Hola mundo!!")

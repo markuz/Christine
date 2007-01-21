@@ -1,5 +1,5 @@
-AC_INIT("christine","0.0.2",markuz@islascruz.org)
-AM_INIT_AUTOMAKE("christine","0.0.2")
+AC_INIT("christine","0.0.3",markuz@islascruz.org)
+AM_INIT_AUTOMAKE("christine","0.0.3")
 
 AC_CONFIG_SRCDIR(lib_christine)
 AC_CONFIG_SRCDIR(gui)
@@ -16,7 +16,7 @@ AM_PATH_PYTHON
 
 PKG_CHECK_MODULES(pygtk, pygtk-2.0)
 PKG_CHECK_MODULES(gstreamer,gstreamer-0.10)
-PKG_CHECK_MODULES(gat_python,gst-python-0.10)
+PKG_CHECK_MODULES(gst_python,gst-python-0.10)
 PKG_CHECK_MODULES(gnome_python,gnome-python-2.0)
 PKG_CHECK_MODULES(gnome_python_extras,gnome-python-extras-2.0)
 PKG_CHECK_MODULES(gconf,gconf-2.0)
@@ -26,10 +26,16 @@ AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
 
 PROGRAM_NAME="christine"
-VERSION="0.0.2"
+VERSION="0.0.3"
+PREFIX=/usr
+PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
+PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib()"`
 
 AC_SUBST(PROGRAM_NAME)
 AC_SUBST(VERSION)
+AC_SUBST(PREFIX)
+AC_SUBST(PYTHON_INCLUDE_DIR)
+AC_SUBST(PYTHON_LIB_DIR)
 
 GETTEXT_PACKAGE=christine
 AC_SUBST(GETTEXT_PACKAGE)
