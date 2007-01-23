@@ -16,6 +16,7 @@ sysconfdir = @sysconfdir@
 pythonincludedir = @PYTHON_INCLUDE_DIR@
 pythonlibdir = @PYTHON_LIB_DIR@/../config
 usr_libdir = @includedir@
+pythonversion = @PYTHON_VERSION@
 
 edit = sed \
 	   -e 's,@datadir\@,$(pkgdatadir),g' \
@@ -34,7 +35,7 @@ christine.desktop: Makefile $(srcdir)/christine.desktop.in
 	$(edit) $(srcdir)/christine.desktop.in > christine.desktop
 
 christine: Makefile $(srcdir)/christine.c
-	gcc -Wall ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o
-	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython2.4.a -lnsl -ldl -lreadline -ltermcap -lieee -lpthread -lutil -lm -o christine
+	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o
+	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython${pythonversion}.a -lnsl -ldl -lreadline -l${__libdir}termcap -lieee -lpthread -lutil -lm -o christine
 
 ACLOCAL_AMFLAGS = -I m4

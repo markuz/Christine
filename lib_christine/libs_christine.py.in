@@ -35,8 +35,16 @@ class sanity:
 		self.__check_christine_dir()
 		self.__check_dir(os.path.join(wdir,"sources"))
 		self.__check_dir(os.path.join(wdir,"uplugins"))
+		if !os.path.exists(os.path.join(wdir,"uplugins","__init__.py"):
+			try:
+				f = open(os.path.join(wdir,"uplugins","__init__.py"))
+				f.write("#python")
+				f.close()
+			except:
+				print "Something goes wrong while I try to create the user plugins dir"
+				sys.exit()
 		if os.getgid() == 0:
-			self.__check_dir(os.path.join("@datadir@","christine","plugins"))
+			self.__check_dir(os.path.join("@datadir@","christine","cplugins"))
 
 	def __check_christine_dir(self):
 		if not os.path.exists(wdir):
