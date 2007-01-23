@@ -35,7 +35,7 @@ class sanity:
 		self.__check_christine_dir()
 		self.__check_dir(os.path.join(wdir,"sources"))
 		self.__check_dir(os.path.join(wdir,"uplugins"))
-		if !os.path.exists(os.path.join(wdir,"uplugins","__init__.py"):
+		if not os.path.exists(os.path.join(wdir,"uplugins","__init__.py"):
 			try:
 				f = open(os.path.join(wdir,"uplugins","__init__.py"))
 				f.write("#python")
