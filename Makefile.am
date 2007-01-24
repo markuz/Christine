@@ -36,6 +36,6 @@ christine.desktop: Makefile $(srcdir)/christine.desktop.in
 
 christine: Makefile $(srcdir)/christine.c
 	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o
-	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython${pythonversion}.a -lnsl -ldl -lreadline -l${__libdir}termcap -lieee -lpthread -lutil -lm -o christine
+	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython${pythonversion}.a -lnsl -ldl -lreadline -L${__libdir}/termcap -ltermcap -lieee -lpthread -lutil -lm -o christine
 
 ACLOCAL_AMFLAGS = -I m4

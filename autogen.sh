@@ -8,6 +8,17 @@ REQUIRED_AUTOMAKE_VERSION=1.7
 
 PKG_NAME="Christine"
 
+echo -n "+ check for build tools"
+if test ! -z $NOCHECK; then echo ": skipped version checks"; else  echo; fi
+G=`inttoolize --version`
+if test x"$G" = x""; then
+	echo "intltoolize... OK"; 
+else 
+	echo "There is no intltoolize"; 
+	echo "G: $G";
+	exit 0; 
+fi
+
 (test -f $srcdir/configure.ac \
 ## put other tests here
 ) || {
@@ -27,8 +38,16 @@ automake --add-missing --copy --gnu
 echo "autoconf"
 autoconf
 
-echo "sh configure --prefix=/usr"
-sh configure --prefix=/usr
-echo "make"
-make 
+if test x$NOCONFIGURE = x; then
+  echo Running $srcdir/configure $conf_flags "$@" ...
+    $srcdir/configure $conf_flags "$@" \
+	  && echo Now type \`make\' to compile. || exit 1
+  else
+    echo Skipping configure process.
+fi
+
+#echo "sh configure --prefix=/usr"
+#sh configure --prefix=/usr
+#echo "make"
+#make 
 

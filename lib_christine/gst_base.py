@@ -20,6 +20,6 @@
 import os
 
 GST_DELAY = 0
-wdir = os.environ["HOME"]+"/.christine/"
+wdir = os.path.join(os.environ["HOME"],".christine")
 CHRISTINE_AUDIO_EXT = sound = ["mp3","ogg","wma"]
 CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
