@@ -90,7 +90,7 @@ class lib_library(object):
 		return self.__files.keys()
 	
 	def save(self):
-		f = open(wdir+self.list,"w")
+		f = open(os.path.join(wdir,self.list),"w+")
 		pickle.dump(self.__files,f)
 		f.close()
 

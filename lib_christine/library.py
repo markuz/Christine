@@ -299,7 +299,7 @@ class library(gtk_misc,gtk.Widget):
 						GENRE,genre)
 
 			#print "tags found",d.tags
-			self.emit_signal("tags-found")
+			#self.emit_signal("tags-found")
 		if t == gst.MESSAGE_ERROR:
 			print b.parse_error()
 		return True
