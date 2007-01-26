@@ -13,6 +13,11 @@ AC_HEADER_STDC
 
 AM_MAINTAINER_MODE
 AM_PATH_PYTHON
+AM_PROG_LIBTOOL
+LIBTOOL="$LIBTOOL --silent"
+AC_PROG_CC
+AC_PROG_INSTALL
+PKG_PROG_PKG_CONFIG
 
 PKG_CHECK_MODULES(pygtk, pygtk-2.0)
 PKG_CHECK_MODULES(gstreamer,gstreamer-0.10)
@@ -61,3 +66,7 @@ intltool-update
 ])
 
 AC_OUTPUT
+
+echo 
+echo $PROGRAM_NAME will be installed in......: ${prefix}/bin
+

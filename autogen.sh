@@ -10,13 +10,13 @@ PKG_NAME="Christine"
 
 echo -n "+ check for build tools"
 if test ! -z $NOCHECK; then echo ": skipped version checks"; else  echo; fi
-G=`inttoolize --version`
-if test x"$G" = x""; then
-	echo "intltoolize... OK"; 
-else 
+G=`intltoolize --version`
+if "$G" == "" ; then
 	echo "There is no intltoolize"; 
 	echo "G: $G";
 	exit 0; 
+else 
+	echo "intltoolize... OK"
 fi
 
 (test -f $srcdir/configure.ac \
