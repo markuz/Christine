@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Fri Jan 12 22:21:31 2007
+	Date: Sun Jan 28 00:22:49 2007
 	User: markuz
 	Host: cucusa
 -->
@@ -670,49 +670,11 @@
                     <property name="visible">True</property>
                     <property name="border_width">3</property>
                     <property name="spacing">10</property>
+                    <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkHBox" id="hbox10">
-                        <child>
-                          <widget class="GtkLabel" id="time">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">00:00</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkHScale" id="scale">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="adjustment">0 0 0 0 0 0</property>
-                            <property name="digits">0</property>
-                            <property name="draw_value">False</property>
-                            <property name="value_pos">GTK_POS_RIGHT</property>
-                            <signal name="change_value" handler="set_scale_value"/>
-                            <signal name="button_release_event" handler="on_scale_value_changed"/>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="total">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">00:00</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
+                      <widget class="GtkLabel" id="label3">
+                        <property name="visible">True</property>
                       </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                      </packing>
                     </child>
                     <child>
                       <widget class="GtkHButtonBox" id="hbuttonbox1">
@@ -797,24 +759,6 @@
                             <property name="expand">False</property>
                             <property name="fill">False</property>
                             <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkButton" id="control_button">
-                            <property name="can_focus">True</property>
-                            <property name="relief">GTK_RELIEF_NONE</property>
-                            <signal name="clicked" handler="change_control"/>
-                            <child>
-                              <widget class="GtkImage" id="image293">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-about</property>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">2</property>
                           </packing>
                         </child>
                       </widget>

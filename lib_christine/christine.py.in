@@ -228,9 +228,6 @@ class christine(gtk_misc):
 		#self.album_box.hide()
 		
 
-		self.scale = self.xml["scale"]
-		self.time  = self.xml["time"]
-		self.stream_length_label = self.xml["total"]
 		self.toolbox = self.xml["toolbox"]
 		self.toolbox_container = self.xml["toolbox_container"]
 		self.volume_scale = self.xml["volume_scale"]
@@ -834,17 +831,6 @@ class christine(gtk_misc):
 		self.scale_value = b
 		self.moving_scale = False
 	
-	def set_scale_to_value(self,value):
-		'''
-		This method changes the scale value
-		'''
-		if not self.moving_scale:
-			try:
-				self.scale.set_value(value)
-			except:
-				value
-				self.scale.set_value(0)
-				
 	def jump_to_playing(self,widget=None,path=None):
 		'''
 		This method jumps and select the file
@@ -1290,7 +1276,6 @@ class christine(gtk_misc):
 			ts = nanos / gst.SECOND
 			time = "%02d:%02d" % divmod(ts,60)
 			time_total = "%02d:%02d" %divmod(self.total/gst.SECOND,60)
-			self.time.set_text("%s"%(time))
 			if ts < 0:
 				ts = long(0)
 			if nanos > 0 and self.total > 0:
@@ -1298,7 +1283,6 @@ class christine(gtk_misc):
 				self.display.set_text("%s/%s"%(time,time_total))
 				if t >= 0 and t <=1:
 					self.display.set_scale(t)
-			self.set_scale_to_value(int(ts))
 		# Taking care only in gst.QueryError
 		# other errors are raised
 		except gst.QueryError:
@@ -1316,9 +1300,7 @@ class christine(gtk_misc):
 			self.total = self.player.query_duration(gst.FORMAT_TIME)[0]
 			ts = self.total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
-			self.stream_length_label.set_text(text)
 			ad = gtk.Adjustment(value=0,lower=0,upper=ts)
-			self.scale.set_adjustment(ad)
 			self.stream_error_count = 0
 			if self.NATURAL_ITER != None:
 				time,path = self.natural_model.get(self.NATURAL_ITER,
