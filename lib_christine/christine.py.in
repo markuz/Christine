@@ -718,11 +718,11 @@ class christine(gtk_misc):
 		Callback on the value changed signal on 
 		position scale
 		'''
-		value = int(self.display.get_value()*self.total)/gst.SECOND
+		value = int(self.display.value*self.total)/gst.SECOND
 		total = self.total*gst.SECOND
 		print "nanos:",value
 		print "total:",self.total
-		print "display_value:",self.display.get_value()
+		print "display_value:",self.display.value
 		self.moving_scale = False
 		if value < 0:
 			value = 0
@@ -1110,9 +1110,8 @@ class christine(gtk_misc):
 		elif t == gst.MESSAGE_BUFFERING:
 			percent = 0
 			percent = b.structure["buffer-percent"]
-			print percent
 			self.display.set_text("%d"%percent)
-			self.display.set_scale(percent/100)
+			self.display.value = percent/100
 		return True
 
 
@@ -1131,7 +1130,7 @@ class christine(gtk_misc):
 				t = nanos/float(self.total)
 				self.display.set_text("%s/%s"%(time,time_total))
 				if t >= 0 and t <=1:
-					self.display.set_scale(t)
+					self.display.value = t
 		# Taking care only in gst.QueryError
 		# other errors are raised
 		except gst.QueryError:

@@ -29,14 +29,6 @@ class display(gtk.DrawingArea):
 		self.set_text(text)
 		self.set_size_request(300,42)
 
-	def set_text(self,text):
-		self.__text = text
-
-	def set_song(self,song):
-		if type(song) != type(""):
-			raise TypeError("Paramether must be text")
-		self.__song = song
-	
 	def __button_press_event(self,widget,event):
 		x,y = self.get_pointer()
 		minx,miny = self._layout.get_pixel_size()
@@ -50,19 +42,33 @@ class display(gtk.DrawingArea):
 			value = (x-minx)*1.0/(width)
 			self.set_scale(value)
 			self.__value = value
-			#self.set_text("%f"%value)
 			self.emit("value-changed",self)
-		#print "width:",width
-		#print "xy:",x,y
-		#print "minx,miny:",minx,miny
-		#print "maxx,maxy:",maxx,maxy
-		#print "======================"
-	def get_value(self):
-		return self.__value
 
 	def __motion_notify(self,widget,event):
 		return True
+
+	def set_text(self,text):
+		self.__text = text
+
+	def set_song(self,song):
+		if type(song) != type(""):
+			raise TypeError("Paramether must be text")
+		self.__song = song
+
+	def get_value(self):
+		return self.__value
+
+	def set_scale(self,value):
+		try:
+			value = float(value)
+		except ValueError,a:
+			raise ValueError(a)
+		if value > 1.0 or value < 0.0:
+			raise ValueError("value > 1.0 or value < 0.0")
+		self.width = value
+		self.emit("expose-event",gtk.gdk.Event(gtk.gdk.EXPOSE))
 	
+
 	def expose_event(self,widget,event):
 		if self.__DRAWING:
 			return True
@@ -116,46 +122,4 @@ class display(gtk.DrawingArea):
 		self.context.show_layout(layout)
 		self.__DRAWING = False
 		
-	def set_scale(self,value):
-		try:
-			value = float(value)
-		except ValueError,a:
-			raise ValueError(a)
-		if value > 1.0 or value < 0.0:
-			raise ValueError("value > 1.0 or value < 0.0")
-		self.width = value
-		self.emit("expose-event",gtk.gdk.Event(gtk.gdk.EXPOSE))
-
-
-class window:
-	def __init__(self):
-		self.window = gtk.Window()
-		self.window.set_border_width(10)
-		self.window.connect("destroy",gtk.main_quit)
-		self.window.set_default_size(1000,0)
-		vbox = gtk.VBox(False,2)
-		a = test()
-		vbox.pack_start(a,False,False,2)
-		self.window.add(vbox)
-		entry = gtk.Entry()
-		entry.connect("changed",lambda widget: a.set_text(widget.get_text()))
-		vbox.pack_start(entry,False,False,2)
-
-		adjustment = gtk.Adjustment(0,
-								0.0,
-								1.0,
-								0.01,
-								0.2,
-								0.2)
-		spin = gtk.SpinButton(adjustment,
-				0,2)
-		spin.connect("changed",lambda widget: a.set_scale(widget.get_value()))
-		vbox.pack_start(spin,False,False,2)
-		self.window.show_all()
-
-	def main(self):
-		gtk.main()
-
-if __name__ == "__main__":
-	a = window()
-	a.main()
+	value = property(get_value,set_scale)
