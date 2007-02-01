@@ -28,23 +28,15 @@ from lib_christine.gst_base import *
 
 class discoverer(gtk.DrawingArea,christine_gconf):
 	def __init__(self):
-		#print "discoverer: new instance"
-		#gtk.DrawingArea.__init__(self)
 		christine_gconf.__init__(self)
 		self.discoverer = gst.element_factory_make("playbin")
-		#self.discoverer.set_property("delay",GST_DELAY)
-		#asink			= self.get_string("backend/audiosink")
 		self.discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
 		video_sink = gst.element_factory_make("fakesink")
-		#video_sink.set_property("display","null")
 		self.discoverer.set_property("video-sink",video_sink)
 		self.discoverer.set_property("volume",0.0)
-		#self.discoverer.set_property("delay",0)
 		self.bus = self.discoverer.get_bus()
 		self.query_duration = self.discoverer.query_duration
 		self.query_position = self.discoverer.query_position
-
-	
 
 	def watcher(self,bus,message):
 		t = message.type
@@ -66,11 +58,6 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
-		#if "video-codec" or ext in CHRISTINE_VIDEO_EXT:
-		#	self.is_video = True
-		#elif "audio-codec" or ext in CHRISTINE_AUDIO_EXT:
-		#	self.is_audio = True
-		#print self.tags
 		
 	def get_location(self):
 		path = self.discoverer.get_property("uri")

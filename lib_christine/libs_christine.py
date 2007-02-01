@@ -40,12 +40,12 @@ class sanity:
 				f.write("#python")
 				f.close()
 		if os.getgid() == 0:
-			self.__check_dir(os.path.join("/usr/share","christine","cplugins"))
+			self.__check_dir(os.path.join("/usr/local/share","christine","cplugins"))
 
 	def __check_christine_dir(self):
-		print "checking dir... %s"%dir
+		print "checking dir... %s"%wdir
 		if not os.path.exists(wdir):
-			print "There is no christine dir!!"
+			#print "There is no christine dir!!"
 			os.mkdir(wdir)
 		else:
 			if os.path.isfile(wdir):
@@ -53,9 +53,9 @@ class sanity:
 				self.__check_christine_dir()	
 
 	def __check_dir(self,dir):
-		print "checking dir... %s"%dir
+		print "checking dir... %s"%os.path.join(wdir,dir)
 		if not os.path.exists(dir):
-			print "there is no %s dir"%dir
+			print "there is no %s dir"%wdir
 			os.mkdir (dir)
 		else:
 			if os.path.isfile(dir):

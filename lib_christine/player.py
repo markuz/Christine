@@ -33,17 +33,18 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		christine_gconf.__init__(self)
 		gtk_misc.__init__(self)
 		gtk.DrawingArea.__init__(self)
-		self.connect('destroy', self.destroy_cb)
+		self.connect('destroy', lambda x:	self.video_sink.set_xwindow_id(0L))
 		self.connect('expose-event', self.expose_cb)
 		self.type = "sound"
 		self.__create_playbin()
-		#self.__create_fakeplay()
 		gobject.timeout_add(5000, self.__check_screensaver)
 	
 	def __check_screensaver(self):
 		if self.should_show: 
 			a = os.popen("xscreensaver-command -deactivate")
-			print a.read()
+			b = os.popen("gnome-screensaver-command -d 2&> /dev/null")
+			#print a.read()
+			#print b.read()
 		return True
 		
 	def __create_playbin(self):
@@ -63,7 +64,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.__update_videosink()
 
 		self.vis_plugin = None
-
 
 		self.__connect()
 		self.query_duration = self.playbin.query_duration
@@ -111,7 +111,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 
 
-	# player10 Set location
 	def set_location(self,file):
 		self.tags = {}
 		self.playbin.set_property("vis-plugin",self.vis_plugin)
@@ -128,28 +127,11 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.get_type()
 		self.expose_cb()
 			
-	def print_discover(self,widget=None,b=None):
-		#print widget,b
-		self.discoverer.discover()
-		#print self.discoverer.print_info()
-		#print "tags:",self.discoverer.tags
-		self.tags = self.discoverer.tags
-		if len(self.discoverer.tags.keys()):
-			return False
-		return True
-
 	def playit(self):
 		self.playbin.set_state(gst.STATE_PLAYING)
-		#gobject.timeout_add(1000,self.check)
 	
-	def check(self):
-		#print self.playbin.get_property("queue-size")
-		return True
-		
 	def pause(self):
 		self.playbin.set_state(gst.STATE_PAUSED)
-		#self.audio_sink.set_state(gst.STATE_PAUSED)
-		#self.video_sink.set_state(gst.STATE_PAUSED)
 		
 	def stop(self):
 		self.playbin.set_state(gst.STATE_NULL)
@@ -160,7 +142,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		
 	def set_visualization_visible(self,active=False):
 			print "playbin.set_visualization_visible(",active,")"
-		#if active:
 			if self.get_location() != None:
 				nanos = self.query_position(gst.FORMAT_TIME)[0]
 			else:
@@ -169,28 +150,21 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 				vsink			= self.get_string("backend/vis-plugin") 
 				self.vis_plugin = gst.element_factory_make(vsink)
 				self.video_sink.set_property("force-aspect-ratio",False)
+				self.should_show = True
 			else:
 				self.vis_plugin = None
 				self.video_sink.set_property("force-aspect-ratio",True)
+				self.should_show = False
+				self.hide()
 			self.playbin.set_property("vis-plugin",self.vis_plugin)
-			self.should_show = True
 			self.expose_cb()
 			state = self.playbin.get_state()[1]
 			self.pause()
 			self.set_location(self.get_location())
 			self.seek_to(nanos/gst.SECOND)
 			if gst.State(gst.STATE_PLAYING) == state:
-				print "a tocar!!"
 				self.playit()
-
-		#else:
-		#	self.video_sink.set_property("force-aspect-ratio",True)
-		#	self.vis_plugin = None
-		#	self.playbin.set_property("vis-plugin",self.vis_plugin)
-			if self.type == "sound":
-				self.should_show = False
-				self.hide()
-				
+							
 	def set_volume(self,volume):
 		if volume < 0:
 			volume = 0.0
@@ -203,11 +177,11 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			return self.tags[key]
 		except:
 			return ""
+
 	def found_tag_cb(self,tags):
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
-		#print __name__,"fount_tags_cb",self.tags
 
 	def get_location(self):
 		path = self.playbin.get_property("uri")
@@ -218,7 +192,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 				return path
 		else:
 			path = None
-		#print "player.get_location:",path
 		return path
 	def get_state(self):
 		return self.playbin.get_state()
@@ -230,21 +203,17 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			self.type = "sound"
 		else:
 			pass
-			#raise TypeError,"Not an known video or sound"
 
 	def nano2str(self,nanos):
 		ts = nanos / gst.SECOND
 		return '%02d:%02d:%02d.%06d' % (ts / 3600,
 				ts / 60,ts % 60, nanos % gst.SECOND)
 
-	def destroy_cb(self, da):
-		self.video_sink.set_xwindow_id(0L)
-		
 	def expose_cb(self, window=None, event=None):
 		self.video_sink.set_xwindow_id(self.window.xid)
 		if self.should_show:
 			self.show()
-			print "display:",self.video_sink.get_property("display")
+			#print "display:",self.video_sink.get_property("display")
 			
 	
 	def seek_to(self,sec):
@@ -262,7 +231,6 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			return True
 		else:
 			return False
-		#return self.discoverer.is_video
 		
 	def issound(self):
 		if self.get_location() == None:
@@ -273,4 +241,3 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			return True
 		else:
 			return False
-		#return self.discoverer.is_audio

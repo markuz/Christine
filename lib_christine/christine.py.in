@@ -55,7 +55,6 @@ class christine(gtk_misc):
 		initialize the gnome ui client, create the xml interface descriptor,
 		initialize class variables and create some timeouts calls
 		'''
-		sanity()
 		gtk_misc.__init__(self)
 		self.xml			= glade_xml("main_window.glade")
 		self.small_view_menuitem = self.xml["small_view_menuitem"]
