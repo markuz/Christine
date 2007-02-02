@@ -19,12 +19,14 @@
 
 
 import pygst; pygst.require("0.10")
-import os,gtk,gobject
+import os,gtk,gobject, cairo
 import gst
 import gst.interfaces
 
 from lib_christine.gtk_misc import *
 from lib_christine.gst_base import *
+
+BORDER_WIDTH=0
 
 class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	def __init__(self,main):
@@ -210,6 +212,19 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 				ts / 60,ts % 60, nanos % gst.SECOND)
 
 	def expose_cb(self, window=None, event=None):
+		x,y,w,h = self.allocation
+		self.context = self.window.cairo_create()
+		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
+				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
+		self.context.clip()
+		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
+				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
+		self.context.set_source_rgba(0,0,0)
+		self.context.fill_preserve()
+		self.context.set_source_rgb(0,0,0)
+		self.context.stroke()
+
+
 		self.video_sink.set_xwindow_id(self.window.xid)
 		if self.should_show:
 			self.show()

@@ -58,7 +58,7 @@ class christine_plugins(gtk_misc):
 		self.interface.list_vbox = self.main.list_vbox
 		self.interface.menubar = self.main.menubar
 		self.interface.search_box = self.main.search_box
-		self.interface.list_box = self.main.list_box
+		#self.interface.list_box = self.main.list_box
 		self.interface.list_vbox = self.main.list_vbox
 		self.interface.library_treeview = self.main.treeview
 		self.interface.menus = self.main.menus

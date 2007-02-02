@@ -11,8 +11,17 @@ LINE_WIDTH = 2
 
 class display(gtk.DrawingArea):
 	def __init__(self,text=""):
+		'''
+		Constructor
+		'''
+		# since this class inherits methods and properties
+		# from gtk.Drawind_area we need to initialize
+		# it too.
 		gtk.DrawingArea.__init__(self)
+		# This flag is supposed to be used to check if the
+		# display y being drawed.
 		self.__DRAWING = False
+		# Adding some events
 		self.set_property("events",gtk.gdk.EXPOSURE_MASK|
 								gtk.gdk.POINTER_MOTION_MASK|
 								gtk.gdk.BUTTON_PRESS_MASK)
@@ -30,6 +39,10 @@ class display(gtk.DrawingArea):
 		self.set_size_request(300,42)
 
 	def __button_press_event(self,widget,event):
+		'''
+		Called when a button is pressed in the 
+		display
+		'''
 		x,y = self.get_pointer()
 		minx,miny = self._layout.get_pixel_size()
 		minx = miny
@@ -44,8 +57,8 @@ class display(gtk.DrawingArea):
 			self.__value = value
 			self.emit("value-changed",self)
 
-	def __motion_notify(self,widget,event):
-		return True
+	#def __motion_notify(self,widget,event):
+	#	return True
 
 	def set_text(self,text):
 		self.__text = text
@@ -70,6 +83,10 @@ class display(gtk.DrawingArea):
 	
 
 	def expose_event(self,widget,event):
+		'''
+		This function is used to draw the display.
+		'''
+		# Every speed improvement is really appreciated.
 		if self.__DRAWING:
 			return True
 		self.DRAWING = True
@@ -99,9 +116,10 @@ class display(gtk.DrawingArea):
 
 		fw,fh = self._layout.get_pixel_size()
 		width = self.w-fh-(BORDER_WIDTH*3)
+		self.context.set_antialias(cairo.ANTIALIAS_NONE)
 		self.context.rectangle(fh,(BORDER_WIDTH*2)+fh,
 				width,BORDER_WIDTH)
-		self.context.set_line_width(LINE_WIDTH)
+		self.context.set_line_width(1)
 		self.context.set_line_cap(cairo.LINE_CAP_BUTT)
 		self.context.set_source_rgb(0,0,0)
 		self.context.stroke()

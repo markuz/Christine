@@ -31,7 +31,7 @@ from lib_christine.preferences import *
 from lib_christine.about import *
 from lib_christine.player import *
 from lib_christine.display import *
-from lib_christine.sources_list import *
+#from lib_christine.sources_list import *
 from lib_christine.plugins import *
 
 try:
@@ -146,11 +146,11 @@ class christine(gtk_misc):
 		self.videobox = self.xml["videobox"]
 		self.main_viewer_place.show_all()
 		
-		sources_sw = self.xml["sources_sw"]
-		self.sources_list = sources_list()
-		self.sources_list.treeview.show()
-		self.sources_list.treeview.connect("cursor-changed",self.update_library_with_source)
-		sources_sw.add(self.sources_list.treeview)
+		#sources_sw = self.xml["sources_sw"]
+		#self.sources_list = sources_list()
+		#self.sources_list.treeview.show()
+		#self.sources_list.treeview.connect("cursor-changed",self.update_library_with_source)
+		#sources_sw.add(self.sources_list.treeview)
 		#=============queue ends
 		self.queue_sw = self.xml["queue_sw"]
 		self.queue = queue()
@@ -160,6 +160,12 @@ class christine(gtk_misc):
 		self.queue.treeview.connect("key-press-event",self.queue_key_handler)
 		self.queue.treeview.connect("row-activated",self.item_activated)
 		#=============queue begins
+
+
+		## main_notebook
+		#self.main_notebook = self.xml["main_notebook"]
+		#self.main_notebook.set_show_tabs(False)
+
 	
 
 		self.control_button = self.xml["control_button"]
@@ -662,7 +668,6 @@ class christine(gtk_misc):
 				self.get_next_in_list()
 
 	def	check_queue(self):
-		return True
 		model = self.queue.treeview.get_model()
 		if model != None:
 			b = model.get_iter_first()
@@ -846,6 +851,7 @@ class christine(gtk_misc):
 		artist = model.get_value(iter,ARTIST)
 		if not artist in self.artist.list:
 			self.artist_l.append(artist)
+	
 			
 #	def add_albums(self,model,path,iter):
 #		'''
