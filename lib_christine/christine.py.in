@@ -717,6 +717,7 @@ class christine(gtk_misc):
 		mlocation = model.get_value(iter,PATH)
 		if mlocation == location:
 			self.current_iter = iter
+			return True
 			
 	def on_scale_value_changed(self,scale,a,value=None):
 		'''
