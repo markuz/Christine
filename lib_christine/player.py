@@ -41,6 +41,11 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		gobject.timeout_add(5000, self.__check_screensaver)
 	
 	def __check_screensaver(self):
+		'''
+		Check if we are whatching something with the player,
+		if true, then deactivate the screensaver by resetting 
+		the idle time.
+		'''
 		if self.should_show: 
 			a = os.popen("xscreensaver-command -deactivate")
 			b = os.popen("gnome-screensaver-command -d 2&> /dev/null")
@@ -49,6 +54,9 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		return True
 		
 	def __create_playbin(self):
+		'''
+		Create the playbin
+		'''
 		self.__playbin	= gst.element_factory_make("playbin")
 		self.__playbin.set_property("delay",GST_DELAY)
 		self.play		= self.__playbin
@@ -112,7 +120,9 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
 	
 	def __expose_cb(self, window=None, event=None):
-
+		'''
+		Draw the player.
+		'''
 		# Drawing a black background because some 
 		# GTK themes (clearlooks) don't draw it.
 		x,y,w,h = self.allocation
