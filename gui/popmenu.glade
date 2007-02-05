@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Tue Dec 26 19:52:47 2006
+	Date: Sun Feb  4 19:43:02 2007
 	User: markuz
 	Host: cucusa
 -->
@@ -26,19 +26,6 @@
     </child>
     <child>
       <widget class="GtkSeparatorMenuItem" id="separator1">
-        <property name="visible">True</property>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkMenuItem" id="properties1">
-        <property name="visible">True</property>
-        <property name="label">Properties</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="show_properties"/>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkSeparatorMenuItem" id="separator2">
         <property name="visible">True</property>
       </widget>
     </child>

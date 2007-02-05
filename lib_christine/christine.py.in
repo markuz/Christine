@@ -874,43 +874,6 @@ class christine(gtk_misc):
 #===============Play stuff ends =============================
 
 #===============libraty stuff begins=============
-#	def add_artists(self,model,path,iter):
-#		'''
-#		Add artist.
-#		This fills the artist model
-#		'''
-#		artist = model.get_value(iter,ARTIST)
-#		if not artist in self.artist.list:
-#			self.artist_l.append(artist)
-	
-			
-#	def add_albums(self,model,path,iter):
-#		'''
-#		This fills the albums model
-#		'''
-#		album  = model.get_value(iter,ALBUM)
-#		artist = model.get_value(iter,ARTIST)
-#		#print "artist: '%s album:'%s'"%(artist,album)
-#		if album == "":
-#			album = self.albums.first_element
-#		if artist == "":
-#			artist = self.artist.first_element
-#			
-#		if not artist in self.artist.list:
-#			self.artist.list.append(artist)
-#
-#		if not album in self.albums.list:
-#			self.albums.add(album,artist)
-#			
-#	def add_artists_sorted(self):
-#		'''
-#		add the artists in a sorted way
-#		'''
-#		self.artist.list.sort()
-#		self.artist.list.append(self.artist.first_element)
-#		
-#		for i in self.artist.list:
-#			self.artist.add(i)
 
 	def import_file(self,widget,queue=False):
 		'''
@@ -1180,7 +1143,7 @@ class christine(gtk_misc):
 		Catches the lenght of the media and update it in the 
 		player
 		'''
-		if self.player.get_location().split(":")[0] != "file":
+		if self.player.get_location().split(":")[0] == "http":
 			return True
 		try:
 			self.total = self.player.query_duration(gst.FORMAT_TIME)[0]
@@ -1318,16 +1281,6 @@ class christine(gtk_misc):
 		'''
 		preferences()
 	
-#	def show_properties(self,widget):
-#		'''
-#		Show the selected media properties
-#		'''
-#		selected = self.treeview.get_selection()
-#		model, iter = selected.get_selected()
-#		if iter != None:
-#			show_properties(model.get_value(iter,PATH))
-	
-
 	def main_quit(self,widget=None):
 		self.player.stop()
 		gtk.main_quit()

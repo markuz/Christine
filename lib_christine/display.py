@@ -131,7 +131,6 @@ class display(gtk.DrawingArea):
 		self.context.fill_preserve()
 		self.context.set_source_rgb(0,0,0)
 		self.context.stroke()
-		
 		layout = self.create_pango_layout(self.__text)
 		fontw,fonth = layout.get_pixel_size()
 		self.context.move_to((w-fontw)/2,(fonth+33)/2)
