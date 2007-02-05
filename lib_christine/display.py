@@ -69,7 +69,7 @@ class display(gtk.DrawingArea):
 		self.__song = song
 
 	def get_value(self):
-		return self.__value
+		return self.width
 
 	def set_scale(self,value):
 		try:

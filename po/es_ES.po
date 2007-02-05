@@ -268,7 +268,7 @@ msgstr "Brincar al tiempo"
 
 #: gui/jump_to.glade:98
 msgid ":"
-msgstr "Ir a"
+msgstr ":"
 
 #: gui/miniviewer.glade:10
 msgid "video player"
@@ -396,7 +396,7 @@ msgstr "Anterior"
 
 #: lib_christine/library.py:154
 msgid "T#"
-msgstr ""
+msgstr "#"
 
 #: lib_christine/library.py:195
 msgid "Count"

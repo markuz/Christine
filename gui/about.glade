@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Thu Jan  4 14:26:57 2007
+	Date: Mon Feb  5 12:59:47 2007
 	User: markuz
 	Host: cucusa
 -->
@@ -24,7 +24,7 @@
 
 
     Christine
-    Copyright (C) 2006  Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
+    Copyright (C) 2006-2007  Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,6 +50,9 @@ proprietary programs.
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
+        <child>
+          <placeholder/>
+        </child>
         <child internal-child="action_area">
           <widget class="GtkHButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
