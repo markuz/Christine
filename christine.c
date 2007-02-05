@@ -5,7 +5,8 @@
 
 void error(char *msg) { 
 	PyErr_Print();
-	printf("%s\n", msg); exit(1); 
+	printf("%s\n", msg); 
+	exit(1); 
 }
 
 char* python_code = "\
@@ -24,24 +25,26 @@ a.main()\n\
 
 int
 main(int argc, char *argv[]){
-	// Get a reference to the main module
 
 	PyObject *t,*main_module, *main_dict, *main_dict_copy;
 	PyObject *sys;
 	Py_Initialize();
+	// Get a reference to the main module
 	main_module = PyImport_ImportModule("__main__");
 	sys = PyImport_ImportModule("sys");
 	if (main_module == NULL)
 		error ("Could not import __main__ module");
+	if (sys == NULL)
+		error ("Could not import sys module");
 	main_dict = PyModule_GetDict(main_module);
 	//main_dict = PyModule_GetDict(sys);
-	//main_dict = PyDict_New();
+	//main_dict_copy = PyDict_New();
 	//PyDict_SetItemString(main_dict,"__builtins__",main_module);
 	if (main_dict == NULL)
 		error ("Could not get the __main__ module dictionary");
-	main_dict_copy = PyDict_Copy(main_dict);
+	//main_dict_copy = PyDict_Copy(main_dict);
 	Py_DECREF(main_module);
-	t = PyRun_String(python_code,Py_file_input,main_dict,main_dict_copy);
+	t = PyRun_String(python_code,Py_file_input,main_dict,main_dict);
 	if (t == NULL){
 		error("Error while trying to run christine");
 	}
