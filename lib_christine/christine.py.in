@@ -23,7 +23,7 @@ import pygst; pygst.require("0.10")
 import gtk,gst.interfaces,random,sys,thread
 import gtk.gdk
 import time
-from gnome import ui
+#from gnome import ui
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
 from lib_christine.library import *
@@ -815,7 +815,7 @@ class christine(gtk_misc):
 		dialog.set_icon(self.gen_pixbuf("logo.png"))
 		mins,seconds = divmod(self.total/gst.SECOND,60)
 		#Current minute and current second
-		cmins,cseconds = divmod(self.scale.get_value(),60)
+		cmins,cseconds = divmod(self.display.get_value(),60)
 		cmins,cseconds = (int(cmins),int(cseconds))
 		mins_adj = gtk.Adjustment(value=0,lower=0,upper=mins,step_incr=1)
 		secs_adj = gtk.Adjustment(value=0,lower=0,upper=59,step_incr=1)
@@ -836,7 +836,6 @@ class christine(gtk_misc):
 			time = mins_scale.get_value()*60 + secs_scale.get_value()
 			if time > self.total:
 				time = self.total
-			self.scale.set_value(time)
 			self.player.seek_to(time)
 			
 	def jump_to_ok_clicked(self,widget,event,button):
