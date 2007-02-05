@@ -14,6 +14,7 @@ sources_list.py \
 trans.py \
 plugins.py \
 christine.py \
+queue.py \
 clibrary.so
 
 DISTFILES= Makefile.in \

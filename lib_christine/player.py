@@ -35,7 +35,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		gtk_misc.__init__(self)
 		gtk.DrawingArea.__init__(self)
 		self.connect('destroy', lambda x:	self.video_sink.set_xwindow_id(0L))
-		self.connect('expose-event', self.expose_cb)
+		self.connect('expose-event', self.__expose_cb)
 		self.type = "sound"
 		self.__create_playbin()
 		gobject.timeout_add(5000, self.__check_screensaver)
@@ -103,14 +103,35 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			self.video_sink.set_property("force-aspect-ratio",True)
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playit()
-			self.expose_cb()
+			self.__expose_cb()
 
 
 	def __update_aspect_ratio(self,client="",cnx_id="",entry="",userdata=""):
 		aspect_ratio	= self.get_string("backend/aspect-ratio")
 		if aspect_ratio != None:
 			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
+	
+	def __expose_cb(self, window=None, event=None):
 
+		# Drawing a black background because some 
+		# GTK themes (clearlooks) don't draw it.
+		x,y,w,h = self.allocation
+		self.context = self.window.cairo_create()
+		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
+				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
+		self.context.clip()
+		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
+				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
+		self.context.set_source_rgba(0,0,0)
+		self.context.fill_preserve()
+		self.context.set_source_rgb(0,0,0)
+		self.context.stroke()
+
+
+		self.video_sink.set_xwindow_id(self.window.xid)
+		if self.should_show:
+			self.show()
+			#print "display:",self.video_sink.get_property("display")
 
 	def set_location(self,file):
 		self.tags = {}
@@ -126,7 +147,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			else:
 				error("file %s not found"%os.path.split(file)[1])
 		self.get_type()
-		self.expose_cb()
+		self.__expose_cb()
 			
 	def playit(self):
 		self.__playbin.set_state(gst.STATE_PLAYING)
@@ -142,29 +163,29 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.__playbin.seek(nanos)
 		
 	def set_visualization_visible(self,active=False):
-			print "playbin.set_visualization_visible(",active,")"
-			if self.get_location() != None:
-				nanos = self.query_position(gst.FORMAT_TIME)[0]
-			else:
-				return True
-			if active:
-				vsink			= self.get_string("backend/vis-plugin") 
-				self.vis_plugin = gst.element_factory_make(vsink)
-				self.video_sink.set_property("force-aspect-ratio",False)
-				self.should_show = True
-			else:
-				self.vis_plugin = None
-				self.video_sink.set_property("force-aspect-ratio",True)
-				self.should_show = False
-				self.hide()
-			self.__playbin.set_property("vis-plugin",self.vis_plugin)
-			self.expose_cb()
-			state = self.__playbin.get_state()[1]
-			self.pause()
-			self.set_location(self.get_location())
-			self.seek_to(nanos/gst.SECOND)
-			if gst.State(gst.STATE_PLAYING) == state:
-				self.playit()
+		#print "playbin.set_visualization_visible(",active,")"
+		if self.get_location() != None:
+			nanos = self.query_position(gst.FORMAT_TIME)[0]
+		else:
+			return True
+		if active:
+			vsink			= self.get_string("backend/vis-plugin") 
+			self.vis_plugin = gst.element_factory_make(vsink)
+			self.video_sink.set_property("force-aspect-ratio",False)
+			self.should_show = True
+		else:
+			self.vis_plugin = None
+			self.video_sink.set_property("force-aspect-ratio",True)
+			self.should_show = False
+			self.hide()
+		self.__playbin.set_property("vis-plugin",self.vis_plugin)
+		self.__expose_cb()
+		state = self.__playbin.get_state()[1]
+		self.pause()
+		self.set_location(self.get_location())
+		self.seek_to(nanos/gst.SECOND)
+		if gst.State(gst.STATE_PLAYING) == state:
+			self.playit()
 							
 	def set_volume(self,volume):
 		if volume < 0:
@@ -207,30 +228,13 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			pass
 
 	def nano2str(self,nanos):
+		'''
+		returns something like 00:00:00.000000
+		'''
 		ts = nanos / gst.SECOND
 		return '%02d:%02d:%02d.%06d' % (ts / 3600,
 				ts / 60,ts % 60, nanos % gst.SECOND)
 
-	def expose_cb(self, window=None, event=None):
-		x,y,w,h = self.allocation
-		self.context = self.window.cairo_create()
-		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
-				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
-		self.context.clip()
-		self.context.rectangle(BORDER_WIDTH,BORDER_WIDTH,
-				w -2*BORDER_WIDTH,h - 2*BORDER_WIDTH)
-		self.context.set_source_rgba(0,0,0)
-		self.context.fill_preserve()
-		self.context.set_source_rgb(0,0,0)
-		self.context.stroke()
-
-
-		self.video_sink.set_xwindow_id(self.window.xid)
-		if self.should_show:
-			self.show()
-			#print "display:",self.video_sink.get_property("display")
-			
-	
 	def seek_to(self,sec):
 		sec = long(sec)*gst.SECOND
 		self.__playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,

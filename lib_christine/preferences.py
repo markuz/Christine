@@ -21,7 +21,7 @@
 #import gtk,gobject
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
-from lib_christine.library import *
+#from lib_christine.library import *
 from lib_christine.trans import *
 
 
@@ -49,7 +49,18 @@ class preferences(gtk_misc):
 		self.set_checkboxes()
 		dialog.run()
 		dialog.destroy()
-	
+
+	def __set_fcolumns(self):
+		render = gtk.CellRendererText()
+		render.set_property("editable",True)
+		render.connect("edited",self.on_cursor_changed)
+		column = gtk.TreeViewColumn("Extension",render,text = 0)
+		self.ftreeview.append_column(column)
+
+	def __save_fmodel(self):
+		 exts = ",".join([self.fmodel.get_value(k.iter,0) for k in self.fmodel])
+		 self.gconf.set_value("backend/allowed_files",exts)
+
 	def on_cursor_changed(self,render,path,value):
 		iter = self.fmodel.get_iter(path)
 		self.fmodel.set_value(iter,0,value)
@@ -66,12 +77,6 @@ class preferences(gtk_misc):
 			iter = self.fmodel.append()
 			self.fmodel.set(iter,0,ext)
 
-	def __set_fcolumns(self):
-		render = gtk.CellRendererText()
-		render.set_property("editable",True)
-		render.connect("edited",self.on_cursor_changed)
-		column = gtk.TreeViewColumn("Extension",render,text = 0)
-		self.ftreeview.append_column(column)
 
 	def add_extension(self,widget):
 		print "add_extension"
@@ -85,12 +90,6 @@ class preferences(gtk_misc):
 		if iter != None:
 			model.remove(iter)
 			self.__save_fmodel()
-	
-	def __save_fmodel(self):
-		 exts = ",".join([self.fmodel.get_value(k.iter,0) for k in self.fmodel])
-		 self.gconf.set_value("backend/allowed_files",exts)
-
-
 
 	def select_sinks(self):
 		videosink = self.gconf.get_string("backend/videosink")
@@ -109,6 +108,7 @@ class preferences(gtk_misc):
 				self.videosink.set_active(a)
 				break
 			a += 1
+
 	def update_sink(self,combobox,sink):
 		path = combobox.get_active()
 		model = combobox.get_model()
