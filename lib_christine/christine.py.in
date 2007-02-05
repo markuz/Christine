@@ -82,7 +82,7 @@ class christine(gtk_misc):
 		self.gconf.notify_add("/apps/christine/ui/show_in_notification_area",
 				lambda cl,cnx,entry,widget: self.tray_icon.set_visible(entry.get_value().get_bool()))
 		# Timeout calls
-		gobject.timeout_add(500,self.on_tick)
+		gobject.timeout_add(500,self.check_time_on_media)
 		self.plugins = christine_plugins(self)
 		self.set_location_count = 0
 	
@@ -205,7 +205,34 @@ class christine(gtk_misc):
 		self.jump_to_playing(path = self.gconf.get_string("backend/last_played"))
 		if "-q" in sys.argv:
 			sys.exit()
+
+	def __trayicon(self):
+		'''
+		Show the trya icon 
+		'''
+		self.tray_icon = gtk.StatusIcon()
+		self.tray_icon.set_from_file(os.path.join(self.wdir,"logo22.png"))
+		self.tray_icon.connect("popup-menu",self.__trayicon_event_handler)
+		self.tray_icon.connect("activate",self.__trayicon_activated)
+		self.tray_icon.set_visible(self.gconf.get_bool("ui/show_in_notification_area"))
 	
+	def __trayicon_event_handler(self,widget,button,activate_time):
+		if button == 3:
+			# If the event is a button press event
+			# and it was the third button then show
+			# a popup menu.
+			xml = glade_xml("tray_menu.glade")
+			xml.signal_autoconnect(self)
+			popup = xml["menu"]
+			popup.popup(None,None,None,3,gtk.get_current_event_time())
+			popup.show_all()
+	def __trayicon_activated(self,statusicon):
+		#	# This hide and then show the window, 
+		#	# Intended when you want to show the window
+		#	# in your current workspace.
+			self.window.hide()
+			self.window.show()
+
 
 	# ============= build methods ===========================
 	# ============= get & set methods =======================
@@ -847,14 +874,14 @@ class christine(gtk_misc):
 #===============Play stuff ends =============================
 
 #===============libraty stuff begins=============
-	def add_artists(self,model,path,iter):
-		'''
-		Add artist.
-		This fills the artist model
-		'''
-		artist = model.get_value(iter,ARTIST)
-		if not artist in self.artist.list:
-			self.artist_l.append(artist)
+#	def add_artists(self,model,path,iter):
+#		'''
+#		Add artist.
+#		This fills the artist model
+#		'''
+#		artist = model.get_value(iter,ARTIST)
+#		if not artist in self.artist.list:
+#			self.artist_l.append(artist)
 	
 			
 #	def add_albums(self,model,path,iter):
@@ -1050,8 +1077,8 @@ class christine(gtk_misc):
 				#if not newfile in self.paths and not newfile2 in self.paths:
 					f = len(self.files_to_add)
 					div,mod = divmod(f,10)
-					print div,mod
-					print newfile
+					#print div,mod
+					#print newfile
 					self.library.add(newfile)
 					if f > 0:
 						self.library.add(self.files_to_add.pop(),False,2)
@@ -1069,6 +1096,7 @@ class christine(gtk_misc):
 				self.percentaje = 1
 			if self.percentaje >= 1.0:
 				self.percentaje == 0.99
+			# Setting the value and text in the progressbar
 			self.add_progress.set_fraction(self.percentaje)
 			rest = self.total_num_files - f
 			text = "%02d/%02d"%(rest,self.total_num_files)
@@ -1099,8 +1127,8 @@ class christine(gtk_misc):
 	def import_to_queue(self,widget):
 		self.import_file("",True)
 	
-	def update_library_with_source(self,treeview):
-		print "update librar with source"
+#	def update_library_with_source(self,treeview):
+#		print "update librar with source"
 
 #===============libraty stuff ends=============
 			
@@ -1125,7 +1153,7 @@ class christine(gtk_misc):
 		return True
 
 
-	def on_tick(self):
+	def check_time_on_media(self):
 		'''
 		Update the time showed in the player
 		'''
@@ -1152,13 +1180,13 @@ class christine(gtk_misc):
 		Catches the lenght of the media and update it in the 
 		player
 		'''
-		if self.player.get_location().split(":")[0] == "http":
+		if self.player.get_location().split(":")[0] != "file":
 			return True
 		try:
 			self.total = self.player.query_duration(gst.FORMAT_TIME)[0]
 			ts = self.total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
-			ad = gtk.Adjustment(value=0,lower=0,upper=ts)
+			#ad = gtk.Adjustment(value=0,lower=0,upper=ts)
 			self.stream_error_count = 0
 			if self.NATURAL_ITER != None:
 				time,path = self.natural_model.get(self.NATURAL_ITER,
@@ -1290,41 +1318,15 @@ class christine(gtk_misc):
 		'''
 		preferences()
 	
-	def show_properties(self,widget):
-		'''
-		Show the selected media properties
-		'''
-		selected = self.treeview.get_selection()
-		model, iter = selected.get_selected()
-		if iter != None:
-			show_properties(model.get_value(iter,PATH))
+#	def show_properties(self,widget):
+#		'''
+#		Show the selected media properties
+#		'''
+#		selected = self.treeview.get_selection()
+#		model, iter = selected.get_selected()
+#		if iter != None:
+#			show_properties(model.get_value(iter,PATH))
 	
-	def __trayicon(self):
-		'''
-		Show the trya icon 
-		'''
-		self.tray_icon = gtk.StatusIcon()
-		self.tray_icon.set_from_file(os.path.join(self.wdir,"logo22.png"))
-		self.tray_icon.connect("popup-menu",self.__trayicon_event_handler)
-		self.tray_icon.connect("activate",self.__trayicon_activated)
-		self.tray_icon.set_visible(self.gconf.get_bool("ui/show_in_notification_area"))
-	
-	def __trayicon_event_handler(self,widget,button,activate_time):
-		if button == 3:
-			# If the event is a button press event
-			# and it was the third button then show
-			# a popup menu.
-			xml = glade_xml("tray_menu.glade")
-			xml.signal_autoconnect(self)
-			popup = xml["menu"]
-			popup.popup(None,None,None,3,gtk.get_current_event_time())
-			popup.show_all()
-	def __trayicon_activated(self,statusicon):
-		#	# This hide and then show the window, 
-		#	# Intended when you want to show the window
-		#	# in your current workspace.
-			self.window.hide()
-			self.window.show()
 
 	def main_quit(self,widget=None):
 		self.player.stop()
