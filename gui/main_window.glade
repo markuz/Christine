@@ -335,13 +335,6 @@
                         <accelerator key="v" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
                     </child>
-                    <child>
-                      <widget class="GtkSeparatorMenuItem" id="menuitem1">
-                        <property name="visible">True</property>
-                        <property name="label">menuitem1</property>
-                        <property name="use_underline">True</property>
-                      </widget>
-                    </child>
                   </widget>
                 </child>
               </widget>
