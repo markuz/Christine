@@ -21,6 +21,7 @@
 from lib_christine.discoverer import *
 from lib_christine.gtk_misc import *
 from lib_christine.library import *
+from lib_christine.trans import *
 
 class Handler(gtk_misc):
 	def __init__(self,interface):
@@ -38,7 +39,7 @@ class Handler(gtk_misc):
 				"Author": "Marco Antonio Islas Cruz",
 				"ref":self
 				}
-		menuitem = gtk.ImageMenuItem("properties1")
+		menuitem = gtk.ImageMenuItem(translate("Properties"))
 		image = gtk.Image()
 		image.set_from_stock(gtk.STOCK_PROPERTIES,gtk.ICON_SIZE_MENU)
 		menuitem.set_image(image)
