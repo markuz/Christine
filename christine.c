@@ -27,7 +27,7 @@ if len(sys.argv) > 1:\n\
 	for i in sys.argv[1:]:\n\
 		if os.path.isfile(i):\n\
 			a.queue.add(i,prepend=True)\n\
-a.play()\n\
+	a.play()\n\
 a.main()\n\
 ";
 
@@ -45,8 +45,6 @@ int
 main(int argc, char *argv[]){
 	PyObject *t,*main_module, *main_dict, *main_dict_copy;
 	PyObject *builtinMod,*c_argv;
-	PyObject *text_arg, *clean;
-	char tmp[100];
 	int i;
 	Py_Initialize();
 	// Get a reference to the main module
@@ -73,11 +71,9 @@ main(int argc, char *argv[]){
 				error ("Still there is no __builtins__!!!!");
 			PyObject  *keys = PyDict_Keys(bdict);
 			PyList_Sort(keys);
-			for (i=0;i<PyList_Size(keys);i++){
+			/*for (i=0;i<PyList_Size(keys);i++){
 				PyObject *key = PyList_GetItem(keys,i);
-				char *keyname=PyString_AsString(key);
-				//printf("%s, ",keyname);
-			}
+			}*/
 
 			//Py_XDECREF(builtinMod);
 	}
