@@ -76,6 +76,7 @@ class christine(gtk_misc):
 		self.total				= 0
 		self.NATURAL_ITER		= None
 		self.IMPORTING			= False
+		self.hidden             = False
 		self.__player_init() # "Creating the player"
 		self.__win() # "Building" the window.
 		if self.gconf.get_bool("ui/show_in_notification_area"):
@@ -231,8 +232,11 @@ class christine(gtk_misc):
 		#	# This hide and then show the window, 
 		#	# Intended when you want to show the window
 		#	# in your current workspace.
-			self.window.hide()
-			self.window.show()
+		    if self.hidden == True:
+		        self.window.show()		        
+		    else:
+		        self.window.hide()
+		    self.hidden = not self.hidden		        
 
 
 	# ============= build methods ===========================
