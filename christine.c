@@ -10,18 +10,13 @@ void error(char *msg) {
 }
 
 char* python_code = "\
-#import sys\n\
 elements = locals()\n\
-print \"elements:\",elements['arguments']\n\
 lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
-#print locals()\n\
-#print 'arguments:',tmp_list\n\
-#sys.exit()\n\
-print \"argumentos: \",sys.argv\n\
-from lib_christine.libs_christine import *\n\
-from lib_christine.christine import *\n\
+from lib_christine.libs_christine import sanity\n\
 sanity()\n\
+#sys.exit()\n\
+from lib_christine.christine import *\n\
 a = christine()\n\
 if len(sys.argv) > 1:\n\
 	for i in sys.argv[1:]:\n\
