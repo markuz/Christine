@@ -45,6 +45,7 @@ class Handler(gtk_misc):
 		menuitem.set_image(image)
 		menuitem.show_all()
 		menuitem.connect("activate",self.show)
+		#self.interface.register_on_menu("edit",menuitem)
 		self.interface.menus["edit"].append(menuitem)
 	
 	def start(self):

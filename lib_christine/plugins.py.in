@@ -43,6 +43,7 @@ class christine_plugins(gtk_misc):
 		gtk_misc.__init__(self)
 		self.main = main
 		self.plugins = {}
+		self.menuitems = {}
 		self.__create_interface()
 		files = os.listdir(os.path.join(os.environ["HOME"],
 			".christine","uplugins"))
@@ -65,6 +66,7 @@ class christine_plugins(gtk_misc):
 		self.interface.menus = self.main.menus
 		self.interface.pack = self.pack
 		self.interface.write = self.write
+		self.interface.register_on_menu = self.register_on_menu
 	
 	def pack(self,widget,item,start=False,expand=False,fill=False,border=0):
 		element = getattr(self.interface,item)
@@ -73,7 +75,16 @@ class christine_plugins(gtk_misc):
 		else:
 			pack = element.pack_end
 		pack(widget,expand,fill,border)
+	
+	def	register_on_menu(self, menuname, widget):
+		self.menuitems[menuname] = widget
 
+	def populate_menu(self,menu,menuname):
+		keys = self.menuitems.keys()
+		keys.sort()
+		for i in keys:
+			self.menuitems[i].unparent()
+			menu.append(self.menuitems[i])
 	
 	def write(self,text):
 		print text

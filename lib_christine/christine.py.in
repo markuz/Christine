@@ -86,6 +86,7 @@ class christine(gtk_misc):
 		# Timeout calls
 		gobject.timeout_add(500,self.check_time_on_media)
 		self.plugins = christine_plugins(self)
+
 		self.set_location_count = 0
 	
 	# ============= private methods ========================
@@ -109,9 +110,6 @@ class christine(gtk_misc):
 		# connected "by hand"
 		self.tmp_vbox = self.xml["tmp_vbox"]
 		self.menubar = self.xml["menubar"]
-		self.menus = {}
-		for i in ["media","edit","control","help"]:
-			self.menus["%s"%i] = self.xml["%s_menu"%i].get_submenu()
 		self.search_hbox = self.xml["search_hbox"]
 		self.search_box = self.xml["search_box"]
 		self.list_box = self.xml["lists_box"]
@@ -123,6 +121,10 @@ class christine(gtk_misc):
 		self.window.set_icon(self.gen_pixbuf("logo.png"))
 		self.play_button	= self.xml["play"]
 		self.play_menuitem = self.xml["play_menuitem"]
+		self.menus ={}
+		for i in ["media","edit","control","help"]:
+			self.menus["%s"%i] = self.xml["%s_menu"%i].get_submenu()
+		
 		# Create the display and attach it to the main
 		# window
 		self.cdisplaybox = self.xml["cdisplaybox"]
