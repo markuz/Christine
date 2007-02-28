@@ -444,7 +444,7 @@ class library(gtk_misc,gtk.Widget):
 		dialog = glade_xml("delete_file_from_disk_dialog.glade")["dialog"]
 		response = dialog.run()
 		path = self.model.get_value(iter,PATH)
-		if response == gtk.RESPONSE_OK:
+		if response == -5:
 			try:
 				os.unlink(path)
 				self.remove(iter)
