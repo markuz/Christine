@@ -1017,12 +1017,11 @@ class christine(gtk_misc):
 		self.percentaje = 0
 		self.total_num_files = len(self.files_to_add)
 		# Use a timer to avoid freezing 
-		gobject.timeout_add(600,self.__add_file,queue)
-		#self.__add_file(queue)
+		#gobject.timeout_add(600,self.__add_file,queue)
+		self.__add_file(queue)
 		#import thread
-		#self.library.connect("tags-found",self.__add_file)
+		self.library.connect("tags-found",self.__add_file)
 		self.add_win.run()
-
 		
 	def get_paths(self,model,path,iter):
 		loc = model.get_value(iter,PATH)
@@ -1045,12 +1044,12 @@ class christine(gtk_misc):
 			if not queue:
 				#if not newfile in self.paths and not newfile2 in self.paths:
 					f = len(self.files_to_add)
-					div,mod = divmod(f,10)
+					div,mod = divmod(f,50)
 					#print div,mod
 					#print newfile
 					self.library.add(newfile)
-					if f > 0:
-						self.library.add(self.files_to_add.pop(),False,2)
+					#if f > 0:
+					#	self.library.add(self.files_to_add.pop(),False,2)
 					if mod == 1 or mod == 0:
 						print "library.save()"
 						self.library.save()

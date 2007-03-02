@@ -47,9 +47,9 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 	def set_location(self,file):
 		self.tags = {}
 		self.location = file
+		self.discoverer.set_state(gst.STATE_NULL)
 		self.discoverer.set_property("uri","file://%s"%self.location)
-		self.discoverer.set_state(gst.STATE_READY)
-		self.discoverer.set_state(gst.STATE_PAUSED)
+		#self.discoverer.set_state(gst.STATE_READY)
 		self.discoverer.set_state(gst.STATE_PLAYING)
 		self.discoverer.set_state(gst.STATE_PAUSED)
 		return False

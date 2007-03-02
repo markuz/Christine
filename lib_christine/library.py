@@ -51,7 +51,7 @@ VPIX) = xrange(3)
 ## both lists (and other lists)
 ##
 
-class library(gtk_misc,gtk.Widget):
+class library(gtk_misc,gtk.DrawingArea):
 	def __init__(self):
 		'''
 		Constructor, load the 
@@ -60,7 +60,7 @@ class library(gtk_misc,gtk.Widget):
 		'''
 		self.iters = {}
 		gtk_misc.__init__(self)
-		#gtk.DrawingArea.__init__(self)
+		gtk.DrawingArea.__init__(self)
 		self.xml = glade_xml("treeview.glade","ltv")
 		gobject.signal_new("tags-found",self,
 				gobject.SIGNAL_RUN_LAST,
@@ -231,10 +231,10 @@ class library(gtk_misc,gtk.Widget):
 		gobject.timeout_add(200,self.stream_length,None,2)
 
 	def add(self,file,prepend=False,n=1):
-		if n == 1:
-			self.discoverer.set_location(file)
-		else:
-			self.discoverer2.set_location(file)
+		#if n == 1:
+		self.discoverer.set_location(file)
+		#else:
+		#	self.discoverer2.set_location(file)
 		if type(file) == type(()):
 			file = file[0]
 		if not os.path.isfile(file):
@@ -299,7 +299,6 @@ class library(gtk_misc,gtk.Widget):
 						GENRE,genre)
 
 			#print "tags found",d.tags
-			#self.emit_signal("tags-found")
 		if t == gst.MESSAGE_ERROR:
 			print b.parse_error()
 		return True
@@ -319,6 +318,7 @@ class library(gtk_misc,gtk.Widget):
 			text = "%02d:%02d"%divmod(ts,60)
 			self.model.set(self.iters[d.get_location()],
 					TIME,text)
+			gobject.timeout_add(150,self.emit_signal,"tags-found")
 		except gst.QueryError:
 			#d.set_location(d.get_location())
 			pass
