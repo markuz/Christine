@@ -34,8 +34,8 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		christine_gconf.__init__(self)
 		gtk_misc.__init__(self)
 		gtk.DrawingArea.__init__(self)
-		self.connect('destroy', lambda x:	self.video_sink.set_xwindow_id(0L))
-		self.connect('expose-event', self.__expose_cb)
+		self.connect('destroy', lambda x:	self.__VideoSink.set_xwindow_id(0L))
+		self.connect('expose-event', self.__ExposeCb)
 		self.type = "sound"
 		self.__CreatePlaybin()
 		gobject.timeout_add(5000, self.__CheckScreensaver)
@@ -63,10 +63,10 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 
 		self.__UpdateAudioSink()
 		self.__UpdateVideoSinksink()
-		self.__update_aspect_ratio()
+		self.__UpdateAspectRatio()
 		self.notify_add("/apps/christine/backend/audiosink",self.__UpdateAudioSink)
 		self.notify_add("/apps/christine/backend/videosink",self.__UpdateVideoSinksink)
-		self.notify_add("/apps/christine/backend/aspect-ratio",self.__update_aspect_ratio)
+		self.notify_add("/apps/christine/backend/aspect-ratio",self.__UpdateAspectRatio)
 		self.__UpdateAudioSink()
 		self.__UpdateVideoSinksink()
 
@@ -76,25 +76,25 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.query_duration = self.__PlayBin.query_duration
 		self.query_position = self.__PlayBin.query_position
 
-	def __connect(self):
-		self.__PlayBin.set_property("audio-sink",self.audio_sink_pack)
-		self.__PlayBin.set_property("video-sink",self.video_sink)
+	def __Connect(self):
+		self.__PlayBin.set_property("audio-sink",self.__AudioSink_pack)
+		self.__PlayBin.set_property("video-sink",self.__VideoSink)
 
 	def __UpdateAudioSink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
-		self.audio_sink_pack = gst.element_factory_make("bin")
+		self.__AudioSink_pack = gst.element_factory_make("bin")
 		if self.get_location()!= None:
 			self.pause()
 		asink			= self.get_string("backend/audiosink")
-		self.audio_sink = gst.element_factory_make(asink)
-		self.audio_sink_pack.add(self.audio_sink)
+		self.__AudioSink = gst.element_factory_make(asink)
+		self.__AudioSink_pack.add(self.__AudioSink)
 
-		self.audio_ghost = gst.GhostPad("sink",self.audio_sink.get_pad("sink"))
-		self.audio_sink_pack.add_pad(self.audio_ghost)
-		self.__PlayBin.set_property("audio-sink",self.audio_sink_pack)
+		self.audio_ghost = gst.GhostPad("sink",self.__AudioSink.get_pad("sink"))
+		self.__AudioSink_pack.add_pad(self.audio_ghost)
+		self.__PlayBin.set_property("audio-sink",self.__AudioSink_pack)
 
 		if asink == "alsasink":
-			self.audio_sink.set_property("device","hw:0")
+			self.__AudioSink.set_property("device","hw:0")
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playit()
 
@@ -103,21 +103,21 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		if self.get_location()!= None:
 			self.pause()
 		vsink = self.get_string("backend/videosink") 
-		self.video_sink = gst.element_factory_make(vsink)
-		self.__PlayBin.set_property("video-sink",self.video_sink)
+		self.__VideoSink = gst.element_factory_make(vsink)
+		self.__PlayBin.set_property("video-sink",self.__VideoSink)
 		if vsink in ["xvimagesink","ximagesink"]:
-			self.video_sink.set_property("force-aspect-ratio",True)
+			self.__VideoSink.set_property("force-aspect-ratio",True)
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playit()
-			self.__expose_cb()
+			self.__ExposeCb()
 
 
-	def __update_aspect_ratio(self,client="",cnx_id="",entry="",userdata=""):
+	def __UpdateAspectRatio(self,client="",cnx_id="",entry="",userdata=""):
 		aspect_ratio	= self.get_string("backend/aspect-ratio")
 		if aspect_ratio != None:
-			self.video_sink.set_property("pixel-aspect-ratio",aspect_ratio)
+			self.__VideoSink.set_property("pixel-aspect-ratio",aspect_ratio)
 	
-	def __expose_cb(self, window=None, event=None):
+	def __ExposeCb(self, window=None, event=None):
 		'''
 		Draw the player.
 		'''
@@ -136,10 +136,10 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.context.stroke()
 
 
-		self.video_sink.set_xwindow_id(self.window.xid)
+		self.__VideoSink.set_xwindow_id(self.window.xid)
 		if self.should_show:
 			self.show()
-			#print "display:",self.video_sink.get_property("display")
+			#print "display:",self.__VideoSink.get_property("display")
 
 	def set_location(self,file):
 		self.tags = {}
@@ -155,7 +155,7 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			else:
 				error("file %s not found"%os.path.split(file)[1])
 		self.get_type()
-		self.__expose_cb()
+		self.__ExposeCb()
 			
 	def playit(self):
 		self.__PlayBin.set_state(gst.STATE_PLAYING)
@@ -179,15 +179,15 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		if active:
 			vsink			= self.get_string("backend/vis-plugin") 
 			self.vis_plugin = gst.element_factory_make(vsink)
-			self.video_sink.set_property("force-aspect-ratio",False)
+			self.__VideoSink.set_property("force-aspect-ratio",False)
 			self.should_show = True
 		else:
 			self.vis_plugin = None
-			self.video_sink.set_property("force-aspect-ratio",True)
+			self.__VideoSink.set_property("force-aspect-ratio",True)
 			self.should_show = False
 			self.hide()
 		self.__PlayBin.set_property("vis-plugin",self.vis_plugin)
-		self.__expose_cb()
+		self.__ExposeCb()
 		state = self.__PlayBin.get_state()[1]
 		self.pause()
 		self.set_location(self.get_location())
