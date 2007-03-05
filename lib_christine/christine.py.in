@@ -30,7 +30,7 @@ from lib_christine.library import *
 from lib_christine.queue import *
 from lib_christine.preferences import *
 from lib_christine.about import *
-from lib_christine.player import *
+from lib_christine.Player import *
 from lib_christine.display import *
 #from lib_christine.sources_list import *
 from lib_christine.plugins import *
@@ -94,7 +94,7 @@ class christine(gtk_misc):
 		'''
 		Initialize the player and packs it into the main_viewer_place
 		'''
-		self.player = player()
+		self.player = Player()
 		self.main_viewer_place = self.xml["playerbox"]
 		self.main_viewer_place.pack_start(self.player,True,True,0)
 		self.player.bus.add_watch(self.__message_handler)
