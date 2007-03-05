@@ -28,7 +28,7 @@ from lib_christine.gst_base import *
 
 BORDER_WIDTH=0
 
-class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
+class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	def __init__(self):
 		self.should_show = False
 		christine_gconf.__init__(self)
@@ -37,52 +37,50 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.connect('destroy', lambda x:	self.video_sink.set_xwindow_id(0L))
 		self.connect('expose-event', self.__expose_cb)
 		self.type = "sound"
-		self.__create_playbin()
-		gobject.timeout_add(5000, self.__check_screensaver)
+		self.__CreatePlaybin()
+		gobject.timeout_add(5000, self.__CheckScreensaver)
 	
-	def __check_screensaver(self):
+	def __CheckScreesaver(self):
 		'''
 		Check if we are whatching something with the player,
 		if true, then deactivate the screensaver by resetting 
 		the idle time.
 		'''
 		if self.should_show: 
-			a = os.popen("xscreensaver-command -deactivate")
+			a = os.popen("xscreensaver-command -deactivate 2&>/dev/null")
 			b = os.popen("gnome-screensaver-command -d 2&> /dev/null")
-			#print a.read()
-			#print b.read()
 		return True
 		
-	def __create_playbin(self):
+	def __CreatePlaybin(self):
 		'''
 		Create the playbin
 		'''
-		self.__playbin	= gst.element_factory_make("playbin")
-		self.__playbin.set_property("delay",GST_DELAY)
-		self.play		= self.__playbin
-		self.bus		= self.__playbin.get_bus()
+		self.__PlayBin	= gst.element_factory_make("playbin")
+		self.__PlayBin.set_property("delay",GST_DELAY)
+		self.play		= self.__PlayBin
+		self.bus		= self.__PlayBin.get_bus()
 		
 
-		self.__update_audiosink()
-		self.__update_videosink()
+		self.__UpdateAudioSink()
+		self.__UpdateVideoSinksink()
 		self.__update_aspect_ratio()
-		self.notify_add("/apps/christine/backend/audiosink",self.__update_audiosink)
-		self.notify_add("/apps/christine/backend/videosink",self.__update_videosink)
+		self.notify_add("/apps/christine/backend/audiosink",self.__UpdateAudioSink)
+		self.notify_add("/apps/christine/backend/videosink",self.__UpdateVideoSinksink)
 		self.notify_add("/apps/christine/backend/aspect-ratio",self.__update_aspect_ratio)
-		self.__update_audiosink()
-		self.__update_videosink()
+		self.__UpdateAudioSink()
+		self.__UpdateVideoSinksink()
 
 		self.vis_plugin = None
 
-		self.__connect()
-		self.query_duration = self.__playbin.query_duration
-		self.query_position = self.__playbin.query_position
+		self.__Connect()
+		self.query_duration = self.__PlayBin.query_duration
+		self.query_position = self.__PlayBin.query_position
 
 	def __connect(self):
-		self.__playbin.set_property("audio-sink",self.audio_sink_pack)
-		self.__playbin.set_property("video-sink",self.video_sink)
+		self.__PlayBin.set_property("audio-sink",self.audio_sink_pack)
+		self.__PlayBin.set_property("video-sink",self.video_sink)
 
-	def __update_audiosink(self,client="",cnx_id="",entry="",userdata=""):
+	def __UpdateAudioSink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
 		self.audio_sink_pack = gst.element_factory_make("bin")
 		if self.get_location()!= None:
@@ -93,20 +91,20 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 
 		self.audio_ghost = gst.GhostPad("sink",self.audio_sink.get_pad("sink"))
 		self.audio_sink_pack.add_pad(self.audio_ghost)
-		self.__playbin.set_property("audio-sink",self.audio_sink_pack)
+		self.__PlayBin.set_property("audio-sink",self.audio_sink_pack)
 
 		if asink == "alsasink":
 			self.audio_sink.set_property("device","hw:0")
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playit()
 
-	def __update_videosink(self,client="",cnx_id="",entry="",userdata=""):
+	def __UpdateAudioSink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
 		if self.get_location()!= None:
 			self.pause()
 		vsink = self.get_string("backend/videosink") 
 		self.video_sink = gst.element_factory_make(vsink)
-		self.__playbin.set_property("video-sink",self.video_sink)
+		self.__PlayBin.set_property("video-sink",self.video_sink)
 		if vsink in ["xvimagesink","ximagesink"]:
 			self.video_sink.set_property("force-aspect-ratio",True)
 		if gst.State(gst.STATE_PLAYING) == state:
@@ -145,32 +143,32 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 
 	def set_location(self,file):
 		self.tags = {}
-		self.__playbin.set_property("vis-plugin",self.vis_plugin)
+		self.__PlayBin.set_property("vis-plugin",self.vis_plugin)
 		if os.path.isfile(file):
-			self.__playbin.set_state(gst.STATE_READY)
+			self.__PlayBin.set_state(gst.STATE_READY)
 			nfile = "file://"+file
-			self.__playbin.set_property("uri",nfile)
+			self.__PlayBin.set_property("uri",nfile)
 		else:
 			print file.split(":")[0]
 			if file.split(":")[0] in ["http","dvd","vcd"]:
-				self.__playbin.set_property("uri",file)
+				self.__PlayBin.set_property("uri",file)
 			else:
 				error("file %s not found"%os.path.split(file)[1])
 		self.get_type()
 		self.__expose_cb()
 			
 	def playit(self):
-		self.__playbin.set_state(gst.STATE_PLAYING)
+		self.__PlayBin.set_state(gst.STATE_PLAYING)
 	
 	def pause(self):
-		self.__playbin.set_state(gst.STATE_PAUSED)
+		self.__PlayBin.set_state(gst.STATE_PAUSED)
 		
 	def stop(self):
-		self.__playbin.set_state(gst.STATE_NULL)
+		self.__PlayBin.set_state(gst.STATE_NULL)
 		
 	def seek_to(self,sec):
 		nanos = sec * gst.SECOND
-		self.__playbin.seek(nanos)
+		self.__PlayBin.seek(nanos)
 		
 	def set_visualization_visible(self,active=False):
 		#print "playbin.set_visualization_visible(",active,")"
@@ -188,9 +186,9 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			self.video_sink.set_property("force-aspect-ratio",True)
 			self.should_show = False
 			self.hide()
-		self.__playbin.set_property("vis-plugin",self.vis_plugin)
+		self.__PlayBin.set_property("vis-plugin",self.vis_plugin)
 		self.__expose_cb()
-		state = self.__playbin.get_state()[1]
+		state = self.__PlayBin.get_state()[1]
 		self.pause()
 		self.set_location(self.get_location())
 		self.seek_to(nanos/gst.SECOND)
@@ -202,7 +200,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			volume = 0.0
 		elif volume > 1:
 			volume = 1.0
-		self.__playbin.set_property("volume",volume)
+		self.__PlayBin.set_property("volume",volume)
 
 	def get_tag(self,key):
 		try:
@@ -216,7 +214,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 				self.tags[i] = tags[i]
 
 	def get_location(self):
-		path = self.__playbin.get_property("uri")
+		path = self.__PlayBin.get_property("uri")
 		if path != None:
 			if path.split(":")[0] == "file":
 				path = path[7:]
@@ -227,7 +225,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		return path
 
 	def get_state(self):
-		return self.__playbin.get_state()
+		return self.__PlayBin.get_state()
 
 	def get_type(self):
 		if self.isvideo():
@@ -247,7 +245,7 @@ class player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 
 	def seek_to(self,sec):
 		sec = long(sec)*gst.SECOND
-		self.__playbin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
+		self.__PlayBin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
 
 	def isvideo(self):
