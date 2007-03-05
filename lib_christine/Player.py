@@ -28,11 +28,11 @@ from lib_christine.gst_base import *
 
 BORDER_WIDTH=0
 
-class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
+class Player(gtk.DrawingArea,GtkMisc,christine_gconf,object):
 	def __init__(self):
-		self.should_show = False
+		self.__shouldShow = False
 		christine_gconf.__init__(self)
-		gtk_misc.__init__(self)
+		GtkMisc.__init__(self)
 		gtk.DrawingArea.__init__(self)
 		self.connect('destroy', lambda x:	self.__VideoSink.set_xwindow_id(0L))
 		self.connect('expose-event', self.__ExposeCb)
@@ -46,7 +46,7 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		if true, then deactivate the screensaver by resetting 
 		the idle time.
 		'''
-		if self.should_show: 
+		if self.__shouldShow: 
 			a = os.popen("xscreensaver-command -deactivate 2&>/dev/null")
 			b = os.popen("gnome-screensaver-command -d 2&> /dev/null")
 		return True
@@ -70,7 +70,7 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.__UpdateAudioSink()
 		self.__UpdateVideoSinksink()
 
-		self.vis_plugin = None
+		self.__visualizationPlugin = None
 
 		self.__Connect()
 		self.query_duration = self.__PlayBin.query_duration
@@ -137,13 +137,13 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 
 
 		self.__VideoSink.set_xwindow_id(self.window.xid)
-		if self.should_show:
+		if self.__shouldShow:
 			self.show()
 			#print "display:",self.__VideoSink.get_property("display")
 
 	def set_location(self,file):
 		self.tags = {}
-		self.__PlayBin.set_property("vis-plugin",self.vis_plugin)
+		self.__PlayBin.set_property("vis-plugin",self.__visualizationPlugin)
 		if os.path.isfile(file):
 			self.__PlayBin.set_state(gst.STATE_READY)
 			nfile = "file://"+file
@@ -178,15 +178,15 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 			return True
 		if active:
 			vsink			= self.get_string("backend/vis-plugin") 
-			self.vis_plugin = gst.element_factory_make(vsink)
+			self.__visualizationPlugin = gst.element_factory_make(vsink)
 			self.__VideoSink.set_property("force-aspect-ratio",False)
-			self.should_show = True
+			self.__shouldShow = True
 		else:
-			self.vis_plugin = None
+			self.__visualizationPlugin = None
 			self.__VideoSink.set_property("force-aspect-ratio",True)
-			self.should_show = False
+			self.__shouldShow = False
 			self.hide()
-		self.__PlayBin.set_property("vis-plugin",self.vis_plugin)
+		self.__PlayBin.set_property("vis-plugin",self.__visualizationPlugin)
 		self.__ExposeCb()
 		state = self.__PlayBin.get_state()[1]
 		self.pause()
@@ -254,7 +254,7 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		ext = self.get_location().split(".").pop().lower()
 		if "video-codec" in self.tags.keys() or \
 			ext in video:
-			self.should_show = True
+			self.__shouldShow = True
 			return True
 		else:
 			return False
