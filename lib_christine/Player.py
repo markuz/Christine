@@ -28,11 +28,11 @@ from lib_christine.gst_base import *
 
 BORDER_WIDTH=0
 
-class Player(gtk.DrawingArea,GtkMisc,christine_gconf,object):
+class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 	def __init__(self):
 		self.__shouldShow = False
 		christine_gconf.__init__(self)
-		GtkMisc.__init__(self)
+		gtk_misc.__init__(self)
 		gtk.DrawingArea.__init__(self)
 		self.connect('destroy', lambda x:	self.__VideoSink.set_xwindow_id(0L))
 		self.connect('expose-event', self.__ExposeCb)
@@ -40,7 +40,7 @@ class Player(gtk.DrawingArea,GtkMisc,christine_gconf,object):
 		self.__CreatePlaybin()
 		gobject.timeout_add(5000, self.__CheckScreensaver)
 	
-	def __CheckScreesaver(self):
+	def __CheckScreensaver(self):
 		'''
 		Check if we are whatching something with the player,
 		if true, then deactivate the screensaver by resetting 
@@ -62,13 +62,13 @@ class Player(gtk.DrawingArea,GtkMisc,christine_gconf,object):
 		
 
 		self.__UpdateAudioSink()
-		self.__UpdateVideoSinksink()
+		self.__UpdateVideoSink()
 		self.__UpdateAspectRatio()
 		self.notify_add("/apps/christine/backend/audiosink",self.__UpdateAudioSink)
-		self.notify_add("/apps/christine/backend/videosink",self.__UpdateVideoSinksink)
+		self.notify_add("/apps/christine/backend/videosink",self.__UpdateVideoSink)
 		self.notify_add("/apps/christine/backend/aspect-ratio",self.__UpdateAspectRatio)
 		self.__UpdateAudioSink()
-		self.__UpdateVideoSinksink()
+		self.__UpdateVideoSink()
 
 		self.__visualizationPlugin = None
 
@@ -98,7 +98,7 @@ class Player(gtk.DrawingArea,GtkMisc,christine_gconf,object):
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playit()
 
-	def __UpdateAudioSink(self,client="",cnx_id="",entry="",userdata=""):
+	def __UpdateVideoSink(self,client="",cnx_id="",entry="",userdata=""):
 		state = self.get_state()[1]
 		if self.get_location()!= None:
 			self.pause()

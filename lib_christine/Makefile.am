@@ -6,8 +6,8 @@ library.py \
 libs_christine.py \
 preferences.py \
 about.py \
-discoverer.py \
-player.py \
+Discoverer.py \
+Player.py \
 gst_base.py \
 display.py \
 sources_list.py \

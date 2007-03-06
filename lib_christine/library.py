@@ -23,7 +23,7 @@ import cPickle as pickle
 import gst, gst.interfaces
 from lib_christine.libs_christine import *
 from lib_christine.gtk_misc import *
-from lib_christine.discoverer import *
+from lib_christine.Discoverer import *
 from lib_christine.trans import *
 from lib_christine import clibrary
 #import pdb
