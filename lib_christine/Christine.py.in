@@ -25,7 +25,6 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-# @version   $Id$
 import sys
 import random
 import thread
@@ -73,7 +72,7 @@ class Christine(GtkMisc):
 		"""
 		GtkMisc.__init__(self)
 
-		self.__Share   = Share()
+		self.__Share   = Share(@datadir@)
 		self.__GConf   = ChristineGconf()
 		self.__Plugins = ChristinePlugins(self)
 

@@ -13,7 +13,7 @@ display.py \
 sources_list.py \
 trans.py \
 plugins.py \
-christine.py \
+Christine.py \
 queue.py \
 clibrary.so
 
@@ -24,7 +24,7 @@ DISTFILES= Makefile.in \
 		   libs_christine.py.in \
 		   clibrary.c \
 		   plugins.py.in \
-		   christine.py.in \
+		   Christine.py.in \
 		   $(scripts_DATA) 
 
 
@@ -62,8 +62,8 @@ clibrary.so: Makefile $(srcdir)/clibrary.c
 	gcc -Wall ${CFLAGS} -I${pythonincludedir} -I${usr_libdir} -c -o clibrary.o clibrary.c
 	gcc -shared clibrary.o -o clibrary.so -L${pythonincludedir}
 
-christine.py: Makefile $(srcdir)/christine.py.in
-	    $(edit) $(srcdir)/christine.py.in > christine.py
+Christine.py: Makefile $(srcdir)/Christine.py.in
+	    $(edit) $(srcdir)/Christine.py.in > Christine.py
 
 all: all-am
 
