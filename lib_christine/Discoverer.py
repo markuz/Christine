@@ -19,24 +19,26 @@
 
 
 import pygst; pygst.require("0.10")
-import os,gtk,gobject
+import os
+import gtk
+import gobject
 import gst
 import gst.interfaces
 
-from lib_christine.gtk_misc import *
+from lib_christine.GtkMisc import *
 from lib_christine.gst_base import *
 
-class discoverer(gtk.DrawingArea,christine_gconf):
+class Dscoverer(gtk.DrawingArea,ChristineGconf):
 	def __init__(self):
 		christine_gconf.__init__(self)
-		self.discoverer = gst.element_factory_make("playbin")
-		self.discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
-		video_sink = gst.element_factory_make("fakesink")
-		self.discoverer.set_property("video-sink",video_sink)
-		self.discoverer.set_property("volume",0.0)
-		self.bus = self.discoverer.get_bus()
-		self.query_duration = self.discoverer.query_duration
-		self.query_position = self.discoverer.query_position
+		self.__Discoverer = gst.element_factory_make("playbin")
+		self.__Discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
+		self.__videoSink = gst.element_factory_make("fakesink")
+		self.__Discoverer.set_property("video-sink",self.__videoSink)
+		self.__Discoverer.set_property("volume",0.0)
+		self.__Bus = self.__Discoverer.get_bus()
+		self.query_duration = self.__Discoverer.query_duration
+		self.query_position = self.__Discoverer.query_position
 
 	def watcher(self,bus,message):
 		t = message.type
@@ -44,28 +46,35 @@ class discoverer(gtk.DrawingArea,christine_gconf):
 			self.found_tags_cb(message.parse_tag())
 		return True
 	
-	def set_location(self,file):
+	def setLocation(self,file):
+		'''
+		receives a file in the first argument
+		and puts it in the discoverer pipeline.
+		'''
 		self.tags = {}
 		self.location = file
-		self.discoverer.set_state(gst.STATE_NULL)
-		self.discoverer.set_property("uri","file://%s"%self.location)
-		#self.discoverer.set_state(gst.STATE_READY)
-		self.discoverer.set_state(gst.STATE_PLAYING)
-		self.discoverer.set_state(gst.STATE_PAUSED)
+		self.__Discoverer.set_state(gst.STATE_NULL)
+		self.__Discoverer.set_property("uri","file://%s"%self.location)
+		#self.__Discoverer.set_state(gst.STATE_READY)
+		self.__Discoverer.set_state(gst.STATE_PLAYING)
+		self.__Discoverer.set_state(gst.STATE_PAUSED)
 		return False
 		
-	def found_tags_cb(self,tags):
+	def fountTagsCallBack(self,tags):
 		if len(tags.keys()) > 0:
 			for i in tags.keys():
 				self.tags[i] = tags[i]
 		
-	def get_location(self):
-		path = self.discoverer.get_property("uri")
+	def getLocation(self):
+		'''
+		returns the current location without the 'file://' part
+		'''
+		path = self.__Discoverer.get_property("uri")
 		if path != None:
 			path = path[7:]
 		return path
 	
-	def get_tag(self,key):
+	def getTag(self,key):
 		try:
 			return self.tags[key]
 		except:
