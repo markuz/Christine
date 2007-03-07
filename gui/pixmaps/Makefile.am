@@ -2,7 +2,7 @@ scriptsdir = @datadir@/christine/gui/pixmaps
 
 scripts_DATA= blank.png \
 logo.png \
-logo22.png \
+trayicon.png \
 sort.png \
 sound.png \
 usort.png \
