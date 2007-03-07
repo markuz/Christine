@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!-- Generated with glade3
+	Version: 3.0.1
+	Date: Mon Feb  5 12:59:47 2007
+	User: markuz
+	Host: cucusa
+-->
+<glade-interface>
+  <widget class="GtkAboutDialog" id="about">
+    <property name="visible">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="copyright">2006 (c) Marco Antonio Islas Cruz</property>
+    <property name="comments">A small and cute media player for GNOME</property>
+    <property name="website">http://christine.sourceforge.net</property>
+    <property name="website_label">http://christine.sourceforge.net</property>
+    <property name="license">		    GNU GENERAL PUBLIC LICENSE
+		       Version 2, June 1991
+
+ Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+                       59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+
+    Christine
+    Copyright (C) 2006-2007  Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; version 2 of the License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+This General Public License does not permit incorporating Christine into
+proprietary programs.  
+</property>
+    <property name="authors">Marco Antonio Islas Cruz</property>
+    <property name="documenters">Marco Antonio Islas Cruz</property>
+    <property name="translator_credits">translator-credits</property>
+    <property name="artists">Marco Antonio Islas Cruz</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">GTK_PACK_END</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>
