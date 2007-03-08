@@ -25,7 +25,8 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 import os
 import gtk.glade
-import pattern.Singleton
+from libchristine.Validator import *
+from libchristine.pattern.Singleton import Singleton
 
 #
 # Share class manager for images, glade 
@@ -33,7 +34,7 @@ import pattern.Singleton
 #
 # @author Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @since 0.3
-class Share(pattern.Singleton.Singleton):
+class Share(Singleton):
 	"""
 	Share class manager for images, glade 
 	templates and more files
@@ -59,7 +60,7 @@ class Share(pattern.Singleton.Singleton):
 		"""
 		Constructor
 		"""
-		pattern.Singleton.Singleton.__init__(self, 'Share')
+		Singleton.__init__(self, 'Share')
 		self.__PathTemplate = sharePath + '/gui/'
 		self.__PathPixmap   = sharePath + '/gui/pixmap/'
 	
@@ -72,9 +73,9 @@ class Share(pattern.Singleton.Singleton):
 		"""
 		Gets glade template
 		"""
-		if ((file is not None) or (file != '')):
+		if ((!isNull(file)) or (isStringEmpty(file)):
 			file + '.glade'
-			if (os.path.isfile(self.__PathTemplate + file)):
+			if (isFile(self.__PathTemplate + file)):
 				return gtk.glade.XML(self.__PathTemplate + file, None, None)
 		return None
 	
@@ -87,9 +88,9 @@ class Share(pattern.Singleton.Singleton):
 		"""
 		Gets image as path string
 		"""
-		if ((file is not None) or (file != '')):
-			if (os.path.isfile(self.__PathPixmap + file + '.png')):
+		if ((!isNull(file)) or (isStringEmpty(file)):
+			if (isFile(self.__PathPixmap + file + '.png')):
 				return self.__PathTemplate + file + '.png'
-			elif (os.path.isfile(self.__PathPixmap + file + '.svg')):
+			elif (isFile(self.__PathPixmap + file + '.svg')):
 				return self.__PathTemplate + file + '.svg'
 		return None
