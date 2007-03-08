@@ -36,9 +36,9 @@ def isNull(value):
 	Compare if it is none or not
 	"""
 	if (value is not None):
-		return True
+		return False
 	
-	return False
+	return True
 
 #
 # Compare if it is none or not
