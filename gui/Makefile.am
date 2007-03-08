@@ -2,24 +2,23 @@ SUBDIRS=pixmaps
 scriptsdir = @datadir@/christine/gui
 
 scripts_DATA=__init__.py \
-about.glade \
-add_files.glade \
-delete_file_from_disk_dialog.glade \
-dir_selector.glade \
-error.glade \
-file_selector.glade \
-icon_view.glade \
-jump_to.glade \
-main_window.glade \
-miniviewer.glade \
-open_remote.glade \
-popmenu.glade \
-preferences.glade \
-properties.glade \
-sources_treeview.glade \
-tray_menu.glade \
-treeview.glade \
-treeview_reorderable.glade
+About.glade \
+Error.glade \
+FileSelector.glade \
+JumpTo.glade \
+MenuTrayIcon.glade \
+PopupMenu.glade \
+Preferences.glade \
+Properties.glade \
+TreeViewReorderable.glade \
+TreeViewSources.glade \
+WindowCore.glade \
+addFiles.glade \
+deleteFileFromDisk.glade \
+directorySelector.glade \
+iconView.glade \
+miniViewer.glade \
+openRemote.glade 
 
 DISTFILES= Makefile.in $(scripts_DATA)
 
