@@ -11,7 +11,7 @@ Player.py \
 gst_base.py \
 display.py \
 sources_list.py \
-trans.py \
+Translator.py \
 plugins.py \
 Christine.py \
 queue.py \
@@ -20,7 +20,7 @@ clibrary.so
 DISTFILES= Makefile.in \
 		   gtk_misc.py.in \
 		   about.py.in \
-		   trans.py.in \
+		   Translator.py.in \
 		   libs_christine.py.in \
 		   clibrary.c \
 		   plugins.py.in \
@@ -49,8 +49,8 @@ gtk_misc.py: Makefile $(srcdir)/gtk_misc.py.in
 about.py: Makefile $(srcdir)/about.py.in
 	$(edit) $(srcdir)/about.py.in > about.py
 
-trans.py: Makefile $(srcdir)/trans.py.in
-	$(edit) $(srcdir)/trans.py.in > trans.py
+Translator.py: Makefile $(srcdir)/Translator.py.in
+	$(edit) $(srcdir)/Translator.py.in > Translator.py
 
 plugins.py: Makefile $(srcdir)/plugins.py.in
 	$(edit) $(srcdir)/plugins.py.in > plugins.py
@@ -70,10 +70,11 @@ all: all-am
 all-am: 
 
 clean:
+	rm Christine.py
 	rm gtk_misc.py
 	rm about.py
 	rm clibrary.o
 	rm clibrary.so
-	rm trans.py
+	rm Translator.py
 	rm plugins.py
 	rm libs_christine.py

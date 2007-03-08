@@ -1,3 +1,14 @@
+2007-03-7 Miguel Vazquez Gocobachi <demrit@gnu.org>
+	* libchristine/trans.py.in is now Translator.py.in
+	* Translator.trans() is now Translator.parse
+	* Translator is now Singleton instance
+	* Adds pattern module and Singleton.py pattern
+	* Adds Share.py to manage glade templates and images
+	* Big code clean for christine.py.in and change to
+	  Christine.py.in
+	* Adds Validator.py for miscellanius comparation, like
+	  isNull(), isString(), isInteger(), isFLoad(), etc.
+
 2006-11-19 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* lib_christine/show_properties.py:
 	Fixed the import fault (doesn't import discoverer) and

@@ -23,7 +23,6 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-import os
 import gtk.glade
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
@@ -73,10 +72,11 @@ class Share(Singleton):
 		"""
 		Gets glade template
 		"""
-		if ((!isNull(file)) or (isStringEmpty(file)):
+		if ((not isNull(file)) or (isStringEmpty(file)):
 			file + '.glade'
 			if (isFile(self.__PathTemplate + file)):
 				return gtk.glade.XML(self.__PathTemplate + file, None, None)
+
 		return None
 	
 	#
@@ -88,9 +88,10 @@ class Share(Singleton):
 		"""
 		Gets image as path string
 		"""
-		if ((!isNull(file)) or (isStringEmpty(file)):
+		if ((not isNull(file)) or (isStringEmpty(file)):
 			if (isFile(self.__PathPixmap + file + '.png')):
 				return self.__PathTemplate + file + '.png'
 			elif (isFile(self.__PathPixmap + file + '.svg')):
 				return self.__PathTemplate + file + '.svg'
+
 		return None

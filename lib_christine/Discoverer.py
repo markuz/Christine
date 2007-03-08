@@ -1,81 +1,134 @@
-#! /usr/bin/env python
-# -*- coding: UTF-8 -*-
-
-## Copyright (c) 2006 Marco Antonio Islas Cruz
-## <markuz@islascruz.org>
-# This program is free software; you can redistribute it and/or modify
+# -*- coding: utf-8 -*-
+#
+# This file is part of the Christine project
+#
+# Copyright (c) 2006-2007 Marco Antonio Islas Cruz
+#
+# Christine is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# Christine is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-
-import pygst; pygst.require("0.10")
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+# @category  libchristine
+# @package   Discoverer
+# @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
+# @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
+# @copyright 2007 Christine Development Group
+# @license   http://www.gnu.org/licenses/gpl.txt
+import pygst; pygst.require('0.10')
 import os
 import gtk
 import gobject
 import gst
 import gst.interfaces
 
-from lib_christine.GtkMisc import *
-from lib_christine.gst_base import *
+from libchristine.GtkMisc import *
+from libchristine.gst_base import *
+from libchristine.Validator import *
 
-class Dscoverer(gtk.DrawingArea,ChristineGconf):
+class Discoverer(gtk.DrawingArea, ChristineGconf):
+	#
+	# Constructor
+	#
+	# @return void
 	def __init__(self):
+		"""
+		Constructor
+		"""
 		christine_gconf.__init__(self)
-		self.__Discoverer = gst.element_factory_make("playbin")
-		self.__Discoverer.set_property("audio-sink",gst.element_factory_make("fakesink"))
-		self.__videoSink = gst.element_factory_make("fakesink")
-		self.__Discoverer.set_property("video-sink",self.__videoSink)
-		self.__Discoverer.set_property("volume",0.0)
-		self.__Bus = self.__Discoverer.get_bus()
-		self.query_duration = self.__Discoverer.query_duration
-		self.query_position = self.__Discoverer.query_position
+		self.__Discoverer = gst.element_factory_make('playbin')
+		self.__VideoSink  = gst.element_factory_make('fakesink')
 
-	def watcher(self,bus,message):
-		t = message.type
-		if t == gst.MESSAGE_TAG:
+		self.__Discoverer.set_property('audio-sink', gst.element_factory_make('fakesink'))
+		self.__Discoverer.set_property('video-sink', self.__VideoSink)
+		self.__Discoverer.set_property('volume',     0.0)
+
+		self.__Bus           = self.__Discoverer.get_bus()
+		self.__QueryDuration = self.__Discoverer.query_duration
+		self.__QueryPosition = self.__Discoverer.query_position
+
+	#
+	# Watcher for Player
+	#
+	# @param
+	# @param
+	# @return boolean
+	def watcher(self, bus, message):
+		"""
+		Watcher for player
+		"""
+		if (message.type == gst.MESSAGE_TAG):
 			self.found_tags_cb(message.parse_tag())
+
 		return True
 	
-	def setLocation(self,file):
-		'''
-		receives a file in the first argument
-		and puts it in the discoverer pipeline.
-		'''
-		self.tags = {}
-		self.location = file
+	#
+	# Receives a file in the first argument
+	# and puts it in the discoverer pipeline
+	#
+	# @return boolean
+	def setLocation(self, file):
+		"""
+		Receives a file in the first argument
+		and puts it in the discoverer pipeline
+		"""
+		self.__Tags     = {}
+		self.__Location = file
+
+		self.__Discoverer.set_property('uri', "file://%s" % self.__Location)
+
 		self.__Discoverer.set_state(gst.STATE_NULL)
-		self.__Discoverer.set_property("uri","file://%s"%self.location)
 		#self.__Discoverer.set_state(gst.STATE_READY)
 		self.__Discoverer.set_state(gst.STATE_PLAYING)
 		self.__Discoverer.set_state(gst.STATE_PAUSED)
+
 		return False
 		
-	def fountTagsCallBack(self,tags):
-		if len(tags.keys()) > 0:
-			for i in tags.keys():
-				self.tags[i] = tags[i]
-		
+	#
+	# Callback foundTags
+	#
+	# @return void
+	def callbackFoundTags(self, tags):
+		"""
+		Callback found tags
+		"""
+		if (len(tags.keys()) > 0):
+			for (i in tags.keys()):
+				self.__Tags[i] = tags[i]
+	
+	#
+	# Returns path location for a file
+	#
+	# @return string
 	def getLocation(self):
-		'''
+		"""
 		returns the current location without the 'file://' part
-		'''
-		path = self.__Discoverer.get_property("uri")
-		if path != None:
+		"""
+		path = self.__Discoverer.get_property('uri')
+		
+		if (not isNull(path)):
 			path = path[7:]
+
 		return path
 	
-	def getTag(self,key):
+	#
+	# Gets tag with a key
+	#
+	# @return string
+	def getTag(self, key):
+		"""
+		Gets tag with a key
+		"""
 		try:
-			return self.tags[key]
+			return self.__Tags[key]
 		except:
-			return ""
+			return ''
