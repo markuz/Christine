@@ -104,4 +104,4 @@ def isFile(value = None):
 	"""
 	Compare if it is a file or not
 	"""
-	return (os.path.isfile(value) == True)
+	return os.path.isfile(value)
