@@ -59,7 +59,7 @@ class Share(Singleton):
 		"""
 		Constructor
 		"""
-		Singleton.__init__(self, 'Share')
+		self.setName('Share')
 		self.__PathTemplate = sharePath + '/gui/'
 		self.__PathPixmap   = sharePath + '/gui/pixmap/'
 	

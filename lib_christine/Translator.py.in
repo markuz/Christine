@@ -47,7 +47,7 @@ class Translator(Singleton):
 		"""
 		Constructor
 		"""
-		Singleton.__init__(self, 'Translator')
+		self.setName('Translator')
 
 		self.__Path = '@datadir@/locale/'
 
