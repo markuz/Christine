@@ -28,7 +28,7 @@
 #
 # Singleton implements
 #
-class Singleton:
+class Singleton(object):
 	#
 	# Manage instance
 	#
@@ -36,27 +36,39 @@ class Singleton:
 	__Instance = None
 	
 	#
-	# Constructor
+	# Name of the child
 	#
-	def __init__(self, name):
-		if (Singleton.__Instance is not None):
-			raise Singleton.__Instance
-		Singleton.__Instance = self
-		self.__Name = name
+	# @var string
+	__Name = 'Singleton'
+	
+	#
+	# callback
+	#
+	def __new__(child):
+		if (not child.__Instance):
+			child.__Instance = super(Singleton, child).__new__(child)
+		
+		return child.__Instance
+
+	#
+	# Sets name of the child
+	#
+	def setName(child, value = 'Singleton'):
+		child.__Name = value
 
 	#
 	# Returns name of the class
 	#
 	# @return string
-	def getName(self):
-		return self.__Name
+	def getName(child):
+		return child.__Name
 
 	#
 	# Returns Id of the object
 	#
 	# @return integer
-	def getId(self):
+	def getId(child):
 		"""
-		Test method, return singleton Id
+		Returns singleton Id
 		"""
-		return id(self)
+		return id(child)
