@@ -14,6 +14,7 @@ sources_list.py \
 Translator.py \
 plugins.py \
 Christine.py \
+Share.py \
 queue.py \
 clibrary.so
 
@@ -25,6 +26,7 @@ DISTFILES= Makefile.in \
 		   clibrary.c \
 		   plugins.py.in \
 		   Christine.py.in \
+		   Share.py.in \
 		   $(scripts_DATA) 
 
 
@@ -65,11 +67,15 @@ clibrary.so: Makefile $(srcdir)/clibrary.c
 Christine.py: Makefile $(srcdir)/Christine.py.in
 	    $(edit) $(srcdir)/Christine.py.in > Christine.py
 
+Share.py: Makefile $(srcdir)/Share.py.in
+		$(edit) $(srcdir)/Share.py.in > Share.py
+
 all: all-am
 
 all-am: 
 
 clean:
+	rm Share.py
 	rm Christine.py
 	rm gtk_misc.py
 	rm about.py

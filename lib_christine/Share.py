@@ -27,12 +27,15 @@ import gtk.glade
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 
+# global PATH to share files required
+PATH = '@datadir@'
+
 #
 # Share class manager for images, glade 
 # templates and more files
 #
 # @author Miguel Vazquez Gocobachi <demrit@gnu.org>
-# @since 0.3
+# @since 0.4
 class Share(Singleton):
 	"""
 	Share class manager for images, glade 
@@ -55,13 +58,13 @@ class Share(Singleton):
 	#
 	# @param  string sharePath Path to share files
 	# @return void
-	def __init__(self, sharePath = '/usr/local/share/christine'):
+	def __init__(self):
 		"""
 		Constructor
 		"""
 		self.setName('Share')
-		self.__PathTemplate = sharePath + '/gui/'
-		self.__PathPixmap   = sharePath + '/gui/pixmap/'
+		self.__PathTemplate = PATH + '/gui/'
+		self.__PathPixmap   = PATH + '/gui/pixmap/'
 	
 	#
 	# Gets glade template
