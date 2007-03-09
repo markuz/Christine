@@ -22,6 +22,7 @@
 # @package   Validator
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @author    Rodrigo Garcia <nibblesmx@gmail.com>
+# @author    Marco Islas <markuz@islascruz.org>
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 import os
@@ -45,7 +46,7 @@ def isNull(value):
 #
 # @param  void
 # @return boolean
-def isBoolean(value = None):
+def isBoolean(value):
 	"""
 	Compare if it is boolean or not
 	"""
@@ -56,7 +57,7 @@ def isBoolean(value = None):
 #
 # @param  void
 # @return boolean
-def isInteger(value = None):
+def isInteger(value):
 	"""
 	Compare if it is integer or not
 	"""
@@ -67,7 +68,7 @@ def isInteger(value = None):
 #
 # @param  void
 # @return boolean
-def isFloat(value = None):
+def isFloat(value):
 	"""
 	Compare if it is float or not
 	"""
@@ -78,7 +79,7 @@ def isFloat(value = None):
 #
 # @param  void
 # @return boolean
-def isString(value = None):
+def isString(value):
 	"""
 	Compare if it is string or not
 	"""
@@ -89,7 +90,7 @@ def isString(value = None):
 #
 # @param  void
 # @return boolean
-def isStringEmpty(value = None):
+def isStringEmpty(value):
 	"""
 	Compare string if it is empty or not
 	"""
@@ -100,7 +101,7 @@ def isStringEmpty(value = None):
 #
 # @param  void
 # @return boolean
-def isFile(value = None):
+def isFile(value):
 	"""
 	Compare if it is a file or not
 	"""
