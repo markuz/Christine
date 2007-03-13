@@ -1,4 +1,15 @@
-2007-03-7 Miguel Vazquez Gocobachi <demrit@gnu.org>
+2007-03-13 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* Appending the current dir to the PYTHON_PATH, usefull
+	when we like to use the current modules (ej. in development)
+	* Fixing a lot of missed names in several modules.
+	* Fixing the PATH in lib_christine/Share.py.in, in the case
+	that gui/ directory exists, try to use it.
+	* Fixing several modules using this kind of for
+		for (i in range(x))
+	* several modules point to libchristine and that was
+	changed to lib_christine.
+
+2007-03-07 Miguel Vazquez Gocobachi <demrit@gnu.org>
 	* libchristine/trans.py.in is now Translator.py.in
 	* Translator.trans() is now Translator.parse
 	* Translator is now Singleton instance
