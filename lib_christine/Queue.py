@@ -22,9 +22,9 @@ import os,gtk,gobject,sys,pango
 import cPickle as pickle
 import gst, gst.interfaces
 from lib_christine.libs_christine import *
-from lib_christine.gtk_misc import *
-from lib_christine.discoverer import *
-from lib_christine.trans import *
+from lib_christine.GtkMisc import *
+from lib_christine.Discoverer import *
+from lib_christine.Translator import *
 from lib_christine import clibrary
 #import pdb
 
@@ -44,14 +44,14 @@ from lib_christine import clibrary
 		VNAME,
 		VPIX) = xrange(3)
 
-class queue(gtk_misc):
+class queue(GtkMisc):
 	def __init__(self):
-		gtk_misc.__init__(self)
+		GtkMisc.__init__(self)
 		self.iters = {}
-		self.discoverer = discoverer()
-		self.discoverer.bus.add_watch(self.message_handler)
+		self.discoverer = Discoverer()
+		self.discoverer.Bus.add_watch(self.message_handler)
 		self.library = lib_library("queue")
-		self.xml = glade_xml("treeview_reorderable.glade","ltv")
+		self.xml = glade_xml("TreeViewReorderable.glade","ltv")
 		self.xml.signal_autoconnect(self)
 		self.treeview = self.xml["ltv"]
 		self.treeview.set_headers_visible(False)

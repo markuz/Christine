@@ -31,9 +31,9 @@ import gobject
 import gst
 import gst.interfaces
 
-from libchristine.GtkMisc import *
-from libchristine.gst_base import *
-from libchristine.Validator import *
+from lib_christine.GtkMisc import *
+from lib_christine.GstBase import *
+from lib_christine.Validator import *
 
 class Discoverer(gtk.DrawingArea, ChristineGconf):
 	#
@@ -44,15 +44,16 @@ class Discoverer(gtk.DrawingArea, ChristineGconf):
 		"""
 		Constructor
 		"""
-		christine_gconf.__init__(self)
+		ChristineGconf.__init__(self)
 		self.__Discoverer = gst.element_factory_make('playbin')
 		self.__VideoSink  = gst.element_factory_make('fakesink')
 
 		self.__Discoverer.set_property('audio-sink', gst.element_factory_make('fakesink'))
 		self.__Discoverer.set_property('video-sink', self.__VideoSink)
 		self.__Discoverer.set_property('volume',     0.0)
-
-		self.__Bus           = self.__Discoverer.get_bus()
+		
+		# self.Bus must be public
+		self.Bus             = self.__Discoverer.get_bus()
 		self.__QueryDuration = self.__Discoverer.query_duration
 		self.__QueryPosition = self.__Discoverer.query_position
 
@@ -102,7 +103,7 @@ class Discoverer(gtk.DrawingArea, ChristineGconf):
 		Callback found tags
 		"""
 		if (len(tags.keys()) > 0):
-			for (i in tags.keys()):
+			for i in tags.keys():
 				self.__Tags[i] = tags[i]
 	
 	#

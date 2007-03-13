@@ -24,11 +24,11 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-from libchristine.ChristineLibrary import *
-from libchristine.GtkMisc import *
-from libchristine.Translator import *
-from libchristine.Share import *
-from libchristine.Validator import *
+#from libchristine.ChristineLibrary import *
+from lib_christine.GtkMisc import *
+from lib_christine.Translator import *
+from lib_christine.Share import *
+from lib_christine.Validator import *
 
 #
 # Preferences gtk dialog
@@ -98,8 +98,8 @@ class Preferences(GtkMisc):
 		"""
 		Saves Model
 		"""
-		 exts = ','.join([self.__FModel.get_value(k.iter, 0) for k in self.__FModel])
-		 self.__GConf.set_value('backend/allowed_files', exts)
+		exts = ','.join([self.__FModel.get_value(k.iter, 0) for k in self.__FModel])
+		self.__GConf.set_value('backend/allowed_files', exts)
 
 	#
 	#  Callback when cursor change
@@ -169,7 +169,7 @@ class Preferences(GtkMisc):
 		video_m   = self.__VideoSink.get_model()
 
 		a = 0
-		for (i in audio_m):
+		for i in audio_m:
 			if (i[0] == audiosink):
 				self.__AudioSink.set_active(a)
 				break
@@ -177,7 +177,7 @@ class Preferences(GtkMisc):
 			a += 1
 
 		a = 0
-		for (i in video_m):
+		for i in video_m:
 			if (i[0] == videosink):
 				self.__VideoSink.set_active(a)
 				break

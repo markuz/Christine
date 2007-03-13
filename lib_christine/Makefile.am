@@ -1,26 +1,26 @@
 scriptsdir = @PYTHON_LIB_DIR@/lib_christine
 
 scripts_DATA=__init__.py \
-gtk_misc.py \
-library.py \
+GtkMisc.py \
+Library.py \
 libs_christine.py \
-preferences.py \
-about.py \
+Preferences.py \
+About.py \
 Discoverer.py \
 Player.py \
-gst_base.py \
-display.py \
+GstBase.py \
+Display.py \
 sources_list.py \
 Translator.py \
-plugins.py \
+Plugins.py \
 Christine.py \
 Share.py \
-queue.py \
+Queue.py \
 clibrary.so
 
 DISTFILES= Makefile.in \
-		   gtk_misc.py.in \
-		   about.py.in \
+		   GtkMisc.py.in \
+		   About.py.in \
 		   Translator.py.in \
 		   libs_christine.py.in \
 		   clibrary.c \
@@ -45,17 +45,17 @@ edit = sed \
 	   -e 's,@programname\@,$(programname),g' \
 	   -e 's,@version\@,$(version),g'
 
-gtk_misc.py: Makefile $(srcdir)/gtk_misc.py.in
-	$(edit) $(srcdir)/gtk_misc.py.in > gtk_misc.py
+GtkMisc.py: Makefile $(srcdir)/GtkMisc.py.in
+	$(edit) $(srcdir)/GtkMisc.py.in > GtkMisc.py
 
-about.py: Makefile $(srcdir)/about.py.in
-	$(edit) $(srcdir)/about.py.in > about.py
+About.py: Makefile $(srcdir)/About.py.in
+	$(edit) $(srcdir)/About.py.in > About.py
 
 Translator.py: Makefile $(srcdir)/Translator.py.in
 	$(edit) $(srcdir)/Translator.py.in > Translator.py
 
-plugins.py: Makefile $(srcdir)/plugins.py.in
-	$(edit) $(srcdir)/plugins.py.in > plugins.py
+Plugins.py: Makefile $(srcdir)/Plugins.py.in
+	$(edit) $(srcdir)/Plugins.py.in > Plugins.py
 
 libs_christine.py: Makefile $(srcdir)/libs_christine.py.in
 	$(edit) $(srcdir)/libs_christine.py.in > libs_christine.py
@@ -77,8 +77,8 @@ all-am:
 clean:
 	rm Share.py
 	rm Christine.py
-	rm gtk_misc.py
-	rm about.py
+	rm GtkMisc.py
+	rm About.py
 	rm clibrary.o
 	rm clibrary.so
 	rm Translator.py

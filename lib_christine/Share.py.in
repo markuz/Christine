@@ -21,14 +21,20 @@
 # @category  libchristine
 # @package   Share
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
+# @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 import gtk.glade
-from libchristine.Validator import *
-from libchristine.pattern.Singleton import Singleton
+from lib_christine.Validator import *
+from lib_christine.pattern.Singleton import Singleton
+from lib_christine.GtkMisc import *
 
 # global PATH to share files required
-PATH = '@datadir@'
+cdir = os.getcwd()
+if os.path.isdir(os.path.join(cdir,"./gui/")):
+	PATH = cdir
+else:
+	PATH = '@datadir@'
 
 #
 # Share class manager for images, glade 
@@ -63,8 +69,8 @@ class Share(Singleton):
 		Constructor
 		"""
 		self.setName('Share')
-		self.__PathTemplate = PATH + '/gui/'
-		self.__PathPixmap   = PATH + '/gui/pixmap/'
+		self.__PathTemplate = os.path.join(PATH,'gui')
+		self.__PathPixmap   = os.path.join(PATH,'gui','pixmap')
 	
 	#
 	# Gets glade template
@@ -75,11 +81,11 @@ class Share(Singleton):
 		"""
 		Gets glade template
 		"""
-		if ((not isNull(file)) or (isStringEmpty(file)):
-			file + '.glade'
-			if (isFile(self.__PathTemplate + file)):
-				return gtk.glade.XML(self.__PathTemplate + file, None, None)
-
+		if not isNull(file) or isStringEmpty(file):
+			file = "".join([file,'.glade'])
+			print os.path.join(self.__PathTemplate,file)
+			if (isFile(os.path.join(self.__PathTemplate,file))):
+				return glade_xml(os.path.join(self.__PathTemplate,file))
 		return None
 	
 	#
@@ -91,10 +97,9 @@ class Share(Singleton):
 		"""
 		Gets image as path string
 		"""
-		if ((not isNull(file)) or (isStringEmpty(file)):
-			if (isFile(self.__PathPixmap + file + '.png')):
-				return self.__PathTemplate + file + '.png'
-			elif (isFile(self.__PathPixmap + file + '.svg')):
-				return self.__PathTemplate + file + '.svg'
-
+		if not isNull(file) or isStringEmpty(name):
+			if (isFile(os.path.join(self.__PathPixmap,name,'.png'))):
+				return os.path.join(self.__PathTemplate,name,'.png')
+			elif (isFile(os.path.join(self.__PathPixmap,name, '.svg'))):
+				return os.path.join(self.__PathTemplate, name,'.svg')
 		return None

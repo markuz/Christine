@@ -23,16 +23,16 @@ import os,gtk,gobject, cairo
 import gst
 import gst.interfaces
 
-from lib_christine.gtk_misc import *
-from lib_christine.gst_base import *
+from lib_christine.GtkMisc import *
+from lib_christine.GstBase import *
 
 BORDER_WIDTH=0
 
-class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
+class Player(gtk.DrawingArea,GtkMisc,ChristineGconf,object):
 	def __init__(self):
 		self.__shouldShow = False
-		christine_gconf.__init__(self)
-		gtk_misc.__init__(self)
+		ChristineGconf.__init__(self)
+		GtkMisc.__init__(self)
 		gtk.DrawingArea.__init__(self)
 		self.connect('destroy', lambda x:	self.__VideoSink.set_xwindow_id(0L))
 		self.connect('expose-event', self.__ExposeCb)
@@ -228,7 +228,7 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		return self.__PlayBin.get_state()
 
 	def get_type(self):
-		if self.isvideo():
+		if self.isVideo():
 			self.type = "video"
 		elif self.issound():
 			self.type = "sound"
@@ -248,7 +248,7 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		self.__PlayBin.seek(1.0,gst.FORMAT_TIME,gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,sec,gst.SEEK_TYPE_NONE,-1)
 
-	def isvideo(self):
+	def isVideo(self):
 		if self.get_location() == None:
 			return False
 		ext = self.get_location().split(".").pop().lower()
@@ -259,7 +259,7 @@ class Player(gtk.DrawingArea,gtk_misc,christine_gconf,object):
 		else:
 			return False
 		
-	def issound(self):
+	def isSound(self):
 		if self.get_location() == None:
 			return False
 		ext = self.get_location().split(".").pop().lower()

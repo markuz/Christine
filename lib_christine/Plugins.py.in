@@ -17,8 +17,8 @@
 # along with this program; if not, write to the Free Software
 
 import os,sys
-from lib_christine.trans import *
-from lib_christine.gtk_misc import *
+from lib_christine.Translator import *
+from lib_christine.GtkMisc import *
 
 sys.path.append(os.path.join(os.environ["HOME"],
 		".christine"))
@@ -38,9 +38,9 @@ def importName(modulename,name):
 class interface:
 	pass
 
-class christine_plugins(gtk_misc):
+class ChristinePlugins(GtkMisc):
 	def __init__(self,main):
-		gtk_misc.__init__(self)
+		GtkMisc.__init__(self)
 		self.main = main
 		self.plugins = {}
 		self.menuitems = {}
@@ -57,7 +57,7 @@ class christine_plugins(gtk_misc):
 	def __create_interface(self):
 		self.interface = interface
 		self.interface.datadir = "@datadir@"
-		self.interface.list_vbox = self.main.list_vbox
+		self.interface.list_vbox = self.main.VBoxList
 		self.interface.menubar = self.main.menubar
 		self.interface.search_box = self.main.search_box
 		#self.interface.list_box = self.main.list_box

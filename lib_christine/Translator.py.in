@@ -27,7 +27,7 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 import os
 import gettext
-from libchristine.pattern.Singleton import *
+from lib_christine.pattern.Singleton import *
 
 locale_dir = '@datadir@/locale/'
 gettext.bindtextdomain('@programname@', locale_dir)

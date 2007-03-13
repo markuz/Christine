@@ -33,8 +33,8 @@ import gtk
 import gtk.gdk
 import pygst; pygst.require('0.10')
 import gst.interfaces
-from lib_christine.Trans import *
-from lib_christine.ChristineLibrary import *
+from lib_christine.Translator import *
+#from lib_christine.ChristineLibrary import *
 from lib_christine.GtkMisc import *
 from lib_christine.Library import *
 from lib_christine.Queue import *
@@ -74,7 +74,6 @@ class Christine(GtkMisc):
 
 		self.__Share   = Share()
 		self.__GConf   = ChristineGconf()
-		self.__Plugins = ChristinePlugins(self)
 
 		self.__XML = self.__Share.getTemplate('WindowCore')
 		self.__XML.signal_autoconnect(self)
@@ -106,6 +105,7 @@ class Christine(GtkMisc):
 		self.__GConf.notify_add('/apps/christine/ui/show_in_notification_area',
 				lambda cl,cnx,entry,widget: self.__TrayIcon.set_visible(entry.get_value().get_bool()))
 
+		self.__Plugins = ChristinePlugins(self)
 		gobject.timeout_add(500, self.checkTimeOnMedia)
 	
 	#
@@ -117,7 +117,7 @@ class Christine(GtkMisc):
 		"""
 		Initialize the player and packs it into the HBoxPlayer
 		"""
-		self.__Player = player()
+		self.__Player = Player()
 		self.__HBoxPlayer = self.__XML['HBoxPlayer']
 		self.__HBoxPlayer.pack_start(self.__Player, True, True, 0)
 		self.__Player.bus.add_watch(self.__handlerMessage)
@@ -135,12 +135,13 @@ class Christine(GtkMisc):
 		call some other methods to show/hide them.
 		"""
 		# Calling some widget descriptors with no callback connected "by hand"
-		self.__VBoxTemporal   = self.__XML['VBoxTemporal']
-		self.__MenuBar        = self.__XML['MenuBar']
-		self.__HBoxSearch     = self.__XML['HBoxSearch']
-		self.__EntrySearch    = self.__XML['EntrySearch']
-		self.__HPanedListsBox = self.__XML['HPanedListsBox']
-		self.__VBoxList       = self.__XML['VBoxList']
+		# This interface should not be private.
+		self.VBoxTemporal   = self.__XML['VBoxTemporal']
+		self.MenuBar        = self.__XML['MenuBar']
+		self.HBoxSearch     = self.__XML['HBoxSearch']
+		self.EntrySearch    = self.__XML['EntrySearch']
+		self.HPanedListsBox = self.__XML['HPanedListsBox']
+		self.VBoxList       = self.__XML['VBoxList']
 		# Ends the call to widgets descriptors not connected by hadn
 
 		# Gets window widget from glade template
@@ -153,14 +154,14 @@ class Christine(GtkMisc):
 
 		self.__Menus = {}
 
-		for (i in ['media', 'edit', 'control', 'help']):
+		for i in ['media', 'edit', 'control', 'help']:
 			self.__Menus["%s" % i] = self.__XML["%s_menu" % i].get_submenu()
 		
 		# cdisplaybox is the display gtk-Box
 		self.__HBoxCairoDisplay = self.__XML['HBoxCairoDisplay']
 		
 		# Create the display and attach it to the main window
-		self.__Display = display()
+		self.__Display = Display()
 		self.__Display.connect('value-changed', self.onScaleChanged)
 		self.__HBoxCairoDisplay.pack_start(self.__Display, True, True, 0)
 		self.__Display.show_all()
@@ -170,7 +171,7 @@ class Christine(GtkMisc):
 		self.__TreeView = self.__Library.tv
 
 		# FIXME: check method if exist and change to standarization
-		self.__TreeView.connect('button-press-event', self.pop_menu)
+		self.__TreeView.connect('button-press-event', self.popupMenuHandlerEvent)
 		self.__TreeView.connect('key-press-event',    self.handlerKeyPress)
 		self.__TreeView.connect('row-activated',      self.itemActivated)
 		self.__TreeView.show()
@@ -228,7 +229,7 @@ class Christine(GtkMisc):
 		self.__MenuItemVisualMode = self.__XML['MenuItemVisualMode']
 		self.__MenuItemVisualMode.set_active(self.__GConf.get_bool('ui/visualization'))
 
-		self.visualMode()
+		self.visualModePlayer()
 
 		self.__MenuItemSmallView.set_active(self.__GConf.get_bool('ui/small_view'))
 		self.toggleViewSmall(self.__MenuItemSmallView)
@@ -319,7 +320,7 @@ class Christine(GtkMisc):
 	# @param  widget widget The widget that will be used
 	# @param  event  event  The event requested by the widget 
 	# @return void
-	def queueHandlerKey(self, widget, event):
+	def __queueHandlerKey(self, widget, event):
 		"""
 		Handler the key-press-event in the queue list
 		"""
@@ -594,7 +595,7 @@ class Christine(GtkMisc):
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
 
-		if ((not widget.get_active()) and ((self.__IsFullScreen)):
+		if not widget.get_active() and self.__IsFullScreen:
 			print 'self.__HPanedListsBox.show()'
 			self.__VBoxVideo.show()
 			self.__VBoxTemp.hide()
@@ -1333,12 +1334,12 @@ class Christine(GtkMisc):
 		ds.destroy()
 
 		if (response == gtk.RESPONSE_OK):
-			for (i in filenames):
+			for i in filenames:
 				if (walk.get_active()):
 					self.addDirectories(i)
 				else:
 					files = [os.path.join(i, k) \
-					for (k in os.listdir(i)) if os.path.isfile(os.path.join(i, k))]
+					for k in os.listdir(i) if os.path.isfile(os.path.join(i, k))]
 
 					if (len(files) > 0):
 						self.addFiles(files = files)
@@ -1360,7 +1361,7 @@ class Christine(GtkMisc):
 		files = os.listdir(dir)
 		f     = []
 
-		for (i in files):
+		for i in files:
 			ext = i.split('.').pop()
 			# Again, only files with the right
 			# extension will be imported
@@ -1401,8 +1402,8 @@ class Christine(GtkMisc):
 		# the files already stored in the library
 		# to avoid duplicates
 		#self.__LibraryModel.foreach(lambda model,path,iter: self.f.append(model.get_value(iter,PATH)))
-		for (i in filenames):
-			for (path in i[1]):
+		for i in filenames:
+			for path in i[1]:
 				ext    = path.split('.').pop().lower()
 				exists = False
 
@@ -1415,7 +1416,7 @@ class Christine(GtkMisc):
 				# libs_christine/libs_christine.py
 				# We need to know what files are supported by 
 				# gstreamer
-				if ((ext in self.__GConf.get_string('backend/allowed_files').split(','))) and (not exists)):
+				if ext in self.__GConf.get_string('backend/allowed_files').split(',') and not exists:
 					f.append(os.path.join(i[0],path))
 				#else:
 				#	print "skipping:",os.path.join(i[0],path)
@@ -1522,7 +1523,7 @@ class Christine(GtkMisc):
 
 		self.__LibraryNaturalModel.foreach(self.getPaths)
 
-		for (i in files):
+		for i in files:
 			if (not i in self.__Paths):
 				self.__FilesToAdd.append(i)
 			else:
@@ -1739,10 +1740,10 @@ class Christine(GtkMisc):
 			(title1, artist1, album1, tc) = self.__LibraryNaturalModel.get(self.__IterNatural, 
 			NAME, ARTIST, ALBUM, TN)
 
-			if ((title != title1) \
-				or (artist != artist1) \
-				or (album != album) \
-				or (track_number != tc):
+			if title != title1 \
+				or artist != artist1 \
+				or album != album \
+				or track_number != tc:
 				gobject.timeout_add(500, self.__Library.save)
 
 		if ((PYNOTIFY) and (self.__GConf.get_bool('ui/show_pynotify'))):
@@ -1863,16 +1864,4 @@ class Christine(GtkMisc):
 		"""
 		gtk.main()
 
-#
-# Initialize christine application and translation
-#
-if __name__ == '__main__':
-	t         = trans()
-	translate = t.trans
-	chris     = christine()
 
-	if (len(sys.argv) > 1):
-		for (i in sys.argv[1:]):
-			if (os.path.isfile(i)):
-				chris.queue.add(i, prepend = True)
-	chris.runGtk()
