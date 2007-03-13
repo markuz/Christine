@@ -10,14 +10,17 @@ void error(char *msg) {
 }
 
 char* python_code = "\
+import os\n\
+sys.path.insert(0,os.getcwd())\n\
+print sys.path\n\
 elements = locals()\n\
 lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
 from lib_christine.libs_christine import sanity\n\
 sanity()\n\
 #sys.exit()\n\
-from lib_christine.christine import *\n\
-a = christine()\n\
+from lib_christine.Christine import *\n\
+a = Christine()\n\
 if len(sys.argv) > 1:\n\
 	for i in sys.argv[1:]:\n\
 		if os.path.isfile(i):\n\
