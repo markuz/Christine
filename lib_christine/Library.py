@@ -22,9 +22,9 @@ import os,gtk,gobject,sys,pango
 import cPickle as pickle
 import gst, gst.interfaces
 from lib_christine.libs_christine import *
-from lib_christine.gtk_misc import *
+from lib_christine.GtkMisc import *
 from lib_christine.Discoverer import *
-from lib_christine.trans import *
+from lib_christine.Translator import *
 from lib_christine import clibrary
 #import pdb
 
@@ -51,7 +51,7 @@ VPIX) = xrange(3)
 ## both lists (and other lists)
 ##
 
-class library(gtk_misc,gtk.DrawingArea):
+class library(GtkMisc,gtk.DrawingArea):
 	def __init__(self):
 		'''
 		Constructor, load the 
@@ -59,16 +59,16 @@ class library(gtk_misc,gtk.DrawingArea):
 		and set some class variables
 		'''
 		self.iters = {}
-		gtk_misc.__init__(self)
+		GtkMisc.__init__(self)
 		gtk.DrawingArea.__init__(self)
-		self.xml = glade_xml("treeview.glade","ltv")
+		self.xml = glade_xml("TreeViewSources.glade","treeview")
 		gobject.signal_new("tags-found",self,
 				gobject.SIGNAL_RUN_LAST,
 				gobject.TYPE_NONE,
 				(gobject.TYPE_PYOBJECT,))
 		self.xml.signal_autoconnect(self)
-		self.gconf = christine_gconf()
-		self.tv = self.xml["ltv"]
+		self.gconf = ChristineGconf()
+		self.tv = self.xml["treeview"]
 		self.library_lib = lib_library("music")
 		self.gen_model()
 		filter = self.model.filter_new()
@@ -223,10 +223,10 @@ class library(gtk_misc,gtk.DrawingArea):
 		self.gconf.notify_add("/apps/christine/ui/show_play_count",self.gconf.toggle_visible,play)
 		self.gconf.notify_add("/apps/christine/ui/show_length",self.gconf.toggle_visible,length)
 		self.gconf.notify_add("/apps/christine/ui/show_genre",self.gconf.toggle_visible,genre)
-		self.discoverer = discoverer()
-		self.discoverer.bus.add_watch(self.message_handler)
-		self.discoverer2 = discoverer()
-		self.discoverer2.bus.add_watch(self.message_handler)
+		self.discoverer = Discoverer()
+		self.discoverer.Bus.add_watch(self.message_handler)
+		self.discoverer2 = Discoverer()
+		self.discoverer2.Bus.add_watch(self.message_handler)
 		gobject.timeout_add(100,self.stream_length,None,1)
 		gobject.timeout_add(200,self.stream_length,None,2)
 
