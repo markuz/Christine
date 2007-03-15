@@ -55,18 +55,19 @@ class ChristinePlugins(GtkMisc):
 
 	
 	def __create_interface(self):
-		self.interface = interface
-		self.interface.datadir = "@datadir@"
-		self.interface.list_vbox = self.main.VBoxList
-		self.interface.menubar = self.main.MenuBar
-		self.interface.search_box = self.main.EntrySearch
+		#self.interface = interface
+		#self.interface.datadir = "@datadir@"
+		#self.interface.list_vbox = self.main.VBoxList
+		#self.interface.menubar = self.main.MenuBar
+		#self.interface.search_box = self.main.EntrySearch
 		#self.interface.list_box = self.main.list_box
-		self.interface.list_vbox = self.main.VBoxList
-		self.interface.library_treeview = self.main.TreeView
-		self.interface.menus = self.main.Menus
-		self.interface.pack = self.pack
-		self.interface.write = self.write
-		self.interface.register_on_menu = self.register_on_menu
+		#self.interface.list_vbox = self.main.VBoxList
+		#self.interface.library_treeview = self.main.TreeView
+		#self.interface.menus = self.main.Menus
+		#self.interface.pack = self.pack
+		#self.interface.write = self.write
+		#self.interface.register_on_menu = self.register_on_menu
+		pass
 	
 	def pack(self,widget,item,start=False,expand=False,fill=False,border=0):
 		element = getattr(self.interface,item)
