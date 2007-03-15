@@ -26,7 +26,7 @@ if len(sys.argv) > 1:\n\
 		if os.path.isfile(i):\n\
 			a.queue.add(i,prepend=True)\n\
 	a.play()\n\
-a.main()\n\
+a.runGtk()\n\
 ";
 
 

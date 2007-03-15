@@ -152,10 +152,10 @@ class Christine(GtkMisc):
 		self.__PlayButton   = self.__XML['ToggleButtonPlay']
 		self.__MenuItemPlay = self.__XML['MenuItemPlay']
 
-		self.__Menus = {}
+		self.Menus = {}
 
 		for i in ['media', 'edit', 'control', 'help']:
-			self.__Menus["%s" % i] = self.__XML["%s_menu" % i].get_submenu()
+			self.Menus["%s" % i] = self.__XML["%s_menu" % i].get_submenu()
 		
 		# cdisplaybox is the display gtk-Box
 		self.__HBoxCairoDisplay = self.__XML['HBoxCairoDisplay']
@@ -168,13 +168,13 @@ class Christine(GtkMisc):
 
 		# Create the library by calling to libs_christine.library class
 		self.__Library  = library()
-		self.__TreeView = self.__Library.tv
+		self.TreeView = self.__Library.tv
 
 		# FIXME: check method if exist and change to standarization
-		self.__TreeView.connect('button-press-event', self.popupMenuHandlerEvent)
-		self.__TreeView.connect('key-press-event',    self.handlerKeyPress)
-		self.__TreeView.connect('row-activated',      self.itemActivated)
-		self.__TreeView.show()
+		self.TreeView.connect('button-press-event', self.popupMenuHandlerEvent)
+		self.TreeView.connect('key-press-event',    self.handlerKeyPress)
+		self.TreeView.connect('row-activated',      self.itemActivated)
+		self.TreeView.show()
 
 		# Models in the library are assigned to class variables
 		self.__LibraryModel       = self.__Library.tv.get_model()
@@ -265,8 +265,7 @@ class Christine(GtkMisc):
 		Show the TrayIcon 
 		"""
 		self.__TrayIcon = gtk.StatusIcon()
-		self.__TrayIcon.set_from_file(self.__Share.getImage('trayicon'))
-
+		self.__TrayIcon.set_from_file(os.path.join(SHARE_PATH,'gui','pixmap','trayicon.png'))
 		self.__TrayIcon.connect('popup-menu', self.__trayIconHandlerEvent)
 		self.__TrayIcon.connect('activate',   self.__trayIconActivated)
 
@@ -363,7 +362,7 @@ class Christine(GtkMisc):
 		"""
 		Delete file from disk
 		"""
-		selection     = self.__TreeView.get_selection()
+		selection     = self.TreeView.get_selection()
 		(model, iter) = selection.get_selected()
 		iter          = self.getIterNatural(iter)
 
@@ -379,7 +378,7 @@ class Christine(GtkMisc):
 		"""
 		Add the selected item to the queue
 		"""
-		selection       = self.__TreeView.get_selection()
+		selection       = self.TreeView.get_selection()
 		(model, iter,)  = selection.get_selected()
 		file            = model.get_value(iter, PATH)
 
@@ -422,7 +421,7 @@ class Christine(GtkMisc):
 		"""
 		Remove file from library
 		"""
-		selection     = self.__TreeView.get_selection()
+		selection     = self.TreeView.get_selection()
 		(model, iter) = selection.get_selected()
 		name          = model.get_value(iter, NAME)
 		niter         = self.getIterNatural(iter)
@@ -573,8 +572,8 @@ class Christine(GtkMisc):
 			except:
 				(w, h) = (800, 480)
 
-			self.__HPanedListsBox.show()
-			self.__HBoxSearch.show()
+			self.HPanedListsBox.show()
+			self.HBoxSearch.show()
 			self.__Window.resize(w, h)
 
 	#
@@ -1068,11 +1067,12 @@ class Christine(GtkMisc):
 	#
 	# @access public
 	# @return boolean
-	def searchByPath(self, model, path, iter, location):
+	def __SearchByPath(self, model, path, iter, location):
 		"""
 		search location in the model, if it found it then it will
 		store the iter where it was found in self.__LibraryCurrentInter
 		"""
+		print ".......................",PATH
 		iter      = model.get_iter(path)
 		mlocation = model.get_value(iter, PATH)
 
@@ -1148,8 +1148,8 @@ class Christine(GtkMisc):
 			path = self.__LibraryModel.get_path(self.__LibraryCurrentInter)
 
 			if (path != None):
-				self.__TreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
-				self.__TreeView.set_cursor(path)
+				self.TreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
+				self.TreeView.set_cursor(path)
 
 	#
 	# Jump to creates dialog

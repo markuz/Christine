@@ -58,12 +58,12 @@ class ChristinePlugins(GtkMisc):
 		self.interface = interface
 		self.interface.datadir = "@datadir@"
 		self.interface.list_vbox = self.main.VBoxList
-		self.interface.menubar = self.main.menubar
-		self.interface.search_box = self.main.search_box
+		self.interface.menubar = self.main.MenuBar
+		self.interface.search_box = self.main.EntrySearch
 		#self.interface.list_box = self.main.list_box
-		self.interface.list_vbox = self.main.list_vbox
-		self.interface.library_treeview = self.main.treeview
-		self.interface.menus = self.main.menus
+		self.interface.list_vbox = self.main.VBoxList
+		self.interface.library_treeview = self.main.TreeView
+		self.interface.menus = self.main.Menus
 		self.interface.pack = self.pack
 		self.interface.write = self.write
 		self.interface.register_on_menu = self.register_on_menu
