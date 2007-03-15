@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = christine
 PACKAGE = christine
-VERSION = 0.0.3
+VERSION = 0.0.4-svn
 
 SHELL = /bin/sh
 

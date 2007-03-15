@@ -24,8 +24,8 @@ import cPickle as pickle
 #import gst
 #import gst.interfaces
 
-from lib_christine.GtkMisc import *
-from lib_christine.GstBase import *
+from libchristine.GtkMisc import *
+from libchristine.GstBase import *
 
 class sanity:
 	'''

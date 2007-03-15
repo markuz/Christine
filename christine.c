@@ -29,15 +29,6 @@ if len(sys.argv) > 1:\n\
 a.main()\n\
 ";
 
-char* clean_arguments = "\
-elements = locals()\n\
-#sys.argv = [k for k in elements['arguments'] if type(k) == str]\n\
-sys.argv = elements['arguments']\n\
-#print locals()\n\
-#print 'arguments:',sys.argv\n\
-#sys.exit()\n\
-";
-
 
 int
 main(int argc, char *argv[]){
@@ -53,7 +44,6 @@ main(int argc, char *argv[]){
 	if (main_dict == NULL)
 		error ("Could not get the __main__ module dictionary");
 	if (PyDict_GetItemString(main_dict, "__import__") == NULL){
-			//printf("hola mundo!!\n");
 	        builtinMod = PyImport_ImportModule("__builtin__");
 			PyObject *sys = PyImport_ImportModule("sys");
 			if (sys == NULL)
@@ -69,11 +59,6 @@ main(int argc, char *argv[]){
 				error ("Still there is no __builtins__!!!!");
 			PyObject  *keys = PyDict_Keys(bdict);
 			PyList_Sort(keys);
-			/*for (i=0;i<PyList_Size(keys);i++){
-				PyObject *key = PyList_GetItem(keys,i);
-			}*/
-
-			//Py_XDECREF(builtinMod);
 	}
 	c_argv = PyList_New(0);
 	if (c_argv == NULL)
@@ -86,10 +71,6 @@ main(int argc, char *argv[]){
 	main_dict_copy = PyDict_Copy(main_dict);
 	if (main_dict_copy == NULL)
 		error ("asdfa");
-	/*clean = PyRun_String(clean_arguments,Py_file_input,main_dict_copy,main_dict_copy);
-	if (clean == NULL)
-		error("asdfa");
-	*/
 	t = PyRun_String(python_code,Py_file_input,main_dict,main_dict);
 	if (t == NULL){
 		error("Error while trying to run christine");

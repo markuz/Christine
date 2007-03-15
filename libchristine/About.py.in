@@ -20,12 +20,12 @@
 
 import gnome,gst,gtk,gst.interfaces,random,sys
 from gnome import ui
-from libchristine.gtk_misc import *
+from libchristine.GtkMisc import *
 
 
-class about(gtk_misc):
+class about(GtkMisc):
 	def __init__(self):
-		gtk_misc.__init__(self)
+		GtkMisc.__init__(self)
 		xml = glade_xml("about.glade")
 		about = xml["about"]
 		pix = self.gen_pixbuf("logo.png")
