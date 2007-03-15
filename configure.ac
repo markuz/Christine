@@ -56,9 +56,6 @@ AC_ARG_WITH(readline,
     AC_CHECK_HEADERS(readline/history.h)
 
     AC_CHECK_HEADERS(readline.h readline/readline.h,[
-      for termlib in ncurses curses termcap terminfo termlib; do
-       AC_CHECK_LIB(${termlib}, tgetent, [TERMLIBS="-l${termlib}"; break])
-      done
       AC_CHECK_LIB(readline, rl_callback_handler_install,
        [TERMLIBS="-lreadline $TERMLIBS"
        AC_DEFINE(HAVE_LIBREADLINE, 1, [Do we have libreadline?])
