@@ -1,7 +1,7 @@
-AC_INIT("christine","0.0.3",markuz@islascruz.org)
-AM_INIT_AUTOMAKE("christine","0.0.3")
+AC_INIT('christine', '0.0.4-svn', markuz@gnu.org.mx)
+AM_INIT_AUTOMAKE('christine', '0.0.4-svn')
 
-AC_CONFIG_SRCDIR(lib_christine)
+AC_CONFIG_SRCDIR(libchristine)
 AC_CONFIG_SRCDIR(gui)
 
 AM_MAINTAINER_MODE
@@ -31,7 +31,7 @@ AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
 
 PROGRAM_NAME="christine"
-VERSION="0.0.3"
+VERSION="0.0.4-svn"
 PREFIX=/usr
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib()"`
