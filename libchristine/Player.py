@@ -23,8 +23,8 @@ import os,gtk,gobject, cairo
 import gst
 import gst.interfaces
 
-from lib_christine.GtkMisc import *
-from lib_christine.GstBase import *
+from libchristine.GtkMisc import *
+from libchristine.GstBase import *
 
 BORDER_WIDTH=0
 

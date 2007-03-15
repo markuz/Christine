@@ -17,8 +17,8 @@
 # along with this program; if not, write to the Free Software
 
 import os,sys
-from lib_christine.Translator import *
-from lib_christine.GtkMisc import *
+from libchristine.Translator import *
+from libchristine.GtkMisc import *
 
 sys.path.append(os.path.join(os.environ["HOME"],
 		".christine"))

@@ -25,10 +25,10 @@
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 #from libchristine.ChristineLibrary import *
-from lib_christine.GtkMisc import *
-from lib_christine.Translator import *
-from lib_christine.Share import *
-from lib_christine.Validator import *
+from libchristine.GtkMisc import *
+from libchristine.Translator import *
+from libchristine.Share import *
+from libchristine.Validator import *
 
 #
 # Preferences gtk dialog

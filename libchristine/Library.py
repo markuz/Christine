@@ -21,11 +21,11 @@
 import os,gtk,gobject,sys,pango
 import cPickle as pickle
 import gst, gst.interfaces
-from lib_christine.libs_christine import *
-from lib_christine.GtkMisc import *
-from lib_christine.Discoverer import *
-from lib_christine.Translator import *
-from lib_christine import clibrary
+from libchristine.libs_christine import *
+from libchristine.GtkMisc import *
+from libchristine.Discoverer import *
+from libchristine.Translator import *
+from libchristine import clibrary
 #import pdb
 
 (PATH,

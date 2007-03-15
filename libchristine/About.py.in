@@ -20,7 +20,7 @@
 
 import gnome,gst,gtk,gst.interfaces,random,sys
 from gnome import ui
-from lib_christine.gtk_misc import *
+from libchristine.gtk_misc import *
 
 
 class about(gtk_misc):

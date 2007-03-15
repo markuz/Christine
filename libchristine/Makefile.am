@@ -1,4 +1,4 @@
-scriptsdir = @PYTHON_LIB_DIR@/lib_christine
+scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
 scripts_DATA=__init__.py \
 GtkMisc.py \

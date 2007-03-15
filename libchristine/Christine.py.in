@@ -33,17 +33,17 @@ import gtk
 import gtk.gdk
 import pygst; pygst.require('0.10')
 import gst.interfaces
-from lib_christine.Translator import *
-#from lib_christine.ChristineLibrary import *
-from lib_christine.GtkMisc import *
-from lib_christine.Library import *
-from lib_christine.Queue import *
-from lib_christine.Preferences import *
-from lib_christine.About import *
-from lib_christine.Player import *
-from lib_christine.Display import *
-from lib_christine.Plugins import *
-from lib_christine.Share import *
+from libchristine.Translator import *
+#from libchristine.ChristineLibrary import *
+from libchristine.GtkMisc import *
+from libchristine.Library import *
+from libchristine.Queue import *
+from libchristine.Preferences import *
+from libchristine.About import *
+from libchristine.Player import *
+from libchristine.Display import *
+from libchristine.Plugins import *
+from libchristine.Share import *
 
 try:
 	import pynotify

@@ -16,10 +16,10 @@ print sys.path\n\
 elements = locals()\n\
 lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
-from lib_christine.libs_christine import sanity\n\
+from libchristine.libs_christine import sanity\n\
 sanity()\n\
 #sys.exit()\n\
-from lib_christine.Christine import *\n\
+from libchristine.Christine import *\n\
 a = Christine()\n\
 if len(sys.argv) > 1:\n\
 	for i in sys.argv[1:]:\n\

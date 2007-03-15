@@ -31,9 +31,9 @@ import gobject
 import gst
 import gst.interfaces
 
-from lib_christine.GtkMisc import *
-from lib_christine.GstBase import *
-from lib_christine.Validator import *
+from libchristine.GtkMisc import *
+from libchristine.GstBase import *
+from libchristine.Validator import *
 
 class Discoverer(gtk.DrawingArea, ChristineGconf):
 	#

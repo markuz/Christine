@@ -25,9 +25,9 @@
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 import gtk.glade
-from lib_christine.Validator import *
-from lib_christine.pattern.Singleton import Singleton
-from lib_christine.GtkMisc import *
+from libchristine.Validator import *
+from libchristine.pattern.Singleton import Singleton
+from libchristine.GtkMisc import *
 
 # global PATH to share files required
 cdir = os.getcwd()

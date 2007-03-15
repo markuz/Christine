@@ -29,7 +29,7 @@ import gtk
 import cairo
 import pango
 import gobject
-from lib_christine.Validator import *
+from libchristine.Validator import *
 
 BORDER_WIDTH  = 3
 POS_INCREMENT = 3
