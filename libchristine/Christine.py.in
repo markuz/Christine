@@ -146,6 +146,7 @@ class Christine(GtkMisc):
 
 		# Gets window widget from glade template
 		self.__Window = self.__XML['WindowCore']
+		self.__Window.connect("destroy",gtk.main_quit)
 		self.__Window.set_icon(self.__Share.getImage('logo'))
 
 		# Gets play button and menu play item from glade template
@@ -250,6 +251,7 @@ class Christine(GtkMisc):
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(path = self.__GConf.get_string('backend/last_played'))
 
+		self.__Window.show_all()
 		if ('-q' in sys.argv):
 			sys.exit()
 
@@ -1072,7 +1074,6 @@ class Christine(GtkMisc):
 		search location in the model, if it found it then it will
 		store the iter where it was found in self.__LibraryCurrentInter
 		"""
-		print ".......................",PATH
 		iter      = model.get_iter(path)
 		mlocation = model.get_value(iter, PATH)
 

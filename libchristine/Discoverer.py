@@ -54,8 +54,8 @@ class Discoverer(gtk.DrawingArea, ChristineGconf):
 		
 		# self.Bus must be public
 		self.Bus             = self.__Discoverer.get_bus()
-		self.__QueryDuration = self.__Discoverer.query_duration
-		self.__QueryPosition = self.__Discoverer.query_position
+		self.query_duration = self.__Discoverer.query_duration
+		self.query_position = self.__Discoverer.query_position
 
 	#
 	# Watcher for Player
