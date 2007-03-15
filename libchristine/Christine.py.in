@@ -472,7 +472,7 @@ class Christine(GtkMisc):
 		self.__LibraryCurrentInter = None
 		
 		self.__Player.stop()
-		self.__LibraryNaturalModel.foreach(self.__SearchByPath, self.__Player.get_location())
+		self.__LibraryNaturalModel.foreach(self.__SearchByPath, self.__Player.getLocation())
 
 		if (self.__LibraryCurrentInter != None):
 			pix = self.__Share.getImage('blank')
@@ -532,7 +532,7 @@ class Christine(GtkMisc):
 		"""
 		value = widget.get_value()
 
-		self.__Player.set_volume(value)
+		self.__Player.setVolume(value)
 		self.__GConf.set_value('control/volume', value)
 	
 	#
@@ -588,7 +588,7 @@ class Christine(GtkMisc):
 		"""
 		This show/hide the visualization
 		"""
-		self.__Player.set_visualization_visible(widget.get_active())
+		self.__Player.setVisualization(widget.get_active())
 		self.__GConf.set_value('ui/visualization', widget.get_active())
 		self.visualMode()
 
@@ -826,16 +826,16 @@ class Christine(GtkMisc):
 		Play!!, but only if the state is not already playing
 		"""
 		if not self.__StatePlaying:
-			location = self.__Player.get_location()
+			location = self.__Player.getLocation()
 
 			# and only if location is not None, if it is the case then
 			# go for one file to play
 			if (location == None):
 				self.goNext()
-			self.__Player.playit()
+			self.__Player.playIt()
 			
 			# is it used?
-			# path = self.__Player.get_location()
+			# path = self.__Player.getLocation()
 	
 	#
 	# PLay from TrayIcon menu
@@ -1102,7 +1102,7 @@ class Christine(GtkMisc):
 		if (value < 0):
 			value = 0
 
-		self.__Player.seek_to(value)
+		self.__Player.seekTo(value)
 	
 	#
 	# Sets scale value
@@ -1130,7 +1130,7 @@ class Christine(GtkMisc):
 		select the playing one
 		"""
 		if (path == None):
-			location = self.__Player.get_location()
+			location = self.__Player.getLocation()
 		else:
 			location = path
 
@@ -1206,7 +1206,7 @@ class Christine(GtkMisc):
 			if (time > self.__TimeTotal):
 				time = self.__TimeTotal
 
-			self.__Player.seek_to(time)
+			self.__Player.seekTo(time)
 
 	#
 	# Jump to accept button
@@ -1601,7 +1601,7 @@ class Christine(GtkMisc):
 		if (type_file == gst.MESSAGE_EOS):
 			self.goNext()
 		elif (type_file == gst.MESSAGE_TAG):
-			self.__Player.found_tag_cb(b.parse_tag())
+			self.__Player.foundTagCallback(b.parse_tag())
 			self.setTags()
 		elif (type_file == gst.MESSAGE_BUFFERING):
 			percent = 0
@@ -1654,7 +1654,7 @@ class Christine(GtkMisc):
 		Catches the lenght of the media and update it in the 
 		player
 		"""
-		if (self.__Player.get_location().split(':')[0] == 'http'):
+		if (self.__Player.getLocation().split(':')[0] == 'http'):
 			return True
 
 		try:
@@ -1676,7 +1676,7 @@ class Christine(GtkMisc):
 			self.__ErrorStreamCount += 1
 
 			if (self.__ErrorStreamCount > 10):
-				self.setLocation(self.__Player.get_location())
+				self.setLocation(self.__Player.getLocation())
 				self.__PlayButton.set_active(False)
 				self.__PlayButton.set_active(True)
 
@@ -1693,11 +1693,11 @@ class Christine(GtkMisc):
 		"""
 		Update the current media tags in the library
 		"""
-		title     = self.__Player.get_tag('title').replace('_', ' ')
-		artist    = self.__Player.get_tag('artist')
-		album     = self.__Player.get_tag('album')
-		genre     = self.__Player.get_tag('genre')
-		type_file = self.__Player.type
+		title     = self.__Player.getTag('title').replace('_', ' ')
+		artist    = self.__Player.getTag('artist')
+		album     = self.__Player.getTag('album')
+		genre     = self.__Player.getTag('genre')
+		type_file = self.__Player.getType
 
 		if (type(genre) == type([])):
 			genre = ','.join(genre)
@@ -1705,7 +1705,7 @@ class Christine(GtkMisc):
 		track_number = self.__Player.get_tag('track-number')
 
 		if (title == ''):
-			title = os.path.split(self.__Player.get_location())[1]
+			title = os.path.split(self.__Player.getLocation())[1]
 			title = '.'.join(title.split('.')[:-1])
 
 		# stript_XML_entities is a method inherited from gtk_misc
