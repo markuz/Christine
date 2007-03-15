@@ -48,7 +48,7 @@ class glade_xml:
 		'''
 		self.__xml.signal_autoconnect(signals)
 
-class gtk_misc:
+class GtkMisc:
 	def __init__(self):
 		if os.path.isdir(os.path.join(os.getcwd(),"./gui/pixmaps/")):
 			self.wdir = os.path.join(os.getcwd(),"./gui/pixmaps/")
@@ -84,7 +84,7 @@ class gtk_misc:
 			text = text.replace(i,entities[i])
 		return text
 
-class christine_gconf:
+class ChristineGconf:
 	def __init__(self):
 		self.dir = "/apps/christine"
 		self.bool_keys = {"ui/small_view":False,
