@@ -1,3 +1,8 @@
+2007-03-14 Marco Antonio Islas Cruz	<markuz@islascruz.org>
+	* renaming lib_christine to libchristine affecting all
+	module import.
+	* firxin module import
+
 2007-03-13 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* Appending the current dir to the PYTHON_PATH, usefull
 	when we like to use the current modules (ej. in development)
