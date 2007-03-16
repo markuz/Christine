@@ -35,13 +35,14 @@ import gst.interfaces
 from libchristine.GtkMisc import *
 from libchristine.GstBase import *
 from libchristine.Validator import *
+from libchristine.ChristineGConf import *
 
 BORDER_WIDTH = 0
 
 #
 # Player for manager play files
 #
-class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
+class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 	"""
 	Player for manage play files
 	"""
@@ -56,7 +57,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
 		self.__Type       = 'sound'
 
 		GtkMisc.__init__(self)
-		ChristineGconf.__init__(self)
+		ChristineGConf.__init__(self)
 		gtk.DrawingArea.__init__(self)
 
 		self.connect('destroy',      lambda x: self.__VideoSink.set_xwindow_id(0L))
@@ -98,9 +99,9 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
 		self.__updateVideoSink()
 		self.__updateAspectRatio()
 
-		self.notify_add('/apps/christine/backend/audiosink',    self.__updateAudioSink)
-		self.notify_add('/apps/christine/backend/videosink',    self.__updateVideoSink)
-		self.notify_add('/apps/christine/backend/aspect-ratio', self.__updateAspectRatio)
+		self.notifyAdd('/apps/christine/backend/audiosink',    self.__updateAudioSink)
+		self.notifyAdd('/apps/christine/backend/videosink',    self.__updateVideoSink)
+		self.notifyAdd('/apps/christine/backend/aspect-ratio', self.__updateAspectRatio)
 
 		self.__updateAudioSink()
 		self.__updateVideoSink()
@@ -137,7 +138,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
 		if (not isNull(self.getLocation())):
 			self.pause()
 
-		asink = self.get_string('backend/audiosink')
+		asink = self.getString('backend/audiosink')
 
 		self.__AudioSink = gst.element_factory_make(asink)
 		self.__AudioSinkPack.add(self.__AudioSink)
@@ -166,7 +167,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
 		if (not isNull(self.getLocation())):
 			self.pause()
 
-		vsink = self.get_string('backend/videosink') 
+		vsink = self.getString('backend/videosink') 
 
 		self.__VideoSink = gst.element_factory_make(vsink)
 		self.__PlayBin.set_property('video-sink', self.__VideoSink)
@@ -186,7 +187,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
 		"""
 		Updates aspect ratio
 		"""
-		aspect_ratio = self.get_string('backend/aspect-ratio')
+		aspect_ratio = self.getString('backend/aspect-ratio')
 
 		if (not isNull(aspect_ratio)):
 			self.__VideoSink.set_property('pixel-aspect-ratio', aspect_ratio)
@@ -311,7 +312,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
 			return True
 
 		if (active):
-			self.__visualizationPlugin = gst.element_factory_make(self.get_string('backend/vis-plugin'))
+			self.__visualizationPlugin = gst.element_factory_make(self.getString('backend/vis-plugin'))
 			self.__VideoSink.set_property('force-aspect-ratio', False)
 			self.__ShouldShow = True
 		else:

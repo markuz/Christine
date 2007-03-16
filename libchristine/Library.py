@@ -26,7 +26,7 @@ from libchristine.GtkMisc import *
 from libchristine.Discoverer import *
 from libchristine.Translator import *
 from libchristine import clibrary
-#import pdb
+from libchristine.ChristineGConf import *
 
 (PATH,
 NAME,
@@ -67,7 +67,7 @@ class library(GtkMisc,gtk.DrawingArea):
 				gobject.TYPE_NONE,
 				(gobject.TYPE_PYOBJECT,))
 		self.xml.signal_autoconnect(self)
-		self.gconf = ChristineGconf()
+		self.gconf = ChristineGConf()
 		self.tv = self.xml["treeview"]
 		self.library_lib = lib_library("music")
 		self.gen_model()
@@ -157,7 +157,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		
 		tn = tvc(translate("T#"),render,text=TN)
 		tn.set_sort_column_id(TN)
-		tn.set_visible(self.gconf.get_bool("ui/show_tn"))
+		tn.set_visible(self.gconf.getBool("ui/show_tn"))
 		tv.append_column(tn)
 	
 		pix = gtk.CellRendererPixbuf()
@@ -180,7 +180,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		artist.set_resizable(True)
 		artist.set_fixed_width(150)
 		artist.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
-		artist.set_visible(self.gconf.get_bool("ui/show_artist"))
+		artist.set_visible(self.gconf.getBool("ui/show_artist"))
 		tv.append_column(artist)
 		
 		album = tvc(translate("Album"),render,text=ALBUM)
@@ -188,41 +188,41 @@ class library(GtkMisc,gtk.DrawingArea):
 		album.set_resizable(True)
 		album.set_fixed_width(150)
 		album.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
-		album.set_visible(self.gconf.get_bool("ui/show_album"))
+		album.set_visible(self.gconf.getBool("ui/show_album"))
 		tv.append_column(album)
 		
 		type = tvc(translate("Type"),render,text=TYPE)
 		type.set_sort_column_id(TYPE)
 		type.set_resizable(True)
-		type.set_visible(self.gconf.get_bool("ui/show_type"))
+		type.set_visible(self.gconf.getBool("ui/show_type"))
 		tv.append_column(type)
 
 		play = tvc(translate("Count"),render,text=PLAY_COUNT)
 		play.set_sort_column_id(PLAY_COUNT)
 		play.set_resizable(True)
-		play.set_visible(self.gconf.get_bool("ui/show_play_count"))
+		play.set_visible(self.gconf.getBool("ui/show_play_count"))
 		tv.append_column(play)
 
 		length = tvc(translate("Lenght"),render,text=TIME)
 		length.set_sort_column_id(TIME)
 		length.set_resizable(True)
-		length.set_visible(self.gconf.get_bool("ui/show_length"))
+		length.set_visible(self.gconf.getBool("ui/show_length"))
 		tv.append_column(length)
 
 		genre = tvc(translate("Genre"),render,text=GENRE)
 		genre.set_sort_column_id(GENRE)
 		genre.set_resizable(True)
-		genre.set_visible(self.gconf.get_bool("ui/show_genre"))
+		genre.set_visible(self.gconf.getBool("ui/show_genre"))
 		tv.append_column(genre)
 
 
-		self.gconf.notify_add("/apps/christine/ui/show_artist",self.gconf.toggle_visible,artist)
-		self.gconf.notify_add("/apps/christine/ui/show_album",self.gconf.toggle_visible,album)
-		self.gconf.notify_add("/apps/christine/ui/show_type",self.gconf.toggle_visible,type)
-		self.gconf.notify_add("/apps/christine/ui/show_tn",self.gconf.toggle_visible,tn)
-		self.gconf.notify_add("/apps/christine/ui/show_play_count",self.gconf.toggle_visible,play)
-		self.gconf.notify_add("/apps/christine/ui/show_length",self.gconf.toggle_visible,length)
-		self.gconf.notify_add("/apps/christine/ui/show_genre",self.gconf.toggle_visible,genre)
+		self.gconf.notifyAdd("/apps/christine/ui/show_artist",self.gconf.toggleVisible,artist)
+		self.gconf.notifyAdd("/apps/christine/ui/show_album",self.gconf.toggleVisible,album)
+		self.gconf.notifyAdd("/apps/christine/ui/show_type",self.gconf.toggleVisible,type)
+		self.gconf.notifyAdd("/apps/christine/ui/show_tn",self.gconf.toggleVisible,tn)
+		self.gconf.notifyAdd("/apps/christine/ui/show_play_count",self.gconf.toggleVisible,play)
+		self.gconf.notifyAdd("/apps/christine/ui/show_length",self.gconf.toggleVisible,length)
+		self.gconf.notifyAdd("/apps/christine/ui/show_genre",self.gconf.toggleVisible,genre)
 		self.discoverer = Discoverer()
 		self.discoverer.Bus.add_watch(self.message_handler)
 		self.discoverer2 = Discoverer()
@@ -251,7 +251,7 @@ class library(GtkMisc,gtk.DrawingArea):
 				PIX,self.blank_pix,
 				PATH,file)
 		self.iters[file] = iter
-		#print file, self.model.get_value(iter,PATH),self.iters[file]
+		#print file, self.model.getValue(iter,PATH),self.iters[file]
 		#gobject.timeout_add(3000,self.NEXT)
 		path = self.model.get_path(iter)
 		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
@@ -269,7 +269,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		t = b.type
 		if t == gst.MESSAGE_TAG:
 			iter = self.iters[d.get_location()]
-			name = self.model.get_value(iter,NAME)
+			name = self.model.getValue(iter,NAME)
 			if name == os.path.split(d.get_location()[1]):
 				return True
 			d.found_tags_cb(b.parse_tag())
@@ -329,7 +329,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		'''
 		Remove the selected iter from the library.
 		'''
-		key = self.model.get_value(iter,PATH)
+		key = self.model.getValue(iter,PATH)
 		self.library_lib.remove(key)
 		self.model.remove(iter)
 	
@@ -373,7 +373,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		if event.keyval == 65535:
 			selection = treeview.get_selection()
 			model,iter = selection.get_selected()
-			name = model.get_value(iter,NAME)
+			name = model.getValue(iter,NAME)
 			model.remove(iter)
 			self.library_lib.remove(name)
 			self.save()
@@ -397,7 +397,7 @@ class library(GtkMisc,gtk.DrawingArea):
 			timestamp):
 		tsel = treeview.get_selection()
 		model,iter = tsel.get_selected()
-		text = model.get_value(iter,PATH)
+		text = model.getValue(iter,PATH)
 		selection.set("STRING",8,text)
 		return
 		
@@ -443,7 +443,7 @@ class library(GtkMisc,gtk.DrawingArea):
 	def delete_from_disk(self,iter):
 		dialog = glade_xml("delete_file_from_disk_dialog.glade")["dialog"]
 		response = dialog.run()
-		path = self.model.get_value(iter,PATH)
+		path = self.model.getValue(iter,PATH)
 		if response == -5:
 			try:
 				os.unlink(path)

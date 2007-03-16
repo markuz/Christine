@@ -34,8 +34,9 @@ import gst.interfaces
 from libchristine.GtkMisc import *
 from libchristine.GstBase import *
 from libchristine.Validator import *
+from libchristine.ChristineGConf import *
 
-class Discoverer(gtk.DrawingArea, ChristineGconf):
+class Discoverer(gtk.DrawingArea, ChristineGConf):
 	#
 	# Constructor
 	#
@@ -44,7 +45,7 @@ class Discoverer(gtk.DrawingArea, ChristineGconf):
 		"""
 		Constructor
 		"""
-		ChristineGconf.__init__(self)
+		ChristineGConf.__init__(self)
 		self.__Discoverer = gst.element_factory_make('playbin')
 		self.__VideoSink  = gst.element_factory_make('fakesink')
 
@@ -53,7 +54,7 @@ class Discoverer(gtk.DrawingArea, ChristineGconf):
 		self.__Discoverer.set_property('volume',     0.0)
 		
 		# self.Bus must be public
-		self.Bus             = self.__Discoverer.get_bus()
+		self.Bus            = self.__Discoverer.get_bus()
 		self.query_duration = self.__Discoverer.query_duration
 		self.query_position = self.__Discoverer.query_position
 
@@ -68,7 +69,7 @@ class Discoverer(gtk.DrawingArea, ChristineGconf):
 		Watcher for player
 		"""
 		if (message.type == gst.MESSAGE_TAG):
-			self.found_tags_cb(message.parse_tag())
+			self.callbackFoundTags(message.parse_tag())
 
 		return True
 	
