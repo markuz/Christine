@@ -65,8 +65,9 @@ class Share(Singleton):
 		Constructor
 		"""
 		self.setName('Share')
+
 		self.__PathTemplate = os.path.join(SHARE_PATH, 'gui')
-		self.__PathPixmap   = os.path.join(self.__PathTemplate, 'pixmap')
+		self.__PathPixmap   = os.path.join(self.__PathTemplate, 'pixmaps')
 	
 	#
 	# Gets glade template
@@ -81,6 +82,7 @@ class Share(Singleton):
 			file = ''.join([file, '.glade'])
 			if (isFile(os.path.join(self.__PathTemplate, file))):
 				return glade_xml(os.path.join(self.__PathTemplate, file))
+
 		return None
 	
 	#
@@ -97,4 +99,22 @@ class Share(Singleton):
 				return os.path.join(self.__PathPixmap, name, '.png')
 			elif (isFile(os.path.join(self.__PathPixmap, name, '.svg'))):
 				return os.path.join(self.__PathPixmap, name, '.svg')
+
+		return None
+
+	#
+	# Gets image as path string
+	#
+	# @param  string name The image name without extension
+	# @return string or None
+	def getImageFromPix(self, name):
+		"""
+		Gets image from pixbuf
+		"""
+		if ((not isNull(file)) or (isStringEmpty(name))):
+			if (isFile(os.path.join(self.__PathPixmap, name + '.png'))):
+				return gtk.gdk.pixbuf_new_from_file(os.path.join(self.__PathPixmap, name + '.png'))
+			elif (isFile(os.path.join(self.__PathPixmap, name + '.svg'))):
+				return gtk.gdk.pixbuf_new_from_file(os.path.join(self.__PathPixmap, name + '.svg'))
+
 		return None
