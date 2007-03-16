@@ -78,96 +78,11 @@ class GtkMisc:
 		image = self.image(filename)
 		widget.set_icon_widget(image)
 	
-	def strip_xml_entities(self,text):
+	def strip_XML_entities(self,text):
 		entities = {"&":"&amp;",}	
 		for i in entities.keys():
 			text = text.replace(i,entities[i])
 		return text
-
-class ChristineGconf:
-	def __init__(self):
-		self.dir = "/apps/christine"
-		self.bool_keys = {"ui/small_view":False,
-						"ui/visualization":False,
-						"control/shuffle":False,
-						"control/repeat":False,
-						"ui/show_artist":True,
-						"ui/show_album":True,
-						"ui/show_play_count":True,
-						"ui/show_tn":True,
-						"ui/show_length":True,
-						"ui/show_genre":True,
-						"ui/show_in_notification_area":True,
-						"ui/show_pynotify":True,
-						"ui/show_type":True}
-		self.string_keys = {"backend/audiosink":"autoaudiosink",
-						"backend/videosink":"ximagesink",
-						"backend/video-aspect-ratio":"1/1",
-						"backend/allowed_files":"mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav",
-						"backend/vis-plugin":"goom"}
-		self.gconf = gconf.client_get_default()
-		self.gconf.add_dir(self.dir,gconf.CLIENT_PRELOAD_RECURSIVE)
-		self.gconf.set_error_handling(gconf.CLIENT_HANDLE_ALL)
-		self.set_initial_values()
-	
-		self.notify_add = self.gconf.notify_add
-	
-	def toggle_widget(self,client,cnx_id,entry,widget):
-		widget.set_active(entry.get_value().get_bool())
-	
-	def toggle_visible(self,client,cnx_id,entry,widget):
-		if type(widget) != gtk.TreeViewColumn:
-			if entry.get_value().get_bool():
-				widget.show()
-			else:
-				widget.hide()
-		elif type(widget) == gtk.TreeViewColumn:
-			widget.set_visible(entry.get_value().get_bool())
-		else:
-			raise TypeError("How should I show/hide this widget:",widget)
-		
-	def toggle(self,widget,entry):
-		self.set_value(entry,widget.get_active())
-	
-	def set_initial_values(self):
-		if not self.get_bool("has_initial_keys"):
-			self.set_value("has_initial_keys",True)
-			for key in self.string_keys.keys():
-				self.set_value(key,self.string_keys[key])
-			for key in self.bool_keys.keys():
-				self.set_value(key,self.bool_keys[key])
-	
-	def __getitem__(self,key,value):
-		pass
-	
-	def get(self,key):
-		return self.gconf.get(os.path.join(self.dir,key))
-
-	def get_bool(self,key):
-		return self.gconf.get_bool(os.path.join(self.dir,key))
-
-	def get_string(self,key):
-		return self.gconf.get_string(os.path.join(self.dir,key))
-	
-	def get_int(self,key):
-		return self.gconf.get_int(os.path.join(self.dir,key))
-	
-	def get_float(self,key):
-		return self.gconf.get_float(os.path.join(self.dir,key))
-
-	def set_value(self,key,value):
-		t = type(value)
-		#print "set:",os.path.join(self.dir,key),value
-		if t == type(1):
-			self.gconf.set_int(os.path.join(self.dir,key),value)
-		elif t == type(""):
-			self.gconf.set_string(os.path.join(self.dir,key),value)
-		elif t == type(True):
-			self.gconf.set_bool(os.path.join(self.dir,key),value)
-		elif t == type (1.0):
-			self.gconf.set_float(os.path.join(self.dir,key),value)
-		else:
-			raise TypeError,"value is not int, bool or string"
 	
 class error:
 	def __init__(self,text):
