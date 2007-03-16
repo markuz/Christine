@@ -138,6 +138,14 @@ class Display(gtk.DrawingArea):
 		Gets value
 		"""
 		return self.__Value
+		
+	#
+	# Sets value
+	#
+	# @param  integer value
+	# @return void
+	def setValue(self, value):
+		self.__Value = value
 
 	#
 	# Sets scale value

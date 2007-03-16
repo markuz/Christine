@@ -1177,7 +1177,7 @@ class Christine(GtkMisc):
 		(mins, seconds) = divmod((self.__TimeTotal / gst.SECOND), 60)
 
 		#Current minute and current second
-		(cmins, cseconds) = divmod(self.__Display.get_value(), 60)
+		(cmins, cseconds) = divmod(self.__Display.getValue(), 60)
 		(cmins, cseconds) = (int(cmins), int(cseconds))
 
 		mins_adj = gtk.Adjustment(value = 0, lower = 0, upper = mins, step_incr = 1)
@@ -1606,8 +1606,8 @@ class Christine(GtkMisc):
 		elif (type_file == gst.MESSAGE_BUFFERING):
 			percent = 0
 			percent = b.structure['buffer-percent']
-			self.__Display.set_text("%d" % percent)
-			self.__Display.value = (percent / 100)
+			self.__Display.setText("%d" % percent)
+			self.__Display.setValue((percent / 100))
 
 		return True
 
@@ -1632,10 +1632,10 @@ class Christine(GtkMisc):
 
 			if ((nanos > 0) and (self.__TimeTotal > 0)):
 				currenttime = (nanos / float(self.__TimeTotal))
-				self.__Display.set_text("%s/%s" % (time, time_total))
+				self.__Display.setText("%s/%s" % (time, time_total))
 
 				if ((currenttime >= 0) and (currenttime <= 1)):
-					self.__Display.value = currenttime
+					self.__Display.setValue(currenttime)
 		# Taking care only in gst.QueryError
 		# other errors are raised
 		except gst.QueryError:
@@ -1697,12 +1697,12 @@ class Christine(GtkMisc):
 		artist    = self.__Player.getTag('artist')
 		album     = self.__Player.getTag('album')
 		genre     = self.__Player.getTag('genre')
-		type_file = self.__Player.getType
+		type_file = self.__Player.getType()
 
 		if (type(genre) == type([])):
 			genre = ','.join(genre)
 
-		track_number = self.__Player.get_tag('track-number')
+		track_number = self.__Player.getTag('track-number')
 
 		if (title == ''):
 			title = os.path.split(self.__Player.getLocation())[1]
@@ -1767,7 +1767,7 @@ class Christine(GtkMisc):
 			self.__Notify.set_property('body', notify_text)
 			self.__Notify.show()
 
-		self.__Display.set_song(tooltext.replace('\n', ' '))
+		self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()
 	
 	########################################
