@@ -388,7 +388,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGconf, object):
 		"""
 		if (self.isVideo()):
 			self.__Type = 'video'
-		elif (self.issound()):
+		elif (self.isSound()):
 			self.__Type = 'sound'
 
 	#
