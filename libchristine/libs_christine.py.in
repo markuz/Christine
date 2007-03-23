@@ -43,7 +43,7 @@ class sanity:
 			self.__check_dir(os.path.join("@datadir@","christine","cplugins"))
 
 	def __check_christine_dir(self):
-		print "checking dir... %s"%wdir
+		#print "checking dir... %s"%wdir
 		if not os.path.exists(wdir):
 			#print "There is no christine dir!!"
 			os.mkdir(wdir)
@@ -53,7 +53,7 @@ class sanity:
 				self.__check_christine_dir()	
 
 	def __check_dir(self,dir):
-		print "checking dir... %s"%os.path.join(wdir,dir)
+		#print "checking dir... %s"%os.path.join(wdir,dir)
 		if not os.path.exists(dir):
 			print "there is no %s dir"%wdir
 			os.mkdir (dir)

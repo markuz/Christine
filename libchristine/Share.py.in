@@ -28,9 +28,13 @@ import gtk.glade
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.GtkMisc import *
+import sys
 
 # global PATH to share files required
-SHARE_PATH = os.path.join('@datadir@', 'christine')
+if "--devel" in sys.argv:
+	SHARE_PATH = os.path.join("./")
+else:
+	SHARE_PATH = os.path.join('@datadir@', 'christine')
 
 #
 # Share class manager for images, glade 
@@ -74,14 +78,14 @@ class Share(Singleton):
 	#
 	# @param  string file The file name without extension
 	# @return string or None
-	def getTemplate(self, file = None):
+	def getTemplate(self, file = None, root = None):
 		"""
 		Gets glade template
 		"""
 		if ((not isNull(file)) or (isStringEmpty(file))):
 			file = ''.join([file, '.glade'])
 			if (isFile(os.path.join(self.__PathTemplate, file))):
-				return glade_xml(os.path.join(self.__PathTemplate, file))
+				return glade_xml(os.path.join(self.__PathTemplate, file),root)
 
 		return None
 	

@@ -310,7 +310,6 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			nanos = self.query_position(gst.FORMAT_TIME)[0]
 		else:
 			return True
-
 		if (active):
 			self.__visualizationPlugin = gst.element_factory_make(self.getString('backend/vis-plugin'))
 			self.__VideoSink.set_property('force-aspect-ratio', False)
@@ -324,12 +323,14 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
 		self.__exposeCallback()
 
+		state = self.getState()[1]
 		self.pause()
 
 		self.setLocation(self.getLocation())
 		self.seekTo((nanos / gst.SECOND))
 
-		if (gst.State(gst.STATE_PLAYING) == self.__PlayBin.getState()[1]):
+		if gst.State(gst.STATE_PLAYING) == state:
+			print "play!"
 			self.playIt()
 	
 	#
@@ -391,6 +392,9 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			self.__Type = 'video'
 		elif (self.isSound()):
 			self.__Type = 'sound'
+		else:
+			self.__Type = "Unknown"
+		return self.__Type
 
 	#
 	# Returns nano secs format

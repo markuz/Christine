@@ -77,6 +77,7 @@ class Display(gtk.DrawingArea):
 		self.__Text           = ""
 		self.__WindowPosition = 0
 		self.__Value          = 0
+		self.value = self.__Value
 
 		self.setText(text)
 		self.set_size_request(300, 42)
@@ -179,7 +180,7 @@ class Display(gtk.DrawingArea):
 		"""
 
 		# Every speed improvement is really appreciated.
-		if (self.__Drawing):
+		if (self.__Drawing) or (self.window == None):
 			return True
 
 		self.__Drawing = True

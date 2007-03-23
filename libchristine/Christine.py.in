@@ -190,7 +190,7 @@ class Christine(GtkMisc):
 		self.__VBoxVideo = self.__XML['VBoxVideo']
 
 		self.__ScrolledMusic.add(self.__Library.tv)
-		self.__VBoxCore.show_all()
+		#self.__VBoxCore.show_all()
 
 		self.__Queue         = queue()
 		self.__ScrolledQueue = self.__XML['ScrolledQueue']
@@ -252,7 +252,6 @@ class Christine(GtkMisc):
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(path = self.__GConf.getString('backend/last_played'))
 
-		self.__Window.show_all()
 		if ('-q' in sys.argv):
 			sys.exit()
 
@@ -478,7 +477,7 @@ class Christine(GtkMisc):
 		if (self.__LibraryCurrentInter != None):
 			pix = self.__Share.getImageFromPix('blank')
 			pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-			self.__LibraryNaturalModel.set(self.__LibraryCurrentInter, pix, pix)
+			self.__LibraryNaturalModel.set(self.__LibraryCurrentInter, PIX, pix)
 		
 		# Search for the item in the library.
 		# if it exists then set it in the "backend/last_played"
@@ -495,6 +494,7 @@ class Christine(GtkMisc):
 
 			self.__Library.save()
 			self.__LastPlayed.append(filename)
+			print self.__LastPlayed
 			self.__GConf.setValue('backend/last_played', filename)
 
 		self.__Player.setLocation(filename)
@@ -591,14 +591,14 @@ class Christine(GtkMisc):
 		"""
 		self.__Player.setVisualization(widget.get_active())
 		self.__GConf.setValue('ui/visualization', widget.get_active())
-		self.visualMode()
+		self.visualModePlayer()
 
 		# Be shure that we are not in small view mode.
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
 
 		if not widget.get_active() and self.__IsFullScreen:
-			print 'self.__HPanedListsBox.show()'
+			self.__HPanedListsBox.show()
 			self.__VBoxVideo.show()
 			self.__VBoxTemp.hide()
 
@@ -623,7 +623,6 @@ class Christine(GtkMisc):
 		#        visualization enabled
 		if (not self.__IsFullScreen):
 			if ((self.__Player.isVideo()) or (self.__GConf.getBool('ui/visualization'))):
-				self.__VBoxVideo.hide()
 				self.__VBoxCore.remove(self.__Player)
 				self.__VBoxTemp.pack_start(self.__Player, True, True, 2)
 				self.__VBoxTemp.show_all()
@@ -646,7 +645,6 @@ class Christine(GtkMisc):
 			self.__VBoxCore.pack_start(self.__Player, True, True, 0)
 			self.__HBoxToolBoxContainerMini.show()
 			self.__MenuBar.show()
-			self.__VBoxVideo.show()
 			self.__IsFullScreen = False
 	
 	#
@@ -667,7 +665,7 @@ class Christine(GtkMisc):
 					self.goNext()
 			elif (event.keyval == 65365):
 				if (self.__IsFullScreen):
-					self.goPreview()
+					self.goPrev()
 					return True
 			elif (event.keyval == 102):
 				if (self.__IsFullScreen):
@@ -729,7 +727,7 @@ class Christine(GtkMisc):
 		# the self.__TextToSearch variable
 		self.__TextToSearch = self.__EntrySearch.get_text().lower()
 
-		if (self.__Search == ''):
+		if (self.__TextToSearch == ''):
 			self.jumpToPlaying()
 
 		# Since we are using a filter model (in the library) we can use
@@ -761,11 +759,6 @@ class Christine(GtkMisc):
 	# @param  ?       iter
 	# @return void
 	def filter(self, model, iter):
-		"""
-		This method is called by the library.refilter filtered model method.
-		This code should be as simple as we can, we must do everythin
-		as fast as we can
-		"""
 		if (self.__IsImporting):
 			return True
 
@@ -882,12 +875,14 @@ class Christine(GtkMisc):
 	# @access public
 	# @param  widget
 	# @return void	
-	def goPreview(self, widget = None):
+	def goPrev(self, widget = None):
 		"""
 		Go to play the previous song. If no previous song was played in the 
 		current session, then plays the previous song in the library
 		"""
 		if (len(self.__LastPlayed) > 1):
+			#remove the last played since it's the same that we are playing.
+			self.__LastPlayed.pop()
 			self.setLocation(self.__LastPlayed.pop())
 			self.__PlayButton.set_active(False)
 			self.__PlayButton.set_active(True)
@@ -1145,7 +1140,7 @@ class Christine(GtkMisc):
 				iter = self.getIterNatural(self.__LibraryCurrentInter)
 				pix  = self.__Share.getImageFromPix('sound')
 				pix  = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-				self.__LibraryNaturalModel.set(iter, pix, pix)
+				self.__LibraryNaturalModel.set(iter, PIX, pix)
 
 			path = self.__LibraryModel.get_path(self.__LibraryCurrentInter)
 
@@ -1291,7 +1286,7 @@ class Christine(GtkMisc):
 		is an optional  boolean value that defines
 		if the files are going to queue or not
 		"""
-		XML = self.__Share.getImage('FileSelector')
+		XML = self.__Share.getTemplate('FileSelector')
 		fs  = XML['fs']
 		fs.set_icon(self.__Share.getImage('logo'))
 
@@ -1636,7 +1631,7 @@ class Christine(GtkMisc):
 				self.__Display.setText("%s/%s" % (time, time_total))
 
 				if ((currenttime >= 0) and (currenttime <= 1)):
-					self.__Display.setValue(currenttime)
+					self.__Display.setScale(currenttime)
 		# Taking care only in gst.QueryError
 		# other errors are raised
 		except gst.QueryError:
@@ -1728,7 +1723,7 @@ class Christine(GtkMisc):
 			notify_text += " from <big>%s</big>" % album
 			tooltext    += "\nfrom %s" % album
 
-		# Updating the info in library, only if it is avaylable.
+		# Updating the info in library, only if it is available.
 		if (self.__IterNatural is not None):
 			if (title != ''):
 				self.__LibraryNaturalModel.set(self.__IterNatural,
@@ -1786,14 +1781,14 @@ class Christine(GtkMisc):
 		Simple or complete visualization
 		"""
 		if (self.__Player.isVideo()):
-			self.__VBoxCore.show_all()
+			self.__VBoxVideo.show_all()
 		elif (self.__Player.isSound()):
 			if (self.__GConf.getBool('ui/visualization')):
-				self.__VBoxCore.show_all()
+				self.__HBoxPlayer.show_all()
 			else:
-				self.__VBoxCore.hide_all()
+				self.__HBoxPlayer.hide()
 		else:
-			self.__VBoxCore.hide_all()
+			self.__HBoxPlayer.hide()
 	
 	#
 	# Open a dialog to select a remote location
@@ -1867,3 +1862,8 @@ class Christine(GtkMisc):
 		gtk.main()
 
 
+# This is useful when we want to launch christine 
+# directiy from python
+if __name__ == "__main__":
+	a = Christine()
+	a.runGtk()

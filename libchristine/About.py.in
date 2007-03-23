@@ -39,7 +39,7 @@ from libchristine.Share import *
 #
 # Manage about GTK dialog
 #
-class about(GtkMisc):
+class guiAbout(GtkMisc):
 	"""
 	Manange about GTK dialog
 	"""

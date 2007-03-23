@@ -26,13 +26,9 @@ class glade_xml:
 		'''constructor, receives the name of the interface descriptor 
 		and then initialize gtk.glade.XML'''
 		locale_dir = "@datadir@/locale/"
-		if os.path.isdir("./gui/"):	
-			self.wdir = "./gui/"
-		else:
-			self.wdir = "@datadir@/christine/gui/"
 		gtk.glade.bindtextdomain("@programname@",locale_dir)
 		gtk.glade.textdomain("@programname@")
-		self.__xml = gtk.glade.XML(os.path.join(self.wdir,file),root,None)
+		self.__xml = gtk.glade.XML(file,root,None)
 		self.get_widget = self.__xml.get_widget
 
 	def __getitem__(self,widget):
@@ -86,7 +82,11 @@ class GtkMisc:
 	
 class error:
 	def __init__(self,text):
-		xml = glade_xml("error.glade")
+		if os.path.isdir("./gui/"):
+			path = "./gui"
+		else:
+			path = os.path.join("@datadir@","christine","gui")
+		xml = glade_xml(os.path.join(path,"error.glade"))
 		dialog		= xml["dialog"]
 		error_label = xml["error"]
 		error_label.set_text(text)

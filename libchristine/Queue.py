@@ -25,6 +25,7 @@ from libchristine.libs_christine import *
 from libchristine.GtkMisc import *
 from libchristine.Discoverer import *
 from libchristine.Translator import *
+from libchristine.Share import *
 from libchristine import clibrary
 #import pdb
 
@@ -47,13 +48,14 @@ from libchristine import clibrary
 class queue(GtkMisc):
 	def __init__(self):
 		GtkMisc.__init__(self)
+		self.__Share = Share()
 		self.iters = {}
 		self.discoverer = Discoverer()
 		self.discoverer.Bus.add_watch(self.message_handler)
 		self.library = lib_library("queue")
-		self.xml = glade_xml("TreeViewReorderable.glade","ltv")
-		self.xml.signal_autoconnect(self)
-		self.treeview = self.xml["ltv"]
+		self.__xml = self.__Share.getTemplate("TreeViewReorderable","ltv")
+		self.__xml.signal_autoconnect(self)
+		self.treeview = self.__xml["ltv"]
 		self.treeview.set_headers_visible(False)
 		#self.treeview.set_reorderable(True)
 		self.gen_model()
@@ -83,26 +85,26 @@ class queue(GtkMisc):
 		d = self.discoverer
 		t = b.type
 		if t == gst.MESSAGE_TAG:
-			#print a,b,d.get_location(),self.model.get_path(self.iters[d.get_location()])
-			self.discoverer.found_tags_cb(b.parse_tag())
-			name	= self.strip_xml_entities(d.get_tag("title"))
-			album	= self.strip_xml_entities(d.get_tag("album"))
-			artist	= self.strip_xml_entities(d.get_tag("artist"))
-			tn		= d.get_tag("track-number")
+			#print a,b,d.getLocation(),self.model.get_path(self.iters[d.getLocation()])
+			self.discoverer.callbackFoundTags(b.parse_tag())
+			name	= self.strip_XML_entities(d.getTag("title"))
+			album	= self.strip_XML_entities(d.getTag("album"))
+			artist	= self.strip_XML_entities(d.getTag("artist"))
+			tn		= d.getTag("track-number")
 			if name == "":
 				n = os.path.split(self.file)[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			name = "<b><i>%s</i></b>"%name
-			name = self.strip_xml_entities(name)
+			name = self.strip_XML_entities(name)
 			if album !="":
 				name += "\n from <i>%s</i>"%album
 			if artist != "":
 				name += "\n by <i>%s</i>"%artist
 
 			model = self.model
-			model.set(self.iters[d.get_location()],
+			model.set(self.iters[d.getLocation()],
 			#model.set(self.iters,
-						PATH,d.get_location(),
+						PATH,d.getLocation(),
 						NAME,name,
 						TYPE,"sound")
 			self.save()
@@ -114,7 +116,7 @@ class queue(GtkMisc):
 		self.discoverer.tags = {}
 		if not os.path.isfile(file):
 			return False
-		self.discoverer.set_location(file)
+		self.discoverer.setLocation(file)
 		model = self.model
 		if prepend:
 			iter = model.prepend()
@@ -122,7 +124,7 @@ class queue(GtkMisc):
 			iter = model.append()
 		model.set(iter,
 					PATH,file,
-					NAME,"<b>%s</b>"%self.strip_xml_entities(os.path.split(file)[1]),
+					NAME,"<b>%s</b>"%self.strip_XML_entities(os.path.split(file)[1]),
 					TYPE,"sound")
 		self.iters[file] = iter
 
@@ -163,8 +165,8 @@ class queue(GtkMisc):
 	#	model = widget.get_model()
 	#	iter = model.get_iter(path)
 	#	filename = model.get_value(iter,PATH)
-	#	self.main.set_location(filename)
-	#	self.main.player.set_location(filename)
+	#	self.main.setLocation(filename)
+	#	self.main.player.setLocation(filename)
 	#	self.main.play_button.set_active(False)
 	#	self.main.play_button.set_active(True)
 	#	self.main.filename = filename

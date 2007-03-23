@@ -25,7 +25,7 @@
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 import gconf
-
+import gtk
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 
@@ -76,6 +76,7 @@ class ChristineGConf(Singleton):
 		self.__GConf.set_error_handling(gconf.CLIENT_HANDLE_ALL)
 		self.setDefaultValues()
 		self.notifyAdd = self.__GConf.notify_add
+		self.notify_add = self.__GConf.notify_add
 	
 	#
 	# Sets default values
@@ -122,13 +123,14 @@ class ChristineGConf(Singleton):
 		"""
 		Toggle visible
 		"""
+		value = entry.get_value().get_bool()
 		if (type(widget) != gtk.TreeViewColumn):
-			if (entry.get_value().get_bool()):
+			if (value):
 				widget.show()
 			else:
 				widget.hide()
 		elif (type(widget) == gtk.TreeViewColumn):
-			widget.set_visible(entry.get_value().get_bool())
+			widget.set_visible(value)
 		else:
 			raise TypeError('How should I show/hide this widget: ', widget)
 	
@@ -140,7 +142,7 @@ class ChristineGConf(Singleton):
 		"""
 		Toggle
 		"""
-		self.set_value(entry, widget.get_active())
+		self.setValue(entry, widget.get_active())
 	
 	#
 	# Gets data

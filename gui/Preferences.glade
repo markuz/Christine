@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!-- Generated with glade3
+<!--Generated with glade3 3.0.3 on Thu Mar 22 20:21:13 2007 by markuz@cucusa
 	Version: 3.0.1
 	Date: Wed Dec 27 19:54:15 2006
 	User: markuz
 	Host: cucusa
 -->
 <glade-interface>
-  <widget class="GtkDialog" id="main_window">
+  <widget class="GtkDialog" id="WindowCore">
     <property name="width_request">320</property>
     <property name="visible">True</property>
     <property name="title">Preferences</property>
@@ -28,7 +28,7 @@
                 <child>
                   <widget class="GtkFrame" id="frame1">
                     <property name="visible">True</property>
-                    <property name="label_xalign">0.000000</property>
+                    <property name="label_xalign">0</property>
                     <child>
                       <widget class="GtkAlignment" id="alignment1">
                         <property name="visible">True</property>
@@ -146,7 +146,7 @@
                 <child>
                   <widget class="GtkFrame" id="frame4">
                     <property name="visible">True</property>
-                    <property name="label_xalign">0.000000</property>
+                    <property name="label_xalign">0</property>
                     <child>
                       <widget class="GtkAlignment" id="alignment4">
                         <property name="visible">True</property>
@@ -229,7 +229,7 @@
                 <child>
                   <widget class="GtkFrame" id="frame2">
                     <property name="visible">True</property>
-                    <property name="label_xalign">0.000000</property>
+                    <property name="label_xalign">0</property>
                     <child>
                       <widget class="GtkAlignment" id="alignment2">
                         <property name="visible">True</property>
@@ -276,7 +276,7 @@ autoaudiosink</property>
                 <child>
                   <widget class="GtkFrame" id="frame3">
                     <property name="visible">True</property>
-                    <property name="label_xalign">0.000000</property>
+                    <property name="label_xalign">0</property>
                     <child>
                       <widget class="GtkAlignment" id="alignment3">
                         <property name="visible">True</property>
@@ -341,7 +341,7 @@ xvimagesink</property>
               <widget class="GtkFrame" id="frame5">
                 <property name="visible">True</property>
                 <property name="border_width">3</property>
-                <property name="label_xalign">0.000000</property>
+                <property name="label_xalign">0</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment5">
                     <property name="visible">True</property>

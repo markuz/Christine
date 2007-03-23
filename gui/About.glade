@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!-- Generated with glade3
+<!--Generated with glade3 3.0.3 on Thu Mar 22 20:02:02 2007 by markuz@cucusa
 	Version: 3.0.1
 	Date: Mon Feb  5 12:59:47 2007
 	User: markuz
@@ -43,8 +43,13 @@
 This General Public License does not permit incorporating Christine into
 proprietary programs.  
 </property>
-    <property name="authors">Marco Antonio Islas Cruz</property>
-    <property name="documenters">Marco Antonio Islas Cruz</property>
+    <property name="authors">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
+Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
+Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;
+</property>
+    <property name="documenters">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
+Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
+Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;</property>
     <property name="translator_credits">translator-credits</property>
     <property name="artists">Marco Antonio Islas Cruz</property>
     <child internal-child="vbox">

@@ -29,11 +29,12 @@ from libchristine.GtkMisc import *
 from libchristine.Translator import *
 from libchristine.Share import *
 from libchristine.Validator import *
+from libchristine.ChristineGConf import *
 
 #
 # Preferences gtk dialog
 #
-class Preferences(GtkMisc):
+class guiPreferences(GtkMisc):
 	"""
 	Preferences gtk dialog
 	"""
@@ -45,7 +46,7 @@ class Preferences(GtkMisc):
 		"""
 		Constructor
 		"""
-		gtk_misc.__init__(self)
+		GtkMisc.__init__(self)
 
 		self.__GConf = ChristineGConf()
 		self.__Share = Share()
@@ -99,7 +100,7 @@ class Preferences(GtkMisc):
 		Saves Model
 		"""
 		exts = ','.join([self.__FModel.get_value(k.iter, 0) for k in self.__FModel])
-		self.__GConf.set_value('backend/allowed_files', exts)
+		self.__GConf.setValue('backend/allowed_files', exts)
 
 	#
 	#  Callback when cursor change
@@ -108,7 +109,7 @@ class Preferences(GtkMisc):
 		"""
 		Callback when cursor change
 		"""
-		self.__FModel.set_value(self.__FModel.get_iter(path), 0, value)
+		self.__FModel.setValue(self.__FModel.get_iter(path), 0, value)
 		self.__saveFModel()
 
 	#
@@ -119,7 +120,7 @@ class Preferences(GtkMisc):
 		Update model
 		"""
 		self.__FModel.clear()
-		extensions = self.__GConf.get_string('backend/allowed_files').split(',')
+		extensions = self.__GConf.getString('backend/allowed_files').split(',')
 		extensions.sort()
 
 		if (len(extensions) < 1):
@@ -163,8 +164,8 @@ class Preferences(GtkMisc):
 		"""
 		Selects sinks
 		"""
-		videosink = self.__GConf.get_string('backend/videosink')
-		audiosink = self.__GConf.get_string('backend/audiosink')
+		videosink = self.__GConf.getString('backend/videosink')
+		audiosink = self.__GConf.getString('backend/audiosink')
 		audio_m   = self.__AudioSink.get_model()
 		video_m   = self.__VideoSink.get_model()
 
@@ -194,7 +195,7 @@ class Preferences(GtkMisc):
 		path     = combobox.get_active()
 		model    = combobox.get_model()
 		selected = model.get_value(model.get_iter(path), 0)
-		self.__GConf.set_value('backend/%s' % sink, selected)
+		self.__GConf.setValue('backend/%s' % sink, selected)
 	
 	#
 	# Sets checkboxes
@@ -204,37 +205,37 @@ class Preferences(GtkMisc):
 		Sets check boxes
 		"""
 		self.__Artist = self.XML['artist']
-		self.__Artist.set_active(self.__GConf.get_bool('ui/show_artist'))
+		self.__Artist.set_active(self.__GConf.getBool('ui/show_artist'))
 		self.__Artist.connect('toggled', self.__GConf.toggle,'ui/show_artist')
 
 		self.__Album = self.XML['album']
-		self.__Album.set_active(self.__GConf.get_bool('ui/show_album'))
+		self.__Album.set_active(self.__GConf.getBool('ui/show_album'))
 		self.__Album.connect('toggled',self.__GConf.toggle,'ui/show_album')
 
 		self.__Type = self.XML['type']
-		self.__Type.set_active(self.__GConf.get_bool('ui/show_type'))
+		self.__Type.set_active(self.__GConf.getBool('ui/show_type'))
 		self.__Type.connect('toggled',self.__GConf.toggle,'ui/show_type')
 
 		self.__Length = self.XML['length']
-		self.__Length.set_active(self.__GConf.get_bool('ui/show_length'))
+		self.__Length.set_active(self.__GConf.getBool('ui/show_length'))
 		self.__Length.connect('toggled',self.__GConf.toggle,'ui/show_length')
 	
 		self.__TrackNumber = self.XML['track_number']
-		self.__TrackNumber.set_active(self.__GConf.get_bool('ui/show_tn'))
+		self.__TrackNumber.set_active(self.__GConf.getBool('ui/show_tn'))
 		self.__TrackNumber.connect('toggled',self.__GConf.toggle,'ui/show_tn')
 		
 		self.__PlayCount = self.XML['play_count']
-		self.__PlayCount.set_active(self.__GConf.get_bool('ui/show_play_count'))
+		self.__PlayCount.set_active(self.__GConf.getBool('ui/show_play_count'))
 		self.__PlayCount.connect('toggled',self.__GConf.toggle,'ui/show_play_count')
 
 		self.__Genre = self.XML['genre']
-		self.__Genre.set_active(self.__GConf.get_bool('ui/show_genre'))
+		self.__Genre.set_active(self.__GConf.getBool('ui/show_genre'))
 		self.__Genre.connect('toggled',self.__GConf.toggle,'ui/show_genre')
 
 		self__NotifyArea = self.XML['notification_area']
-		self__NotifyArea.set_active(self.__GConf.get_bool('ui/show_in_notification_area'))
+		self__NotifyArea.set_active(self.__GConf.getBool('ui/show_in_notification_area'))
 		self__NotifyArea.connect('toggled',self.__GConf.toggle,'ui/show_in_notification_area')
 
 		self.__LibNotify = self.XML['pynotify']
-		self.__LibNotify.set_active(self.__GConf.get_bool('ui/show_pynotify'))
+		self.__LibNotify.set_active(self.__GConf.getBool('ui/show_pynotify'))
 		self.__LibNotify.connect('toggled',self.__GConf.toggle,'ui/show_pynotify')

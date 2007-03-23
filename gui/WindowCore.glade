@@ -200,7 +200,7 @@
                         <property name="visible">True</property>
                         <property name="label">Prev</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="goPreview"/>
+                        <signal name="activate" handler="goPrev"/>
                         <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image590">
@@ -530,7 +530,7 @@
                           <widget class="GtkButton" id="button1">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <signal name="clicked" handler="goPreview"/>
+                            <signal name="clicked" handler="goPrev"/>
                             <child>
                               <widget class="GtkImage" id="image1">
                                 <property name="visible">True</property>

@@ -27,6 +27,7 @@ from libchristine.Discoverer import *
 from libchristine.Translator import *
 from libchristine import clibrary
 from libchristine.ChristineGConf import *
+from libchristine.Share import *
 
 (PATH,
 NAME,
@@ -60,15 +61,16 @@ class library(GtkMisc,gtk.DrawingArea):
 		'''
 		self.iters = {}
 		GtkMisc.__init__(self)
+		self.__Share = Share()
 		gtk.DrawingArea.__init__(self)
-		self.xml = glade_xml("TreeViewSources.glade","treeview")
+		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		gobject.signal_new("tags-found",self,
 				gobject.SIGNAL_RUN_LAST,
 				gobject.TYPE_NONE,
 				(gobject.TYPE_PYOBJECT,))
-		self.xml.signal_autoconnect(self)
+		self.__xml.signal_autoconnect(self)
 		self.gconf = ChristineGConf()
-		self.tv = self.xml["treeview"]
+		self.tv = self.__xml["treeview"]
 		self.library_lib = lib_library("music")
 		self.gen_model()
 		filter = self.model.filter_new()
