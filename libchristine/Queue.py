@@ -45,8 +45,14 @@ from libchristine import clibrary
 		VNAME,
 		VPIX) = xrange(3)
 
-class queue(GtkMisc):
+class queue(GtkMisc,gtk.DrawingArea):
 	def __init__(self):
+		gtk.DrawingArea.__init__(self)
+		gobject.signal_new("tags-fount",self,
+				gobject.SIGNAL_RUN_LAST,
+				gobject.TYPE_NONE,
+				(gobject.TYPE_PYOBJECT,))
+
 		GtkMisc.__init__(self)
 		self.__Share = Share()
 		self.iters = {}
@@ -58,6 +64,7 @@ class queue(GtkMisc):
 		self.treeview = self.__xml["ltv"]
 		self.treeview.set_headers_visible(False)
 		#self.treeview.set_reorderable(True)
+		gobject
 		self.gen_model()
 		self.treeview.set_model(self.model)
 		self.__add_columns()
@@ -108,6 +115,7 @@ class queue(GtkMisc):
 						NAME,name,
 						TYPE,"sound")
 			self.save()
+			self.__emitSignal("tags-found")
 		return True
 	
 	def add(self,file,prepend=False):
@@ -127,6 +135,10 @@ class queue(GtkMisc):
 					NAME,"<b>%s</b>"%self.strip_XML_entities(os.path.split(file)[1]),
 					TYPE,"sound")
 		self.iters[file] = iter
+	
+	def __emitSignal(self,signal):
+		self.emit(signal,self)
+		return False
 
 	def __add_columns(self):
 		render = gtk.CellRendererText()

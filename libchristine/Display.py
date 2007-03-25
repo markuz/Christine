@@ -92,7 +92,7 @@ class Display(gtk.DrawingArea):
 		(x, y)       = self.get_pointer()
 		(minx, miny) = self.__Layout.get_pixel_size()
 		minx         = miny
-		width        = ((self.__W - miny) - (BORDER_WIDTH * 3))
+		width        = (self.__W - miny - (BORDER_WIDTH * 3))
 		miny         = (miny + (BORDER_WIDTH * 2))
 		maxx         = (minx + width)
 		maxy         = (miny + BORDER_WIDTH)
@@ -192,15 +192,15 @@ class Display(gtk.DrawingArea):
 
 		self.__Context.rectangle(BORDER_WIDTH, 
 		                         BORDER_WIDTH,
-			                     ((w - 2) * BORDER_WIDTH), 
-			                     ((h - 2) * BORDER_WIDTH))
+			                     (w - (2 * BORDER_WIDTH)), 
+			                     (h - (2 * BORDER_WIDTH)))
 		
 		self.__Context.clip()
 
 		self.__Context.rectangle(BORDER_WIDTH, 
 		                         BORDER_WIDTH,
-			                     ((w - 2) * BORDER_WIDTH), 
-			                     ((h - 2) * BORDER_WIDTH))
+			                     (w - (2 * BORDER_WIDTH)), 
+			                     (h - (2 * BORDER_WIDTH)))
 		
 		self.__Context.set_source_rgba(1, 1, 1, 1)
 		self.__Context.fill_preserve()

@@ -86,7 +86,7 @@ class error:
 			path = "./gui"
 		else:
 			path = os.path.join("@datadir@","christine","gui")
-		xml = glade_xml(os.path.join(path,"error.glade"))
+		xml = glade_xml(os.path.join(path,"Error.glade"))
 		dialog		= xml["dialog"]
 		error_label = xml["error"]
 		error_label.set_text(text)

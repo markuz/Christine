@@ -600,7 +600,7 @@ class Christine(GtkMisc):
 		if not widget.get_active() and self.__IsFullScreen:
 			self.__HPanedListsBox.show()
 			self.__VBoxVideo.show()
-			self.__VBoxTemp.hide()
+			self.__VBoxTemporal.hide()
 
 		if (self.__IsFullScreen):
 			self.__IsFullScreen = False
@@ -623,9 +623,10 @@ class Christine(GtkMisc):
 		#        visualization enabled
 		if (not self.__IsFullScreen):
 			if ((self.__Player.isVideo()) or (self.__GConf.getBool('ui/visualization'))):
-				self.__VBoxCore.remove(self.__Player)
-				self.__VBoxTemp.pack_start(self.__Player, True, True, 2)
-				self.__VBoxTemp.show_all()
+				self.__HBoxPlayer.remove(self.__Player)
+				self.__VBoxTemporal.pack_start(self.__Player, True, True, 2)
+				self.__VBoxTemporal.show_all()
+				self.__VBoxVideo.hide()
 				self.__Window.fullscreen()
 				self.__IsFullScreen = True
 			else:
@@ -640,9 +641,10 @@ class Christine(GtkMisc):
 				self.__Player.hide()
 
 			self.__Window.unfullscreen()
-			self.__VBoxTemp.hide()
-			self.__VBoxTemp.remove(self.__Player)
-			self.__VBoxCore.pack_start(self.__Player, True, True, 0)
+			self.__VBoxTemporal.hide()
+			self.__VBoxTemporal.remove(self.__Player)
+			self.__HBoxPlayer.pack_start(self.__Player, True, True, 0)
+			self.__VBoxVideo.show()
 			self.__HBoxToolBoxContainerMini.show()
 			self.__MenuBar.show()
 			self.__IsFullScreen = False
@@ -1328,7 +1330,6 @@ class Christine(GtkMisc):
 		response  = ds.run()
 		filenames = ds.get_filenames()
 
-		ds.destroy()
 
 		if (response == gtk.RESPONSE_OK):
 			for i in filenames:
@@ -1342,6 +1343,7 @@ class Christine(GtkMisc):
 						self.addFiles(files = files)
 
 			self.__Library.save()
+		ds.destroy()
 
 	#
 	# This add a single directory, is simplier that addDirectories
@@ -1433,13 +1435,14 @@ class Christine(GtkMisc):
 	#
 	# @access private
 	# @return boolean
-	def __addFile(self, queue = False, data = None):
+	def __addFile(self, list = None, data = None,queue = False):
 		"""
 		Add a single file, to the library or queue.
 		the files are taken from the self.__FilesToAdd
 		list. the only one argument is queue, wich defines
 		if the importing is to the queue
 		"""
+		print locals()
 		if (type(queue) != type(True)):
 			queue = False
 
@@ -1460,9 +1463,6 @@ class Christine(GtkMisc):
 					self.__Library.save()
 			else:
 				self.__Queue.add(new_file)
-
-				if (len(self.__FilesToAdd) > 0):
-					self.__Queue.add(self.__FilesToAdd.pop())
 
 			length = len(self.__FilesToAdd)
 
@@ -1529,9 +1529,11 @@ class Christine(GtkMisc):
 		self.__Percentage      = 0
 		self.__TimeTotalNFiles = len(self.__FilesToAdd)
 
-		self.__addFile(queue)
+		self.__addFile(queue=queue)
 		self.__Library.connect('tags-found', self.__addFile)
+		self.__Queue.connect('tags-found', self.__addFile,True)
 		self.__AddWindow.run()
+		self.__AddWindow.destroy()
 
 	#
 	# Gets path from
@@ -1781,7 +1783,7 @@ class Christine(GtkMisc):
 		Simple or complete visualization
 		"""
 		if (self.__Player.isVideo()):
-			self.__VBoxVideo.show_all()
+			self.__HBoxPlayer.show_all()
 		elif (self.__Player.isSound()):
 			if (self.__GConf.getBool('ui/visualization')):
 				self.__HBoxPlayer.show_all()

@@ -1,3 +1,13 @@
+2007-03-24 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* libchristine/Display.py: 
+		Fixed a small bug in the main rectangle draw.
+		Fixed a small bug in the calculation of the progress bar
+		width affecting the value.
+	* libchristine/Christine.py.in: 
+		Fixed a blocker bug in the 	FullScreen mode.
+		Fixed the Import to queue
+	* libchristine/Queue.py: 
+		Fixed the Import to queue
 2007-03-14 Marco Antonio Islas Cruz	<markuz@islascruz.org>
 	* renaming lib_christine to libchristine affecting all
 	module import.
