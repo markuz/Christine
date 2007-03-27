@@ -126,6 +126,7 @@ IT_PROG_INTLTOOL
 AC_CONFIG_FILES([
 Makefile
 libchristine/Makefile
+libchristine/pattern/Makefile
 cplugins/Makefile
 gui/Makefile
 gui/pixmaps/Makefile

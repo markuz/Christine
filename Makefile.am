@@ -1,4 +1,4 @@
-SUBDIRS = libchristine gui po cplugins
+SUBDIRS = libchristine gui po cplugins libchristine/pattern/
 
 bin_SCRIPTS = christine
 
