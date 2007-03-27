@@ -19,10 +19,12 @@
 import os,sys
 from libchristine.Translator import *
 from libchristine.GtkMisc import *
+from libchristine.Share import *
 
 sys.path.append(os.path.join(os.environ["HOME"],
 		".christine"))
-sys.path.append("@datadir@/christine")
+if (not "--devel" in sys.argv):
+	sys.path.append("@datadir@/christine")
 print sys.path
 import uplugins
 import cplugins
@@ -49,24 +51,24 @@ class ChristinePlugins(GtkMisc):
 			".christine","uplugins"))
 		files = [".".join(k.split(".")[:-1]) for k in files if k.split(".")[-1] == "py" and ".".join(k.split(".")[:-1]) != "__init__"]
 		self.__imports(files,"uplugins")
-		files = os.listdir("@datadir@/christine/cplugins")
+		files = os.listdir(os.path.join(SHARE_PATH,"cplugins"))
 		files = [".".join(k.split(".")[:-1]) for k in files if k.split(".")[-1] == "py" and ".".join(k.split(".")[:-1]) != "__init__"]
 		self.__imports(files,"cplugins")
 
 	
 	def __create_interface(self):
-		#self.interface = interface
-		#self.interface.datadir = "@datadir@"
-		#self.interface.list_vbox = self.main.VBoxList
-		#self.interface.menubar = self.main.MenuBar
-		#self.interface.search_box = self.main.EntrySearch
+		self.interface = interface
+		self.interface.datadir = "@datadir@"
+		self.interface.list_vbox = self.main.VBoxList
+		self.interface.menubar = self.main.MenuBar
+		self.interface.search_box = self.main.EntrySearch
 		#self.interface.list_box = self.main.list_box
-		#self.interface.list_vbox = self.main.VBoxList
-		#self.interface.library_treeview = self.main.TreeView
-		#self.interface.menus = self.main.Menus
-		#self.interface.pack = self.pack
-		#self.interface.write = self.write
-		#self.interface.register_on_menu = self.register_on_menu
+		self.interface.list_vbox = self.main.VBoxList
+		self.interface.library_treeview = self.main.TreeView
+		self.interface.menus = self.main.Menus
+		self.interface.pack = self.pack
+		self.interface.write = self.write
+		self.interface.register_on_menu = self.register_on_menu
 		pass
 	
 	def pack(self,widget,item,start=False,expand=False,fill=False,border=0):
