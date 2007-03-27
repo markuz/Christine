@@ -137,12 +137,15 @@ class Christine(GtkMisc):
 		"""
 		# Calling some widget descriptors with no callback connected "by hand"
 		# This interface should not be private.
-		self.__VBoxTemporal   = self.__XML['VBoxTemporal']
-		self.__MenuBar        = self.__XML['MenuBar']
-		self.__HBoxSearch     = self.__XML['HBoxSearch']
-		self.__EntrySearch    = self.__XML['EntrySearch']
+		#===================================================
+		# Public Widgets
+		self.MenuBar        = self.__XML['MenuBar'] 
+		self.HBoxSearch    = self.__XML['HBoxSearch']
+		self.EntrySearch    = self.__XML['EntrySearch'] 
+		self.VBoxList       = self.__XML['VBoxList'] 
+		#Private widgets
 		self.__HPanedListsBox = self.__XML['HPanedListsBox']
-		self.__VBoxList       = self.__XML['VBoxList']
+		self.__VBoxTemporal   = self.__XML['VBoxTemporal']
 		# Ends the call to widgets descriptors not connected by hadn
 
 		# Gets window widget from glade template
@@ -576,7 +579,7 @@ class Christine(GtkMisc):
 				(w, h) = (800, 480)
 
 			self.__HPanedListsBox.show()
-			self.__HBoxSearch.show()
+			self.HBoxSearch.show()
 			self.__Window.resize(w, h)
 
 	#
@@ -711,7 +714,7 @@ class Christine(GtkMisc):
 		"""
 		Set the focus on the Search entry
 		"""
-		self.__EntrySearch.grab_focus()
+		self.EntrySearch.grab_focus()
 
 	#
 	# Perform the actions to make a search
@@ -727,7 +730,7 @@ class Christine(GtkMisc):
 
 		# Store the text that is in search box into 
 		# the self.__TextToSearch variable
-		self.__TextToSearch = self.__EntrySearch.get_text().lower()
+		self.__TextToSearch = self.EntrySearch.get_text().lower()
 
 		if (self.__TextToSearch == ''):
 			self.jumpToPlaying()
@@ -749,7 +752,7 @@ class Christine(GtkMisc):
 		"""
 		Entry search cleaning
 		"""
-		self.__EntrySearch.set_text('')
+		self.EntrySearch.set_text('')
 
 	#
 	# This method is called by the library.refilter filtered model method.
