@@ -567,7 +567,7 @@ class Christine(GtkMisc):
 
 		if (active):
 			self.__HPanedListsBox.hide()
-			self.__HBoxSearch.hide()
+			self.HBoxSearch.hide()
 
 			self.__WindowSize = self.__Window.get_size()
 			self.__Window.unmaximize()

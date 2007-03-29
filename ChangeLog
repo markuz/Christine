@@ -1,3 +1,6 @@
+2007-03-29 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* libchristine/Chrinstine.py.in:
+		Fixed a bug when trying to get the Small View mode.
 2007-03-24 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Display.py: 
 		Fixed a small bug in the main rectangle draw.
