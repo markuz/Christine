@@ -18,17 +18,17 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-from lib_christine.discoverer import *
-from lib_christine.gtk_misc import *
-from lib_christine.library import *
-from lib_christine.trans import *
+from lib_christine.Discoverer import *
+from lib_christine.GtkMisc import *
+from lib_christine.Library import *
+from lib_christine.Translator import *
 
-class Handler(gtk_misc):
+class Handler(GtkMisc):
 	def __init__(self,interface):
 		self.interface = interface
-		self.discoverer = discoverer()
-		self.discoverer.bus.add_watch(self.message_handler)
-		gtk_misc.__init__(self)
+		self.__discoverer = Discoverer()
+		self.di.bus.add_watch(self.message_handler)
+		GtkMisc.__init__(self)
 		self.gconf = christine_gconf()
 		active = self.gconf.gconf.key_is_writable("/apps/christine/plugins/show_properties")
 		if active == None:
@@ -46,6 +46,7 @@ class Handler(gtk_misc):
 		menuitem.show_all()
 		menuitem.connect("activate",self.show)
 		#self.interface.register_on_menu("edit",menuitem)
+		print menuitem
 		self.interface.menus["edit"].append(menuitem)
 	
 	def start(self):
@@ -55,7 +56,7 @@ class Handler(gtk_misc):
 		selection = self.interface.library_treeview.get_selection()
 		model,iter = selection.get_selected()
 		file = model.get_value(iter,PATH)
-		self.discoverer.set_location(file)
+		self.__discoverer.set_location(file)
 		xml				= glade_xml("properties.glade")
 		self.dialog			= xml["dialog"]
 		self.file		= xml["file"]
@@ -75,25 +76,25 @@ class Handler(gtk_misc):
 		
 	def message_handler(self,a,b):
 		if b.type == gst.MESSAGE_TAG:
-			self.discoverer.found_tags_cb(b.parse_tag())
+			self.__discoverer.found_tags_cb(b.parse_tag())
 			self.check_tags()
 		return True
 			
 	def check_tags(self):
-		date = self.discoverer.get_tag("date")
+		date = self.__discoverer.getTag("date")
 		if type(date) == gst.Date:
 			day = date.day
 			month = date.month
 			year = date.year
 		else:
 			day,month,year = (0,0,0)
-		self.tn.set_text(str(self.discoverer.get_tag("track-number")))
-		self.title.set_text(self.discoverer.get_tag("title"))
-		self.album.set_text(self.discoverer.get_tag("album"))
-		self.artist.set_text(self.discoverer.get_tag("artist"))
-		self.genre.set_text(self.discoverer.get_tag("genre"))
+		self.tn.set_text(str(self.__discoverer.getTag("track-number")))
+		self.title.set_text(self.__discoverer.getTag("title"))
+		self.album.set_text(self.__discoverer.getTag("album"))
+		self.artist.set_text(self.__discoverer.getTag("artist"))
+		self.genre.set_text(self.__discoverer.getTag("genre"))
 		self.date.set_text("%d-%d-%d"%(year,month,day))
-		self.acodec.set_text(self.discoverer.get_tag("audio-codec"))
-		self.vcodec.set_text(self.discoverer.get_tag("video-codec"))
-		self.mode.set_text(self.discoverer.get_tag("mode"))
-		self.bitrate.set_text(str(self.discoverer.get_tag("bitrate")))
+		self.acodec.set_text(self.__discoverer.getTag("audio-codec"))
+		self.vcodec.set_text(self.__discoverer.getTag("video-codec"))
+		self.mode.set_text(self.__discoverer.getTag("mode"))
+		self.bitrate.set_text(str(self.__discoverer.getTag("bitrate")))

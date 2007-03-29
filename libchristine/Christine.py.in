@@ -497,7 +497,6 @@ class Christine(GtkMisc):
 
 			self.__Library.save()
 			self.__LastPlayed.append(filename)
-			print self.__LastPlayed
 			self.__GConf.setValue('backend/last_played', filename)
 
 		self.__Player.setLocation(filename)
@@ -710,7 +709,7 @@ class Christine(GtkMisc):
 	# @access public
 	# @param  widget
 	# @return void
-	def onEntrySearchActivate(self, widget):
+	def onFindActivate(self, widget):
 		"""
 		Set the focus on the Search entry
 		"""

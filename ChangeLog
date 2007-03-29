@@ -1,6 +1,9 @@
 2007-03-29 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Chrinstine.py.in:
 		Fixed a bug when trying to get the Small View mode.
+		Ctrl+F wasn't focusing the Search box. Fixed.
+	* cplugins/show_properties.py:
+		Fixed some bugs with the Discoverer module
 2007-03-24 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Display.py: 
 		Fixed a small bug in the main rectangle draw.
