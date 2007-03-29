@@ -73,7 +73,7 @@ class Christine(GtkMisc):
 		GtkMisc.__init__(self)
 
 		self.__Share   = Share()
-		print 'SHARE IDENTIFY: ', self.__Share.getId()
+		#print 'SHARE IDENTIFY: ', self.__Share.getId()
 		self.__GConf   = ChristineGConf()
 
 		self.__XML = self.__Share.getTemplate('WindowCore')
@@ -270,10 +270,9 @@ class Christine(GtkMisc):
 		Show the TrayIcon 
 		"""
 		self.__TrayIcon = gtk.StatusIcon()
-		self.__TrayIcon.set_from_file(os.path.join(SHARE_PATH,'gui','pixmap','trayicon.png'))
+		self.__TrayIcon.set_from_pixbuf(self.__Share.getImageFromPix('trayicon'))
 		self.__TrayIcon.connect('popup-menu', self.__trayIconHandlerEvent)
 		self.__TrayIcon.connect('activate',   self.__trayIconActivated)
-
 		self.__TrayIcon.set_visible(self.__GConf.getBool('ui/show_in_notification_area'))
 	
 	#
