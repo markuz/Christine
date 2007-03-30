@@ -274,17 +274,17 @@ class library(GtkMisc,gtk.DrawingArea):
 			name = self.model.get_value(iter,NAME)
 			if name == os.path.split(d.getLocation()[1]):
 				return True
-			d.found_tags_cb(b.parse_tag())
-			name	= d.get_tag("title")
-			album	= d.get_tag("album")
-			artist	= d.get_tag("artist")
-			tn		= d.get_tag("track-number")
-			genre	= d.get_tag("genre")
+			d.callbackFoundTags(b.parse_tag())
+			name	= d.getTag("title")
+			album	= d.getTag("album")
+			artist	= d.getTag("artist")
+			tn		= d.getTag("track-number")
+			genre	= d.getTag("genre")
 			if name == "":
 				n = os.path.split(d.getLocation())[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			model = self.model
-			if d.get_tag("video-codec") != "" or \
+			if d.getTag("video-codec") != "" or \
 					os.path.splitext(d.getLocation())[1] in CHRISTINE_VIDEO_EXT:
 				t = "video"
 			else:
