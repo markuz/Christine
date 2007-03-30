@@ -87,12 +87,12 @@ class library(GtkMisc,gtk.DrawingArea):
 	#	try:
 	#		self.CURRENT_ITER = self.model.iter_next(self.CURRENT_ITER)
 	#		path = self.model.get(self.CURRENT_ITER,PATH)
-	#		self.discoverer.set_location(path)
-	#		self.iters[self.discoverer.get_location()] = self.CURRENT_ITER
+	#		self.discoverer.setLocation(path)
+	#		self.iters[self.discoverer.getLocation()] = self.CURRENT_ITER
 	#		print locals()
 	#	except:
 	#		self.CURRENT_ITER = self.model.get_iter_first()
-	#	print self.discoverer.get_location()
+	#	print self.discoverer.getLocation()
 	#	return True
 	
 	def gen_model(self,refresh=False):
@@ -234,9 +234,9 @@ class library(GtkMisc,gtk.DrawingArea):
 
 	def add(self,file,prepend=False,n=1):
 		#if n == 1:
-		self.discoverer.set_location(file)
+		self.discoverer.setLocation(file)
 		#else:
-		#	self.discoverer2.set_location(file)
+		#	self.discoverer2.setLocation(file)
 		if type(file) == type(()):
 			file = file[0]
 		if not os.path.isfile(file):
@@ -264,15 +264,15 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.emit("tags-found",self)
 
 	def message_handler(self,bus,b):
-		if bus == self.discoverer.bus:
+		if bus == self.discoverer.Bus:
 			d = self.discoverer
 		else:
 			d = self.discoverer2
 		t = b.type
 		if t == gst.MESSAGE_TAG:
-			iter = self.iters[d.get_location()]
-			name = self.model.getValue(iter,NAME)
-			if name == os.path.split(d.get_location()[1]):
+			iter = self.iters[d.getLocation()]
+			name = self.model.get_value(iter,NAME)
+			if name == os.path.split(d.getLocation()[1]):
 				return True
 			d.found_tags_cb(b.parse_tag())
 			name	= d.get_tag("title")
@@ -281,16 +281,16 @@ class library(GtkMisc,gtk.DrawingArea):
 			tn		= d.get_tag("track-number")
 			genre	= d.get_tag("genre")
 			if name == "":
-				n = os.path.split(d.get_location())[1].split(".")
+				n = os.path.split(d.getLocation())[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			model = self.model
 			if d.get_tag("video-codec") != "" or \
-					os.path.splitext(d.get_location())[1] in CHRISTINE_VIDEO_EXT:
+					os.path.splitext(d.getLocation())[1] in CHRISTINE_VIDEO_EXT:
 				t = "video"
 			else:
 				t = "audio"
 					
-			model.set(self.iters[d.get_location()],
+			model.set(self.iters[d.getLocation()],
 						NAME,name,
 						TYPE,t,
 						ALBUM,album,
@@ -318,11 +318,11 @@ class library(GtkMisc,gtk.DrawingArea):
 			total = d.query_duration(gst.FORMAT_TIME)[0]
 			ts = total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
-			self.model.set(self.iters[d.get_location()],
+			self.model.set(self.iters[d.getLocation()],
 					TIME,text)
 			gobject.timeout_add(150,self.emit_signal,"tags-found")
 		except gst.QueryError:
-			#d.set_location(d.get_location())
+			#d.setLocation(d.getLocation())
 			pass
 		return True
 
@@ -331,7 +331,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		'''
 		Remove the selected iter from the library.
 		'''
-		key = self.model.getValue(iter,PATH)
+		key = self.model.get_value(iter,PATH)
 		self.library_lib.remove(key)
 		self.model.remove(iter)
 	

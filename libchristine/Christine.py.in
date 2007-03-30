@@ -1314,7 +1314,7 @@ class Christine(GtkMisc):
 	# @access public
 	# @param  widget
 	# @return void
-	def import_folder(self, widget):
+	def importFolder(self, widget):
 		"""
 		This is the 'simple' way to import folders
 		Creates and rund a filechooser dialog to 
