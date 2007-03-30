@@ -309,12 +309,12 @@ class Christine(GtkMisc):
 		intended when you want to show the window
 		in your current workspace
 		"""
-		if (self.IsHidden == True):
+		if (self.__IsHidden == True):
 			self.__Window.show()
 		else:
 			self.__Window.hide()
 
-		self.IsHidden = not self.IsHidden
+		self.__IsHidden = not self.__IsHidden
 
 	#
 	# Queue list key-press-event manager
