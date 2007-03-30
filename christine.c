@@ -24,7 +24,7 @@ a = Christine()\n\
 if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
 	for i in sys.argv[1:]:\n\
 		if os.path.isfile(i):\n\
-			a.queue.add(i,prepend=True)\n\
+			a.Queue.add(i,prepend=True)\n\
 	a.play()\n\
 a.runGtk()\n\
 ";

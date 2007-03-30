@@ -195,13 +195,13 @@ class Christine(GtkMisc):
 		self.__ScrolledMusic.add(self.__Library.tv)
 		#self.__VBoxCore.show_all()
 
-		self.__Queue         = queue()
+		self.Queue         = queue()
 		self.__ScrolledQueue = self.__XML['ScrolledQueue']
 
-		self.__Queue.treeview.connect('key-press-event', self.__queueHandlerKey)
-		self.__Queue.treeview.connect('row-activated',   self.itemActivated)
+		self.Queue.treeview.connect('key-press-event', self.QueueHandlerKey)
+		self.Queue.treeview.connect('row-activated',   self.itemActivated)
 
-		self.__ScrolledQueue.add(self.__Queue.treeview)
+		self.__ScrolledQueue.add(self.Queue.treeview)
 		gobject.timeout_add(500, self.checkQueue)
 
 		self.__ControlButton = self.__XML['control_button']
@@ -323,18 +323,18 @@ class Christine(GtkMisc):
 	# @param  widget widget The widget that will be used
 	# @param  event  event  The event requested by the widget 
 	# @return void
-	def __queueHandlerKey(self, widget, event):
+	def QueueHandlerKey(self, widget, event):
 		"""
 		Handler the key-press-event in the queue list
 		"""
 		if (event.keyval == 65535):
-			selection     = self.__Queue.treeview.get_selection()
+			selection     = self.Queue.treeview.get_selection()
 			(model, iter) = selection.get_selected()
 
 			if (iter is not None):
 				name = model.get_value(iter, NAME)
-				self.__Queue.remove(iter)
-				self.__Queue.save()
+				self.Queue.remove(iter)
+				self.Queue.save()
 	
 	#
 	# Catch popupMenu events
@@ -386,7 +386,7 @@ class Christine(GtkMisc):
 		(model, iter,)  = selection.get_selected()
 		file            = model.get_value(iter, PATH)
 
-		self.__Queue.add(file)
+		self.Queue.add(file)
 	
 	#
 	# Handle the key-press-event in the library. 
@@ -413,7 +413,7 @@ class Christine(GtkMisc):
 			(model, iter) = selection.get_selected()
 			name          = model.get_value(iter, PATH)
 
-			self.__Queue.add(name)
+			self.Queue.add(name)
 
 	#
 	# Remove file from library
@@ -973,15 +973,15 @@ class Christine(GtkMisc):
 
 		# Look for a file in the queue. Iter should not be None in the case
 		# there where something in the queue
-		model = self.__Queue.treeview.get_model()
+		model = self.Queue.treeview.get_model()
 		iter  = model.get_iter_first()
 
 		if (type(iter) == gtk.TreeIter):
 			self.setLocation(model.get_value(iter, PATH))
 			self.__LibraryCurrentInter == None
 			self.jumpToPlaying()
-			self.__Queue.remove(iter)
-			self.__Queue.save()
+			self.Queue.remove(iter)
+			self.Queue.save()
 			self.__PlayButton.set_active(False)
 			self.__PlayButton.set_active(True)
 		else:
@@ -1012,7 +1012,7 @@ class Christine(GtkMisc):
 	# @param  widget
 	# @return boolean
 	def	checkQueue(self):
-		model = self.__Queue.treeview.get_model()
+		model = self.Queue.treeview.get_model()
 
 		if (model != None):
 			b = model.get_iter_first()
@@ -1304,7 +1304,7 @@ class Christine(GtkMisc):
 			# What I told, if queue is true
 			# send it to queue
 			if (queue):
-				self.__Queue.save()
+				self.Queue.save()
 			else:
 				self.__Library.save()
 	
@@ -1473,7 +1473,7 @@ class Christine(GtkMisc):
 					print 'library.save()'
 					self.__Library.save()
 			else:
-				self.__Queue.add(new_file)
+				self.Queue.add(new_file)
 
 			length = len(self.__FilesToAdd)
 
@@ -1545,7 +1545,7 @@ class Christine(GtkMisc):
 
 		self.__addFile(queue=queue)
 		self.__Library.connect('tags-found', self.__addFile)
-		self.__Queue.connect('tags-found', self.__addFile,True)
+		self.Queue.connect('tags-found', self.__addFile,True)
 		self.__AddWindow.run()
 		self.__AddWindow.destroy()
 
