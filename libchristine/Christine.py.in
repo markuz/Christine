@@ -1360,15 +1360,23 @@ class Christine(GtkMisc):
 		"""
 		files = os.listdir(dir)
 		f     = []
+		self.f = []
 
 		for i in files:
 			ext = i.split('.').pop()
+			exists = False
+
+			if (os.path.join(i[0], path) in self.f):
+				exists = True
+
 			# Again, only files with the right
 			# extension will be imported
-			if (ext in [sound, video]):
+			print ext
+			if (ext in self.__GConf.getString('backend/allowed_files').split(',')):
 				f.append(i)
 
 		files = f
+		print files
 		self.addFiles(files)
 	
 	#
@@ -1401,7 +1409,7 @@ class Christine(GtkMisc):
 		# create a temporal list with the path of
 		# the files already stored in the library
 		# to avoid duplicates
-		#self.__LibraryModel.foreach(lambda model,path,iter: self.f.append(model.get_value(iter,PATH)))
+		self.__LibraryModel.foreach(lambda model,path,iter: self.f.append(model.get_value(iter,PATH)))
 		for i in filenames:
 			for path in i[1]:
 				ext    = path.split('.').pop().lower()
@@ -1416,12 +1424,14 @@ class Christine(GtkMisc):
 				# libs_christine/libs_christine.py
 				# We need to know what files are supported by 
 				# gstreamer
+				print ext
 				if ext in self.__GConf.getString('backend/allowed_files').split(',') and not exists:
 					f.append(os.path.join(i[0],path))
 				#else:
 				#	print "skipping:",os.path.join(i[0],path)
 		# Once we have the files to add, then use the addFiles
 		# wrapper method to add them.
+		print f
 		if (len(f) > 0):
 			self.addFiles(files = f)
 		else:
@@ -1522,7 +1532,10 @@ class Christine(GtkMisc):
 		self.__LibraryNaturalModel.foreach(self.getPaths)
 
 		for i in files:
-			if (not i in self.__Paths):
+			ext    = i.split('.').pop().lower()
+			if (not i in self.__Paths) and \
+					(ext in self.__GConf.getString('backend/allowed_files').split(',')):
+				print i,ext
 				self.__FilesToAdd.append(i)
 			else:
 				print 'skipping: ', i

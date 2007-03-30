@@ -300,7 +300,7 @@ class library(GtkMisc,gtk.DrawingArea):
 						PLAY_COUNT,0,
 						GENRE,genre)
 
-			#print "tags found",d.tags
+			gobject.timeout_add(150,self.emit_signal,"tags-found")
 		if t == gst.MESSAGE_ERROR:
 			print b.parse_error()
 		return True
@@ -320,7 +320,6 @@ class library(GtkMisc,gtk.DrawingArea):
 			text = "%02d:%02d"%divmod(ts,60)
 			self.model.set(self.iters[d.getLocation()],
 					TIME,text)
-			gobject.timeout_add(150,self.emit_signal,"tags-found")
 		except gst.QueryError:
 			#d.setLocation(d.getLocation())
 			pass
