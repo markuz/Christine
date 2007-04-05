@@ -2,6 +2,8 @@
 	* libchristine/Makefile.am: 
 		Added the -fPIC to the gcc command in order to compile in
 		64 bits systems.
+		Fixed a bug where libchristine/Validator.py wheren't 
+		installed
 
 2007-03-29 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Chrinstine.py.in:

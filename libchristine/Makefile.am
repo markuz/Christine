@@ -16,6 +16,7 @@ Plugins.py \
 Christine.py \
 Share.py \
 Queue.py \
+Validator.py \
 clibrary.so
 
 DISTFILES= Makefile.in \
@@ -24,7 +25,7 @@ DISTFILES= Makefile.in \
 		   Translator.py.in \
 		   libs_christine.py.in \
 		   clibrary.c \
-		   plugins.py.in \
+		   Plugins.py.in \
 		   Christine.py.in \
 		   Share.py.in \
 		   $(scripts_DATA) 
