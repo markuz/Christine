@@ -570,6 +570,7 @@ class Christine(GtkMisc):
 			self.__WindowSize = self.__Window.get_size()
 			self.__Window.unmaximize()
 			self.__Window.resize(10, 10)
+			self.__Window.set_resizable(False)
 		else:
 			try:
 				(w, h) = self.__WindowSize
@@ -579,6 +580,7 @@ class Christine(GtkMisc):
 			self.__HPanedListsBox.show()
 			self.HBoxSearch.show()
 			self.__Window.resize(w, h)
+			self.__Window.set_resizable(True)
 
 	#
 	# This show/hide the visualization

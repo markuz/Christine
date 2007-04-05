@@ -4,6 +4,8 @@
 		64 bits systems.
 		Fixed a bug where libchristine/Validator.py wheren't 
 		installed
+	* libchristine/Christine.py.in:
+		Fixed bug #1694684 where Core Window is resizable in small view mode
 
 2007-03-29 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Chrinstine.py.in:
