@@ -1,3 +1,6 @@
+2007-04-05 Marco Antonio Islas Cruz <markuz@islascruz.org>
+	* libchristine/Christine.py.in:
+		Support for somafm (and all .pls radio stations)
 2007-04-04 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Makefile.am: 
 		Added the -fPIC to the gcc command in order to compile in

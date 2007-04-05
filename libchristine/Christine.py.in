@@ -1829,7 +1829,18 @@ class Christine(GtkMisc):
 		response = dialog.run()
 
 		if (response == gtk.RESPONSE_OK):
-			self.setLocation(entry.get_text())
+			location = entry.get_text()
+			if location.split(".").pop() == "pls":
+				import urllib
+				gate = urllib.FancyURLopener()
+				urldesc = gate.open(location)
+				for i in urldesc.readlines():
+					if i.lower().find("file") > -1:
+						location = i.split("=").pop()
+						print location
+						self.setLocation(location)
+						break
+			self.setLocation(location)
 			self.play()
 
 		dialog.destroy()
