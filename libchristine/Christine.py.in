@@ -1841,7 +1841,8 @@ class Christine(GtkMisc):
 						self.setLocation(location)
 						break
 			self.setLocation(location)
-			self.play()
+			self.__PlayButton.set_active(False)
+			self.__PlayButton.set_active(True)
 
 		dialog.destroy()
 	
