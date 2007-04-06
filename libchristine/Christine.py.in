@@ -1830,16 +1830,28 @@ class Christine(GtkMisc):
 
 		if (response == gtk.RESPONSE_OK):
 			location = entry.get_text()
-			if location.split(".").pop() == "pls":
+			extension = location.split(".").pop()
+			if extension in ["pls", "m3u"]:
 				import urllib
 				gate = urllib.FancyURLopener()
 				urldesc = gate.open(location)
+			if extension == "pls":
 				for i in urldesc.readlines():
 					if i.lower().find("file") > -1:
 						location = i.split("=").pop()
-						print location
-						self.setLocation(location)
-						break
+			elif extension == "m3u":
+				lines = urldesc.readlines()
+				if lines[0].lower() != "#extm3u":
+					self.goNext()
+				sites  = [k for k in lines if k[0:4] == "http"]
+				tl,name = ":".join(lines[1].split(":")[1:]).split(",")
+				print tl, name
+				self.__Display.setSong(name)
+				print sites
+				if len(sites) > 0:
+					location = sites[0].strip("\r").strip("\n").strip()
+					#gate = urllib.FancyURLopener()
+					#urldesc = gate.open(site)
 			self.setLocation(location)
 			self.__PlayButton.set_active(False)
 			self.__PlayButton.set_active(True)
