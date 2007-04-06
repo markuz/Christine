@@ -2,6 +2,7 @@
 	* libchristine/Christine.py.in:
 		- Support for internet radio stations that use the 
 		m3u file format.
+		- Import and initialization of Dbus
 2007-04-05 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Christine.py.in:
 		- Support for somafm (and all .pls radio stations)

@@ -33,6 +33,8 @@ import gtk
 import gtk.gdk
 import pygst; pygst.require('0.10')
 import gst.interfaces
+import dbus
+import dbus.service
 from libchristine.Translator import *
 from libchristine.GtkMisc import *
 from libchristine.Library import *
@@ -44,6 +46,9 @@ from libchristine.Display import *
 from libchristine.Plugins import *
 from libchristine.Share import *
 from libchristine.ChristineGConf import *
+
+SYSTEM_BUS = dbus.SystemBus()
+#SYSTEM_BUS = dbus.SessionBus()
 
 try:
 	import pynotify
@@ -63,7 +68,7 @@ if (gtk.gtk_version < (2, 10, 0)):
 	print translate('Gtk+ 2.10 or better is required')
 	sys.exit()
 
-class Christine(GtkMisc):
+class Christine(GtkMisc,dbus.service.Object):
 	def __init__(self):
 		"""
 		Constructor, this method will init the gtk_misc parent class,
@@ -71,6 +76,7 @@ class Christine(GtkMisc):
 		initialize class variables and create some timeouts calls
 		"""
 		GtkMisc.__init__(self)
+		#dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
 		self.__Share   = Share()
 		#print 'SHARE IDENTIFY: ', self.__Share.getId()
@@ -1845,9 +1851,7 @@ class Christine(GtkMisc):
 					self.goNext()
 				sites  = [k for k in lines if k[0:4] == "http"]
 				tl,name = ":".join(lines[1].split(":")[1:]).split(",")
-				print tl, name
 				self.__Display.setSong(name)
-				print sites
 				if len(sites) > 0:
 					location = sites[0].strip("\r").strip("\n").strip()
 					#gate = urllib.FancyURLopener()
