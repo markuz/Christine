@@ -75,7 +75,7 @@ class guiPreferences(GtkMisc):
 		self.selectSinks()
 
 		dialog	 = self.XML['WindowCore']
-		dialog.set_icon(self.__Share.getImage('logo'))
+		dialog.set_icon(self.__Share.getImageFromPix('logo'))
 		self.setCheckBoxes()
 		dialog.run()
 		dialog.destroy()

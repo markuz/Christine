@@ -1,10 +1,21 @@
 2007-04-07 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Christine.py.in:
 		- Finished the import and initialization of dbus
+		- Fixed a bug in window.set_icon bug.
+		Was setting a path instead a gtk.gdk.Pixbuf
 	* gui/MenuTrayIcon.glade:
 		- Fixed some callbacks name.
 	* libchirstine/Makefile.am:
 		- Added ChristineGConfi to the scripts_DATA variable
+	* libchristine/About.py.in, 
+	  libchristine/Preferences.py:
+		- Fixed a bug in window.set_icon bug.
+		Was setting a path instead a gtk.gdk.Pixbuf
+	* libchrstine/Share.py.in:
+		- Fixed a bug in Share.getImage method,
+		was sending None all the time because checks for something
+		like this 'PIXMAPS_PATH/file/.png' instead
+		'PIXMAPS_PATH/file.png'
 2007-04-06 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Christine.py.in:
 		- Support for internet radio stations that use the 

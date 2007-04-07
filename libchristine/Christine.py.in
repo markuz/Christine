@@ -162,7 +162,7 @@ class Christine(GtkMisc,dbus.service.Object):
 		# Gets window widget from glade template
 		self.__Window = self.__XML['WindowCore']
 		self.__Window.connect("destroy",gtk.main_quit)
-		self.__Window.set_icon(self.__Share.getImage('logo'))
+		self.__Window.set_icon(self.__Share.getImageFromPix('logo'))
 
 		# Gets play button and menu play item from glade template
 		self.__PlayButton   = self.__XML['ToggleButtonPlay']
@@ -1184,7 +1184,7 @@ class Christine(GtkMisc,dbus.service.Object):
 
 		XML    = self.__Share.getTemplate('jumpTo')
 		dialog = XML['dialog']
-		dialog.set_icon(self.__Share.getImage('logo'))
+		dialog.set_icon(self.__Share.getImageFromPix('logo'))
 
 		(mins, seconds) = divmod((self.__TimeTotal / gst.SECOND), 60)
 
@@ -1304,7 +1304,7 @@ class Christine(GtkMisc,dbus.service.Object):
 		"""
 		XML = self.__Share.getTemplate('FileSelector')
 		fs  = XML['fs']
-		fs.set_icon(self.__Share.getImage('logo'))
+		fs.set_icon(self.__Share.getImageFromPix('logo'))
 
 		response = fs.run()
 		files    = fs.get_filenames()
@@ -1339,7 +1339,7 @@ class Christine(GtkMisc,dbus.service.Object):
 		ds   = XML['ds']
 		walk = XML['walk']
 
-		ds.set_icon(self.__Share.getImage('logo'))
+		ds.set_icon(self.__Share.getImageFromPix('logo'))
 
 		response  = ds.run()
 		filenames = ds.get_filenames()
@@ -1777,8 +1777,10 @@ class Christine(GtkMisc,dbus.service.Object):
 				self.__Notify.close()
 			except:
 				pass
-
-			self.__Notify = pynotify.Notification('christine', '', self.__Share.getImage('logo'))
+			#self.__TrayIcon.set_from_pixbuf(self.__Share.getImageFromPix('trayicon'))
+			pixmap = self.__Share.getImage('trayicon')
+			print pixmap
+			self.__Notify = pynotify.Notification('christine', '',pixmap)
 
 			if (self.__GConf.getBool('ui/show_in_notification_area')):
 				self.__Notify.attach_to_status_icon(self.__TrayIcon)
@@ -1835,7 +1837,7 @@ class Christine(GtkMisc,dbus.service.Object):
 		entry  = XML['entry']
 		dialog = XML['dialog']
 
-		dialog.set_icon(self.__Share.getImage('logo'))
+		dialog.set_icon(self.__Share.getImageFromPix('logo'))
 
 		response = dialog.run()
 
