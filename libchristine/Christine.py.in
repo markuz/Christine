@@ -47,6 +47,11 @@ from libchristine.Plugins import *
 from libchristine.Share import *
 from libchristine.ChristineGConf import *
 
+
+from dbus.mainloop.glib import DBusGMainLoop
+
+DBusGMainLoop(set_as_default=True)
+
 SYSTEM_BUS = dbus.SystemBus()
 #SYSTEM_BUS = dbus.SessionBus()
 
@@ -76,7 +81,7 @@ class Christine(GtkMisc,dbus.service.Object):
 		initialize class variables and create some timeouts calls
 		"""
 		GtkMisc.__init__(self)
-		#dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
+		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
 		self.__Share   = Share()
 		#print 'SHARE IDENTIFY: ', self.__Share.getId()
