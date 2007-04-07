@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!-- Generated with glade3
+<!--Generated with glade3 3.0.3 on Sat Apr  7 10:32:53 2007 by markuz@cucusa
 	Version: 3.0.1
 	Date: Sun Feb  4 19:16:55 2007
 	User: markuz
@@ -14,7 +14,7 @@
         <property name="tooltip">Play or pause the player</property>
         <property name="label">Play</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="tray_play"/>
+        <signal name="activate" handler="trayIconPlay"/>
         <child internal-child="image">
           <widget class="GtkImage" id="image1">
             <property name="visible">True</property>
@@ -44,7 +44,7 @@
         <property name="visible">True</property>
         <property name="label">Previous</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="go_prev"/>
+        <signal name="activate" handler="goPrev"/>
         <child internal-child="image">
           <widget class="GtkImage" id="image3">
             <property name="visible">True</property>
@@ -59,7 +59,7 @@
         <property name="visible">True</property>
         <property name="label">Next</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="go_next"/>
+        <signal name="activate" handler="goNext"/>
         <child internal-child="image">
           <widget class="GtkImage" id="menu-item-image5">
             <property name="visible">True</property>
@@ -80,7 +80,7 @@
         <property name="label">gtk-quit</property>
         <property name="use_underline">True</property>
         <property name="use_stock">True</property>
-        <signal name="activate" handler="main_quit"/>
+        <signal name="activate" handler="quitGtk"/>
       </widget>
     </child>
   </widget>

@@ -1,6 +1,10 @@
 2007-04-07 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Christine.py.in:
 		- Finished the import and initialization of dbus
+	* gui/MenuTrayIcon.glade:
+		- Fixed some callbacks name.
+	* libchirstine/Makefile.am:
+		- Added ChristineGConfi to the scripts_DATA variable
 2007-04-06 Marco Antonio Islas Cruz <markuz@islascruz.org>
 	* libchristine/Christine.py.in:
 		- Support for internet radio stations that use the 
