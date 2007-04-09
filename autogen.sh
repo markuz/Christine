@@ -2,7 +2,7 @@
 # Run this to generate all the initial makefiles, etc.
 
 srcdir=`dirname $0`
-PKG_NAME="the package."
+PKG_NAME="christine"
 
 DIE=0
 
@@ -84,16 +84,17 @@ do
   else
     echo processing $dr
     macrodirs=`sed -n -e 's,AM_ACLOCAL_INCLUDE(\(.*\)),\1,gp' < $coin`
+    #macrodirs= "m4"
     ( cd $dr
       aclocalinclude="$ACLOCAL_FLAGS"
       for k in $macrodirs; do
         if test -d $k; then
           aclocalinclude="$aclocalinclude -I $k"
-        ##else 
-        ##  echo "**Warning**: No such directory \`$k'.  Ignored."
+        else 
+          echo "**Warning**: No such directory \`$k'.  Ignored."
         fi
       done
-      if grep "^AM_GNU_GETTEXT" configure.ac >/dev/null; then
+      if grep "^AM_GLIB_GNU_GETTEXT" configure.ac >/dev/null; then
         if grep "sed.*POTFILES" configure.ac >/dev/null; then
           : do nothing -- we still have an old unmodified configure.ac
         else
@@ -117,14 +118,16 @@ do
         echo "Running libtoolize..."
         libtoolize --force --copy
       fi
+	  echo "intltoolize"
+	  intltoolize --force --copy --automake	  
       echo "Running aclocal $aclocalinclude ..."
       aclocal $aclocalinclude
       if grep "^AM_CONFIG_HEADER" configure.ac >/dev/null; then
         echo "Running autoheader..."
         autoheader
       fi
-      echo "Running automake --gnu $am_opt ..."
-      automake --add-missing --gnu $am_opt
+      echo "Running automake --gnu -c -f -a $am_opt ..."
+      automake --add-missing --gnu -c -f $am_opt
       echo "Running autoconf ..."
       autoconf
     )
