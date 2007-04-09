@@ -4,6 +4,12 @@
 	* lock.m4: New file, from gettext-0.15.
 	* visibility.m4: New file, from gettext-0.15.
 
+2007-04-09  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* inttypes-h.m4: New file, from gettext-0.15.
+	* lock.m4: New file, from gettext-0.15.
+	* visibility.m4: New file, from gettext-0.15.
+
 2007-01-24  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* codeset.m4: New file, from gettext-0.15.
