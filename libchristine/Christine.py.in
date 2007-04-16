@@ -73,7 +73,7 @@ if (gtk.gtk_version < (2, 10, 0)):
 	print translate('Gtk+ 2.10 or better is required')
 	sys.exit()
 
-class Christine(GtkMisc,dbus.service.Object):
+class Christine(GtkMisc):
 	def __init__(self):
 		"""
 		Constructor, this method will init the gtk_misc parent class,
