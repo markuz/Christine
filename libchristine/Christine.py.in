@@ -33,8 +33,8 @@ import gtk
 import gtk.gdk
 import pygst; pygst.require('0.10')
 import gst.interfaces
-import dbus
-import dbus.service
+#import dbus
+#import dbus.service
 from libchristine.Translator import *
 from libchristine.GtkMisc import *
 from libchristine.Library import *
@@ -48,11 +48,11 @@ from libchristine.Share import *
 from libchristine.ChristineGConf import *
 
 
-from dbus.mainloop.glib import DBusGMainLoop
+#from dbus.mainloop.glib import DBusGMainLoop
 
-DBusGMainLoop(set_as_default=True)
+#DBusGMainLoop(set_as_default=True)
 
-SYSTEM_BUS = dbus.SystemBus()
+#SYSTEM_BUS = dbus.SystemBus()
 #SYSTEM_BUS = dbus.SessionBus()
 
 try:
@@ -81,7 +81,7 @@ class Christine(GtkMisc,dbus.service.Object):
 		initialize class variables and create some timeouts calls
 		"""
 		GtkMisc.__init__(self)
-		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
+#		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
 		self.__Share   = Share()
 		#print 'SHARE IDENTIFY: ', self.__Share.getId()
