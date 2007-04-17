@@ -1437,14 +1437,14 @@ class Christine(GtkMisc):
 				# libs_christine/libs_christine.py
 				# We need to know what files are supported by 
 				# gstreamer
-				print ext
+				#print ext
 				if ext in self.__GConf.getString('backend/allowed_files').split(',') and not exists:
 					f.append(os.path.join(i[0],path))
 				#else:
 				#	print "skipping:",os.path.join(i[0],path)
 		# Once we have the files to add, then use the addFiles
 		# wrapper method to add them.
-		print f
+		#print f
 		if (len(f) > 0):
 			self.addFiles(files = f)
 		else:
@@ -1466,7 +1466,7 @@ class Christine(GtkMisc):
 		list. the only one argument is queue, wich defines
 		if the importing is to the queue
 		"""
-		print locals()
+		#print locals()
 		if (type(queue) != type(True)):
 			queue = False
 
@@ -1494,14 +1494,13 @@ class Christine(GtkMisc):
 				self.__Percentage = (1 - (length / float(self.__TimeTotalNFiles)))
 			else:
 				self.__Percentage = 1
-
 			if (self.__Percentage >= 1.0):
 				self.__Percentage = 0.99
-
 			# Setting the value and text in the progressbar
 			self.__AddProgress.set_fraction(self.__Percentage)
 
 			rest = (self.__TimeTotalNFiles - length)
+			#print rest,new_file
 			text = "%02d/%02d" % (rest, self.__TimeTotalNFiles)
 
 			self.__AddProgress.set_text(text)

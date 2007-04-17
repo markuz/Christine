@@ -89,7 +89,7 @@ class Discoverer(gtk.DrawingArea, ChristineGConf):
 		self.__Discoverer.set_property('uri', "file://%s" % self.__Location)
 
 		self.__Discoverer.set_state(gst.STATE_NULL)
-		#self.__Discoverer.set_state(gst.STATE_READY)
+		self.__Discoverer.set_state(gst.STATE_READY)
 		self.__Discoverer.set_state(gst.STATE_PLAYING)
 		self.__Discoverer.set_state(gst.STATE_PAUSED)
 
