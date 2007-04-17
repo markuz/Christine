@@ -302,6 +302,7 @@ class library(GtkMisc,gtk.DrawingArea):
 						GENRE,genre)
 			time.sleep(0.09)
 			#gobject.timeout_add(150,self.emit_signal,"tags-found")
+			#if not gtk.events_pending():
 			self.emit_signal("tags-found")
 		if t == gst.MESSAGE_ERROR:
 			print b.parse_error()
