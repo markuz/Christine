@@ -300,7 +300,7 @@ class library(GtkMisc,gtk.DrawingArea):
 						SEARCH,",".join([name,album,artist]),
 						PLAY_COUNT,0,
 						GENRE,genre)
-			time.sleep(0.009)
+			time.sleep(0.09)
 			#gobject.timeout_add(150,self.emit_signal,"tags-found")
 			self.emit_signal("tags-found")
 		if t == gst.MESSAGE_ERROR:
