@@ -661,7 +661,7 @@ class Christine(GtkMisc):
 			self.__HBoxPlayer.pack_start(self.__Player, True, True, 0)
 			self.__VBoxVideo.show()
 			self.__HBoxToolBoxContainerMini.show()
-			self.__MenuBar.show()
+			self.MenuBar.show()
 			self.__IsFullScreen = False
 	
 	#
@@ -705,11 +705,11 @@ class Christine(GtkMisc):
 
 		if (self.__ShowButtons):
 			self.__HBoxToolBoxContainerMini.show()
-			self.__MenuBar.show()
+			self.MenuBar.show()
 			self.__ShowButtons = False
 		else:
 			self.__HBoxToolBoxContainerMini.hide()
-			self.__MenuBar.hide()
+			self.MenuBar.hide()
 			self.__ShowButtons = True
 
 	###########################################
