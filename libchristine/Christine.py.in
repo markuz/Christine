@@ -1851,7 +1851,8 @@ class Christine(GtkMisc):
 			if extension == "pls":
 				for i in urldesc.readlines():
 					if i.lower().find("file") > -1:
-						location = i.split("=").pop()
+						location = i.split("=").pop().strip()
+						print (location,)
 			elif extension == "m3u":
 				lines = urldesc.readlines()
 				if lines[0].lower() != "#extm3u":

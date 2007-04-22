@@ -245,6 +245,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			self.__PlayBin.set_property('uri', nfile)
 		else:
 			if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
+				print "Voy a tocar un archivo con url:",file
 				self.__PlayBin.set_property('uri', file)
 			else:
 				error("file %s not found" % os.path.split(file)[1])
