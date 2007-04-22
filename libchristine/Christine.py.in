@@ -439,10 +439,10 @@ class Christine(GtkMisc):
 		"""
 		selection     = self.TreeView.get_selection()
 		(model, iter) = selection.get_selected()
-		name          = model.get_value(iter, NAME)
+		name,path     = model.get(iter, NAME, PATH)
 		niter         = self.getIterNatural(iter)
-
-		self.__LibraryNaturalModel.remove(niter)
+		if self.__GConf.getString("backend/last_played") == path:
+			self.__GConf.setValue("backend/last_played","")
 		self.__Library.remove(niter)
 		self.__Library.save()
 
