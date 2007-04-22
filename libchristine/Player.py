@@ -106,7 +106,11 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.__updateAudioSink()
 		self.__updateVideoSink()
 
-		self.__visualizationPlugin = None
+		active = self.getBool("ui/visualization")
+		if active:
+			self.setVisualization(False)
+		self.setVisualization(active)
+
 
 		self.__connect()
 
@@ -306,10 +310,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Sets visualization active or desactive
 		"""
-		if (not isNull(self.getLocation())):
-			nanos = self.query_position(gst.FORMAT_TIME)[0]
-		else:
-			return True
+		print "Player.setVisualization:",active
 		if (active):
 			self.__visualizationPlugin = gst.element_factory_make(self.getString('backend/vis-plugin'))
 			self.__VideoSink.set_property('force-aspect-ratio', False)
@@ -318,10 +319,19 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			self.__visualizationPlugin = None
 			self.__VideoSink.set_property('force-aspect-ratio', True)
 			self.__ShouldShow = False
-			self.hide()
 
 		self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
+		print self.__visualizationPlugin
+		if (not isNull(self.getLocation())):
+			nanos = self.query_position(gst.FORMAT_TIME)[0]
+		else:
+			return True
+
 		self.__exposeCallback()
+		if (not isNull(self.getLocation())):
+			nanos = self.query_position(gst.FORMAT_TIME)[0]
+		else:
+			return True
 
 		state = self.getState()[1]
 		self.pause()
