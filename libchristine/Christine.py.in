@@ -1004,7 +1004,9 @@ class Christine(GtkMisc):
 			if (self.__MenuItemShuffle.get_active()):
 				self.__Elements = 0
 				self.__Elements = len (self.__LibraryModel) - 1
-	
+				if self.__Elements < 1:
+					return True
+				print self.__Elements
 				iter     = self.__LibraryModel.get_iter(((self.__Elements * random.random()),))
 				filename = self.__LibraryModel.get_value(iter, PATH)
 
