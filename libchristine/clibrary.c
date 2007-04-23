@@ -110,7 +110,7 @@ clibrary_fill_model(PyObject *self,PyObject *args){
 				2,PyDict_GetItemString(temp,"type"),
 				4,PyDict_GetItemString(temp,"album"),
 				5,PyDict_GetItemString(temp,"artist"),
-				6,PyDict_GetItemString(temp,"track_number"),
+				6,PyDict_GetItem(temp,"track_number"),
 				7,search,
 				8,PyDict_GetItemString(temp,"play_count"),
 				9,PyDict_GetItemString(temp,"duration"),

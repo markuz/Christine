@@ -99,8 +99,9 @@ class library(GtkMisc,gtk.DrawingArea):
 	def gen_model(self,refresh=False):
 		if not refresh:
 			s = gobject.TYPE_STRING
+			i = gobject.TYPE_INT
 			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
-					s,s,s,s,int,s,s)
+					s,s,i,s,int,s,s)
 		else:
 			self.model.clear()
 		if "--plibrary" in sys.argv:
