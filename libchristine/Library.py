@@ -40,11 +40,11 @@ TN,
 SEARCH,
 PLAY_COUNT,
 TIME,
-GENRE)=xrange(11)
+GENRE)=range(11)
 
 (VPATH,
 VNAME,
-VPIX) = xrange(3)
+VPIX) = range(3)
 
 
 ##
@@ -100,8 +100,18 @@ class library(GtkMisc,gtk.DrawingArea):
 		if not refresh:
 			s = gobject.TYPE_STRING
 			i = gobject.TYPE_INT
-			self.model = gtk.ListStore(s,s,s,gtk.gdk.Pixbuf,
-					s,s,i,s,int,s,s)
+			self.model = gtk.ListStore(
+					s, #path
+					s, #name
+					s, #type
+					gtk.gdk.Pixbuf, #Pix
+					s, #album
+					s, #artist
+					int, #Track Number
+					s, #search
+					int, #play count
+					s, #time
+					s) #Genre
 		else:
 			self.model.clear()
 		if "--plibrary" in sys.argv:
@@ -253,7 +263,8 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.model.set(iter,
 				NAME,name,
 				PIX,self.blank_pix,
-				PATH,file)
+				PATH,file,
+				GENRE,"")
 		self.iters[file] = iter
 		#print file, self.model.getValue(iter,PATH),self.iters[file]
 		#gobject.timeout_add(3000,self.NEXT)
@@ -292,15 +303,12 @@ class library(GtkMisc,gtk.DrawingArea):
 			else:
 				t = "audio"
 					
-			model.set(self.iters[d.getLocation()],
-						NAME,name,
-						TYPE,t,
-						ALBUM,album,
-						ARTIST,artist,
-						TN,str(tn),
-						SEARCH,",".join([name,album,artist]),
-						PLAY_COUNT,0,
-						GENRE,genre)
+			print "TN:",(tn,),type(tn)
+			if not tn.isdigit():
+				tn = 0
+			else:
+				tn = int(tn)
+			self.model.set(self.iters[d.getLocation()],NAME,name,TYPE,t,ALBUM,album,ARTIST,artist,TN,tn,SEARCH,",".join([name,album,artist]),PLAY_COUNT,0,GENRE,genre)
 			time.sleep(0.09)
 			#gobject.timeout_add(150,self.emit_signal,"tags-found")
 			#if not gtk.events_pending():
