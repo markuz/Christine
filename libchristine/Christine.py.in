@@ -107,6 +107,7 @@ class Christine(GtkMisc):
 		self.__ShowButtons      = False
 		self.__IsImporting      = False
 		self.__IsHidden         = False
+		self.__addCounter       = 0
 
 		# Creating the player and build the GUI interface
 		self.__initPlayer()
@@ -1392,7 +1393,7 @@ class Christine(GtkMisc):
 				f.append(i)
 
 		files = f
-		print files
+		#print files
 		self.addFiles(files)
 	
 	#
@@ -1481,13 +1482,17 @@ class Christine(GtkMisc):
 
 			if (not queue):
 				length     = len(self.__FilesToAdd)
-				(div, mod) = divmod(length, 50)
+				self.__addCounter +=1
+				(div, mod) = divmod(length, 7)
 				# Add file to our Library
 				self.__Library.add(new_file)
 
-				if ((mod == 1) or (mod == 0)):
+				#if ((mod == 1) or (mod == 0)):
+				if self.__addCounter == 100:
 					print 'library.save()'
 					self.__Library.save()
+					self.__addCounter == 0
+
 			else:
 				self.Queue.add(new_file)
 

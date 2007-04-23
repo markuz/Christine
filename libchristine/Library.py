@@ -303,7 +303,6 @@ class library(GtkMisc,gtk.DrawingArea):
 			else:
 				t = "audio"
 					
-			print "TN:",(tn,),type(tn)
 			if type(tn) == type(""):
 				if not tn.isdigit():
 					tn = 0
