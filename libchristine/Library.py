@@ -304,10 +304,11 @@ class library(GtkMisc,gtk.DrawingArea):
 				t = "audio"
 					
 			print "TN:",(tn,),type(tn)
-			if not tn.isdigit():
-				tn = 0
-			else:
-				tn = int(tn)
+			if type(tn) == type(""):
+				if not tn.isdigit():
+					tn = 0
+				else:
+					tn = int(tn)
 			self.model.set(self.iters[d.getLocation()],NAME,name,TYPE,t,ALBUM,album,ARTIST,artist,TN,tn,SEARCH,",".join([name,album,artist]),PLAY_COUNT,0,GENRE,genre)
 			time.sleep(0.09)
 			#gobject.timeout_add(150,self.emit_signal,"tags-found")
