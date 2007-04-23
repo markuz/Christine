@@ -1813,15 +1813,23 @@ class Christine(GtkMisc):
 		"""
 		Simple or complete visualization
 		"""
+		isPlaying = False
+		state = self.__Player.getState()[1]
+		if gst.State(gst.STATE_PLAYING) is state:
+			isPlaying = True
+
+		print "visualModePlayer.isPlaying:",isPlaying
+
 		if (self.__Player.isVideo()):
 			self.__HBoxPlayer.show_all()
-		elif (self.__Player.isSound()):
-			if (self.__GConf.getBool('ui/visualization')):
+		else:
+			if (self.__GConf.getBool('ui/visualization') and isPlaying):
+				print "visualModePlayer: Mostrando"
 				self.__HBoxPlayer.show_all()
 			else:
+				print "visualModePlayer: Ocultando"
 				self.__HBoxPlayer.hide()
-		else:
-			self.__HBoxPlayer.hide()
+
 	
 	#
 	# Open a dialog to select a remote location

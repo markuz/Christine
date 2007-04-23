@@ -206,6 +206,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		# Drawing a black background because some 
 		# GTK themes (clearlooks) don't draw it
+		print "shouldShow",self.__ShouldShow
 		(x, y, w, h) = self.allocation
 		self.__Context = self.window.cairo_create()
 
@@ -225,7 +226,8 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		self.__VideoSink.set_xwindow_id(self.window.xid)
 
-		if (self.__ShouldShow):
+		if self.__ShouldShow:
+			print "mostrando"
 			self.show()
 
 	#
@@ -324,16 +326,15 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
 		print self.__visualizationPlugin
+
 		if (not isNull(self.getLocation())):
 			nanos = self.query_position(gst.FORMAT_TIME)[0]
 		else:
 			return True
+		print "video?",self.isVideo()
+		print "sound?",self.isSound()
 
 		self.__exposeCallback()
-		if (not isNull(self.getLocation())):
-			nanos = self.query_position(gst.FORMAT_TIME)[0]
-		else:
-			return True
 
 		state = self.getState()[1]
 		self.pause()
