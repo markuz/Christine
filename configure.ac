@@ -33,7 +33,7 @@ AC_SUBST(pygtk_LIBS)
 
 
 (gst-inspect-0.10) < /dev/null > /dev/null 2>&1 || {
-	echo "There is not gstreamer 0.10 in this machine, and christine will not work";
+	echo "checking for gstreamer... no";
 	exit 1
 }
 echo "checking for gstreamer... yes"

@@ -61,7 +61,7 @@ def isInteger(value):
 	"""
 	Compare if it is integer or not
 	"""
-	return (type(value) == int)
+	return (type(value) == type(1))
 
 #
 # Compare if it is float or not
@@ -72,7 +72,7 @@ def isFloat(value):
 	"""
 	Compare if it is float or not
 	"""
-	return (type(value) == float)
+	return (type(value) == type(1.0))
 
 #
 # Compare if it is string or not
@@ -83,7 +83,7 @@ def isString(value):
 	"""
 	Compare if it is string or not
 	"""
-	return (type(value) == str)
+	return (type(value) == type(""))
 
 #
 # Compare string if it is empty or not

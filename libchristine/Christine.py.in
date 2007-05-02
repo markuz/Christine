@@ -122,6 +122,19 @@ class Christine(GtkMisc):
 		self.__Plugins = ChristinePlugins(self)
 		gobject.timeout_add(500, self.checkTimeOnMedia)
 	
+	def __printEvent(self,widget,event):
+		if event.type == gtk.gdk.SCROLL:
+			value = self.__HScaleVolume.get_value()
+			if event.direction == gtk.gdk.SCROLL_DOWN:
+				value -= 0.1
+			elif event.direction == gtk.gdk.SCROLL_UP:
+				value += 0.1
+			if value < 0:
+				value = 0.0
+			elif  value >1:
+				value = 1.0
+			print value
+			self.__HScaleVolume.set_value(value)
 	#
 	# Initialize the player
 	#
@@ -165,6 +178,7 @@ class Christine(GtkMisc):
 		self.__Window = self.__XML['WindowCore']
 		self.__Window.connect("destroy",gtk.main_quit)
 		self.__Window.set_icon(self.__Share.getImageFromPix('logo'))
+		self.__Window.connect("event",self.__printEvent)
 
 		# Gets play button and menu play item from glade template
 		self.__PlayButton   = self.__XML['ToggleButtonPlay']

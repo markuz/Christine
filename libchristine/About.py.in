@@ -25,13 +25,11 @@
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
-import gnome
 import gtk
 import gst
 import gst.interfaces
 import random
 import sys
-from gnome import ui
 
 from libchristine.GtkMisc import *
 from libchristine.Share import * 
