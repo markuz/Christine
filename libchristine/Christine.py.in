@@ -126,9 +126,9 @@ class Christine(GtkMisc):
 		if event.type == gtk.gdk.SCROLL:
 			value = self.__HScaleVolume.get_value()
 			if event.direction == gtk.gdk.SCROLL_DOWN:
-				value -= 0.1
+				value -= 0.01
 			elif event.direction == gtk.gdk.SCROLL_UP:
-				value += 0.1
+				value += 0.01
 			if value < 0:
 				value = 0.0
 			elif  value >1:
