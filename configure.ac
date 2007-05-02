@@ -20,15 +20,23 @@ AC_PROG_INSTALL
 PKG_PROG_PKG_CONFIG
 
 PKG_CHECK_MODULES(pygtk, pygtk-2.0)
-PKG_CHECK_MODULES(gstreamer,gstreamer-0.10)
+dnl PKG_CHECK_MODULES(gstreamer,gstreamer-0.10)
 PKG_CHECK_MODULES(gst_python,gst-python-0.10)
-PKG_CHECK_MODULES(gnome_python,gnome-python-2.0)
-PKG_CHECK_MODULES(gnome_python_extras,gnome-python-extras-2.0)
+dnl Dropping gnome dependencies
+dnl PKG_CHECK_MODULES(gnome_python,gnome-python-2.0)
+dnl PKG_CHECK_MODULES(gnome_python_extras,gnome-python-extras-2.0)
 PKG_CHECK_MODULES(gconf,gconf-2.0)
 PKG_CHECK_MODULES(glib,glib-2.0)
 
 AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
+
+
+(gst-inspect-0.10) < /dev/null > /dev/null 2>&1 || {
+	echo "There is not gstreamer 0.10 in this machine, and christine will not work";
+	exit 1
+}
+echo "checking for gstreamer... yes"
 
 PROGRAM_NAME="christine"
 VERSION="0.0.4-svn"
