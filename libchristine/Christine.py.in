@@ -1751,10 +1751,11 @@ class Christine(GtkMisc):
 			genre = ""
 
 		track_number = self.__Player.getTag('track-number')
-		if track_number.isdigit():
-			track_number = int(track_number)
-		else:
-			track_number = 0
+		if type(track_number) == type(""):
+			if track_number.isdigit():
+				track_number = int(track_number)
+			else:
+				track_number = 0
 
 
 		if (title == ''):
