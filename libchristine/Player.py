@@ -237,6 +237,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 	# @return string
 	def setLocation(self, file):
 		self.__Tags = {}
+		self.Tags = self.__Tags
 
 		if self.__visualizationPlugin is not None:
 			self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)

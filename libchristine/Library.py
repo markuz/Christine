@@ -40,7 +40,7 @@ TN,
 SEARCH,
 PLAY_COUNT,
 TIME,
-GENRE)=range(11)
+GENRE) = range(11)
 
 (VPATH,
 VNAME,
@@ -101,17 +101,17 @@ class library(GtkMisc,gtk.DrawingArea):
 			s = gobject.TYPE_STRING
 			i = gobject.TYPE_INT
 			self.model = gtk.ListStore(
-					s, #path
-					s, #name
-					s, #type
+					gobject.TYPE_STRING, #path
+					gobject.TYPE_STRING, #name
+					gobject.TYPE_STRING, #type
 					gtk.gdk.Pixbuf, #Pix
-					s, #album
-					s, #artist
+					gobject.TYPE_STRING, #album
+					gobject.TYPE_STRING, #artist
 					int, #Track Number
-					s, #search
+					gobject.TYPE_STRING, #search
 					int, #play count
-					s, #time
-					s) #Genre
+					gobject.TYPE_STRING, #time
+					gobject.TYPE_STRING) #Genre
 		else:
 			self.model.clear()
 		if "--plibrary" in sys.argv:
@@ -308,7 +308,15 @@ class library(GtkMisc,gtk.DrawingArea):
 					tn = 0
 				else:
 					tn = int(tn)
-			self.model.set(self.iters[d.getLocation()],NAME,name,TYPE,t,ALBUM,album,ARTIST,artist,TN,tn,SEARCH,",".join([name,album,artist]),PLAY_COUNT,0,GENRE,genre)
+			self.model.set(self.iters[d.getLocation()],
+					NAME,name,
+					TYPE,t,
+					ALBUM,album,
+					ARTIST,artist,
+					TN,tn,
+					SEARCH,",".join([name,album,artist]),
+					PLAY_COUNT,0,
+					GENRE,genre)
 			time.sleep(0.09)
 			#gobject.timeout_add(150,self.emit_signal,"tags-found")
 			#if not gtk.events_pending():

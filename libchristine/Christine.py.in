@@ -1747,8 +1747,15 @@ class Christine(GtkMisc):
 
 		if (type(genre) == type([])):
 			genre = ','.join(genre)
+		elif type(genre) != type(""):
+			genre = ""
 
 		track_number = self.__Player.getTag('track-number')
+		if track_number.isdigit():
+			track_number = int(track_number)
+		else:
+			track_number = 0
+
 
 		if (title == ''):
 			title = os.path.split(self.__Player.getLocation())[1]
@@ -1775,7 +1782,7 @@ class Christine(GtkMisc):
 
 		# Updating the info in library, only if it is available.
 		if (self.__IterNatural is not None):
-			if (title != ''):
+			if title != '':
 				self.__LibraryNaturalModel.set(self.__IterNatural,
 						NAME,   title,
 						ALBUM,  album,
