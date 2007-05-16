@@ -1493,7 +1493,6 @@ class Christine(GtkMisc):
 		# and everything must run as fast as we can
 		if (self.__IsImporting) and (len(self.__FilesToAdd) > 0):
 			new_file = self.__FilesToAdd.pop()
-
 			if (not queue):
 				length     = len(self.__FilesToAdd)
 				self.__addCounter +=1
@@ -1502,9 +1501,9 @@ class Christine(GtkMisc):
 				self.__Library.add(new_file)
 
 				#if ((mod == 1) or (mod == 0)):
-				if self.__addCounter == 100:
+				if self.__addCounter == 500:
 					print 'library.save()'
-					self.__Library.save()
+					#self.__Library.save()
 					self.__addCounter == 0
 
 			else:
@@ -1516,8 +1515,8 @@ class Christine(GtkMisc):
 				self.__Percentage = (1 - (length / float(self.__TimeTotalNFiles)))
 			else:
 				self.__Percentage = 1
-			if (self.__Percentage >= 1.0):
-				self.__Percentage = 0.99
+			if (self.__Percentage > 1.0):
+				self.__Percentage = 1.0
 			# Setting the value and text in the progressbar
 			self.__AddProgress.set_fraction(self.__Percentage)
 

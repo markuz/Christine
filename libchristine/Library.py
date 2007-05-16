@@ -317,7 +317,10 @@ class library(GtkMisc,gtk.DrawingArea):
 					SEARCH,",".join([name,album,artist]),
 					PLAY_COUNT,0,
 					GENRE,genre)
-			time.sleep(0.09)
+
+			while gtk.events_pending():
+				     gtk.mainiteration(False)
+			time.sleep(0.005)
 			#gobject.timeout_add(150,self.emit_signal,"tags-found")
 			#if not gtk.events_pending():
 			self.emit_signal("tags-found")
