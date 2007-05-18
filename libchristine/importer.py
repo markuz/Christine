@@ -41,8 +41,17 @@ class MP3Track(Track):
 
     def __init__(self, *args):
         Track.__init__(self, *args)
+        self.IDS = {"title":"TIT2",
+                                "artist":"TPE1",
+                                "album":"TALB",
+                                "track-number":"TRCK",
+                                "year":"TDRC",
+                                "genre":"TCON"
+                                }
 
     def get_tag(self, id3, t):
+	if not self.IDS.has_key(t): return ""
+        t = self.IDS[t]
         if not id3.has_key(t): return ""
         text = str(id3[t])
 
@@ -169,5 +178,5 @@ class GUI:
         
         
 if __name__ == "__main__":
-	gui = GUI()
-	gtk.main()
+        gui = GUI()
+        gtk.main()
