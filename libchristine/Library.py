@@ -28,6 +28,7 @@ from libchristine.Translator import *
 from libchristine import clibrary
 from libchristine.ChristineGConf import *
 from libchristine.Share import *
+from libchristine.importer import *
 import time
 
 (PATH,
@@ -238,15 +239,15 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.gconf.notifyAdd("/apps/christine/ui/show_length",self.gconf.toggleVisible,length)
 		self.gconf.notifyAdd("/apps/christine/ui/show_genre",self.gconf.toggleVisible,genre)
 		self.discoverer = Discoverer()
-		self.discoverer.Bus.add_watch(self.message_handler)
-		self.discoverer2 = Discoverer()
-		self.discoverer2.Bus.add_watch(self.message_handler)
-		gobject.timeout_add(100,self.stream_length,None,1)
-		gobject.timeout_add(200,self.stream_length,None,2)
+		#self.discoverer.Bus.add_watch(self.message_handler)
+		#self.discoverer2 = Discoverer()
+		#self.discoverer2.Bus.add_watch(self.message_handler)
+		#gobject.timeout_add(100,self.stream_length,None,1)
+		#gobject.timeout_add(200,self.stream_length,None,2)
 
 	def add(self,file,prepend=False,n=1):
 		#if n == 1:
-		self.discoverer.setLocation(file)
+		#self.discoverer.setLocation(file)
 		#else:
 		#	self.discoverer2.setLocation(file)
 		if type(file) == type(()):
@@ -270,35 +271,58 @@ class library(GtkMisc,gtk.DrawingArea):
 		#gobject.timeout_add(3000,self.NEXT)
 		path = self.model.get_path(iter)
 		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
-		return False
+		self.extractTags(file)
+		#print "Emitiendo la señal de listo..."
+		#self.emit_signal("tags-found")
+		#print "Señal emitida..."
+
 
 	def NEXT(self):
 		print "NEXT"
 		self.emit("tags-found",self)
 
-	def message_handler(self,bus,b):
-		if bus == self.discoverer.Bus:
-			d = self.discoverer
-		else:
-			d = self.discoverer2
-		t = b.type
-		if t == gst.MESSAGE_TAG:
-			iter = self.iters[d.getLocation()]
+	#def message_handler(self,bus,b):
+	def extractTags(self,file):
+		#if bus == self.discoverer.Bus:
+		#	d = self.discoverer
+		#else:
+		#	d = self.discoverer2
+		#t = b.type
+		ext = file.split(".").pop().lower()
+		if ext == "mp3":
+			try: 
+				f = mutagen.id3.ID3(file)
+				d = MP3Track(file)
+			except:
+				self.emit_signal("tags-found")
+				return
+		elif ext == "ogg":
+			try:
+				f = mutagen.oggvorbis.OggVorbis(file)
+				d = OGGTrack(file)
+			except:
+				self.emit_signal("tags-found")
+				return
+		d.getTag = d.get_tag
+		if 1:
+			iter = self.iters[file]
 			name = self.model.get_value(iter,NAME)
-			if name == os.path.split(d.getLocation()[1]):
+			if name == os.path.split(file):
 				return True
-			d.callbackFoundTags(b.parse_tag())
-			name	= d.getTag("title")
-			album	= d.getTag("album")
-			artist	= d.getTag("artist")
-			tn		= d.getTag("track-number")
-			genre	= d.getTag("genre")
+			#d.callbackFoundTags(b.parse_tag())
+			#print "obteniendo  etiquetas..."
+			name	= d.getTag(f,"title")
+			album	= d.getTag(f,"album")
+			artist	= d.getTag(f,"artist")
+			tn		= d.getTag(f,"track-number")
+			genre	= d.getTag(f,"genre")
 			if name == "":
-				n = os.path.split(d.getLocation())[1].split(".")
+				n = os.path.split(file)[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			model = self.model
-			if d.getTag("video-codec") != "" or \
-					os.path.splitext(d.getLocation())[1] in CHRISTINE_VIDEO_EXT:
+			if d.getTag(f,"video-codec") != "" or \
+					os.path.splitext(file)[1] in CHRISTINE_VIDEO_EXT:
+					#os.path.splitext(d.getLocation())[1] in CHRISTINE_VIDEO_EXT:
 				t = "video"
 			else:
 				t = "audio"
@@ -308,7 +332,8 @@ class library(GtkMisc,gtk.DrawingArea):
 					tn = 0
 				else:
 					tn = int(tn)
-			self.model.set(self.iters[d.getLocation()],
+			#print "Guardadno etiquetas en el modelo"
+			self.model.set(self.iters[file],
 					NAME,name,
 					TYPE,t,
 					ALBUM,album,
@@ -319,14 +344,10 @@ class library(GtkMisc,gtk.DrawingArea):
 					GENRE,genre)
 
 			while gtk.events_pending():
-				     gtk.mainiteration(False)
+				     gtk.main_iteration(False)
 			time.sleep(0.005)
 			#gobject.timeout_add(150,self.emit_signal,"tags-found")
 			#if not gtk.events_pending():
-			self.emit_signal("tags-found")
-		if t == gst.MESSAGE_ERROR:
-			print b.parse_error()
-		return True
 
 	def emit_signal(self,signal):
 		self.emit(signal,self)

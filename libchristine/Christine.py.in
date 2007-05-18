@@ -1498,34 +1498,43 @@ class Christine(GtkMisc):
 				self.__addCounter +=1
 				(div, mod) = divmod(length, 7)
 				# Add file to our Library
-				self.__Library.add(new_file)
+				new_file = None
+				new_file = self.__FilesToAdd.pop()
+				while new_file:
+					self.__Library.add(new_file)
+					if len(self.__FilesToAdd)>0:
+						new_file = self.__FilesToAdd.pop()
+						length = len(self.__FilesToAdd)
+						if (length > 0):
+							self.__Percentage = (1 - (length / float(self.__TimeTotalNFiles)))
+						else:
+							self.__Percentage = 1
+						if (self.__Percentage > 1.0):
+							self.__Percentage = 1.0
+						# Setting the value and text in the progressbar
+						self.__AddProgress.set_fraction(self.__Percentage)
+	
+						rest = (self.__TimeTotalNFiles - length)
+						#print rest,new_file
+						text = "%02d/%02d" % (rest, self.__TimeTotalNFiles)
+	
+						self.__AddProgress.set_text(text)
+						self.__AddFileLabel.set_text(os.path.split(new_file)[1])
+					else:
+						new_file = False
+						self.__Library.save()
+					#if ((mod == 1) or (mod == 0)):
+					if self.__addCounter == 500:
+						print 'library.save()'
+						self.__Library.save()
+						self.__addCounter == 0
 
-				#if ((mod == 1) or (mod == 0)):
-				if self.__addCounter == 500:
-					print 'library.save()'
-					#self.__Library.save()
-					self.__addCounter == 0
 
+					while gtk.events_pending():
+						gtk.main_iteration(False)
 			else:
 				self.Queue.add(new_file)
 
-			length = len(self.__FilesToAdd)
-
-			if (length > 0):
-				self.__Percentage = (1 - (length / float(self.__TimeTotalNFiles)))
-			else:
-				self.__Percentage = 1
-			if (self.__Percentage > 1.0):
-				self.__Percentage = 1.0
-			# Setting the value and text in the progressbar
-			self.__AddProgress.set_fraction(self.__Percentage)
-
-			rest = (self.__TimeTotalNFiles - length)
-			#print rest,new_file
-			text = "%02d/%02d" % (rest, self.__TimeTotalNFiles)
-
-			self.__AddProgress.set_text(text)
-			self.__AddFileLabel.set_text(os.path.split(new_file)[1])
 		else:
 			if (not queue):
 				self.__Library.save()
@@ -1568,16 +1577,16 @@ class Christine(GtkMisc):
 			ext    = i.split('.').pop().lower()
 			if (not i in self.__Paths) and \
 					(ext in self.__GConf.getString('backend/allowed_files').split(',')):
-				print i,ext
+				#print i,ext
 				self.__FilesToAdd.append(i)
-			else:
-				print 'skipping: ', i
+			#else:
+			#	print 'skipping: ', i
 
 		self.__Percentage      = 0
 		self.__TimeTotalNFiles = len(self.__FilesToAdd)
 
 		self.__addFile(queue=queue)
-		self.__Library.connect('tags-found', self.__addFile)
+		#self.__Library.connect('tags-found', self.__addFile)
 		self.Queue.connect('tags-found', self.__addFile,True)
 		self.__AddWindow.run()
 		self.__AddWindow.destroy()

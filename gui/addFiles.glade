@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.0.3 on Wed May 16 11:02:17 2007 by markuz@cucusa
+<!--Generated with glade3 3.0.3 on Thu May 17 21:42:17 2007 by markuz@cucusa
 	Version: 3.0.1
 	Date: Mon Nov 27 13:48:05 2006
 	User: markuz
@@ -8,6 +8,7 @@
 -->
 <glade-interface>
   <widget class="GtkDialog" id="WindowCore">
+    <property name="width_request">400</property>
     <property name="visible">True</property>
     <property name="title">Import files</property>
     <property name="resizable">False</property>
