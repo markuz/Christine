@@ -2,6 +2,10 @@
 
 	* Makefile.am (EXTRA_DIST): Add config.rpath.
 
+2007-05-18  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (EXTRA_DIST): Add config.rpath.
+
 2007-05-15  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* Makefile.am (EXTRA_DIST): Add config.rpath.

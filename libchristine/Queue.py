@@ -26,6 +26,7 @@ from libchristine.GtkMisc import *
 from libchristine.Discoverer import *
 from libchristine.Translator import *
 from libchristine.Share import *
+from libchristine.Tagger import *
 from libchristine import clibrary
 #import pdb
 
@@ -56,8 +57,8 @@ class queue(GtkMisc,gtk.DrawingArea):
 		GtkMisc.__init__(self)
 		self.__Share = Share()
 		self.iters = {}
-		self.discoverer = Discoverer()
-		self.discoverer.Bus.add_watch(self.message_handler)
+		#self.discoverer = Discoverer()
+		#self.discoverer.Bus.add_watch(self.message_handler)
 		self.library = lib_library("queue")
 		self.__xml = self.__Share.getTemplate("TreeViewReorderable","ltv")
 		self.__xml.signal_autoconnect(self)
@@ -88,43 +89,38 @@ class queue(GtkMisc,gtk.DrawingArea):
 					NAME,self.library[i]["name"],
 					TYPE,self.library[i]["type"])
 			
-	def message_handler(self,a,b):
-		d = self.discoverer
-		t = b.type
-		if t == gst.MESSAGE_TAG:
-			#print a,b,d.getLocation(),self.model.get_path(self.iters[d.getLocation()])
-			self.discoverer.callbackFoundTags(b.parse_tag())
-			name	= self.strip_XML_entities(d.getTag("title"))
-			album	= self.strip_XML_entities(d.getTag("album"))
-			artist	= self.strip_XML_entities(d.getTag("artist"))
-			tn		= d.getTag("track-number")
-			if name == "":
-				n = os.path.split(self.file)[1].split(".")
-				name = ".".join([k for k in n[:-1]])
-			name = "<b><i>%s</i></b>"%name
-			name = self.strip_XML_entities(name)
-			if album !="":
-				name += "\n from <i>%s</i>"%album
-			if artist != "":
-				name += "\n by <i>%s</i>"%artist
-
-			model = self.model
-			model.set(self.iters[d.getLocation()],
-			#model.set(self.iters,
-						PATH,d.getLocation(),
-						NAME,name,
-						TYPE,"sound")
-			self.save()
-			self.__emitSignal("tags-found")
-		return True
+	def extractTags(self,file):
+		try:
+			tagger = Tagger(file)
+			tags = tagger.readTags()
+		except:
+			self.emit_signal("tags-found!")
+			return True
+		#print a,b,d.getLocation(),self.model.get_path(self.iters[d.getLocation()])
+		name	= self.strip_XML_entities(tags["title"])
+		album	= self.strip_XML_entities(tags["album"])
+		artist	= self.strip_XML_entities(tags["artist"])
+		tn		= tags["track"]
+		if name == "":
+			n = os.path.split(self.file)[1].split(".")
+			name = ".".join([k for k in n[:-1]])
+		name = "<b><i>%s</i></b>"%name
+		name = self.strip_XML_entities(name)
+		if album !="":
+			name += "\n from <i>%s</i>"%album
+		if artist != "":
+			name += "\n by <i>%s</i>"%artist
+		model = self.model
+		model.set(self.iters[file],
+					PATH,file,
+					NAME,name,
+					TYPE,"sound")
+		self.__emitSignal("tags-found")
 	
 	def add(self,file,prepend=False):
-		print "queue.add(%s)"%file
 		self.file = file
-		self.discoverer.tags = {}
 		if not os.path.isfile(file):
 			return False
-		self.discoverer.setLocation(file)
 		model = self.model
 		if prepend:
 			iter = model.prepend()
@@ -135,6 +131,7 @@ class queue(GtkMisc,gtk.DrawingArea):
 					NAME,"<b>%s</b>"%self.strip_XML_entities(os.path.split(file)[1]),
 					TYPE,"sound")
 		self.iters[file] = iter
+		self.extractTags(file)
 	
 	def __emitSignal(self,signal):
 		self.emit(signal,self)
