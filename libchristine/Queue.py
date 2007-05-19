@@ -89,7 +89,15 @@ class queue(GtkMisc,gtk.DrawingArea):
 					NAME,self.library[i]["name"],
 					TYPE,self.library[i]["type"])
 			
-	def extractTags(self,file):
+	def add(self,file,prepend=False):
+		self.file = file
+		if not os.path.isfile(file):
+			return False
+		model = self.model
+		if prepend:
+			iter = model.prepend()
+		else:
+			iter = model.append()
 		try:
 			tagger = Tagger(file)
 			tags = tagger.readTags()
@@ -110,28 +118,12 @@ class queue(GtkMisc,gtk.DrawingArea):
 			name += "\n from <i>%s</i>"%album
 		if artist != "":
 			name += "\n by <i>%s</i>"%artist
-		model = self.model
-		model.set(self.iters[file],
+		model.set(iter,
 					PATH,file,
 					NAME,name,
 					TYPE,"sound")
 		self.__emitSignal("tags-found")
-	
-	def add(self,file,prepend=False):
-		self.file = file
-		if not os.path.isfile(file):
-			return False
-		model = self.model
-		if prepend:
-			iter = model.prepend()
-		else:
-			iter = model.append()
-		model.set(iter,
-					PATH,file,
-					NAME,"<b>%s</b>"%self.strip_XML_entities(os.path.split(file)[1]),
-					TYPE,"sound")
-		self.iters[file] = iter
-		self.extractTags(file)
+
 	
 	def __emitSignal(self,signal):
 		self.emit(signal,self)

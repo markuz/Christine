@@ -261,28 +261,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		name = os.path.split(file)[1]
 		if type(name) == type(()):
 			name = name[0]
-		self.model.set(iter,
-				NAME,name,
-				PIX,self.blank_pix,
-				PATH,file,
-				GENRE,"")
-		self.iters[file] = iter
-		#print file, self.model.getValue(iter,PATH),self.iters[file]
-		#gobject.timeout_add(3000,self.NEXT)
-		path = self.model.get_path(iter)
-		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
-		self.extractTags(file)
-		#print "Emitiendo la señal de listo..."
-		#self.emit_signal("tags-found")
-		#print "Señal emitida..."
-
-
-	def NEXT(self):
-		print "NEXT"
-		self.emit("tags-found",self)
-
-	#def message_handler(self,bus,b):
-	def extractTags(self,file):
+		################################
 		try:
 			tagger = Tagger(file)
 			tags = tagger.readTags()
@@ -290,7 +269,6 @@ class library(GtkMisc,gtk.DrawingArea):
 			self.emit_signal("tags-found")
 			return True
 
-		iter = self.iters[file]
 		name = self.model.get_value(iter,NAME)
 		if name == os.path.split(file):
 			return True
@@ -308,9 +286,10 @@ class library(GtkMisc,gtk.DrawingArea):
 		if(type(tags["track"]) is not int):
 			tags["track"] = 0
 				
-		#print "Guardadno etiquetas en el modelo"
-		self.model.set(self.iters[file],
+		self.model.set(iter,
 				NAME,tags["title"],
+				PATH,file,
+				PIX,self.blank_pix,
 				TYPE,t,
 				ALBUM,tags["album"],
 				ARTIST,tags["artist"],
@@ -318,9 +297,28 @@ class library(GtkMisc,gtk.DrawingArea):
 				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
 				PLAY_COUNT,0,
 				GENRE,tags["genre"])
-		
-		while gtk.events_pending():
-			gtk.main_iteration(False)
+#####################################
+#		self.model.set(iter,
+#				NAME,name,
+#				PIX,self.blank_pix,
+#				PATH,file,
+#				GENRE,"")
+#		self.iters[file] = iter
+		#print file, self.model.getValue(iter,PATH),self.iters[file]
+		#gobject.timeout_add(3000,self.NEXT)
+		path = self.model.get_path(iter)
+		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
+#		self.extractTags(file)
+		#print "Emitiendo la señal de listo..."
+		#self.emit_signal("tags-found")
+		#print "Señal emitida..."
+
+
+	def NEXT(self):
+		print "NEXT"
+		self.emit("tags-found",self)
+
+	#def message_handler(self,bus,b):
 
 	def emit_signal(self,signal):
 		self.emit(signal,self)
