@@ -619,7 +619,7 @@ class Christine(GtkMisc):
 		"""
 		This show/hide the visualization
 		"""
-		self.__Player.setVisualization(widget.get_active())
+		#self.__Player.setVisualization(widget.get_active())
 		self.__GConf.setValue('ui/visualization', widget.get_active())
 		self.visualModePlayer()
 

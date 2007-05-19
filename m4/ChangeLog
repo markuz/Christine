@@ -1,5 +1,10 @@
 2007-05-18  gettextize  <bug-gnu-gettext@gnu.org>
 
+	* gettext.m4: Upgrade to gettext-0.16.1.
+	* lib-link.m4: Upgrade to gettext-0.16.1.
+
+2007-05-18  gettextize  <bug-gnu-gettext@gnu.org>
+
 	* inttypes-h.m4: New file, from gettext-0.15.
 	* lock.m4: New file, from gettext-0.15.
 	* visibility.m4: New file, from gettext-0.15.

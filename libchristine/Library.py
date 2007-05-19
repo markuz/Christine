@@ -28,7 +28,7 @@ from libchristine.Translator import *
 from libchristine import clibrary
 from libchristine.ChristineGConf import *
 from libchristine.Share import *
-from libchristine.importer import *
+from libchristine.Tagger import *
 import time
 
 (PATH,
@@ -283,71 +283,44 @@ class library(GtkMisc,gtk.DrawingArea):
 
 	#def message_handler(self,bus,b):
 	def extractTags(self,file):
-		#if bus == self.discoverer.Bus:
-		#	d = self.discoverer
-		#else:
-		#	d = self.discoverer2
-		#t = b.type
-		ext = file.split(".").pop().lower()
-		if ext == "mp3":
-			try: 
-				f = mutagen.id3.ID3(file)
-				d = MP3Track(file)
-			except:
-				self.emit_signal("tags-found")
-				return
-		elif ext == "ogg":
-			try:
-				f = mutagen.oggvorbis.OggVorbis(file)
-				d = OGGTrack(file)
-			except:
-				self.emit_signal("tags-found")
-				return
-		d.getTag = d.get_tag
-		if 1:
-			iter = self.iters[file]
-			name = self.model.get_value(iter,NAME)
-			if name == os.path.split(file):
-				return True
-			#d.callbackFoundTags(b.parse_tag())
-			#print "obteniendo  etiquetas..."
-			name	= d.getTag(f,"title")
-			album	= d.getTag(f,"album")
-			artist	= d.getTag(f,"artist")
-			tn		= d.getTag(f,"track-number")
-			genre	= d.getTag(f,"genre")
-			if name == "":
-				n = os.path.split(file)[1].split(".")
-				name = ".".join([k for k in n[:-1]])
-			model = self.model
-			if d.getTag(f,"video-codec") != "" or \
-					os.path.splitext(file)[1] in CHRISTINE_VIDEO_EXT:
-					#os.path.splitext(d.getLocation())[1] in CHRISTINE_VIDEO_EXT:
-				t = "video"
-			else:
-				t = "audio"
-					
-			if type(tn) == type(""):
-				if not tn.isdigit():
-					tn = 0
-				else:
-					tn = int(tn)
-			#print "Guardadno etiquetas en el modelo"
-			self.model.set(self.iters[file],
-					NAME,name,
-					TYPE,t,
-					ALBUM,album,
-					ARTIST,artist,
-					TN,tn,
-					SEARCH,",".join([name,album,artist]),
-					PLAY_COUNT,0,
-					GENRE,genre)
+		try:
+			tagger = Tagger(file)
+			tags = tagger.readTags()
+		except:			
+			self.emit_signal("tags-found")
+			return True
 
-			while gtk.events_pending():
-				     gtk.main_iteration(False)
-			time.sleep(0.005)
-			#gobject.timeout_add(150,self.emit_signal,"tags-found")
-			#if not gtk.events_pending():
+		iter = self.iters[file]
+		name = self.model.get_value(iter,NAME)
+		if name == os.path.split(file):
+			return True
+
+		if tags["title"] == "":
+			n = os.path.split(file)[1].split(".")
+			tags["title"] = ".".join([k for k in n[:-1]])
+		
+		if "video-codec" in tags.keys() or \
+				os.path.splitext(file)[1] in CHRISTINE_VIDEO_EXT:
+			t = "video"
+		else:
+			t = "audio"
+		
+		if(type(tags["track"]) is not int):
+			tags["track"] = 0
+				
+		#print "Guardadno etiquetas en el modelo"
+		self.model.set(self.iters[file],
+				NAME,tags["title"],
+				TYPE,t,
+				ALBUM,tags["album"],
+				ARTIST,tags["artist"],
+				TN,tags["track"],
+				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
+				PLAY_COUNT,0,
+				GENRE,tags["genre"])
+		
+		while gtk.events_pending():
+			gtk.main_iteration(False)
 
 	def emit_signal(self,signal):
 		self.emit(signal,self)
