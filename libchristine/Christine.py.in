@@ -1043,6 +1043,7 @@ class Christine(GtkMisc):
 	# @param  widget
 	# @return boolean
 	def	checkQueue(self):
+		return True
 		model = self.Queue.treeview.get_model()
 
 		if (model != None):

@@ -47,6 +47,13 @@ GENRE) = range(11)
 VNAME,
 VPIX) = range(3)
 
+QUEUE_TARGETS = [
+		('MY_TREE_MODEL_ROW',gtk.TARGET_SAME_WIDGET,0),
+		('text/plain',0,0),
+		('TEXT',0,0),
+		('STRING',0,0)
+		]
+
 
 ##
 ## Since library and queue are more or less the same 
@@ -304,7 +311,7 @@ class library(GtkMisc,gtk.DrawingArea):
 #				PATH,file,
 #				GENRE,"")
 #		self.iters[file] = iter
-		#print file, self.model.getValue(iter,PATH),self.iters[file]
+		#print file, self.model.get_value(iter,PATH),self.iters[file]
 		#gobject.timeout_add(3000,self.NEXT)
 		path = self.model.get_path(iter)
 		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
@@ -389,7 +396,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		if event.keyval == 65535:
 			selection = treeview.get_selection()
 			model,iter = selection.get_selected()
-			name = model.getValue(iter,NAME)
+			name = model.get_value(iter,NAME)
 			model.remove(iter)
 			self.library_lib.remove(name)
 			self.save()
@@ -398,12 +405,17 @@ class library(GtkMisc,gtk.DrawingArea):
 	# Need some help in the next functions
 	# They need to be retouched to work fine.
 	def set_drag_n_drop(self):
-		 self.tv.connect("drag_motion",self.check_contexts)
-		 self.tv.connect("drag_drop",self.dnd_handler)
-		 self.tv.connect("drag_data_received",self.add_it)
-		 self.tv.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
-				 [('STRING',0,0)],gtk.gdk.ACTION_COPY)
-		 self.tv.connect("drag-data-get",self.drag_data_get)
+		self.tv.connect("drag_motion",self.check_contexts)
+		self.tv.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
+				QUEUE_TARGETS,
+				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_MOVE)
+
+		self.tv.connect("drag_data_received",self.add_it)
+		self.tv.enable_model_drag_dest(QUEUE_TARGETS, 
+				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_COPY)
+		self.tv.connect("drag-data-get",self.drag_data_get)
+
+		self.tv.connect("drag_drop", self.dnd_handler)
 	
 	def drag_data_get(self,
 			treeview,
@@ -413,8 +425,9 @@ class library(GtkMisc,gtk.DrawingArea):
 			timestamp):
 		tsel = treeview.get_selection()
 		model,iter = tsel.get_selected()
-		text = model.getValue(iter,PATH)
-		selection.set("STRING",8,text)
+		text = model.get_value(iter,PATH)
+		text = "file://"+text
+		selection.set(selection.target,8,text)
 		return
 		
 	def check_contexts(self,
@@ -423,7 +436,7 @@ class library(GtkMisc,gtk.DrawingArea):
 			selection,
 			info,
 			timestamp):
-		context.drag_status(gtk.gdk.ACTION_COPY,timestamp)
+		print context.drag_status(gtk.gdk.ACTION_COPY,timestamp)
 		return True
 
 	def dnd_handler(self,
@@ -434,32 +447,32 @@ class library(GtkMisc,gtk.DrawingArea):
 			timestamp,
 			b=None,
 			c=None):
-		tgt = treeview.drag_dest_find_target(context,[("STRING",0,0)])
-		data = treeview.drag_get_data(context,tgt)
+		treeview.emit_stop_by_name("drag_drop")
+		tgt = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
+		text = treeview.drag_get_data(context,tgt)
+		print text
 		return True
 
-	def add_it(self,
-			treeview,
-			context,
-			x,
-			y,
-			selection,
-			target,
-			timestamp):
+	def add_it(self,treeview,context,x,y,selection,target,timestamp):
+		print locals()
+		#treeview.emit_stop_by_name("drag_drop")
 		treeview.emit_stop_by_name("drag_data_received")
-		target = treeview.drag_dest_find_target(context,[("STRING",0,0)])
-		if timestamp !=0:
-			#print treeview,context,x,y,selection,target,timestamp
+		target = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
+		if timestamp != 0:
 			text = self.parse_received_data(selection.get_text())
-			#print text
-			if len(text)>0:
-				install_gui(text,self)
+			while len(text) > 0:
+				file = text.pop()
+				if file[:7] == "file://":
+					file = file[7:].replace("%20"," ")
+				print file
+				self.add(file)
 		return True
+
 
 	def delete_from_disk(self,iter):
 		dialog = glade_xml("delete_file_from_disk_dialog.glade")["dialog"]
 		response = dialog.run()
-		path = self.model.getValue(iter,PATH)
+		path = self.model.get_value(iter,PATH)
 		if response == -5:
 			try:
 				os.unlink(path)

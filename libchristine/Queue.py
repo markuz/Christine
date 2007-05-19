@@ -46,6 +46,14 @@ from libchristine import clibrary
 		VNAME,
 		VPIX) = xrange(3)
 
+QUEUE_TARGETS = [
+		('MY_TREE_MODEL_ROW',gtk.TARGET_SAME_WIDGET,0),
+		('text/plain',0,1),
+		('TEXT',0,2),
+		('STRING',0,3)
+		]
+
+
 class queue(GtkMisc,gtk.DrawingArea):
 	def __init__(self):
 		gtk.DrawingArea.__init__(self)
@@ -60,9 +68,9 @@ class queue(GtkMisc,gtk.DrawingArea):
 		#self.discoverer = Discoverer()
 		#self.discoverer.Bus.add_watch(self.message_handler)
 		self.library = lib_library("queue")
-		self.__xml = self.__Share.getTemplate("TreeViewReorderable","ltv")
+		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
-		self.treeview = self.__xml["ltv"]
+		self.treeview = self.__xml["treeview"]
 		self.treeview.set_headers_visible(False)
 		#self.treeview.set_reorderable(True)
 		gobject
@@ -90,8 +98,10 @@ class queue(GtkMisc,gtk.DrawingArea):
 					TYPE,self.library[i]["type"])
 			
 	def add(self,file,prepend=False):
+		print "add:",file
 		self.file = file
 		if not os.path.isfile(file):
+			print "No es un archivo"
 			return False
 		model = self.model
 		if prepend:
@@ -176,11 +186,11 @@ class queue(GtkMisc,gtk.DrawingArea):
 		print widget,event,key
 	
 	def set_drag_n_drop(self):
-		return True
 	### FIXME For some reason this thing doesn't work!!! ###
-		self.treeview.drag_dest_set(gtk.DEST_DEFAULT_DROP,[("STRING",0,0),('GTK_TREE_MODEL_ROW',2,0)],0)
-		self.treeview.connect("drag-motion",self.check_contexts)
-		self.treeview.connect("drag-drop",self.dnd_handler)
+		self.treeview.enable_model_drag_dest(QUEUE_TARGETS, 
+				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_MOVE)
+		#self.treeview.connect("drag-motion",self.check_contexts)
+		#self.treeview.connect("drag-drop",self.dnd_handler)
 		self.treeview.connect("drag-data-received",self.add_it)
 
 	def check_contexts(self,treeview,context,selection,info,timestamp):
@@ -191,22 +201,24 @@ class queue(GtkMisc,gtk.DrawingArea):
 	def dnd_handler(self,treeview,context,selection,info,timestamp,b=None,c=None):
 		'''
 		'''
-		tgt = treeview.drag_dest_find_target(context,[('STRING',0,0),('GTK_TREE_MODEL_ROW',2,0)])
-		print treeview.drag_dest_get_target_list()
+		tgt = treeview.drag_dest_find_target(context,[('text/plain',0,0),('GTK_TREE_MODEL_ROW',2,0)])
+		#print treeview.drag_dest_get_target_list()
 		data = treeview.drag_get_data(context,tgt)
-		print locals(),context.get_data(tgt)
+		#print locals(),context.get_data(tgt)
 		return True
 	
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
 		#print locals()
-		treeview.emit_stop_by_name("drag_data_received")
-		target = treeview.drag_dest_find_target(context,[("STRING",0,0)])
+		treeview.emit_stop_by_name("drag-data-received")
+		#target = treeview.drag_dest_find_target(context,[("text/plain",0,0)])
 		if timestamp !=0:
 			text = self.parse_received_data(selection.get_text())
-			if len(text)>0:
-				for i in text:
-					print i
-					#self.add(i)
+			while len(text) > 0:
+				i = text.pop()
+				if i[:7] == "file://":
+					file = i[7:].replace("%20"," ")
+				print file
+				self.add(file)
 		return True
 
 	def parse_received_data(self,text):
