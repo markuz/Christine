@@ -18,7 +18,7 @@ Share.py \
 Queue.py \
 Validator.py \
 ChristineGConf.py \
-importer.py \
+Tagger.py \
 clibrary.so
 
 DISTFILES= Makefile.in \
