@@ -110,6 +110,12 @@ class OGGTrack(Track):
 		
 		return self.createDict()  
 
+class FakeTrack(Track):
+	def __init__(self, *args):
+		Track.__init__(self, *args)
+
+	def readTags(self):
+		return self.createDict()
 
 
 class Tagger:
@@ -119,6 +125,8 @@ class Tagger:
 			self.Rola = MP3Track(self.Song)
 		elif self.Song.split('.').pop().lower() == 'ogg':
 			self.Rola = OGGTrack(self.Song)
+		else:
+			self.Rola = FakeTrack(self.Song)
 
 	def readTags(self):
 		return self.Rola.readTags()
