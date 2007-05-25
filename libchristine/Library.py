@@ -269,12 +269,8 @@ class library(GtkMisc,gtk.DrawingArea):
 		if type(name) == type(()):
 			name = name[0]
 		################################
-		try:
-			tagger = Tagger(file)
-			tags = tagger.readTags()
-		except:			
-			self.emit_signal("tags-found")
-			return True
+		tagger = Tagger(file)
+		tags = tagger.readTags()
 
 		name = self.model.get_value(iter,NAME)
 		if name == os.path.split(file):
@@ -283,6 +279,8 @@ class library(GtkMisc,gtk.DrawingArea):
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")
 			tags["title"] = ".".join([k for k in n[:-1]])
+		else:
+			print (tags["title"],)
 		
 		if "video-codec" in tags.keys() or \
 				os.path.splitext(file)[1] in CHRISTINE_VIDEO_EXT:
