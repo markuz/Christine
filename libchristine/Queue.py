@@ -213,6 +213,7 @@ class queue(GtkMisc,gtk.DrawingArea):
 		#target = treeview.drag_dest_find_target(context,[("text/plain",0,0)])
 		if timestamp !=0:
 			text = self.parse_received_data(selection.get_text())
+			text.reverse()
 			while len(text) > 0:
 				i = text.pop()
 				if i[:7] == "file://":
