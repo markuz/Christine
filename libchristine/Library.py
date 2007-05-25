@@ -479,4 +479,8 @@ class library(GtkMisc,gtk.DrawingArea):
 			except IOError:
 				error("cannot delete file: %s"%path)
 		dialog.destroy()
+	
+	def clear(self):
+		self.model.clear()
+		self.save()
 

@@ -18,7 +18,8 @@ deleteFileFromDisk.glade \
 directorySelector.glade \
 iconView.glade \
 miniViewer.glade \
-openRemote.glade 
+openRemote.glade \
+deleteQuestion.glade
 
 DISTFILES= Makefile.in $(scripts_DATA)
 

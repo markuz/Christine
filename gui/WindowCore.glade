@@ -123,6 +123,19 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkMenuItem" id="menuitem1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Clean main List</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="cleanLibrary"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="menuitem2">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkImageMenuItem" id="quit1">
                         <property name="visible">True</property>
                         <property name="label">gtk-quit</property>

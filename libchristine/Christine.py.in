@@ -1904,7 +1904,20 @@ class Christine(GtkMisc):
 			self.__PlayButton.set_active(True)
 
 		dialog.destroy()
-	
+	#
+	# Raise a dialog that asks for confirmation
+	# To remove all files in the list
+	# @regturn void
+	def cleanLibrary(self,widget):
+		xml = self.__Share.getTemplate("deleteQuestion")
+		dialog = xml["dialog"]
+		response = dialog.run()
+		if response == -5:
+			self.__Library.clear()
+		dialog.destroy()
+
+
+
 	#
 	# Show the about dialog
 	#
