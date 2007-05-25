@@ -38,6 +38,18 @@ AC_SUBST(pygtk_LIBS)
 }
 echo "checking for gstreamer... yes"
 
+(`python -c "import mutagen"`) < /dev/null > /dev/null >&1 || {
+	echo "checking for mutagen... no";
+	echo ""
+	echo "Mutagen is needed to retrieve the tags in ogg and mp3 files"
+	echo "We know that gstreamer can do that but is a bit unstable and"
+	echo "in some computers slow, so please visit"
+	echo "http://www.sacredchao.net/quodlibet/wiki/Development/Mutagen"
+	echo "install mutagen and re run configure script"
+	exit 1
+}
+echo "checking for mutagen... yes"
+
 PROGRAM_NAME="christine"
 VERSION="0.0.4-svn"
 PREFIX=/usr
