@@ -53,12 +53,13 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		 Constructor
 		"""
-		self.__ShouldShow = False
-		self.__Type       = 'sound'
-
 		GtkMisc.__init__(self)
 		ChristineGConf.__init__(self)
 		gtk.DrawingArea.__init__(self)
+
+		self.__ShouldShow = False
+		self.__Type       = 'sound'
+
 
 		self.connect('destroy',      lambda x: self.__VideoSink.set_xwindow_id(0L))
 		self.connect('expose-event', self.__exposeCallback)
@@ -224,6 +225,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
 
+		print self.window.xid
 		self.__VideoSink.set_xwindow_id(self.window.xid)
 
 		if self.__ShouldShow:
