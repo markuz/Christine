@@ -73,10 +73,6 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.__Share = Share()
 		gtk.DrawingArea.__init__(self)
 		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
-		gobject.signal_new("tags-found",self,
-				gobject.SIGNAL_RUN_LAST,
-				gobject.TYPE_NONE,
-				(gobject.TYPE_PYOBJECT,))
 		self.__xml.signal_autoconnect(self)
 		self.gconf = ChristineGConf()
 		self.tv = self.__xml["treeview"]
@@ -90,19 +86,6 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.blank_pix = self.gen_pixbuf("blank.png")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.CURRENT_ITER = self.model.get_iter_first()
-		#gobject.timeout_add(1000,self.update_values)
-	
-	#def update_values(self):
-	#	try:
-	#		self.CURRENT_ITER = self.model.iter_next(self.CURRENT_ITER)
-	#		path = self.model.get(self.CURRENT_ITER,PATH)
-	#		self.discoverer.setLocation(path)
-	#		self.iters[self.discoverer.getLocation()] = self.CURRENT_ITER
-	#		print locals()
-	#	except:
-	#		self.CURRENT_ITER = self.model.get_iter_first()
-	#	print self.discoverer.getLocation()
-	#	return True
 	
 	def gen_model(self,refresh=False):
 		if not refresh:
@@ -122,46 +105,7 @@ class library(GtkMisc,gtk.DrawingArea):
 					gobject.TYPE_STRING) #Genre
 		else:
 			self.model.clear()
-		if "--plibrary" in sys.argv:
-			#print "using python library code,"
-			self.__pgen_model()
-		else:
-			#print "using C library code,"
-			#print "if you want to use Python code run christine with"
-			#print "--plibrary option"
-			self.__cgen_model()
-
-	def __pgen_model(self):
-		append = self.model.append
-		sounds = self.library_lib.get_sounds()
-		keys = sounds.keys()
-		keys.sort()
-		limit = 20
-		pix = self.gen_pixbuf("blank.png")
-		pix = pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		for i in keys:
-			if not sounds[i].has_key("play_count"):
-				sounds[i]["play_count"] = 0
-
-			if not sounds[i].has_key("duration"):
-				sounds[i]["duration"] = "00:00"
-			if not sounds[i].has_key("genre"):
-				sounds[i]["genre"] = ""
-
-			self.model.set(append(),
-					NAME,sounds[i]["name"],
-					PATH,i,
-					TYPE,sounds[i]["type"],
-					PIX, pix,
-					ALBUM,sounds[i]["album"],
-					ARTIST,sounds[i]["artist"],
-					TN,str(sounds[i]["track_number"]),
-					SEARCH,",".join([sounds[i]["name"],sounds[i]["album"],
-									sounds[i]["artist"]]),
-					PLAY_COUNT,sounds[i]["play_count"],
-					TIME,sounds[i]["duration"],
-					GENRE, sounds[i]["genre"])
-		#self.tv.freeze_child_notify()
+		self.__cgen_model()
 
 	def __cgen_model(self):
 		append = self.model.append
@@ -291,18 +235,9 @@ class library(GtkMisc,gtk.DrawingArea):
 				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
 				PLAY_COUNT,0,
 				GENRE,tags["genre"])
-		path = self.model.get_path(iter)
-		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
+		#path = self.model.get_path(iter)
+		#self.tv.scroll_to_cell(path,None,True,0.5,0.5)
 
-	def NEXT(self):
-		print "NEXT"
-		self.emit("tags-found",self)
-
-	#def message_handler(self,bus,b):
-
-	def emit_signal(self,signal):
-		self.emit(signal,self)
-		return False
 
 	def stream_length(self,widget=None,n=1):
 		if n==1:
