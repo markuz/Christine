@@ -246,17 +246,8 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.gconf.notifyAdd("/apps/christine/ui/show_length",self.gconf.toggleVisible,length)
 		self.gconf.notifyAdd("/apps/christine/ui/show_genre",self.gconf.toggleVisible,genre)
 		self.discoverer = Discoverer()
-		#self.discoverer.Bus.add_watch(self.message_handler)
-		#self.discoverer2 = Discoverer()
-		#self.discoverer2.Bus.add_watch(self.message_handler)
-		#gobject.timeout_add(100,self.stream_length,None,1)
-		#gobject.timeout_add(200,self.stream_length,None,2)
 
-	def add(self,file,prepend=False,n=1):
-		#if n == 1:
-		#self.discoverer.setLocation(file)
-		#else:
-		#	self.discoverer2.setLocation(file)
+	def add(self,file,prepend=False):
 		if type(file) == type(()):
 			file = file[0]
 		if not os.path.isfile(file):
@@ -279,8 +270,6 @@ class library(GtkMisc,gtk.DrawingArea):
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")
 			tags["title"] = ".".join([k for k in n[:-1]])
-		else:
-			print (tags["title"],)
 		
 		if "video-codec" in tags.keys() or \
 				os.path.splitext(file)[1] in CHRISTINE_VIDEO_EXT:
@@ -302,22 +291,8 @@ class library(GtkMisc,gtk.DrawingArea):
 				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
 				PLAY_COUNT,0,
 				GENRE,tags["genre"])
-#####################################
-#		self.model.set(iter,
-#				NAME,name,
-#				PIX,self.blank_pix,
-#				PATH,file,
-#				GENRE,"")
-#		self.iters[file] = iter
-		#print file, self.model.get_value(iter,PATH),self.iters[file]
-		#gobject.timeout_add(3000,self.NEXT)
 		path = self.model.get_path(iter)
 		self.tv.scroll_to_cell(path,None,True,0.5,0.5)
-#		self.extractTags(file)
-		#print "Emitiendo la señal de listo..."
-		#self.emit_signal("tags-found")
-		#print "Señal emitida..."
-
 
 	def NEXT(self):
 		print "NEXT"

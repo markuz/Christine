@@ -107,7 +107,6 @@ class Christine(GtkMisc):
 		self.__ShowButtons      = False
 		self.__IsImporting      = False
 		self.__IsHidden         = False
-		self.__addCounter       = 0
 
 		# Creating the player and build the GUI interface
 		self.__initPlayer()
@@ -1497,20 +1496,15 @@ class Christine(GtkMisc):
 			library = self.Queue
 		else:
 			library = self.__Library
-			new_file = self.__FilesToAdd.pop()
-		#if (not queue):
-		length     = len(self.__FilesToAdd)
-		self.__addCounter +=1
-		(div, mod) = divmod(length, 7)
-		# Add file to our Library
+		counter = 0
 		while len(self.__FilesToAdd) > 0:
+			counter +=1
 			new_file = self.__FilesToAdd.pop()
 			library.add(new_file)
 			self.__updateAddProgressBar(new_file)
-			if self.__addCounter == 500:
-				print 'library.save()'
+			if counter == 500:
 				library.save()
-				self.__addCounter == 0
+				counter == 0
 		library.save()
 
 	def __updateAddProgressBar(self,file):
@@ -1575,10 +1569,7 @@ class Christine(GtkMisc):
 		self.__TimeTotalNFiles = len(self.__FilesToAdd)
 
 		self.__addFile(queue=queue)
-		#response = self.__AddWindow.run()
-		#if response == -1:
-		#	self.__importCancel()
-		#self.__AddWindow.destroy()
+		self.__AddWindow.destroy()
 
 	#
 	# Gets path from
