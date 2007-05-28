@@ -57,11 +57,6 @@ QUEUE_TARGETS = [
 class queue(GtkMisc,gtk.DrawingArea):
 	def __init__(self):
 		gtk.DrawingArea.__init__(self)
-		gobject.signal_new("tags-fount",self,
-				gobject.SIGNAL_RUN_LAST,
-				gobject.TYPE_NONE,
-				(gobject.TYPE_PYOBJECT,))
-
 		GtkMisc.__init__(self)
 		self.__Share = Share()
 		self.iters = {}
@@ -132,12 +127,6 @@ class queue(GtkMisc,gtk.DrawingArea):
 					PATH,file,
 					NAME,name,
 					TYPE,"sound")
-		self.__emitSignal("tags-found")
-
-	
-	def __emitSignal(self,signal):
-		self.emit(signal,self)
-		return False
 
 	def __add_columns(self):
 		render = gtk.CellRendererText()
