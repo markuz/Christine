@@ -1319,6 +1319,9 @@ class Christine(GtkMisc):
 		"""
 		XML = self.__Share.getTemplate('FileSelector')
 		fs  = XML['fs']
+		uri = self.__GConf.getString("ui/LastFolder")
+		if uri:
+			fs.set_uri(uri)
 		fs.set_icon(self.__Share.getImageFromPix('logo'))
 
 		response = fs.run()
@@ -1328,6 +1331,8 @@ class Christine(GtkMisc):
 
 		if (response == gtk.RESPONSE_OK):
 			self.addFiles(files = files, queue = queue)
+			path = os.path.join(os.path.split(files[0])[:-1])[0]
+			self.__GConf.setValue("ui/LastFolder",path)
 
 			# What I told, if queue is true
 			# send it to queue
@@ -1353,6 +1358,9 @@ class Christine(GtkMisc):
 		XML  = self.__Share.getTemplate('directorySelector')
 		ds   = XML['ds']
 		walk = XML['walk']
+		uri = self.__GConf.getString("ui/LastFolder")
+		if uri:
+			ds.set_uri(uri)
 
 		ds.set_icon(self.__Share.getImageFromPix('logo'))
 
@@ -1361,6 +1369,8 @@ class Christine(GtkMisc):
 
 
 		if (response == gtk.RESPONSE_OK):
+			path = os.path.join(os.path.split(filenames[0])[:-1])[0]
+			self.__GConf.setValue("ui/LastFolder",path)
 			ds.destroy()
 			for i in filenames:
 				if (walk.get_active()):

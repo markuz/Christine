@@ -50,7 +50,7 @@ def isBoolean(value):
 	"""
 	Compare if it is boolean or not
 	"""
-	return (type(value) == bool)
+	return (type(value) == type(True))
 
 #
 # Compare if it is integer or not

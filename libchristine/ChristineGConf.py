@@ -199,6 +199,7 @@ class ChristineGConf(Singleton):
 		"""
 		Sets value from a key
 		"""
+		print type(value)
 		if (isInteger(value)):
 			self.__GConf.set_int(os.path.join(self.__Directory, key), value)
 		elif (isString(value)):
