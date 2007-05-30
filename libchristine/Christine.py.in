@@ -171,6 +171,8 @@ class Christine(GtkMisc):
 		#Private widgets
 		self.__HPanedListsBox = self.__XML['HPanedListsBox']
 		self.__VBoxTemporal   = self.__XML['VBoxTemporal']
+		self.__ScrolledMusic  = self.__XML["ScrolledMusic"]
+		self.__VBoxList       = self.__XML["VBoxList"]
 		# Ends the call to widgets descriptors not connected by hadn
 
 		# Gets window widget from glade template
@@ -652,11 +654,10 @@ class Christine(GtkMisc):
 		#        visualization enabled
 		if (not self.__IsFullScreen):
 			if ((self.__Player.isVideo()) or (self.__GConf.getBool('ui/visualization'))):
-				self.__HBoxPlayer.remove(self.__Player)
-				self.__VBoxTemporal.pack_start(self.__Player, True, True, 2)
-				self.__VBoxTemporal.show_all()
-				self.__VBoxVideo.hide()
 				self.__Window.fullscreen()
+				self.__ScrolledMusic.set_size_request(0,0)
+				self.__VBoxList.set_size_request(0,0)
+
 				self.__IsFullScreen = True
 			else:
 				print 'WARNING: Full screen with no visualization'
@@ -668,14 +669,10 @@ class Christine(GtkMisc):
 		# visualization.
 			if ((not self.__Player.isVideo()) and (not self.__GConf.getBool('ui/visualization'))):
 				self.__Player.hide()
+			self.__ScrolledMusic.set_size_request(200,200)
+			self.__VBoxList.set_size_request(150,0)
 
 			self.__Window.unfullscreen()
-			self.__VBoxTemporal.hide()
-			self.__VBoxTemporal.remove(self.__Player)
-			self.__HBoxPlayer.pack_start(self.__Player, True, True, 0)
-			self.__VBoxVideo.show()
-			self.__HBoxToolBoxContainerMini.show()
-			self.MenuBar.show()
 			self.__IsFullScreen = False
 	
 	#
@@ -1629,6 +1626,7 @@ class Christine(GtkMisc):
 		Handle the messages from self.__Player
 		"""
 		type_file = b.type
+		print type_file
 
 		if (type_file == gst.MESSAGE_ERROR):
 			error(b.parse_error()[1])
@@ -1643,6 +1641,11 @@ class Christine(GtkMisc):
 			percent = b.structure['buffer-percent']
 			self.__Display.setText("%d" % percent)
 			self.__Display.setValue((percent / 100))
+		elif (type_file == gst.MESSAGE_ELEMENT):
+			self.__Player.emitExpose()
+			print b.structure
+			print dir(b)
+			return True
 
 		return True
 

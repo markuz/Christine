@@ -61,8 +61,8 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.__Type       = 'sound'
 
 
-		self.connect('destroy',      lambda x: self.__VideoSink.set_xwindow_id(0L))
-		self.connect('expose-event', self.__exposeCallback)
+		self.connect('destroy',      lambda x: self.VideoSink.set_xwindow_id(0L))
+		self.connect('expose-event', self.exposeCallback)
 
 		self.__createPlaybin()
 		gobject.timeout_add(5000, self.__checkScreenSaver)
@@ -127,7 +127,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		Connect
 		"""
 		self.__PlayBin.set_property('audio-sink', self.__AudioSinkPack)
-		self.__PlayBin.set_property('video-sink', self.__VideoSink)
+		self.__PlayBin.set_property('video-sink', self.VideoSink)
 
 	#
 	# Updates audio sink
@@ -174,15 +174,15 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		vsink = self.getString('backend/videosink') 
 
-		self.__VideoSink = gst.element_factory_make(vsink)
-		self.__PlayBin.set_property('video-sink', self.__VideoSink)
+		self.VideoSink = gst.element_factory_make(vsink)
+		self.__PlayBin.set_property('video-sink', self.VideoSink)
 
 		if (vsink in ['xvimagesink', 'ximagesink']):
-			self.__VideoSink.set_property('force-aspect-ratio', True)
+			self.VideoSink.set_property('force-aspect-ratio', True)
 
 		if (gst.State(gst.STATE_PLAYING) == state):
 			self.playIt()
-			self.__exposeCallback()
+			#self.exposeCallback()
 
 	#
 	# Updates aspect ratio
@@ -195,20 +195,27 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		aspect_ratio = self.getString('backend/aspect-ratio')
 
 		if (not isNull(aspect_ratio)):
-			self.__VideoSink.set_property('pixel-aspect-ratio', aspect_ratio)
+			self.VideoSink.set_property('pixel-aspect-ratio', aspect_ratio)
 	
+	def emitExpose(self):
+		self.exposeCallback()
+		return False
+
+
 	#
 	# Draw the player
 	#
 	# @return void
-	def __exposeCallback(self, window = None, event = None):
+	def exposeCallback(self, window = None, event = None):
 		"""
 		Draw the player
 		"""
 		# Drawing a black background because some 
 		# GTK themes (clearlooks) don't draw it
 		print "shouldShow",self.__ShouldShow
+	
 		(x, y, w, h) = self.allocation
+		
 		self.__Context = self.window.cairo_create()
 
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH, 
@@ -225,12 +232,12 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
 
-		print self.window.xid
-		self.__VideoSink.set_xwindow_id(self.window.xid)
 
 		if self.__ShouldShow:
 			print "mostrando"
 			self.show()
+			self.VideoSink.set_xwindow_id(self.window.xid)
+
 
 	#
 	# Sets location
@@ -256,7 +263,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 				error("file %s not found" % os.path.split(file)[1])
 
 		self.getType()
-		self.__exposeCallback()
+		self.exposeCallback()
 	
 	#
 	# Gets location
@@ -320,11 +327,11 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		print "Player.setVisualization:",active
 		if (active):
 			self.__visualizationPlugin = gst.element_factory_make(self.getString('backend/vis-plugin'))
-			self.__VideoSink.set_property('force-aspect-ratio', False)
+			self.VideoSink.set_property('force-aspect-ratio', False)
 			self.__ShouldShow = True
 		else:
 			self.__visualizationPlugin = None
-			self.__VideoSink.set_property('force-aspect-ratio', True)
+			self.VideoSink.set_property('force-aspect-ratio', True)
 			self.__ShouldShow = False
 
 		self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
@@ -337,7 +344,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		print "video?",self.isVideo()
 		print "sound?",self.isSound()
 
-		self.__exposeCallback()
+		self.exposeCallback()
 
 		state = self.getState()[1]
 		self.pause()
