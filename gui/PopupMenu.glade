@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!-- Generated with glade3
+<!--Generated with glade3 3.2.0 on Wed May 30 21:28:43 2007 by nibblesmx@Goliath
 	Version: 3.0.1
 	Date: Sun Feb  4 21:14:30 2007
 	User: markuz
@@ -13,7 +13,7 @@
         <property name="visible">True</property>
         <property name="label">Add to queue</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="popup_add_to_queue"/>
+        <signal name="activate" handler="popupAddToQueue"/>
         <accelerator key="q" modifiers="" signal="activate"/>
         <child internal-child="image">
           <widget class="GtkImage" id="image7">
@@ -34,7 +34,7 @@
         <property name="visible">True</property>
         <property name="label">Remove</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="remove_from_library"/>
+        <signal name="activate" handler="removeFromLibrary"/>
         <child internal-child="image">
           <widget class="GtkImage" id="image8">
             <property name="visible">True</property>
@@ -60,7 +60,7 @@
               <widget class="GtkImageMenuItem" id="imagemenuitem1">
                 <property name="visible">True</property>
                 <property name="label">Delete from disk</property>
-                <signal name="activate" handler="delete_file_from_disk"/>
+                <signal name="activate" handler="deleteFileFromDisk"/>
                 <child internal-child="image">
                   <widget class="GtkImage" id="menu-item-image3">
                     <property name="visible">True</property>
