@@ -66,11 +66,11 @@ class MP3Track(Track):
 					self.Track = int(self.Track)
 					self.DiscId = int(self.DiscId)
 				else:
-					self.track = int(track)
+					self.Track = int(track)
 
 			except ValueError:
-				self.Track = -1
-				self.DiscId = -1
+				self.Track = 0
+				self.DiscId = 0
 
 			self.Year = self.getTag(id3, "TDRC")
 
@@ -104,7 +104,10 @@ class OGGTrack(Track):
 		self.Album = self.getTag(f, "album")
 		self.Title = self.getTag(f, "title")
 		self.Genre = self.getTag(f, "genre")
-		self.Track = self.getTag(f, "tracknumber")
+		if self.getTag(f,"tracknumber").isdigit():
+			self.Track = int(self.getTag(f, "tracknumber"))
+		else:
+			self.Track = 0
 		self.DiscId = self.getTag(f, "tracktotal")
 		self.Year = self.getTag(f, "date")
 		

@@ -221,9 +221,9 @@ class library(GtkMisc,gtk.DrawingArea):
 		else:
 			t = "audio"
 		
-		if(type(tags["track"]) is not int):
+		if type(tags["track"]) !=  type(1):
 			tags["track"] = 0
-				
+
 		self.model.set(iter,
 				NAME,tags["title"],
 				PATH,file,
