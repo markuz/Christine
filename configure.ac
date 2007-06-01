@@ -1,4 +1,4 @@
-AC_INIT('christine', '0.0.4-svn', markuz@gnu.org.mx)
+AC_INIT('christine', '0.1rc', markuz@gnu.org.mx)
 AM_INIT_AUTOMAKE('christine', '0.0.4-svn')
 
 AC_CONFIG_SRCDIR(libchristine)
@@ -51,7 +51,7 @@ echo "checking for gstreamer... yes"
 echo "checking for mutagen... yes"
 
 PROGRAM_NAME="christine"
-VERSION="0.0.4-svn"
+VERSION="0.1rc"
 PREFIX=/usr
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib()"`
