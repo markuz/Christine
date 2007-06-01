@@ -321,10 +321,6 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Sets visualization active or desactive
 		"""
-		location = self.getLocation()
-		if (not isNull(self.getLocation())):
-			nanos = self.query_position(gst.FORMAT_TIME)[0]
-			self.stop()
 
 		if active:
 			self.__visualizationPlugin = gst.element_factory_make(self.getString('backend/vis-plugin'))
@@ -337,16 +333,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			self.__ShouldShow = False
 			self.__PlayBin.set_property('vis-plugin', None)
 
-		if location!= None:
-			self.setLocation(location)
-			self.playIt()
-			t = long(nanos) / gst.SECOND
-			print "SEGUND",t
-			gobject.timeout_add(150, self.seekTo,t)
-		try:
-			self.exposeCallback()
-		except:
-			pass
+		return True
 
 	
 	#
