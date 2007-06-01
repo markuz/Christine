@@ -85,7 +85,6 @@ class Christine(GtkMisc):
 #		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
 		self.__Share   = Share()
-		#print 'SHARE IDENTIFY: ', self.__Share.getId()
 		self.__GConf   = ChristineGConf()
 
 		self.__XML = self.__Share.getTemplate('WindowCore')
@@ -132,7 +131,6 @@ class Christine(GtkMisc):
 				value = 0.0
 			elif  value >1:
 				value = 1.0
-			print value
 			self.__HScaleVolume.set_value(value)
 	#
 	# Initialize the player
@@ -628,16 +626,18 @@ class Christine(GtkMisc):
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
 
-		if not widget.get_active() and self.__IsFullScreen:
-			self.__HPanedListsBox.show()
-			self.__VBoxVideo.show()
-			self.__VBoxTemporal.hide()
+		self.__Player.setVisualization(widget.get_active())
+		
+		#if not widget.get_active() and self.__IsFullScreen:
+		#	self.__HPanedListsBox.show()
+		#	self.__VBoxVideo.show()
+		#	self.__VBoxTemporal.hide()
 
-		if (self.__IsFullScreen):
-			self.__IsFullScreen = False
-			self.toggleFullScreen()
-			self.__Window.fullscreen()
-			self.__IsFullScreen = True
+		#if self.__IsFullScreen:
+		#	self.__IsFullScreen = False
+		#	self.toggleFullScreen()
+		#	self.__Window.fullscreen()
+		#	self.__IsFullScreen = True
 	
 	#
 	# Set the fullscreen mode
@@ -949,7 +949,6 @@ class Christine(GtkMisc):
 	# @return void
 	def toggleControlNone(self, widget):
 		if (widget.get_active()):
-			print 'toggleControlName: none'
 			self.__ControlStat=CONTROL_NONE
 			self.changeControl()
 
@@ -964,7 +963,6 @@ class Christine(GtkMisc):
 		Control shuffle
 		"""
 		if (widget.get_active()):
-			print 'toggleControlShuffle: shuffle'
 			self.__ControlStat = CONTROL_SHUFFLE
 			self.changeControl()
 
@@ -979,7 +977,6 @@ class Christine(GtkMisc):
 		 Control repeat
 		"""
 		if (widget.get_active()):
-			print 'toggleControlRepeat: repeat'
 			self.__ControlStat = CONTROL_REPEAT
 			self.changeControl()
 
@@ -1119,10 +1116,6 @@ class Christine(GtkMisc):
 		"""
 		value = (int(self.__Display.value * self.__TimeTotal) / gst.SECOND)
 		total = self.__TimeTotal*gst.SECOND
-
-		print 'Nanos: ',         value
-		print 'Rotal: ',         self.__TimeTotal
-		print 'Display_value: ', self.__Display.value
 
 		self.__ScaleMoving = False
 
@@ -1410,12 +1403,10 @@ class Christine(GtkMisc):
 
 			# Again, only files with the right
 			# extension will be imported
-			print ext
 			if (ext in self.__GConf.getString('backend/allowed_files').split(',')):
 				f.append(i)
 
 		files = f
-		#print files
 		self.addFiles(files)
 	
 	#
@@ -1525,7 +1516,6 @@ class Christine(GtkMisc):
 		# Setting the value and text in the progressbar
 		self.__AddProgress.set_fraction(self.__Percentage)
 		rest = (self.__TimeTotalNFiles - length)
-		#print rest,new_file
 		text = "%02d/%02d" % (rest, self.__TimeTotalNFiles)
 		self.__AddProgress.set_text(text)
 		self.__AddFileLabel.set_text(os.path.split(file)[1])
@@ -1636,7 +1626,6 @@ class Christine(GtkMisc):
 		Handle the messages from self.__Player
 		"""
 		type_file = b.type
-		print type_file
 
 		if (type_file == gst.MESSAGE_ERROR):
 			error(b.parse_error()[1])
@@ -1653,8 +1642,6 @@ class Christine(GtkMisc):
 			self.__Display.setValue((percent / 100))
 		elif (type_file == gst.MESSAGE_ELEMENT):
 			self.__Player.emitExpose()
-			print b.structure
-			print dir(b)
 			return True
 
 		return True
@@ -1810,7 +1797,6 @@ class Christine(GtkMisc):
 				pass
 			#self.__TrayIcon.set_from_pixbuf(self.__Share.getImageFromPix('trayicon'))
 			pixmap = self.__Share.getImage('trayicon')
-			print pixmap
 			self.__Notify = pynotify.Notification('christine', '',pixmap)
 
 			if (self.__GConf.getBool('ui/show_in_notification_area')):
@@ -1847,16 +1833,12 @@ class Christine(GtkMisc):
 		if gst.State(gst.STATE_PLAYING) is state:
 			isPlaying = True
 
-		print "visualModePlayer.isPlaying:",isPlaying
-
 		if (self.__Player.isVideo()):
 			self.__HBoxPlayer.show_all()
 		else:
 			if (self.__GConf.getBool('ui/visualization') and isPlaying):
-				print "visualModePlayer: Mostrando"
 				self.__HBoxPlayer.show_all()
 			else:
-				print "visualModePlayer: Ocultando"
 				self.__HBoxPlayer.hide()
 
 	
@@ -1891,7 +1873,6 @@ class Christine(GtkMisc):
 				for i in urldesc.readlines():
 					if i.lower().find("file") > -1:
 						location = i.split("=").pop().strip()
-						print (location,)
 			elif extension == "m3u":
 				lines = urldesc.readlines()
 				if lines[0].lower() != "#extm3u":

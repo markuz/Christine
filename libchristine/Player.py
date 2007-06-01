@@ -212,7 +212,6 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		# Drawing a black background because some 
 		# GTK themes (clearlooks) don't draw it
-		print "shouldShow",self.__ShouldShow
 	
 		(x, y, w, h) = self.allocation
 		
@@ -233,10 +232,9 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.__Context.stroke()
 
 
+		self.VideoSink.set_xwindow_id(self.window.xid)
 		if self.__ShouldShow:
-			print "mostrando"
 			self.show()
-			self.VideoSink.set_xwindow_id(self.window.xid)
 
 
 	#
@@ -257,7 +255,6 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			self.__PlayBin.set_property('uri', nfile)
 		else:
 			if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
-				print "Voy a tocar un archivo con url:",file
 				self.__PlayBin.set_property('uri', file)
 			else:
 				error("file %s not found" % os.path.split(file)[1])
@@ -324,37 +321,33 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Sets visualization active or desactive
 		"""
-		print "Player.setVisualization:",active
-		if (active):
+		location = self.getLocation()
+		if (not isNull(self.getLocation())):
+			nanos = self.query_position(gst.FORMAT_TIME)[0]
+			self.stop()
+
+		if active:
 			self.__visualizationPlugin = gst.element_factory_make(self.getString('backend/vis-plugin'))
 			self.VideoSink.set_property('force-aspect-ratio', False)
 			self.__ShouldShow = True
+			self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
 		else:
 			self.__visualizationPlugin = None
 			self.VideoSink.set_property('force-aspect-ratio', True)
 			self.__ShouldShow = False
+			self.__PlayBin.set_property('vis-plugin', None)
 
-		self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
-		print self.__visualizationPlugin
-
-		if (not isNull(self.getLocation())):
-			nanos = self.query_position(gst.FORMAT_TIME)[0]
-		else:
-			return True
-		print "video?",self.isVideo()
-		print "sound?",self.isSound()
-
-		self.exposeCallback()
-
-		state = self.getState()[1]
-		self.pause()
-
-		self.setLocation(self.getLocation())
-		self.seekTo((nanos / gst.SECOND))
-
-		if gst.State(gst.STATE_PLAYING) == state:
-			print "play!"
+		if location!= None:
+			self.setLocation(location)
 			self.playIt()
+			t = long(nanos) / gst.SECOND
+			print "SEGUND",t
+			gobject.timeout_add(150, self.seekTo,t)
+		try:
+			self.exposeCallback()
+		except:
+			pass
+
 	
 	#
 	# Sets volume value
@@ -439,6 +432,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		Seek to secs
 		"""
 		sec = (long(sec) * gst.SECOND)
+		print "seekTo",sec
 		self.__PlayBin.seek(1.0, 
 		        gst.FORMAT_TIME,    gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,  sec, 
