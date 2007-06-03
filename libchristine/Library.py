@@ -21,6 +21,7 @@
 import os,gtk,gobject,sys,pango
 import cPickle as pickle
 import gst, gst.interfaces
+
 from libchristine.libs_christine import *
 from libchristine.GtkMisc import *
 from libchristine.Discoverer import *
@@ -29,6 +30,7 @@ from libchristine import clibrary
 from libchristine.ChristineGConf import *
 from libchristine.Share import *
 from libchristine.Tagger import *
+from libchristine.GstBase import *
 import time
 
 (PATH,
@@ -216,9 +218,10 @@ class library(GtkMisc,gtk.DrawingArea):
 			tags["title"] = ".".join([k for k in n[:-1]])
 		
 		if "video-codec" in tags.keys() or \
-				os.path.splitext(file)[1] in CHRISTINE_VIDEO_EXT:
+				os.path.splitext(file)[1][1:] in CHRISTINE_VIDEO_EXT:
 			t = "video"
 		else:
+			print os.path.splitext(file)[1][1:],CHRISTINE_VIDEO_EXT
 			t = "audio"
 		
 		if type(tags["track"]) !=  type(1):

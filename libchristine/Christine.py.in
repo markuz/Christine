@@ -104,7 +104,6 @@ class Christine(GtkMisc):
 		self.__StatePlaying     = False
 		self.__IsFullScreen     = False
 		self.__ShowButtons      = False
-		self.__IsImporting      = False
 		self.__IsHidden         = False
 
 		# Creating the player and build the GUI interface
@@ -749,7 +748,7 @@ class Christine(GtkMisc):
 		"""
 		Perform the actions to make a search
 		"""
-		self.__Library.tv.freeze_child_notify()
+		#self.__Library.tv.freeze_child_notify()
 
 		# Store the text that is in search box into 
 		# the self.__TextToSearch variable
@@ -763,7 +762,7 @@ class Christine(GtkMisc):
 		# the rows that we need.
 		#gobject.timeout_add(10,self.__LibraryFilterModel.refilter)
 		self.__LibraryFilterModel.refilter()
-		self.__Library.tv.thaw_child_notify()
+		#self.__Library.tv.thaw_child_notify()
 	
 	#
 	# Entry search cleaning
@@ -787,9 +786,6 @@ class Christine(GtkMisc):
 	# @param  ?       iter
 	# @return void
 	def filter(self, model, iter):
-		if (self.__IsImporting):
-			return True
-
 		if (self.__TextToSearch == ''):
 			return True
 
@@ -1535,7 +1531,6 @@ class Christine(GtkMisc):
 		XML = self.__Share.getTemplate('addFiles')
 		XML.signal_autoconnect(self)
 		
-		self.__IsImporting     = True
 		self.__AddWindow       = XML['WindowCore']
 		self.__AddProgress     = XML['progressbar']
 		self.__AddCloseButton  = XML['close']
@@ -1589,9 +1584,6 @@ class Christine(GtkMisc):
 		"""
 		Cancel de import stuff
 		"""
-		# Setting self.__IsImporting to false
-		# we break the import file timeout
-		# then destroy the add dialog.
 		self.__AddCloseButton.grab_remove()
 		self.__FilesToAdd = []
 		self.__AddWindow.destroy()
@@ -1800,7 +1792,10 @@ class Christine(GtkMisc):
 			self.__Notify = pynotify.Notification('christine', '',pixmap)
 
 			if (self.__GConf.getBool('ui/show_in_notification_area')):
-				self.__Notify.attach_to_status_icon(self.__TrayIcon)
+				try:
+					self.__Notify.attach_to_status_icon(self.__TrayIcon)
+				except:
+					pass
 				self.__TrayIcon.set_tooltip(tooltext)
 
 			self.__Notify.set_timeout(3000)
