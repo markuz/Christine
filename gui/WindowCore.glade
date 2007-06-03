@@ -326,7 +326,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="ful_scren1">
                         <property name="visible">True</property>
-                        <property name="label">Full Scren</property>
+                        <property name="label">Full Screen</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="toggleFullScreen"/>
                         <accelerator key="Return" modifiers="GDK_CONTROL_MASK" signal="activate"/>

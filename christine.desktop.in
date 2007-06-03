@@ -11,5 +11,5 @@ Encoding=UTF-8
 Categories=GTK;Application;AudioVideo
 MimeType=application/x-ogg;application/ogg;audio/x-mp3;audio/x-scpls;audio/x-mp3;audio/x-mpeg;audio/mpeg;audio/x-mpegurl;application/x-flac;video/mpeg;video/x-avi;video/x-ms-wmv;video/quicktime;video/x-ms-asf;video/x-msvideo
 StartupNotify=true
-Name[es]=Reproductor Mutimedia Christine
+Name[es]=Reproductor Multimedia Christine
 Comment[es]= Reproductor multimedia basado en gstreamer
