@@ -221,7 +221,6 @@ class library(GtkMisc,gtk.DrawingArea):
 				os.path.splitext(file)[1][1:] in CHRISTINE_VIDEO_EXT:
 			t = "video"
 		else:
-			print os.path.splitext(file)[1][1:],CHRISTINE_VIDEO_EXT
 			t = "audio"
 		
 		if type(tags["track"]) !=  type(1):
