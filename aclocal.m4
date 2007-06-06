@@ -219,6 +219,20 @@ glib_DEFUN([GLIB_WITH_NLS],
           glib_save_LIBS="$LIBS"
           LIBS="$LIBS $INTLLIBS"
 	  AC_CHECK_FUNCS(dcgettext)
+	  MSGFMT_OPTS=
+	  AC_MSG_CHECKING([if msgfmt accepts -c])
+	  GLIB_RUN_PROG([msgfmt -c -o /dev/null],[
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: test 1.0\n"
+"PO-Revision-Date: 2007-02-15 12:01+0100\n"
+"Last-Translator: test <foo@bar.xx>\n"
+"Language-Team: C <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+], [MSGFMT_OPTS=-c; AC_MSG_RESULT([yes])], [AC_MSG_RESULT([no])])
+	  AC_SUBST(MSGFMT_OPTS)
 	  AC_PATH_PROG(GMSGFMT, gmsgfmt, $MSGFMT)
 	  GLIB_PATH_PROG_WITH_TEST(XGETTEXT, xgettext,
 	    [test -z "`$ac_dir/$ac_word -h 2>&1 | grep '(HELP)'`"], :)
@@ -414,6 +428,23 @@ AC_DEFUN([AM_GLIB_GNU_GETTEXT],[GLIB_GNU_GETTEXT($@)])
 AC_DEFUN([AM_GLIB_DEFINE_LOCALEDIR],[GLIB_DEFINE_LOCALEDIR($@)])
 ])dnl
 
+# GLIB_RUN_PROG(PROGRAM, TEST-FILE, [ACTION-IF-PASS], [ACTION-IF-FAIL])
+# 
+# Create a temporary file with TEST-FILE as its contents and pass the
+# file name to PROGRAM.  Perform ACTION-IF-PASS if PROGRAM exits with
+# 0 and perform ACTION-IF-FAIL for any other exit status.
+AC_DEFUN([GLIB_RUN_PROG],
+[cat >conftest.foo <<_ACEOF
+$2
+_ACEOF
+if AC_RUN_LOG([$1 conftest.foo]); then
+  m4_ifval([$3], [$3], [:])
+m4_ifvaln([$4], [else $4])dnl
+echo "$as_me: failed input was:" >&AS_MESSAGE_LOG_FD
+sed 's/^/| /' conftest.foo >&AS_MESSAGE_LOG_FD
+fi])
+
+
 
 dnl IT_PROG_INTLTOOL([MINIMUM-VERSION], [no-xml])
 # serial 35 IT_PROG_INTLTOOL
@@ -506,7 +537,30 @@ AC_PATH_PROG(INTLTOOL_XGETTEXT, xgettext, xgettext)
 
 # Substitute ALL_LINGUAS so we can use it in po/Makefile
 AC_SUBST(ALL_LINGUAS)
-    
+
+# Set DATADIRNAME correctly if it is not set yet
+# (copied from glib-gettext.m4)
+if test -z "$DATADIRNAME"; then
+  AC_TRY_LINK(, [extern int _nl_msg_cat_cntr;
+                 return _nl_msg_cat_cntr],
+    [DATADIRNAME=share],
+    [case $host in
+    *-*-solaris*)
+    dnl On Solaris, if bind_textdomain_codeset is in libc,
+    dnl GNU format message catalog is always supported,
+    dnl since both are added to the libc all together.
+    dnl Hence, we'd like to go with DATADIRNAME=share
+    dnl in this case.
+    AC_CHECK_FUNC(bind_textdomain_codeset,
+      [DATADIRNAME=share], [DATADIRNAME=lib])
+    ;;
+    *)
+    [DATADIRNAME=lib]
+    ;;
+    esac])
+fi
+AC_SUBST(DATADIRNAME)
+
 IT_PO_SUBDIR([po])
 
 dnl The following is very similar to
@@ -7006,7 +7060,7 @@ if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
 	AC_PATH_TOOL([PKG_CONFIG], [pkg-config])
 fi
 if test -n "$PKG_CONFIG"; then
-	_pkg_min_version=m4_ifval([$1], [$1], [0.9.0])
+	_pkg_min_version=m4_default([$1], [0.9.0])
 	AC_MSG_CHECKING([pkg-config is at least version $_pkg_min_version])
 	if $PKG_CONFIG --atleast-pkgconfig-version $_pkg_min_version; then
 		AC_MSG_RESULT([yes])
@@ -7042,13 +7096,29 @@ fi])
 # ---------------------------------------------
 m4_define([_PKG_CONFIG],
 [if test -n "$PKG_CONFIG"; then
+    if test -n "$$1"; then
+        pkg_cv_[]$1="$$1"
+    else
         PKG_CHECK_EXISTS([$3],
                          [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`],
 			 [pkg_failed=yes])
+    fi
 else
 	pkg_failed=untried
 fi[]dnl
 ])# _PKG_CONFIG
+
+# _PKG_SHORT_ERRORS_SUPPORTED
+# -----------------------------
+AC_DEFUN([_PKG_SHORT_ERRORS_SUPPORTED],
+[AC_REQUIRE([PKG_PROG_PKG_CONFIG])
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi[]dnl
+])# _PKG_SHORT_ERRORS_SUPPORTED
+
 
 # PKG_CHECK_MODULES(VARIABLE-PREFIX, MODULES, [ACTION-IF-FOUND],
 # [ACTION-IF-NOT-FOUND])
@@ -7071,29 +7141,39 @@ AC_MSG_CHECKING([for $1])
 _PKG_CONFIG([$1][_CFLAGS], [cflags], [$2])
 _PKG_CONFIG([$1][_LIBS], [libs], [$2])
 
+m4_define([_PKG_TEXT], [Alternatively, you may set the environment variables $1[]_CFLAGS
+and $1[]_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.])
+
 if test $pkg_failed = yes; then
-	$1[]_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
+        _PKG_SHORT_ERRORS_SUPPORTED
+        if test $_pkg_short_errors_supported = yes; then
+	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
+        else 
+	        $1[]_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
+        fi
 	# Put the nasty error message in config.log where it belongs
-	echo "$$1[]_PKG_ERRORS" 1>&AS_MESSAGE_LOG_FD
+	echo "$$1[]_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
 
 	ifelse([$4], , [AC_MSG_ERROR(dnl
-[Package requirements ($2) were not met.
+[Package requirements ($2) were not met:
+
+$$1_PKG_ERRORS
+
 Consider adjusting the PKG_CONFIG_PATH environment variable if you
 installed software in a non-standard prefix.
 
-Alternatively you may set the $1_CFLAGS and $1_LIBS environment variables
-to avoid the need to call pkg-config.  See the pkg-config man page for
-more details.])],
-		[$4])
+_PKG_TEXT
+])],
+		[AC_MSG_RESULT([no])
+                $4])
 elif test $pkg_failed = untried; then
 	ifelse([$4], , [AC_MSG_FAILURE(dnl
 [The pkg-config script could not be found or is too old.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
 path to pkg-config.
 
-Alternatively you may set the $1_CFLAGS and $1_LIBS environment variables
-to avoid the need to call pkg-config.  See the pkg-config man page for
-more details.
+_PKG_TEXT
 
 To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.])],
 		[$4])
