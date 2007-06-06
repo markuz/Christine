@@ -490,6 +490,10 @@ class Christine(GtkMisc):
 		Set the location in the player and
 		perform some other required actions
 		"""
+		if not os.path.isfile(filename):
+			t = Translator()
+			self.error(t.parse("File not found"))
+			self.stop()
 		self.__StatePlaying = False
 		self.__IterNatural  = None
 		# current iter is a temporal variable
@@ -541,7 +545,7 @@ class Christine(GtkMisc):
 	# @access public
 	# @param  widget
 	# @return void
-	def stop(self, widget):
+	def stop(self, widget=None):
 		"""
 		Stop the player
 		"""
