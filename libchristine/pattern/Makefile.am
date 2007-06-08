@@ -25,13 +25,4 @@ all: all-am
 
 all-am: 
 
-clean:
-	rm Share.py
-	rm Christine.py
-	rm GtkMisc.py
-	rm About.py
-	rm clibrary.o
-	rm clibrary.so
-	rm Translator.py
-	rm plugins.py
-	rm libs_christine.py
+

@@ -78,12 +78,12 @@ all: all-am
 all-am: 
 
 clean:
-	rm Share.py
-	rm Christine.py
-	rm GtkMisc.py
-	rm About.py
-	rm clibrary.o
-	rm clibrary.so
-	rm Translator.py
-	rm plugins.py
-	rm libs_christine.py
+	rm $(srcdir)/Share.py
+	rm $(srcdir)/Christine.py
+	rm $(srcdir)/GtkMisc.py
+	rm $(srcdir)/About.py
+	rm $(srcdir)/clibrary.o
+	rm $(srcdir)/clibrary.so
+	rm $(srcdir)/Translator.py
+	rm $(srcdir)/Plugins.py
+	rm $(srcdir)/libs_christine.py
