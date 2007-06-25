@@ -143,7 +143,7 @@ AC_SUBST(USE_NLS)
 AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL
 
-AC_CONFIG_FILES([
+AC_CONFIG_FILES([ po/Makefile.in
 Makefile
 libchristine/Makefile
 libchristine/pattern/Makefile

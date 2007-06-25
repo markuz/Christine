@@ -76,7 +76,7 @@ xlc )
   am_opt=--include-deps;;
 esac
 	 echo "gettextize -f --copy"
-	 gettextize -f --copy
+	 gettextize -f --copy --no-changelog
       if grep "^AM_PROG_LIBTOOL" configure.ac >/dev/null; then
         echo "Running libtoolize..."
         libtoolize --force --copy
