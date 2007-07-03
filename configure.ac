@@ -150,7 +150,6 @@ libchristine/pattern/Makefile
 cplugins/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
-po/Makefile.in
 po/Makefile
 po/POTFILES
 intltool-extract

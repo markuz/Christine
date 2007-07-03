@@ -47,6 +47,7 @@ from libchristine.Display import *
 from libchristine.Plugins import *
 from libchristine.Share import *
 from libchristine.ChristineGConf import *
+from libchristine.Logger import *
 
 
 #from dbus.mainloop.glib import DBusGMainLoop
@@ -81,6 +82,8 @@ class Christine(GtkMisc):
 		initialize the gnome ui client, create the XML interface descriptor,
 		initialize class variables and create some timeouts calls
 		"""
+		self.__Logger = ChristineLogger()
+		self.__Logger.log("Starting Christine")
 		GtkMisc.__init__(self)
 #		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 

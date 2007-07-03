@@ -12,7 +12,7 @@ void error(char *msg) {
 char* python_code = "\
 import os\n\
 sys.path.insert(0,os.getcwd())\n\
-print sys.path\n\
+#print sys.path\n\
 elements = locals()\n\
 lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\

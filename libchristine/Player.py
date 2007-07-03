@@ -36,6 +36,7 @@ from libchristine.GtkMisc import *
 from libchristine.GstBase import *
 from libchristine.Validator import *
 from libchristine.ChristineGConf import *
+from libchristine.Logger import *
 
 BORDER_WIDTH = 0
 
@@ -53,6 +54,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		 Constructor
 		"""
+		self.__Logger = ChristineLogger()
 		GtkMisc.__init__(self)
 		ChristineGConf.__init__(self)
 		gtk.DrawingArea.__init__(self)
@@ -90,8 +92,9 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Create the playbin
 		"""
-		self.__PlayBin = gst.element_factory_make('playbin')
-		self.__PlayBin.set_property('delay', GST_DELAY)
+		self.__Logger.log("Creating the Player")
+		self.__PlayBin = self.__elementFactoryMake('playbin')
+		self.__elementSetProperty(self.__PlayBin,'delay', GST_DELAY)
 
 		self.play = self.__PlayBin
 		self.bus  = self.__PlayBin.get_bus()
@@ -126,8 +129,9 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Connect
 		"""
-		self.__PlayBin.set_property('audio-sink', self.__AudioSinkPack)
-		self.__PlayBin.set_property('video-sink', self.VideoSink)
+		self.__Logger.log("Connecting sinks")
+		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
+		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
 
 	#
 	# Updates audio sink
@@ -137,21 +141,22 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Updates audio sink
 		"""
-		state                = self.getState()[1]
-		self.__AudioSinkPack = gst.element_factory_make('bin')
+		self.__Logger.log("__updateAudioSink")
+		state = self.getState()[1]
+		self.__AudioSinkPack = self.__elementFactoryMake('bin')
 
 		if (not isNull(self.getLocation())):
 			self.pause()
 
 		asink = self.getString('backend/audiosink')
 
-		self.__AudioSink = gst.element_factory_make(asink)
+		self.__AudioSink = self.__elementFactoryMake(asink)
 		self.__AudioSinkPack.add(self.__AudioSink)
 
 		self.audio_ghost = gst.GhostPad('sink', self.__AudioSink.get_pad('sink'))
 		self.__AudioSinkPack.add_pad(self.audio_ghost)
 
-		self.__PlayBin.set_property('audio-sink', self.__AudioSinkPack)
+		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
 
 		if (asink == 'alsasink'):
 			self.__AudioSink.set_property('device', 'hw:0')
@@ -174,8 +179,8 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		vsink = self.getString('backend/videosink') 
 
-		self.VideoSink = gst.element_factory_make(vsink)
-		self.__PlayBin.set_property('video-sink', self.VideoSink)
+		self.VideoSink = self.__elementFactoryMake(vsink)
+		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
 
 		if (vsink in ['xvimagesink', 'ximagesink']):
 			self.VideoSink.set_property('force-aspect-ratio', True)
@@ -196,6 +201,26 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		if (not isNull(aspect_ratio)):
 			self.VideoSink.set_property('pixel-aspect-ratio', aspect_ratio)
+	
+	def __elementFactoryMake(self,element):
+		'''
+		Wrap the gst.element_factory_make, but add logging capabilities
+
+		@param element: element to be created (str)
+		'''
+		self.__Logger.log("creatign a gst element %s"%element)
+		return gst.element_factory_make(element)
+
+	def __elementSetProperty(self,element,property,value):
+		'''
+		Wrap the self.(element).set_property, but add logging capabilities
+
+		@parame element: gst.Element
+		@param property: string Property
+		@param value: property value
+		'''
+		self.__Logger.log("setting property '%s' with value '%s 'for element '%s'"%(property,repr(value),repr(element)))
+		element.set_property(property,value)
 	
 	def emitExpose(self):
 		self.exposeCallback()
@@ -247,15 +272,15 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.Tags = self.__Tags
 
 		if self.__visualizationPlugin is not None:
-			self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
+			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
 
 		if (isFile(file)):
 			self.__PlayBin.set_state(gst.STATE_READY)
 			nfile = 'file://' + file
-			self.__PlayBin.set_property('uri', nfile)
+			self.__elementSetProperty(self.__PlayBin,'uri', nfile)
 		else:
 			if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
-				self.__PlayBin.set_property('uri', file)
+				self.__elementSetProperty(self.__PlayBin,'uri', file)
 			else:
 				error("file %s not found" % os.path.split(file)[1])
 
@@ -323,15 +348,15 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 
 		if active:
-			self.__visualizationPlugin = gst.element_factory_make(self.getString('backend/vis-plugin'))
+			self.__visualizationPlugin = self.__elementFactoryMake(self.getString('backend/vis-plugin'))
 			self.VideoSink.set_property('force-aspect-ratio', False)
 			self.__ShouldShow = True
-			self.__PlayBin.set_property('vis-plugin', self.__visualizationPlugin)
+			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
 		else:
 			self.__visualizationPlugin = None
 			self.VideoSink.set_property('force-aspect-ratio', True)
 			self.__ShouldShow = False
-			self.__PlayBin.set_property('vis-plugin', None)
+			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
 
 		return True
 
@@ -345,7 +370,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			volume = 0.0
 		elif (volume > 1):
 			volume = 1.0
-		self.__PlayBin.set_property('volume', volume)
+		self.__elementSetProperty(self.__PlayBin,'volume', volume)
 
 	#
 	# Gets a specific tag 

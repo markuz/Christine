@@ -19,6 +19,7 @@ Queue.py \
 Validator.py \
 ChristineGConf.py \
 Tagger.py \
+Logger.py \
 clibrary.so
 
 DISTFILES= Makefile.in \

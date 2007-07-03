@@ -56,11 +56,7 @@ ALL_LINGUAS = es_ES
 
 PO_LINGUAS=$(shell if test -r $(srcdir)/LINGUAS; then grep -v "^\#" $(srcdir)/LINGUAS; fi)
 
-USER_LINGUAS=$(shell if test -n "$(LINGUAS)"; then LLINGUAS="$(LINGUAS)"; ALINGUAS="$(ALL_LINGUAS)"; for lang in $$LLINGUAS; do if test -n "`grep ^$$lang$$ $(srcdir)/LINGUAS`" -o -n "`echo $$ALINGUAS|grep ' ?$$lang ?'`"; then printf "$$lang "; fi; done; fi)
-
-USE_LINGUAS=$(shell if test -n "$(USER_LINGUAS)"; then LLINGUAS="$(USER_LINGUAS)"; else if test -n "$(PO_LINGUAS)"; then LLINGUAS="$(PO_LINGUAS)"; else LLINGUAS="$(ALL_LINGUAS)"; fi; fi; for lang in $$LLINGUAS; do printf "$$lang "; done)
-
-POFILES=$(shell LINGUAS="$(USE_LINGUAS)"; for lang in $$LINGUAS; do printf "$$lang.po "; done)
+POFILES=$(shell if test -n "$(PO_LINGUAS)"; then LINGUAS="$(PO_LINGUAS)"; else LINGUAS="$(ALL_LINGUAS)"; fi; for lang in $$LINGUAS; do printf "$$lang.po "; done)
 
 DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(POFILES)
 EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
@@ -84,9 +80,9 @@ POTFILES = \
 	../gui/tray_menu.glade \ \
 	../gui/treeview.glade \ \
 	../gui/treeview_reorderable.glade
-# This comment gets stripped out
+#This Gets Replace for some reason
 
-CATALOGS=$(shell LINGUAS="$(USE_LINGUAS)"; for lang in $$LINGUAS; do printf "$$lang.gmo "; done)
+CATALOGS=$(shell if test -n "$(PO_LINGUAS)"; then LINGUAS="$(PO_LINGUAS)"; else LINGUAS="$(ALL_LINGUAS)"; fi; for lang in $$LINGUAS; do printf "$$lang.gmo "; done)
 
 .SUFFIXES:
 .SUFFIXES: .po .pox .gmo .mo .msg .cat
@@ -120,7 +116,11 @@ install-data: install-data-yes
 install-data-no: all
 install-data-yes: all
 	$(mkdir_p) $(DESTDIR)$(itlocaledir)
-	linguas="$(USE_LINGUAS)"; \
+	if test -n "$(PO_LINGUAS)"; then \
+	  linguas="$(PO_LINGUAS)"; \
+	else \
+	  linguas="$(ALL_LINGUAS)"; \
+	fi; \
 	for lang in $$linguas; do \
 	  dir=$(DESTDIR)$(itlocaledir)/$$lang/LC_MESSAGES; \
 	  $(mkdir_p) $$dir; \
@@ -154,18 +154,17 @@ dvi info tags TAGS ID:
 installcheck:
 
 uninstall:
-	linguas="$(USE_LINGUAS)"; \
+	if test -n "$(PO_LINGUAS)"; then \
+	  linguas="$(PO_LINGUAS)"; \
+	else \
+	  linguas="$(ALL_LINGUAS)"; \
+	fi; \
 	for lang in $$linguas; do \
 	  rm -f $(DESTDIR)$(itlocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo; \
 	  rm -f $(DESTDIR)$(itlocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE).mo.m; \
 	done
 
 check: all $(GETTEXT_PACKAGE).pot
-	rm -f missing notexist
-	srcdir=$(srcdir) $(INTLTOOL_UPDATE) -m
-	if [ -r missing -o -r notexist ]; then \
-	  exit 1; \
-	fi
 
 mostlyclean:
 	rm -f *.pox $(GETTEXT_PACKAGE).pot *.old.po cat-id-tbl.tmp
@@ -198,7 +197,11 @@ dist distdir: $(DISTFILES)
 update-po: Makefile
 	$(MAKE) $(GETTEXT_PACKAGE).pot
 	tmpdir=`pwd`; \
-	linguas="$(USE_LINGUAS)"; \
+	if test -n "$(PO_LINGUAS)"; then \
+	  linguas="$(PO_LINGUAS)"; \
+	else \
+	  linguas="$(ALL_LINGUAS)"; \
+	fi; \
 	for lang in $$linguas; do \
 	  echo "$$lang:"; \
 	  result="`$(MSGMERGE) -o $$tmpdir/$$lang.new.po $$lang`"; \
@@ -226,8 +229,8 @@ Makefile POTFILES: stamp-it
 	  $(MAKE) stamp-it; \
 	fi
 
-stamp-it: Makefile.in.in $(top_builddir)/config.status POTFILES.in
-	cd $(top_builddir) \
+stamp-it: Makefile.in.in ../config.status POTFILES.in
+	cd .. \
 	  && CONFIG_FILES=$(subdir)/Makefile.in CONFIG_HEADERS= CONFIG_LINKS= \
 	       $(SHELL) ./config.status
 
