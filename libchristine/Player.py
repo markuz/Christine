@@ -92,7 +92,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Create the playbin
 		"""
-		self.__Logger.log("Creating the Player")
+		self.__Logger.Log("Creating the Player")
 		self.__PlayBin = self.__elementFactoryMake('playbin')
 		self.__elementSetProperty(self.__PlayBin,'delay', GST_DELAY)
 
@@ -129,7 +129,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Connect
 		"""
-		self.__Logger.log("Connecting sinks")
+		self.__Logger.Log("Connecting sinks")
 		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
 
@@ -141,7 +141,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Updates audio sink
 		"""
-		self.__Logger.log("__updateAudioSink")
+		self.__Logger.Log("__updateAudioSink")
 		state = self.getState()[1]
 		self.__AudioSinkPack = self.__elementFactoryMake('bin')
 
@@ -208,7 +208,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		@param element: element to be created (str)
 		'''
-		self.__Logger.log("creatign a gst element %s"%element)
+		self.__Logger.Log("creatign a gst element %s"%element)
 		return gst.element_factory_make(element)
 
 	def __elementSetProperty(self,element,property,value):
@@ -219,7 +219,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		@param property: string Property
 		@param value: property value
 		'''
-		self.__Logger.log("setting property '%s' with value '%s 'for element '%s'"%(property,repr(value),repr(element)))
+		self.__Logger.Log("setting property '%s' with value '%s 'for element '%s'"%(property,repr(value),repr(element)))
 		element.set_property(property,value)
 	
 	def emitExpose(self):
@@ -275,7 +275,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
 
 		if (isFile(file)):
-			self.__PlayBin.set_state(gst.STATE_READY)
+			self.__setState(gst.STATE_READY)
 			nfile = 'file://' + file
 			self.__elementSetProperty(self.__PlayBin,'uri', nfile)
 		else:
@@ -304,7 +304,6 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 				return path
 		else:
 			path = None
-
 		return path
 	
 	#
@@ -315,7 +314,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Play the current song
 		"""
-		self.__PlayBin.set_state(gst.STATE_PLAYING)
+		self.__setState(gst.STATE_PLAYING)
 	
 	#
 	# Pause it
@@ -325,7 +324,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Pause the current song
 		"""
-		self.__PlayBin.set_state(gst.STATE_PAUSED)
+		self.__setState(gst.STATE_PAUSED)
 	
 	#
 	# Stop the current song
@@ -335,7 +334,18 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Stop the current song
 		"""
-		self.__PlayBin.set_state(gst.STATE_NULL)
+		self.__setState(gst.STATE_NULL)
+	
+	def __setState(self,state):
+		'''
+		Sets the state of the playtin to the state in 
+		the state param.
+		Add loggin capabilites
+
+		@param: state: gst.STATE
+		'''
+		self.__Logger.Log("Setting the state of the Playbin to %s"%repr(state))
+		self.__PlayBin.set_state(state)
 	
 	#
 	# Sets visualization active or desactive
@@ -346,7 +356,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Sets visualization active or desactive
 		"""
-
+		self.__Logger.Log("Setting visualization to %s"%repr(active))
 		if active:
 			self.__visualizationPlugin = self.__elementFactoryMake(self.getString('backend/vis-plugin'))
 			self.VideoSink.set_property('force-aspect-ratio', False)
@@ -370,6 +380,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			volume = 0.0
 		elif (volume > 1):
 			volume = 1.0
+		self.__Logger.Log("Setting volme to %f"%volume)
 		self.__elementSetProperty(self.__PlayBin,'volume', volume)
 
 	#
@@ -444,7 +455,6 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		Seek to secs
 		"""
 		sec = (long(sec) * gst.SECOND)
-		print "seekTo",sec
 		self.__PlayBin.seek(1.0, 
 		        gst.FORMAT_TIME,    gst.SEEK_FLAG_FLUSH,
 				gst.SEEK_TYPE_SET,  sec, 

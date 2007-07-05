@@ -98,7 +98,6 @@ class Share(Singleton):
 		"""
 		Gets image as path string
 		"""
-		print os.path.join(self.__PathPixmap,name+".png")
 		if ((not isNull(file)) or (isStringEmpty(name))):
 			if (isFile(os.path.join(self.__PathPixmap, name+'.png'))):
 				return os.path.join(self.__PathPixmap, name+'.png')

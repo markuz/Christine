@@ -346,7 +346,6 @@ class library(GtkMisc,gtk.DrawingArea):
 			selection,
 			info,
 			timestamp):
-		print context.drag_status(gtk.gdk.ACTION_COPY,timestamp)
 		return True
 
 	def dnd_handler(self,
@@ -360,11 +359,9 @@ class library(GtkMisc,gtk.DrawingArea):
 		treeview.emit_stop_by_name("drag_drop")
 		tgt = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
 		text = treeview.drag_get_data(context,tgt)
-		print text
 		return True
 
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
-		print locals()
 		#treeview.emit_stop_by_name("drag_drop")
 		treeview.emit_stop_by_name("drag_data_received")
 		target = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
@@ -374,7 +371,6 @@ class library(GtkMisc,gtk.DrawingArea):
 				file = text.pop()
 				if file[:7] == "file://":
 					file = file[7:].replace("%20"," ")
-				print file
 				self.add(file)
 		return True
 

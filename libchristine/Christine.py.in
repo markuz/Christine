@@ -83,7 +83,7 @@ class Christine(GtkMisc):
 		initialize class variables and create some timeouts calls
 		"""
 		self.__Logger = ChristineLogger()
-		self.__Logger.log("Starting Christine")
+		self.__Logger.Log("Starting Christine")
 		GtkMisc.__init__(self)
 #		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
@@ -666,7 +666,7 @@ class Christine(GtkMisc):
 
 				self.__IsFullScreen = True
 			else:
-				print 'WARNING: Full screen with no visualization'
+				self.__Logger.Log('WARNING: Full screen with no visualization')
 				self.__Window.fullscreen()
 				self.__IsFullScreen = True
 		else: 
@@ -1017,7 +1017,6 @@ class Christine(GtkMisc):
 				self.__Elements = len (self.__LibraryModel) - 1
 				if self.__Elements < 1:
 					return True
-				print self.__Elements
 				iter     = self.__LibraryModel.get_iter(((self.__Elements * random.random()),))
 				filename = self.__LibraryModel.get_value(iter, PATH)
 
@@ -1457,18 +1456,13 @@ class Christine(GtkMisc):
 				# libs_christine/libs_christine.py
 				# We need to know what files are supported by 
 				# gstreamer
-				#print ext
 				if ext in self.__GConf.getString('backend/allowed_files').split(',') and not exists:
 					f.append(os.path.join(i[0],path))
-				#else:
-				#	print "skipping:",os.path.join(i[0],path)
 		# Once we have the files to add, then use the addFiles
 		# wrapper method to add them.
-		#print f
 		if (len(f) > 0):
 			self.addFiles(files = f)
 		else:
-			#print f
 			pass
 	
 	#
@@ -1486,7 +1480,6 @@ class Christine(GtkMisc):
 		list. the only one argument is queue, wich defines
 		if the importing is to the queue
 		"""
-		#print locals()
 		if (type(queue) != type(True)):
 			queue = False
 

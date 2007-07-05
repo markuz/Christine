@@ -85,7 +85,6 @@ class queue(GtkMisc,gtk.DrawingArea):
 		keys = self.library.keys()
 		keys.sort()
 		for i in keys:
-			print i, self.library[i]["name"]
 			iter = self.model.append()
 			self.model.set(iter,
 					PATH,self.library[i]["path"],
@@ -93,10 +92,8 @@ class queue(GtkMisc,gtk.DrawingArea):
 					TYPE,self.library[i]["type"])
 			
 	def add(self,file,prepend=False):
-		print "add:",file
 		self.file = file
 		if not os.path.isfile(file):
-			print "No es un archivo"
 			return False
 		model = self.model
 		if prepend:
@@ -109,7 +106,6 @@ class queue(GtkMisc,gtk.DrawingArea):
 		except:
 			self.emit_signal("tags-found!")
 			return True
-		#print a,b,d.getLocation(),self.model.get_path(self.iters[d.getLocation()])
 		name	= self.strip_XML_entities(tags["title"])
 		album	= self.strip_XML_entities(tags["album"])
 		artist	= self.strip_XML_entities(tags["artist"])
@@ -149,7 +145,6 @@ class queue(GtkMisc,gtk.DrawingArea):
 		'''
 		Save the current library
 		'''
-		print "queue save"
 		self.pos = 0
 		self.model.foreach(self.prepare_for_disk)
 		self.library.save()
@@ -172,8 +167,8 @@ class queue(GtkMisc,gtk.DrawingArea):
 	#	self.main.filename = filename
 	
 	def key_press_handler(self,widget,event,key):
-		print widget,event,key
-	
+		pass
+
 	def set_drag_n_drop(self):
 	### FIXME For some reason this thing doesn't work!!! ###
 		self.treeview.enable_model_drag_dest(QUEUE_TARGETS, 
@@ -184,20 +179,16 @@ class queue(GtkMisc,gtk.DrawingArea):
 
 	def check_contexts(self,treeview,context,selection,info,timestamp):
 		context.drag_status(gtk.gdk.ACTION_COPY,timestamp)
-		#print selection.get_text()
 		return True
 
 	def dnd_handler(self,treeview,context,selection,info,timestamp,b=None,c=None):
 		'''
 		'''
 		tgt = treeview.drag_dest_find_target(context,[('text/plain',0,0),('GTK_TREE_MODEL_ROW',2,0)])
-		#print treeview.drag_dest_get_target_list()
 		data = treeview.drag_get_data(context,tgt)
-		#print locals(),context.get_data(tgt)
 		return True
 	
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
-		#print locals()
 		treeview.emit_stop_by_name("drag-data-received")
 		#target = treeview.drag_dest_find_target(context,[("text/plain",0,0)])
 		if timestamp !=0:
@@ -207,7 +198,6 @@ class queue(GtkMisc,gtk.DrawingArea):
 				i = text.pop()
 				if i[:7] == "file://":
 					file = i[7:].replace("%20"," ")
-				print file
 				self.add(file)
 		return True
 

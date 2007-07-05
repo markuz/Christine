@@ -25,12 +25,10 @@ sys.path.append(os.path.join(os.environ["HOME"],
 		".christine"))
 if (not "--devel" in sys.argv):
 	sys.path.append("@datadir@/christine")
-print sys.path
 import uplugins
 import cplugins
 
 def importName(modulename,name):
-	#print modulename,name
 	try: 
 		module = __import__(modulename,globals(),locals(),[name])
 	except ImportError:
@@ -67,7 +65,6 @@ class ChristinePlugins(GtkMisc):
 		self.interface.library_treeview = self.main.TreeView
 		self.interface.menus = self.main.Menus
 		self.interface.pack = self.pack
-		self.interface.write = self.write
 		self.interface.register_on_menu = self.register_on_menu
 		pass
 	
@@ -88,9 +85,6 @@ class ChristinePlugins(GtkMisc):
 		for i in keys:
 			self.menuitems[i].unparent()
 			menu.append(self.menuitems[i])
-	
-	def write(self,text):
-		print text
 	
 
 	def __imports(self,plugins,package):

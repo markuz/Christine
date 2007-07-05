@@ -47,7 +47,7 @@ class ChristineLogger(Singleton,GtkMisc):
 		self.__logs = []
 		gobject.timeout_add(1000,self.__save)
 	
-	def log(self,text):
+	def Log(self,text):
 		if not isString(text) or isStringEmpty(text):
 			raise TypeError("First argument must be a string, got %s"%type(text))
 		text = time.ctime()+" "+text
