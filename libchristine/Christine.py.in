@@ -103,6 +103,7 @@ class Christine(GtkMisc):
 		self.__LocationCount    = 0     # Count ns and jump if the file is not good
 		self.__LastPlayed       = []
 		self.__IterNatural      = None
+		self.__IterCurrentPlaying = None # Temporal store for the current iter playing
 		self.__ScaleMoving      = False
 		self.__StatePlaying     = False
 		self.__IsFullScreen     = False
@@ -215,7 +216,7 @@ class Christine(GtkMisc):
 		self.__LibraryFilterModel.set_visible_func(self.filter)
 		
 		self.__LibraryNaturalModel = self.__LibraryFilterModel.get_model()
-		self.__LibraryCurrentInter = self.__LibraryModel.get_iter_first()
+		self.__LibraryCurrentIter = self.__LibraryModel.get_iter_first()
 		
 		self.__ScrolledMusic = self.__XML['ScrolledMusic']
 		self.__VBoxVideo = self.__XML['VBoxVideo']
@@ -476,6 +477,7 @@ class Christine(GtkMisc):
 		filename = model.get_value(iter, PATH)
 		self.__FileName = filename
 
+		self.__IterCurrentPlaying = self.getIterNatural(iter)
 		self.setLocation(filename)
 
 		self.__PlayButton.set_active(False)
@@ -503,28 +505,23 @@ class Christine(GtkMisc):
 		# that will hold a gtk.TreeIter
 		# should be setted to None 
 		# before using it
-		self.__LibraryCurrentInter = None
+		self.__LibraryCurrentIter = None
 		
 		self.__Player.stop()
 		self.__LibraryNaturalModel.foreach(self.__SearchByPath, self.__Player.getLocation())
-
-		if (self.__LibraryCurrentInter != None):
+	
+		if (self.__LibraryCurrentIter != None):
 			pix = self.__Share.getImageFromPix('blank')
 			pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-			self.__LibraryNaturalModel.set(self.__LibraryCurrentInter, PIX, pix)
+			self.__LibraryNaturalModel.set(self.__LibraryCurrentIter, PIX, pix)
 		
 		# Search for the item in the library.
 		# if it exists then set it in the "backend/last_played"
 		# entry in gconf to be able to select it in the next
 		# christine start-up (and other functions) and
-		self.__LibraryCurrentInter = None
-		self.__LibraryNaturalModel.foreach(self.__SearchByPath, filename)
-
-		if (self.__LibraryCurrentInter != None):
-			self.__IterNatural = self.__LibraryCurrentInter.copy()
-
-			count = self.__LibraryNaturalModel.get_value(self.__LibraryCurrentInter, PLAY_COUNT)
-			self.__LibraryNaturalModel.set(self.__LibraryCurrentInter, PLAY_COUNT, count + 1)
+		if (self.__IterCurrentPlaying != None):
+			count = self.__LibraryNaturalModel.get_value(self.__IterCurrentPlaying, PLAY_COUNT)
+			self.__LibraryNaturalModel.set(self.__IterCurrentPlaying, PLAY_COUNT, count + 1)
 
 			self.__Library.save()
 			self.__LastPlayed.append(filename)
@@ -918,12 +915,12 @@ class Christine(GtkMisc):
 			self.__PlayButton.set_active(False)
 			self.__PlayButton.set_active(True)
 		else:
-			self.__LibraryCurrentInter = None
+			self.__LibraryCurrentIter = None
 			self.__LibraryModel.foreach(self.__SearchByPath, 
 				self.__GConf.getString('backend/last_played'))
 
-			if self.__LibraryCurrentInter != None:
-				path = self.__LibraryModel.get_path(self.__LibraryCurrentInter)
+			if self.__LibraryCurrentIter != None:
+				path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
 				
 				if (path > 0):
 					path = (path[0] -1,)
@@ -1003,7 +1000,7 @@ class Christine(GtkMisc):
 
 		if (type(iter) == gtk.TreeIter):
 			self.setLocation(model.get_value(iter, PATH))
-			self.__LibraryCurrentInter == None
+			self.__LibraryCurrentIter == None
 			self.jumpToPlaying()
 			self.Queue.remove(iter)
 			self.Queue.save()
@@ -1019,8 +1016,9 @@ class Christine(GtkMisc):
 					return True
 				iter     = self.__LibraryModel.get_iter(((self.__Elements * random.random()),))
 				filename = self.__LibraryModel.get_value(iter, PATH)
-
-				if ((not filename in self.__LastPlayed) or (self.__GConf.getBool('control/repeat'))):
+				self.__IterCurrentPlaying = self.getIterNatural(iter)
+				if ((not filename in self.__LastPlayed) or \
+						(self.__GConf.getBool('control/repeat'))):
 						self.setLocation(filename)
 						self.__PlayButton.set_active(False)
 						self.__PlayButton.set_active(True)
@@ -1064,25 +1062,28 @@ class Christine(GtkMisc):
 
 		if (path == None):
 			filename = self.__GConf.getString('backend/last_played')
-			self.__LibraryCurrentInter = None
+			self.__LibraryCurrentIter = None
 			self.__LibraryModel.foreach(self.__SearchByPath, filename)
 
-			if (self.__LibraryCurrentInter == None):
+			if (self.__LibraryCurrentIter == None):
 				iter     = self.__LibraryModel.get_iter_first()
 				filename = self.__LibraryModel.get_value(iter, PATH)
+				self.__IterCurrentPlaying = self.getIterNatural(iter)
 
 			self.setLocation(filename)
 		else:
-			self.__LibraryCurrentInter = None
+			self.__LibraryCurrentIter = None
 			self.__LibraryModel.foreach(self.__SearchByPath, path)
 
-			if (self.__LibraryCurrentInter != None):
-				iter = self.__LibraryModel.iter_next(self.__LibraryCurrentInter)
+			if (self.__LibraryCurrentIter != None):
+				iter = self.__LibraryModel.iter_next(self.__LibraryCurrentIter)
 			else:
 				iter = self.__LibraryModel.get_iter_first()
 
+			self.__IterCurrentPlaying = self.getIterNatural(iter)
 			try:
 				self.setLocation(self.__LibraryModel.get_value(iter, PATH))
+				niter = self.getIterNatural(iter)
 				self.__PlayButton.set_active(False)
 				self.__PlayButton.set_active(True)
 			except:
@@ -1098,13 +1099,13 @@ class Christine(GtkMisc):
 	def __SearchByPath(self, model, path, iter, location):
 		"""
 		search location in the model, if it found it then it will
-		store the iter where it was found in self.__LibraryCurrentInter
+		store the iter where it was found in self.__LibraryCurrentIter
 		"""
 		iter      = model.get_iter(path)
 		mlocation = model.get_value(iter, PATH)
 
 		if (mlocation == location):
-			self.__LibraryCurrentInter = iter
+			self.__LibraryCurrentIter = iter
 			return True
 	
 	#
@@ -1156,19 +1157,19 @@ class Christine(GtkMisc):
 		else:
 			location = path
 
-		self.__LibraryCurrentInter = None
+		self.__LibraryCurrentIter = None
 		self.__LibraryModel.foreach(self.__SearchByPath, location)
 
-		if (self.__LibraryCurrentInter != None):
+		if (self.__LibraryCurrentIter != None):
 			state = self.__StatePlaying
 
 			if (self.__StatePlaying):
-				iter = self.getIterNatural(self.__LibraryCurrentInter)
+				iter = self.getIterNatural(self.__LibraryCurrentIter)
 				pix  = self.__Share.getImageFromPix('sound')
 				pix  = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 				self.__LibraryNaturalModel.set(iter, PIX, pix)
 
-			path = self.__LibraryModel.get_path(self.__LibraryCurrentInter)
+			path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
 
 			if (path != None):
 				self.TreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
