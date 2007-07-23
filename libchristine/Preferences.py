@@ -25,11 +25,20 @@
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 #from libchristine.ChristineLibrary import *
+
+
+
+import os
+
 from libchristine.GtkMisc import *
 from libchristine.Translator import *
 from libchristine.Share import *
 from libchristine.Validator import *
-from libchristine.ChristineGConf import *
+#from libchristine.ChristineGConf import *
+from libchristine.ChristineObject import ChristineObject
+from libchristine.Dispatcher import Dispatcher 
+from libchristine import Storage
+
 
 #
 # Preferences gtk dialog
@@ -239,3 +248,43 @@ class guiPreferences(GtkMisc):
 		self.__LibNotify = self.XML['pynotify']
 		self.__LibNotify.set_active(self.__GConf.getBool('ui/show_pynotify'))
 		self.__LibNotify.connect('toggled',self.__GConf.toggle,'ui/show_pynotify')
+
+class Preferences(ChristineObject):
+	'''
+	Preferences main interface. (not Gui Interface)
+	This object will handle all preferences storage
+	and notifications.
+	'''
+	def __init__(self):
+		'''
+		Constructor
+		'''
+		self.__dispatcher = Dispatcher()
+		if os.environ.has_key("CHRISTINE_PSTORAGE"):
+			module = self.__dispatcher.Import("libchristine.Storage",os.environ["CHRISTINE_PSTORAGE"])
+			handler = getattr(module,os.environ["CHRISTINE_PSTORAGE"])
+			if handler:
+				self.__Handler = handler()
+			else:
+				self.__Handler = self.__defaultHandler()
+		else:
+			self.__Handler = self.__defaultHandler()
+	
+	def __defaultHandler(self):
+		'''
+		Creates an instance of the default handler
+		'''
+		module = self.__dispatcher.Import("libchristine.Storage","ChristineGConf")
+		return getattr(module,"ChristineGConf")
+
+	def Query (self,method,*args):
+		'''
+		Query for a method in handler
+		@param method: name of the method
+		@param args: arguments to be passed to the method
+		'''
+		if type(method) != str:
+			raise TypeError("First argument must be string")
+		medthod = getattr(self.__handler,medhot)
+		if callable(method):
+			return method(*args)
