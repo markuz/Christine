@@ -35,7 +35,7 @@ import gst.interfaces
 from libchristine.GtkMisc import *
 from libchristine.GstBase import *
 from libchristine.Validator import *
-from libchristine.ChristineGConf import *
+from libchristine.Preferences import *
 from libchristine.Logger import *
 
 BORDER_WIDTH = 0
@@ -43,7 +43,7 @@ BORDER_WIDTH = 0
 #
 # Player for manager play files
 #
-class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
+class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 	"""
 	Player for manage play files
 	"""
@@ -56,7 +56,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		self.__Logger = ChristineLogger()
 		GtkMisc.__init__(self)
-		ChristineGConf.__init__(self)
+		Preferences.__init__(self)
 		gtk.DrawingArea.__init__(self)
 
 		self.__ShouldShow = False

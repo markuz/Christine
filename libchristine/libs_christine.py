@@ -26,12 +26,14 @@ import cPickle as pickle
 
 from libchristine.GtkMisc import *
 from libchristine.GstBase import *
+import libchristine.ChristineDefinitions as ChristineDefinitions
 
 class sanity:
 	'''
 		Make all the sanity checks
 	'''
 	def __init__(self):
+		wdir = ChristineDefinitions.USERDIR
 		self.__check_christine_dir()
 		self.__check_dir(os.path.join(wdir,"sources"))
 		self.__check_dir(os.path.join(wdir,"uplugins"))
@@ -40,7 +42,7 @@ class sanity:
 				f.write("#python")
 				f.close()
 		if os.getgid() == 0:
-			self.__check_dir(os.path.join("@datadir@","christine","cplugins"))
+			self.__check_dir(os.path.join(ChristineDefinitions.SHARE_PATH,"cplugins"))
 
 	def __check_christine_dir(self):
 		if not os.path.exists(wdir):

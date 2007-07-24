@@ -27,7 +27,7 @@ from libchristine.GtkMisc import *
 from libchristine.Discoverer import *
 from libchristine.Translator import *
 from libchristine import clibrary
-from libchristine.ChristineGConf import *
+from libchristine.Preferences import *
 from libchristine.Share import *
 from libchristine.Tagger import *
 from libchristine.GstBase import *
@@ -76,7 +76,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		gtk.DrawingArea.__init__(self)
 		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
-		self.gconf = ChristineGConf()
+		self.gconf = Preferences()
 		self.tv = self.__xml["treeview"]
 		self.library_lib = lib_library("music")
 		self.gen_model()
@@ -85,7 +85,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.tv.set_model(sort)
 		self.__add_columns()
 		self.set_drag_n_drop()
-		self.blank_pix = self.gen_pixbuf("blank.png")
+		self.blank_pix = self.genPixbuf("blank.png")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.CURRENT_ITER = self.model.get_iter_first()
 	

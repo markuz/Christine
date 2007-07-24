@@ -20,11 +20,11 @@ import os,sys
 from libchristine.Translator import *
 from libchristine.GtkMisc import *
 from libchristine.Share import *
+import libchristine.ChristineDefinitions as ChristineDefinitions
 
-sys.path.append(os.path.join(os.environ["HOME"],
-		".christine"))
+sys.path.append(ChristineDefinitions.USERDIR)
 if (not "--devel" in sys.argv):
-	sys.path.append("@datadir@/christine")
+	sys.path.append(ChristineDefinitions.SHARE_PATH)
 import uplugins
 import cplugins
 
@@ -49,14 +49,14 @@ class ChristinePlugins(GtkMisc):
 			".christine","uplugins"))
 		files = [".".join(k.split(".")[:-1]) for k in files if k.split(".")[-1] == "py" and ".".join(k.split(".")[:-1]) != "__init__"]
 		self.__imports(files,"uplugins")
-		files = os.listdir(os.path.join(SHARE_PATH,"cplugins"))
+		files = os.listdir(os.path.join(ChristineDefinitions.SHARE_PATH,"cplugins"))
 		files = [".".join(k.split(".")[:-1]) for k in files if k.split(".")[-1] == "py" and ".".join(k.split(".")[:-1]) != "__init__"]
 		self.__imports(files,"cplugins")
 
 	
 	def __create_interface(self):
 		self.interface = interface
-		self.interface.datadir = "@datadir@"
+		self.interface.datadir = ChristineDefinitions.SHARE_PATH
 		self.interface.list_vbox = self.main.VBoxList
 		self.interface.menubar = self.main.MenuBar
 		self.interface.search_box = self.main.EntrySearch

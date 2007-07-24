@@ -19,15 +19,22 @@
 
 
 
-import gtk, os, gobject, gconf, os.path
+import gtk 
+import os 
+import gobject
+import gconf
+import os.path
 import gtk.glade
+import libchristine.ChristineDefinitions as ChristineDefinitions
+
 class glade_xml:
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of the interface descriptor 
 		and then initialize gtk.glade.XML'''
-		locale_dir = "@datadir@/locale/"
-		gtk.glade.bindtextdomain("@programname@",locale_dir)
-		gtk.glade.textdomain("@programname@")
+
+		gtk.glade.bindtextdomain(ChristineDefinitions.PROGRAM_NAME,
+				ChristineDefinitions.LOCALE_DIR)
+		gtk.glade.textdomain(ChristineDefinitions.PROGRAM_NAME)
 		self.__xml = gtk.glade.XML(file,root,None)
 		self.get_widget = self.__xml.get_widget
 
@@ -46,35 +53,52 @@ class glade_xml:
 
 class GtkMisc:
 	def __init__(self):
-		if os.path.isdir(os.path.join(os.getcwd(),"./gui/pixmaps/")):
-			self.wdir = os.path.join(os.getcwd(),"./gui/pixmaps/")
-		else:
-			self.wdir = "@datadir@/christine/gui/pixmaps"
+		'''
+		Constructor
+		'''
+		self.wdir = os.path.join(ChristineDefinitions.SHARE_PATH,
+					"gui","pixmaps")
 
-	def gen_pixbuf(self,imagefile):
-		'''Create a pixbuf from  a file'''
-		#try:
+	def genPixbuf(self,imagefile):
+		'''
+		Create a pixbuf from  a file
+		@param imagefile: Name of the image to be loaded, must
+		be in the pixmaps dir from the working directory
+		'''
 		pixbuf = gtk.gdk.pixbuf_new_from_file(os.path.join(self.wdir,imagefile))
 		return pixbuf
-		#except:
-		#	raise IOError,"There is no pixmap called %s"%imagefile
 	
-	def set_image(self,widget,filename):
-		image = gtk.Image()
-		image.set_from_pixbuf(self.gen_pixbuf(filename))
+	def setImage(self,widget,filename):
+		'''
+		Set the image to a widget. Mostly used in 
+		gtk.Buttons and gtk.Windows and gtk.Dialogs
+		@param widget: The widget where to set the image
+		@param filename: The name of the filename to be loaded
+		and used to create the gtk.Image to be set in the widget.
+		'''
+		image = self.Image(filename)
 		widget.set_image(image)
 		
-	def image(self,filename):
+	def Image(self,filename):
+		'''
+		Creates a image from a file.
+		'''
 		image = gtk.Image()
-		image.set_from_pixbuf(self.gen_pixbuf(filename))
+		image.set_from_pixbuf(self.genPixbuf(filename))
 		image.show()
 		return image
 
-	def set_toolbutton_image(self,widget,filename):
-		image = self.image(filename)
-		widget.set_icon_widget(image)
+####def set_toolbutton_image(self,widget,filename):
+####	image = self.image(filename)
+####	widget.set_icon_widget(image)
 	
-	def strip_XML_entities(self,text):
+	def stripXmlEntities(self,text):
+		'''
+		Strip some entities from the text, 
+		usefull when you are working with XML or 
+		pango markup language.
+		@param text: text to be stripped.
+		'''
 		entities = {"&":"&amp;",}	
 		for i in entities.keys():
 			text = text.replace(i,entities[i])
@@ -82,11 +106,7 @@ class GtkMisc:
 	
 class error:
 	def __init__(self,text):
-		if os.path.isdir("./gui/"):
-			path = "./gui"
-		else:
-			path = os.path.join("@datadir@","christine","gui")
-		xml = glade_xml(os.path.join(path,"Error.glade"))
+		xml = glade_xml(os.path.join(GUI_PATH,"Error.glade"))
 		dialog		= xml["dialog"]
 		error_label = xml["error"]
 		error_label.set_text(text)

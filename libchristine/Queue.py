@@ -106,15 +106,15 @@ class queue(GtkMisc,gtk.DrawingArea):
 		except:
 			self.emit_signal("tags-found!")
 			return True
-		name	= self.strip_XML_entities(tags["title"])
-		album	= self.strip_XML_entities(tags["album"])
-		artist	= self.strip_XML_entities(tags["artist"])
+		name	= self.stripXmlEntities(tags["title"])
+		album	= self.stripXmlEntities(tags["album"])
+		artist	= self.stripXmlEntities(tags["artist"])
 		tn		= tags["track"]
 		if name == "":
 			n = os.path.split(self.file)[1].split(".")
 			name = ".".join([k for k in n[:-1]])
 		name = "<b><i>%s</i></b>"%name
-		name = self.strip_XML_entities(name)
+		name = self.stripXmlEntities(name)
 		if album !="":
 			name += "\n from <i>%s</i>"%album
 		if artist != "":

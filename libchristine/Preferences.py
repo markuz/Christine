@@ -34,7 +34,6 @@ from libchristine.GtkMisc import *
 from libchristine.Translator import *
 from libchristine.Share import *
 from libchristine.Validator import *
-#from libchristine.ChristineGConf import *
 from libchristine.ChristineObject import ChristineObject
 from libchristine.Dispatcher import Dispatcher 
 from libchristine import Storage
@@ -262,9 +261,9 @@ class Preferences(ChristineObject):
 		self.__dispatcher = Dispatcher()
 		if os.environ.has_key("CHRISTINE_PSTORAGE"):
 			module = self.__dispatcher.Import("libchristine.Storage",os.environ["CHRISTINE_PSTORAGE"])
-			handler = getattr(module,os.environ["CHRISTINE_PSTORAGE"])
+			handler = getattr(module,os.environ["CHRISTINE_PSTORAGE"])()
 			if handler:
-				self.__Handler = handler()
+				self.__Handler = self.__grabAttr(handler)
 			else:
 				self.__Handler = self.__defaultHandler()
 		else:
@@ -275,16 +274,16 @@ class Preferences(ChristineObject):
 		Creates an instance of the default handler
 		'''
 		module = self.__dispatcher.Import("libchristine.Storage","ChristineGConf")
-		return getattr(module,"ChristineGConf")
-
-	def Query (self,method,*args):
+		cla = getattr(module,"ChristineGConf")()
+		return self.__grabAttr(cla)
+	
+	def __grabAttr(self,cla):
 		'''
-		Query for a method in handler
-		@param method: name of the method
-		@param args: arguments to be passed to the method
+		Grab all data from the instance and make them available
+		via this class.
+		@param cla: Class instance
 		'''
-		if type(method) != str:
-			raise TypeError("First argument must be string")
-		medthod = getattr(self.__handler,medhot)
-		if callable(method):
-			return method(*args)
+		for i in dir(cla):
+			newkey = i.replace("_ChristineGConf_","_Preferences_")
+			self.__dict__[newkey] = getattr(cla,i)
+		return self

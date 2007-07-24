@@ -34,8 +34,6 @@ import gtk
 import gtk.gdk
 import pygst; pygst.require('0.10')
 import gst.interfaces
-#import dbus
-#import dbus.service
 from libchristine.Translator import *
 from libchristine.GtkMisc import *
 from libchristine.Library import *
@@ -46,16 +44,9 @@ from libchristine.Player import *
 from libchristine.Display import *
 from libchristine.Plugins import *
 from libchristine.Share import *
-from libchristine.ChristineGConf import *
+from libchristine.Preferences import *
 from libchristine.Logger import *
 
-
-#from dbus.mainloop.glib import DBusGMainLoop
-
-#DBusGMainLoop(set_as_default=True)
-
-#SYSTEM_BUS = dbus.SystemBus()
-#SYSTEM_BUS = dbus.SessionBus()
 
 try:
 	import pynotify
@@ -85,10 +76,9 @@ class Christine(GtkMisc):
 		self.__Logger = ChristineLogger()
 		self.__Logger.Log("Starting Christine")
 		GtkMisc.__init__(self)
-#		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
 		self.__Share   = Share()
-		self.__GConf   = ChristineGConf()
+		self.__GConf   = Preferences()
 
 		self.__XML = self.__Share.getTemplate('WindowCore')
 		self.__XML.signal_autoconnect(self)
@@ -1746,7 +1736,7 @@ class Christine(GtkMisc):
 
 		# stript_XML_entities is a method inherited from gtk_misc
 		tooltext = title
-		title    = self.strip_XML_entities(title)
+		title    = self.stripXmlEntities(title)
 
 		# Sets window title, which it will be our current song :-)
 		self.__Window.set_title("%s - Christine" % title)

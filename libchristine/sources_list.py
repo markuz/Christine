@@ -57,7 +57,7 @@ class sources_list (gtk_misc):
 						icon = cp.get("source","icon")
 					else:
 						iconf = ""
-					pixbuf = self.gen_pixbuf(icon)
+					pixbuf = self.genPixbuf(icon)
 					pixbuf = pixbuf.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 					ltype = cp.get("source","type")
 					self.model.set(iter,LIST_NAME,fname,

@@ -17,20 +17,18 @@ Christine.py \
 Share.py \
 Queue.py \
 Validator.py \
-ChristineGConf.py \
 Tagger.py \
 Logger.py \
+Dispatcher.py \
+ChristineDefinitions.py \
 clibrary.so
 
 DISTFILES= Makefile.in \
-		   GtkMisc.py.in \
 		   About.py.in \
 		   Translator.py.in \
 		   libs_christine.py.in \
 		   clibrary.c \
 		   Plugins.py.in \
-		   Christine.py.in \
-		   Share.py.in \
 		   $(scripts_DATA) 
 
 
@@ -49,42 +47,26 @@ edit = sed \
 	   -e 's,@programname\@,$(programname),g' \
 	   -e 's,@version\@,$(version),g'
 
-GtkMisc.py: Makefile $(srcdir)/GtkMisc.py.in
-	$(edit) $(srcdir)/GtkMisc.py.in > GtkMisc.py
-
 About.py: Makefile $(srcdir)/About.py.in
 	$(edit) $(srcdir)/About.py.in > About.py
 
 Translator.py: Makefile $(srcdir)/Translator.py.in
 	$(edit) $(srcdir)/Translator.py.in > Translator.py
 
-Plugins.py: Makefile $(srcdir)/Plugins.py.in
-	$(edit) $(srcdir)/Plugins.py.in > Plugins.py
-
-libs_christine.py: Makefile $(srcdir)/libs_christine.py.in
-	$(edit) $(srcdir)/libs_christine.py.in > libs_christine.py
-
 clibrary.so: Makefile $(srcdir)/clibrary.c
 	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -I${usr_libdir} -c -o clibrary.o clibrary.c
 	gcc -shared clibrary.o -o clibrary.so -L${pythonincludedir}
 
-Christine.py: Makefile $(srcdir)/Christine.py.in
-	    $(edit) $(srcdir)/Christine.py.in > Christine.py
-
-Share.py: Makefile $(srcdir)/Share.py.in
-		$(edit) $(srcdir)/Share.py.in > Share.py
+ChristineDefinitions.py: Makefile $(srcdir)/ChristineDefinitions.py.in
+	    $(edit) $(srcdir)/ChristineDefinitions.py.in > ChristineDefinitions.py
 
 all: all-am
 
 all-am: 
 
 clean:
-	rm $(srcdir)/Share.py
-	rm $(srcdir)/Christine.py
-	rm $(srcdir)/GtkMisc.py
+	rm $(srcdir)/ChristineDefinitions.py
 	rm $(srcdir)/About.py
 	rm $(srcdir)/clibrary.o
 	rm $(srcdir)/clibrary.so
 	rm $(srcdir)/Translator.py
-	rm $(srcdir)/Plugins.py
-	rm $(srcdir)/libs_christine.py
