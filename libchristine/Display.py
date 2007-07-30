@@ -81,6 +81,16 @@ class Display(gtk.DrawingArea):
 
 		self.setText(text)
 		self.set_size_request(300, 42)
+		gobject.timeout_add(250,self.__emit)
+	
+	def __emit(self):
+		'''
+		Emits an expose event
+		'''
+
+		self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
+		#self.emit("expose-event",self)
+		return True
 
 	#
 	# callback when a button is pressed
@@ -99,11 +109,10 @@ class Display(gtk.DrawingArea):
 
 		if ((x >= minx) and (x <= maxx) and (y >= miny) and (y <= maxy)):
 			value = (((x - minx) * 1.0) / width)
-
 			self.setScale(value)
-			self.__Value = value
+			self.__emit()
+			self.emit("value-changed",self)
 
-			self.emit('value-changed', self)
 
 	#
 	# Sets text
@@ -127,7 +136,6 @@ class Display(gtk.DrawingArea):
 		"""
 		if (not isString(song)):
 			raise TypeError('Paramether must be text')
-
 		self.__Song = song
 
 	#
@@ -166,7 +174,7 @@ class Display(gtk.DrawingArea):
 
 		self.__Value = value
 
-		self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
+		#self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
 	
 	#
 	# This function is used to draw the display
@@ -178,7 +186,11 @@ class Display(gtk.DrawingArea):
 		"""
 		This function is used to draw the display
 		"""
-
+		style = self.get_style()
+		tcolor = style.text[0]
+		wcolor = style.base[0]
+		#print wcolor.red*0.00001,wcolor.green*0.000001,wcolor.blue*0.000001
+		#print color.red,color.green,color.blue
 		# Every speed improvement is really appreciated.
 		if (self.__Drawing) or (self.window == None):
 			return True
@@ -202,9 +214,10 @@ class Display(gtk.DrawingArea):
 			                     (w - (2 * BORDER_WIDTH)), 
 			                     (h - (2 * BORDER_WIDTH)))
 		
-		self.__Context.set_source_rgba(1, 1, 1, 1)
+		self.__Context.set_source_rgb(wcolor.red*0.00001, wcolor.green*0.00001, wcolor.blue*0.00001)
 		self.__Context.fill_preserve()
-		self.__Context.set_source_rgb(0, 0, 0)
+		self.__Context.set_source_rgb(tcolor.red*0.00001,tcolor.green*0.00001,tcolor.blue*0.00001)
+		#self.__Context.set_source_rgb(0, 0, 0)
 		self.__Context.stroke()
 
 		# Write text
@@ -216,6 +229,7 @@ class Display(gtk.DrawingArea):
 		(fontw, fonth) = self.__Layout.get_pixel_size()
 
 		self.__Context.move_to((w - fontw) / 2, (fonth)/2)
+		self.__Context.set_source_rgb(tcolor.red*0.00001,tcolor.green*0.00001,tcolor.blue*0.00001)
 		self.__Context.update_layout(self.__Layout)
 		self.__Context.show_layout(self.__Layout)
 
@@ -226,15 +240,15 @@ class Display(gtk.DrawingArea):
 		self.__Context.rectangle(fh, ((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
 		self.__Context.set_line_width(1)
 		self.__Context.set_line_cap(cairo.LINE_CAP_BUTT)
-		self.__Context.set_source_rgb(0, 0, 0)
+		#self.__Context.set_source_rgb(0, 0, 0)
 		self.__Context.stroke()
 		
 		width = (self.__Value * width)
 
 		self.__Context.rectangle(fh, ((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
-		self.__Context.set_source_rgb(0,0,0)
+		#self.__Context.set_source_rgb(0,0,0)
 		self.__Context.fill_preserve()
-		self.__Context.set_source_rgb(0,0,0)
+		#self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
 
 		layout         = self.create_pango_layout(self.__Text)
@@ -242,6 +256,7 @@ class Display(gtk.DrawingArea):
 
 		self.__Context.move_to(((w - fontw) / 2), ((fonth + 33) / 2))
 		layout.set_font_description(pango.FontDescription('Sans Serif 8'))
+		self.__Context.set_source_rgb(tcolor.red*0.00001,tcolor.green*0.00001,tcolor.blue*0.00001)
 		self.__Context.update_layout(layout)
 		self.__Context.show_layout(layout)
 

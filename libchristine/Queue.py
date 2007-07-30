@@ -59,6 +59,7 @@ class queue(GtkMisc,gtk.DrawingArea):
 		gtk.DrawingArea.__init__(self)
 		GtkMisc.__init__(self)
 		self.__Share = Share()
+		self.__Tagger= Tagger()
 		self.iters = {}
 		#self.discoverer = Discoverer()
 		#self.discoverer.Bus.add_watch(self.message_handler)
@@ -93,32 +94,35 @@ class queue(GtkMisc,gtk.DrawingArea):
 			
 	def add(self,file,prepend=False):
 		self.file = file
-		if not os.path.isfile(file):
-			return False
+		#if not os.path.isfile(file):
+		#	return False
 		model = self.model
 		if prepend:
 			iter = model.prepend()
 		else:
 			iter = model.append()
-		try:
-			tagger = Tagger(file)
-			tags = tagger.readTags()
-		except:
-			self.emit_signal("tags-found!")
-			return True
-		name	= self.stripXmlEntities(tags["title"])
-		album	= self.stripXmlEntities(tags["album"])
-		artist	= self.stripXmlEntities(tags["artist"])
-		tn		= tags["track"]
-		if name == "":
-			n = os.path.split(self.file)[1].split(".")
-			name = ".".join([k for k in n[:-1]])
-		name = "<b><i>%s</i></b>"%name
-		name = self.stripXmlEntities(name)
-		if album !="":
-			name += "\n from <i>%s</i>"%album
-		if artist != "":
-			name += "\n by <i>%s</i>"%artist
+		if file.split(":")[0] == "file" or \
+				os.path.isfile(file):
+			try:
+				tags = self.__Tagger.readTags(file)
+			except:
+				self.emit_signal("tags-found!")
+				return True
+			name	= self.strip_XML_entities(tags["title"])
+			album	= self.strip_XML_entities(tags["album"])
+			artist	= self.strip_XML_entities(tags["artist"])
+			tn		= tags["track"]
+			if name == "":
+				n = os.path.split(self.file)[1].split(".")
+				name = ".".join([k for k in n[:-1]])
+			name = "<b><i>%s</i></b>"%name
+			name = self.strip_XML_entities(name)
+			if album !="":
+				name += "\n from <i>%s</i>"%album
+			if artist != "":
+				name += "\n by <i>%s</i>"%artist
+		else:
+			name = file
 		model.set(iter,
 					PATH,file,
 					NAME,name,

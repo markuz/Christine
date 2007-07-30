@@ -80,6 +80,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.tv = self.__xml["treeview"]
 		self.library_lib = lib_library("music")
 		self.gen_model()
+		self.model.connect("row-changed",self.__rowChanged)
 		filter = self.model.filter_new()
 		sort = gtk.TreeModelSort(filter)
 		self.tv.set_model(sort)
@@ -108,6 +109,51 @@ class library(GtkMisc,gtk.DrawingArea):
 		else:
 			self.model.clear()
 		self.__cgen_model()
+	
+	def __rowChanged(self,model,path,iter):
+		'''
+		Handle the row changed stuff
+		'''
+		#The filename is the key in the self.library dictionary
+		a = [filename,
+		name,
+		artist,
+		album,
+		track_number,
+		path,
+		tipo,
+		pc,
+		duration,
+		genre] = model.get(iter,PATH,
+				    NAME,
+					ARTIST,
+					ALBUM,
+					TN,
+					PATH,
+					TYPE,
+					PLAY_COUNT,
+					TIME,
+					GENRE)
+		if filename == None: 
+			return True
+		a = [k for k in a]
+		for i in range(len(a)):
+			if a[i] == None:
+				if i in [4,8]:
+					a[i] = 0
+				else:
+					a[i] = ""
+		self.library_lib[a[0]] = {"name":a[1],
+				"type":a[6],"artist":a[2],
+				"album":a[3],"track_number":a[4],
+				"play_count":a[7],
+				"duration":a[8],
+				"genre":a[9]}
+		for i in self.library_lib[filename].keys():
+			if self.library_lib[filename][i] == None:
+				print filename
+				sys.exit(-1)
+
 
 	def __cgen_model(self):
 		append = self.model.append
@@ -270,9 +316,6 @@ class library(GtkMisc,gtk.DrawingArea):
 		'''
 		Save the current library
 		'''
-		self.library_lib.clear()
-		self.append = self.library_lib.append
-		self.model.foreach(self.prepare_for_disk)
 		self.library_lib.save()
 		
 	#pdb.set_trace()
