@@ -467,7 +467,7 @@ class Christine(GtkMisc):
 		# if it exists then set it in the "backend/last_played"
 		# entry in gconf to be able to select it in the next
 		# christine start-up (and other functions) and
-		if (self.__IterCurrentPlaying != None):
+		if (self.__IterCurrentPlaying != None and os.path.isfile(filename)):
 			count = self.__LibraryNaturalModel.get_value(self.__IterCurrentPlaying, PLAY_COUNT)
 			self.__LibraryNaturalModel.set(self.__IterCurrentPlaying, PLAY_COUNT, count + 1)
 			self.__IterNatural = self.__IterCurrentPlaying
