@@ -27,10 +27,14 @@
 import gtk.glade
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
-from libchristine.GtkMisc import *
-import libchristine.ChristineDefinitions as ChristineDefinitions
+from libchristine.GtkMisc import glade_xml
 import sys
 
+# global PATH to share files required
+if "--devel" in sys.argv:
+	SHARE_PATH = os.path.join("./")
+else:
+	SHARE_PATH = os.path.join('@datadir@', 'christine')
 
 #
 # Share class manager for images, glade 
@@ -38,7 +42,6 @@ import sys
 #
 # @author Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @since 0.4
-
 class Share(Singleton):
 	"""
 	Share class manager for images, glade 
@@ -67,8 +70,11 @@ class Share(Singleton):
 		"""
 		self.setName('Share')
 
-		self.__PathTemplate = os.path.join(ChristineDefinitions.SHARE_PATH, 'gui')
+		self.__PathTemplate = os.path.join(SHARE_PATH, 'gui')
 		self.__PathPixmap   = os.path.join(self.__PathTemplate, 'pixmaps')
+		#self.__Pixmaps, used to store a pixmap. if it is here then reuse it
+		#instead of creating another one from the same faile
+		self.__Pixmaps = {}
 	
 	#
 	# Gets glade template
@@ -83,7 +89,7 @@ class Share(Singleton):
 			file = ''.join([file, '.glade'])
 			if (isFile(os.path.join(self.__PathTemplate, file))):
 				return glade_xml(os.path.join(self.__PathTemplate, file),root)
-
+		print 'Warning: File %s was not found'%(os.path.join(self.__PathTemplate, file))
 		return None
 	
 	#
@@ -113,9 +119,17 @@ class Share(Singleton):
 		Gets image from pixbuf
 		"""
 		if ((not isNull(file)) or (isStringEmpty(name))):
-			if (isFile(os.path.join(self.__PathPixmap, name + '.png'))):
-				return gtk.gdk.pixbuf_new_from_file(os.path.join(self.__PathPixmap, name + '.png'))
-			elif (isFile(os.path.join(self.__PathPixmap, name + '.svg'))):
-				return gtk.gdk.pixbuf_new_from_file(os.path.join(self.__PathPixmap, name + '.svg'))
-
+			names = []
+			for i in ['.png','.svg']:
+				names.append(os.path.join(self.__PathPixmap, name + i))
+			for i in names:				
+				if (isFile(i)):
+					if self.__Pixmaps.has_key(i):
+						print 'returning %s'%i
+						return self.__Pixmaps[i]
+					else:
+						pixmap = gtk.gdk.pixbuf_new_from_file(i)
+						self.__Pixmaps[i] = pixmap
+						return pixmap
+		print 'Warning, none of this files \n%s\n where found'%repr(names)
 		return None

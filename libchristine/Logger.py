@@ -31,7 +31,7 @@ import os
 import gobject
 
 from libchristine.Validator import *
-from libchristine.GtkMisc import *
+from libchristine.GtkMisc import GtkMisc
 from libchristine.pattern.Singleton import Singleton
 
 

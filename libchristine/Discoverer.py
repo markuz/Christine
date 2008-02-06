@@ -34,14 +34,18 @@ import gst.interfaces
 from libchristine.GtkMisc import *
 from libchristine.GstBase import *
 from libchristine.Validator import *
-from libchristine.Preferences import Preferences
+from libchristine.ChristineGConf import *
 
-class Discoverer(gtk.DrawingArea,Preferences):
+class Discoverer(gtk.DrawingArea, ChristineGConf):
+	#
+	# Constructor
+	#
+	# @return void
 	def __init__(self):
 		"""
 		Constructor
 		"""
-		Preferences.__init__(self)
+		ChristineGConf.__init__(self)
 		self.__Discoverer = gst.element_factory_make('playbin')
 		self.__VideoSink  = gst.element_factory_make('fakesink')
 

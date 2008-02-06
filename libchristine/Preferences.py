@@ -25,20 +25,12 @@
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 #from libchristine.ChristineLibrary import *
-
-
-
-import os
-
-from libchristine.GtkMisc import *
+from libchristine.GtkMisc import GtkMisc
 from libchristine.Translator import *
-from libchristine.Share import *
+from libchristine.Share import Share
 from libchristine.Validator import *
-from libchristine.ChristineObject import ChristineObject
-from libchristine.Dispatcher import Dispatcher 
-from libchristine import Storage
-
-
+from libchristine.ChristineGConf import ChristineGConf
+import gtk
 #
 # Preferences gtk dialog
 #
@@ -117,7 +109,7 @@ class guiPreferences(GtkMisc):
 		"""
 		Callback when cursor change
 		"""
-		self.__FModel.setValue(self.__FModel.get_iter(path), 0, value)
+		self.__FModel.set_value(self.__FModel.get_iter(path), 0, value)
 		self.__saveFModel()
 
 	#
@@ -247,43 +239,3 @@ class guiPreferences(GtkMisc):
 		self.__LibNotify = self.XML['pynotify']
 		self.__LibNotify.set_active(self.__GConf.getBool('ui/show_pynotify'))
 		self.__LibNotify.connect('toggled',self.__GConf.toggle,'ui/show_pynotify')
-
-class Preferences(ChristineObject):
-	'''
-	Preferences main interface. (not Gui Interface)
-	This object will handle all preferences storage
-	and notifications.
-	'''
-	def __init__(self):
-		'''
-		Constructor
-		'''
-		self.__dispatcher = Dispatcher()
-		if os.environ.has_key("CHRISTINE_PSTORAGE"):
-			module = self.__dispatcher.Import("libchristine.Storage",os.environ["CHRISTINE_PSTORAGE"])
-			handler = getattr(module,os.environ["CHRISTINE_PSTORAGE"])()
-			if handler:
-				self.__Handler = self.__grabAttr(handler)
-			else:
-				self.__Handler = self.__defaultHandler()
-		else:
-			self.__Handler = self.__defaultHandler()
-	
-	def __defaultHandler(self):
-		'''
-		Creates an instance of the default handler
-		'''
-		module = self.__dispatcher.Import("libchristine.Storage","ChristineGConf")
-		cla = getattr(module,"ChristineGConf")()
-		return self.__grabAttr(cla)
-	
-	def __grabAttr(self,cla):
-		'''
-		Grab all data from the instance and make them available
-		via this class.
-		@param cla: Class instance
-		'''
-		for i in dir(cla):
-			newkey = i.replace("_ChristineGConf_","_Preferences_")
-			self.__dict__[newkey] = getattr(cla,i)
-		return self

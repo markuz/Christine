@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: latin-1 -*-
 #
 # This file is part of the Christine project
 #
@@ -32,18 +32,18 @@ import cairo
 import gst
 import gst.interfaces
 
-from libchristine.GtkMisc import *
+from libchristine.GtkMisc import GtkMisc,error
 from libchristine.GstBase import *
 from libchristine.Validator import *
-from libchristine.Preferences import *
-from libchristine.Logger import *
+from libchristine.ChristineGConf import ChristineGConf
+from libchristine.Logger import ChristineLogger
 
 BORDER_WIDTH = 0
 
 #
 # Player for manager play files
 #
-class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
+class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 	"""
 	Player for manage play files
 	"""
@@ -56,18 +56,31 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 		"""
 		self.__Logger = ChristineLogger()
 		GtkMisc.__init__(self)
-		Preferences.__init__(self)
+		ChristineGConf.__init__(self)
 		gtk.DrawingArea.__init__(self)
 
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
-
-
-		self.connect('destroy',      lambda x: self.VideoSink.set_xwindow_id(0L))
+		
+		self.set_property('events',
+				gtk.gdk.ENTER_NOTIFY_MASK|
+				gtk.gdk.LEAVE_NOTIFY_MASK|
+				gtk.gdk.KEY_PRESS_MASK|
+				gtk.gdk.KEY_RELEASE_MASK)
+		events = self.get_property('events')
+		self.connect('destroy',
+				lambda x: self.VideoSink.set_xwindow_id(0L))
 		self.connect('expose-event', self.exposeCallback)
+		self.connect('event', self.__eventHandler)
 
 		self.__createPlaybin()
 		gobject.timeout_add(5000, self.__checkScreenSaver)
+	
+	def __eventHandler(self,widget,event):
+		'''
+		Catch the event
+		'''
+		return False
 	
 	#
 	# Check if screensaver is active/desactive
@@ -79,7 +92,7 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 		if true, then deactivate the screensaver by resetting 
 		the idle time
 		"""
-		if (self.__ShouldShow): 
+		if self.__ShouldShow: 
 			a = os.popen('xscreensaver-command -deactivate 2&>/dev/null')
 			b = os.popen('gnome-screensaver-command -d 2&> /dev/null')
 		return True
@@ -159,7 +172,7 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
 
 		if (asink == 'alsasink'):
-			self.__AudioSink.set_property('device', 'hw:0')
+			self.__AudioSink.set_property('device', 'default')
 
 		if (gst.State(gst.STATE_PLAYING) == state):
 			self.playIt()
@@ -239,8 +252,10 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 		# GTK themes (clearlooks) don't draw it
 	
 		(x, y, w, h) = self.allocation
-		
-		self.__Context = self.window.cairo_create()
+		try:
+			self.__Context = self.window.cairo_create()
+		except:
+			return False
 
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH, 
 		                         w - 2 * BORDER_WIDTH, 
@@ -260,6 +275,7 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 		self.VideoSink.set_xwindow_id(self.window.xid)
 		if self.__ShouldShow:
 			self.show()
+		return True
 
 
 	#
@@ -278,6 +294,8 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 			self.__setState(gst.STATE_READY)
 			nfile = 'file://' + file
 			self.__elementSetProperty(self.__PlayBin,'uri', nfile)
+			if self.isVideo():
+				self.VideoSink.set_property('force-aspect-ratio', True)
 		else:
 			if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
 				self.__elementSetProperty(self.__PlayBin,'uri', file)
@@ -359,7 +377,7 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 		self.__Logger.Log("Setting visualization to %s"%repr(active))
 		if active:
 			self.__visualizationPlugin = self.__elementFactoryMake(self.getString('backend/vis-plugin'))
-			self.VideoSink.set_property('force-aspect-ratio', False)
+			self.VideoSink.set_property('force-aspect-ratio', self.isVideo())
 			self.__ShouldShow = True
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
 		else:
@@ -367,7 +385,6 @@ class Player(gtk.DrawingArea, GtkMisc, Preferences, object):
 			self.VideoSink.set_property('force-aspect-ratio', True)
 			self.__ShouldShow = False
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
-
 		return True
 
 	

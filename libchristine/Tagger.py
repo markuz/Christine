@@ -1,11 +1,15 @@
 import os
 import mutagen.mp3, mutagen.oggvorbis
+from libchristine.pattern.Singleton import Singleton
 
 class Track:
-	def __init__(self, song):
-	
+	def __init__(self,*args):
+		'''
+		Do nothing
+		'''
+		pass
+	def setSong(self, song):
 		self.Song = song
-		
 		self.Title = ""
 		self.Artist = ""
 		self.Album = ""
@@ -28,7 +32,7 @@ class Track:
 	
 	
 
-class MP3Track(Track):
+class MP3Track(Singleton,Track):
 	IDS = { "TIT2": "title",
 			"TPE1": "artist",
 			"TALB": "album",
@@ -39,6 +43,7 @@ class MP3Track(Track):
 
 	def __init__(self, *args):
 		Track.__init__(self, *args)
+	
 
 	def getTag(self, id3, t):
 		if not id3.has_key(t): return ""
@@ -47,8 +52,19 @@ class MP3Track(Track):
 		text = text.replace("\n", " ").replace("\r", " ")
 		return text
 
-	def readTags(self):
-		info = mutagen.mp3.MP3(self.Song)
+	def readTags(self,Song):
+		self.setSong(Song)
+		try:
+			info = mutagen.mp3.MP3(self.Song)
+		except :
+			self.Title = ''
+			self.Artist = ''
+			self.Album = ''
+			self.Genre = ''
+			self.Length = ''
+			self.Bitrate = ''
+			return self.createDict()
+
 		self.Length = info.info.length
 		self.Bitrate = info.info.bitrate
 		try:
@@ -81,7 +97,7 @@ class MP3Track(Track):
 
 
 
-class OGGTrack(Track):
+class OGGTrack(Singleton,Track):
 	def __init__(self, *args):
 		Track.__init__(self, *args)
 
@@ -91,7 +107,8 @@ class OGGTrack(Track):
 		except:
 			return ""
 
-	def readTags(self):
+	def readTags(self,Song):
+		self.setSong(Song)
 		try:
 			f = mutagen.oggvorbis.OggVorbis(self.Song)
 		except mutagen.oggvorbis.OggVorbisHeaderError:
@@ -113,23 +130,22 @@ class OGGTrack(Track):
 		
 		return self.createDict()  
 
-class FakeTrack(Track):
+class FakeTrack(Singleton,Track):
 	def __init__(self, *args):
 		Track.__init__(self, *args)
 
-	def readTags(self):
+	def readTags(self,song):
+		self.setSong(song)
 		return self.createDict()
 
 
-class Tagger:
-	def __init__(self, song):
+class Tagger(Singleton):
+	def readTags(self, song):
 		self.Song = song
 		if self.Song.split('.').pop().lower() == 'mp3':
-			self.Rola = MP3Track(self.Song)
+			self.Rola = MP3Track()
 		elif self.Song.split('.').pop().lower() == 'ogg':
-			self.Rola = OGGTrack(self.Song)
+			self.Rola = OGGTrack()
 		else:
-			self.Rola = FakeTrack(self.Song)
-
-	def readTags(self):
-		return self.Rola.readTags()
+			self.Rola = FakeTrack()
+		return self.Rola.readTags(self.Song)

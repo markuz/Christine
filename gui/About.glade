@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.0.3 on Thu Mar 22 20:02:02 2007 by markuz@cucusa
+<!--Generated with glade3 3.2.0 on Fri Sep 21 10:51:41 2007 by markuz@cucusa
 	Version: 3.0.1
 	Date: Mon Feb  5 12:59:47 2007
 	User: markuz
@@ -10,6 +10,7 @@
   <widget class="GtkAboutDialog" id="about">
     <property name="visible">True</property>
     <property name="destroy_with_parent">True</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
     <property name="copyright">2006 (c) Marco Antonio Islas Cruz</property>
     <property name="comments">A small and cute media player for GNOME</property>
     <property name="website">http://christine.sourceforge.net</property>
@@ -46,7 +47,7 @@ proprietary programs.
     <property name="authors">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
 Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
 Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;
-</property>
+Alejandro Ignacio Sanchez Verduzco &lt;alejandrosanchez@gmail.com&gt;</property>
     <property name="documenters">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
 Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
 Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;</property>

@@ -1,13 +1,8 @@
-SUBDIRS = libchristine \
-		  gui \
-		  po \
-		  cplugins \
-		  libchristine/pattern \
-		  libchristine/Storage
+SUBDIRS = libchristine gui po cplugins libchristine/pattern/
 
 bin_SCRIPTS = christine
 
-EXTRA_DIST = config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath mkinstalldirs m4/ChangeLog  mkinstalldirs m4/ChangeLog christine.desktop.in christine.c
+EXTRA_DIST = config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath  config.rpath mkinstalldirs m4/ChangeLog  mkinstalldirs m4/ChangeLog christine.desktop.in christine.c
 DIST_FILES = ${EXTRA_DIST}
 
 program_name = @program_name@

@@ -59,6 +59,7 @@ class Display(gtk.DrawingArea):
 		# This flag is supposed to be used to check if the
 		# display y being drawed
 		self.__Drawing = False
+		self.__HPos = 0
 
 		# Adding some events
 		self.set_property('events', gtk.gdk.EXPOSURE_MASK |
@@ -123,7 +124,7 @@ class Display(gtk.DrawingArea):
 		"""
 		Sets text
 		"""
-		self.__Text = text
+		self.__Text = text.encode('latin-1')
 
 	#
 	# Sets song
@@ -136,7 +137,10 @@ class Display(gtk.DrawingArea):
 		"""
 		if (not isString(song)):
 			raise TypeError('Paramether must be text')
-		self.__Song = song
+		try:
+			self.__Song = u'%s'%song.encode('latin-1')
+		except:
+			self.__Song = song
 
 	#
 	# Gets value
@@ -188,9 +192,14 @@ class Display(gtk.DrawingArea):
 		"""
 		style = self.get_style()
 		tcolor = style.text[0]
-		wcolor = style.base[0]
-		#print wcolor.red*0.00001,wcolor.green*0.000001,wcolor.blue*0.000001
-		#print color.red,color.green,color.blue
+		wcolor = style.bg[0]
+		br,bg,bb = ((wcolor.red*1)/65000.0, 
+				(wcolor.green*1)/65000.0, 
+				(wcolor.blue*1)/65000.0)
+
+		fr,fg,fb = ((tcolor.red*1)/65000.0,
+				(tcolor.green*1)/65000.0,
+				(tcolor.blue*1)/65000.0)
 		# Every speed improvement is really appreciated.
 		if (self.__Drawing) or (self.window == None):
 			return True
@@ -214,9 +223,9 @@ class Display(gtk.DrawingArea):
 			                     (w - (2 * BORDER_WIDTH)), 
 			                     (h - (2 * BORDER_WIDTH)))
 		
-		self.__Context.set_source_rgb(wcolor.red*0.00001, wcolor.green*0.00001, wcolor.blue*0.00001)
+		self.__Context.set_source_rgb(br,bg,bb)
 		self.__Context.fill_preserve()
-		self.__Context.set_source_rgb(tcolor.red*0.00001,tcolor.green*0.00001,tcolor.blue*0.00001)
+		self.__Context.set_source_rgb(fr,fg,fb)
 		#self.__Context.set_source_rgb(0, 0, 0)
 		self.__Context.stroke()
 
@@ -224,12 +233,19 @@ class Display(gtk.DrawingArea):
 		(x, y, w, h)   = self.allocation
 		self.__Layout  = self.create_pango_layout(self.__Song)
 
-		self.__Layout.set_font_description(pango.FontDescription('Sans Serif 8'))
+		self.__Layout.set_font_description(pango.
+				FontDescription('Sans Serif 8'))
 
 		(fontw, fonth) = self.__Layout.get_pixel_size()
-
-		self.__Context.move_to((w - fontw) / 2, (fonth)/2)
-		self.__Context.set_source_rgb(tcolor.red*0.00001,tcolor.green*0.00001,tcolor.blue*0.00001)
+		
+		if self.__HPos == 0 or fontw < w:
+			self.__HPos = (w - fontw) / 2
+		elif self.__HPos > (fontw-(fontw*2)):
+			self.__HPos = self.__HPos - 3
+		else:
+			self.__HPos = w + 1
+		self.__Context.move_to(self.__HPos, (fonth)/2)
+		self.__Context.set_source_rgb(fr,fg,fb)
 		self.__Context.update_layout(self.__Layout)
 		self.__Context.show_layout(self.__Layout)
 
@@ -237,7 +253,8 @@ class Display(gtk.DrawingArea):
 		width    = ((self.__W - fh) - (BORDER_WIDTH * 3))
 
 		self.__Context.set_antialias(cairo.ANTIALIAS_NONE)
-		self.__Context.rectangle(fh, ((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
+		self.__Context.rectangle(fh, 
+				((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
 		self.__Context.set_line_width(1)
 		self.__Context.set_line_cap(cairo.LINE_CAP_BUTT)
 		#self.__Context.set_source_rgb(0, 0, 0)
@@ -245,7 +262,8 @@ class Display(gtk.DrawingArea):
 		
 		width = (self.__Value * width)
 
-		self.__Context.rectangle(fh, ((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
+		self.__Context.rectangle(fh, 
+				((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
 		#self.__Context.set_source_rgb(0,0,0)
 		self.__Context.fill_preserve()
 		#self.__Context.set_source_rgb(0,0,0)
@@ -255,8 +273,9 @@ class Display(gtk.DrawingArea):
 		(fontw, fonth) = layout.get_pixel_size()
 
 		self.__Context.move_to(((w - fontw) / 2), ((fonth + 33) / 2))
-		layout.set_font_description(pango.FontDescription('Sans Serif 8'))
-		self.__Context.set_source_rgb(tcolor.red*0.00001,tcolor.green*0.00001,tcolor.blue*0.00001)
+		layout.set_font_description(
+				pango.FontDescription('Sans Serif 8'))
+		self.__Context.set_source_rgb(fr,fg,fb)
 		self.__Context.update_layout(layout)
 		self.__Context.show_layout(layout)
 

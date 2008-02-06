@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- encoding: latin-1 -*-
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -20,18 +20,19 @@
 
 import os,gtk,gobject,sys,pango
 import cPickle as pickle
-import gst, gst.interfaces
+import gst
 
-from libchristine.libs_christine import *
-from libchristine.GtkMisc import *
-from libchristine.Discoverer import *
+from libchristine.libs_christine import lib_library
+from libchristine.GtkMisc import GtkMisc, error
 from libchristine.Translator import *
 from libchristine import clibrary
-from libchristine.Preferences import *
-from libchristine.Share import *
-from libchristine.Tagger import *
-from libchristine.GstBase import *
+from libchristine.ChristineGConf import ChristineGConf
+from libchristine.Share import Share
+from libchristine.Tagger import Tagger
+from libchristine.LibraryModel import LibraryModel
+from libchristine.GstBase import CHRISTINE_VIDEO_EXT
 import time
+import sys
 
 (PATH,
 NAME,
@@ -73,42 +74,25 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.iters = {}
 		GtkMisc.__init__(self)
 		self.__Share = Share()
+		self.__Tagger = Tagger()
 		gtk.DrawingArea.__init__(self)
 		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
-		self.gconf = Preferences()
+		self.gconf = ChristineGConf()
 		self.tv = self.__xml["treeview"]
 		self.library_lib = lib_library("music")
+		self.__music = self.library_lib.get_all()
+		self.__iterator = self.__music.keys()
+		self.__iterator.sort()
 		self.gen_model()
+		self.__cgen_model()
 		self.model.connect("row-changed",self.__rowChanged)
-		filter = self.model.filter_new()
-		sort = gtk.TreeModelSort(filter)
-		self.tv.set_model(sort)
+		self.tv.set_model(self.model.getModel())		
 		self.__add_columns()
 		self.set_drag_n_drop()
-		self.blank_pix = self.genPixbuf("blank.png")
+		self.blank_pix = self.__Share.getImageFromPix("blank")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.CURRENT_ITER = self.model.get_iter_first()
-	
-	def gen_model(self,refresh=False):
-		if not refresh:
-			s = gobject.TYPE_STRING
-			i = gobject.TYPE_INT
-			self.model = gtk.ListStore(
-					gobject.TYPE_STRING, #path
-					gobject.TYPE_STRING, #name
-					gobject.TYPE_STRING, #type
-					gtk.gdk.Pixbuf, #Pix
-					gobject.TYPE_STRING, #album
-					gobject.TYPE_STRING, #artist
-					int, #Track Number
-					gobject.TYPE_STRING, #search
-					int, #play count
-					gobject.TYPE_STRING, #time
-					gobject.TYPE_STRING) #Genre
-		else:
-			self.model.clear()
-		self.__cgen_model()
 	
 	def __rowChanged(self,model,path,iter):
 		'''
@@ -135,7 +119,7 @@ class library(GtkMisc,gtk.DrawingArea):
 					TIME,
 					GENRE)
 		if filename == None: 
-			return True
+			return False
 		a = [k for k in a]
 		for i in range(len(a)):
 			if a[i] == None:
@@ -151,17 +135,121 @@ class library(GtkMisc,gtk.DrawingArea):
 				"genre":a[9]}
 		for i in self.library_lib[filename].keys():
 			if self.library_lib[filename][i] == None:
-				print filename
 				sys.exit(-1)
+	
+	def gen_model(self,refresh=False):
+		'''
+		Generates the model
+		'''
+		if not refresh:
+			i = gobject.TYPE_INT
+			self.model = LibraryModel(
+					str, #path
+					str, #name
+					str, #type
+					gtk.gdk.Pixbuf, #Pix
+					str, #album
+					str, #artist
+					int, #Track Number
+					str, #search
+					int, #play count
+					str, #time
+					str) #Genre
+		else:
+			self.model.clear()
 
+####def __cgen_model(self):
+####	append = self.model.append
+####	sounds = self.library_lib.get_all().copy()
+####	clibrary.set_create_iter(append)
+####	clibrary.set_set(self.set)
+####	#clibrary.set_events_pending(gtk.events_pending)
+####	#clibrary.set_gtk_main_iteration(gtk.main_iteration)
+####	pix = self.__Share.getImageFromPix('blank')
+####	pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
+####	self.tv.hide()
+####	clibrary.fill_model(sounds,pix)
+####	gobject.idle_add(self.__set)
+####	self.tv.show()
+####	return True
 
 	def __cgen_model(self):
+		sounds = self.library_lib.get_all().copy()
+		model = self.model
 		append = self.model.append
-		sounds = self.library_lib.get_all()
-		clibrary.set_create_iter(append)
-		clibrary.set_set(self.model.set)
-		clibrary.fill_model(sounds)
+		iterator = sounds.iteritems()
+		keys = sounds.keys()
+		keys.sort()
+		keys.reverse()
+		pix = self.__Share.getImageFromPix('blank')
+		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
+		#gobject.idle_add(self.__append,iterator, pix, len(sounds.keys()))
+
+		while self.__append(model, append, keys,sounds,pix):
+			pass
+		del sounds
+
+	def __append(self, model, append, keys,sounds,pix):
+		try:
+			path = keys.pop()
+			values = sounds[path]
+		except:
+			gobject.idle_add(self.__set)
+			return False
+		iter = append()
+		model.set(iter
+				,PATH,path,
+				NAME, values['name'],
+				SEARCH,
+				''.join((values['name'],
+					values['artist'],
+					values['album'],
+					values['type'])),
+				PIX,pix)
+		self.iters[path] = iter
 		return True
+	
+	def set(self,iter, col1, path, col2, name, col3, search):
+		try:
+			name = u'%s'%name.encode('latin-1')
+		except:
+			pass
+			#sys.exit()
+		self.model.set(iter,
+				col1, path,
+				col2, name,
+				col3, search)
+		self.iters[path] = iter
+	
+	def __set(self):
+		try:
+			key = self.__iterator.pop()
+		except IndexError:
+			#Nos salimos del ciclo
+			return False
+		data = self.__music[key]
+
+		iter = self.iters[key]
+		for i in data.keys():
+			try:
+				if type(data[i]) == type(''):
+					data[i] = u'%s'%data[i].encode('latin-1')
+			except:
+				pass
+		self.model.set(iter,
+				TYPE,data['type'],
+				ARTIST,data['artist'],
+				ALBUM ,data['album'],
+				TN,data['track_number'],
+				PLAY_COUNT ,data['play_count'],
+				TIME ,data['duration'],
+				GENRE ,data['genre'],
+				)
+		time.sleep(0.001)
+		del iter
+		return True
+	
+
 
 	def __add_columns(self):
 		render = gtk.CellRendererText()
@@ -237,7 +325,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.gconf.notifyAdd("/apps/christine/ui/show_play_count",self.gconf.toggleVisible,play)
 		self.gconf.notifyAdd("/apps/christine/ui/show_length",self.gconf.toggleVisible,length)
 		self.gconf.notifyAdd("/apps/christine/ui/show_genre",self.gconf.toggleVisible,genre)
-		self.discoverer = Discoverer()
+		#self.discoverer = Discoverer()
 
 	def add(self,file,prepend=False):
 		if type(file) == type(()):
@@ -252,8 +340,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		if type(name) == type(()):
 			name = name[0]
 		################################
-		tagger = Tagger(file)
-		tags = tagger.readTags()
+		tags = self.__Tagger.readTags(file)
 
 		name = self.model.get_value(iter,NAME)
 		if name == os.path.split(file):
@@ -288,10 +375,10 @@ class library(GtkMisc,gtk.DrawingArea):
 
 
 	def stream_length(self,widget=None,n=1):
-		if n==1:
-			d = self.discoverer
-		else:
-			d = self.discoverer2
+		#if n==1:
+		#	d = self.discoverer
+		#else:
+		#	d = self.discoverer2
 		try: 
 			total = d.query_duration(gst.FORMAT_TIME)[0]
 			ts = total/gst.SECOND
@@ -318,35 +405,8 @@ class library(GtkMisc,gtk.DrawingArea):
 		'''
 		self.library_lib.save()
 		
-	#pdb.set_trace()
-	def prepare_for_disk(self,model,path,iter):
-		(name,
-		artist,
-		album,
-		track_number,
-		path,
-		type,
-		pc,
-		duration,
-		genre) = model.get(iter,NAME,
-					ARTIST,
-					ALBUM,
-					TN,
-					PATH,
-					TYPE,
-					PLAY_COUNT,
-					TIME,
-					GENRE)
-		self.append(path,{"name":name,
-				"type":type,"artist":artist,
-				"album":album,"track_number":track_number,
-				"play_count":pc,
-				"duration":duration,
-				"genre":genre})
-		
-
 	def key_press_handler(self,treeview,event):
-		if event.keyval == 65535:
+		if event.keyval == gtk.gdk.keyval_from_name('Delete'):
 			selection = treeview.get_selection()
 			model,iter = selection.get_selected()
 			name = model.get_value(iter,NAME)
@@ -354,6 +414,13 @@ class library(GtkMisc,gtk.DrawingArea):
 			self.library_lib.remove(name)
 			self.save()
 			
+	def Exists(self,filename):
+		'''
+		Checks if the filename exits in
+		the library
+		'''
+		result = filename in self.library_lib.keys()
+		return result
 	
 	# Need some help in the next functions
 	# They need to be retouched to work fine.
@@ -415,13 +482,13 @@ class library(GtkMisc,gtk.DrawingArea):
 				if file[:7] == "file://":
 					file = file[7:].replace("%20"," ")
 				self.add(file)
-		return True
+		return True 
 
 
 	def delete_from_disk(self,iter):
-		dialog = glade_xml("delete_file_from_disk_dialog.glade")["dialog"]
+		dialog = self.__Share.getTemplate("deleteFileFromDisk")["dialog"]
 		response = dialog.run()
-		path = self.model.get_value(iter,PATH)
+		path = self.model.getValue(iter,PATH)
 		if response == -5:
 			try:
 				os.unlink(path)
@@ -433,5 +500,8 @@ class library(GtkMisc,gtk.DrawingArea):
 	
 	def clear(self):
 		self.model.clear()
+		self.library_lib.clear()
 		self.save()
+
+
 

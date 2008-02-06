@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: latin-1 -*-
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -18,22 +18,18 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-#import pygst; pygst.require("0.10")
-import os,gtk,gobject,sys
+import os
 import cPickle as pickle
-#import gst
-#import gst.interfaces
+from libchristine.Share import SHARE_PATH
+from libchristine.GstBase import wdir
 
-from libchristine.GtkMisc import *
-from libchristine.GstBase import *
-import libchristine.ChristineDefinitions as ChristineDefinitions
+import thread
 
 class sanity:
 	'''
 		Make all the sanity checks
 	'''
 	def __init__(self):
-		wdir = ChristineDefinitions.USERDIR
 		self.__check_christine_dir()
 		self.__check_dir(os.path.join(wdir,"sources"))
 		self.__check_dir(os.path.join(wdir,"uplugins"))
@@ -42,7 +38,7 @@ class sanity:
 				f.write("#python")
 				f.close()
 		if os.getgid() == 0:
-			self.__check_dir(os.path.join(ChristineDefinitions.SHARE_PATH,"cplugins"))
+			self.__check_dir(os.path.join("@datadir@","christine","cplugins"))
 
 	def __check_christine_dir(self):
 		if not os.path.exists(wdir):
@@ -128,3 +124,27 @@ class lib_library(object):
 			if self.__files[i]["type"] == "video":
 				a[i] = self.__files[i]
 		return a
+
+
+#class STDERR(Singleton):
+####def __init__(self):
+####	'''
+####	Constructor
+####	'''
+####	self.__f = open('/tmp/christine-%s'%os.environ['USER'],'w')
+####	sys.stdout = self.__f
+
+####	gobject.timeout_add(500,self.__checker)
+####
+####def __checker(self):
+####	'''
+####	Checa el contenido del error estandard
+####	'''
+####	txt = self.__f.read()
+####	print 'txt>>',(txt,)
+####	error(txt)
+####	return True
+
+
+
+

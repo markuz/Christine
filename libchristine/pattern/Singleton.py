@@ -21,6 +21,7 @@
 # @category  Pattern
 # @package   Singleton
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
+# @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 # @version   $Id$
@@ -44,11 +45,22 @@ class Singleton(object):
 	#
 	# callback
 	#
-	def __new__(child):
+	def __new__(child,*args):
 		if (not child.__Instance):
-			child.__Instance = super(Singleton, child).__new__(child)
+			child.__Instance = super(Singleton, child).__new__(child,*args)
+		else:
+			child.__init__ = child.__doNothing
 		
 		return child.__Instance
+
+
+	def __doNothing(child,*args):
+		'''
+		This method do nothing. is used to override the __init__ method
+		and then, do not re-declare values that may be declared at first
+		use of __init__ (When no instance was made).
+		'''
+		pass
 
 	#
 	# Sets name of the child

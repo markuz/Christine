@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.0.3 on Thu Mar 22 20:21:13 2007 by markuz@cucusa
+<!--Generated with glade3 3.2.0 on Tue Aug 21 02:58:18 2007 by nibblesmx@Lappy
 	Version: 3.0.1
 	Date: Wed Dec 27 19:54:15 2006
 	User: markuz
@@ -114,7 +114,7 @@
                             <child>
                               <widget class="GtkCheckButton" id="genre">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">genre</property>
+                                <property name="label" translatable="yes">Genre</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -157,9 +157,9 @@
                             <child>
                               <widget class="GtkCheckButton" id="notification_area">
                                 <property name="visible">True</property>
+                                <property name="tooltip">Show a small icon of christine in the notification area.</property>
                                 <property name="label" translatable="yes">Show in notification area</property>
                                 <property name="draw_indicator">True</property>
-                                <property name="tooltip">Show a small icon of christine in the notification area.</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -169,9 +169,9 @@
                             <child>
                               <widget class="GtkCheckButton" id="pynotify">
                                 <property name="visible">True</property>
+                                <property name="tooltip">Popup the notification windows with the media info</property>
                                 <property name="label" translatable="yes">Use notification windows</property>
                                 <property name="draw_indicator">True</property>
-                                <property name="tooltip">Popup the notification windows with the media info</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -374,7 +374,7 @@ xvimagesink</property>
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">gtk-add</property>
                                 <property name="use_stock">True</property>
-                                <signal name="clicked" handler="add_extension"/>
+                                <signal name="clicked" handler="addExtension"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -386,7 +386,7 @@ xvimagesink</property>
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">gtk-delete</property>
                                 <property name="use_stock">True</property>
-                                <signal name="clicked" handler="remove_extension"/>
+                                <signal name="clicked" handler="removeExtension"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>

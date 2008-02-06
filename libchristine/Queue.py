@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: latin-1 -*-
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -20,14 +20,14 @@
 
 import os,gtk,gobject,sys,pango
 import cPickle as pickle
-import gst, gst.interfaces
-from libchristine.libs_christine import *
-from libchristine.GtkMisc import *
-from libchristine.Discoverer import *
+#import gst, gst.interfaces
+from libchristine.libs_christine import lib_library
+from libchristine.GtkMisc import GtkMisc
+#from libchristine.Discoverer import *
 from libchristine.Translator import *
-from libchristine.Share import *
-from libchristine.Tagger import *
-from libchristine import clibrary
+from libchristine.Share import Share
+from libchristine.Tagger import Tagger
+#from libchristine import clibrary
 #import pdb
 
 (PATH,
@@ -61,6 +61,7 @@ class queue(GtkMisc,gtk.DrawingArea):
 		self.__Share = Share()
 		self.__Tagger= Tagger()
 		self.iters = {}
+		self.files = []
 		#self.discoverer = Discoverer()
 		#self.discoverer.Bus.add_watch(self.message_handler)
 		self.library = lib_library("queue")
@@ -97,13 +98,21 @@ class queue(GtkMisc,gtk.DrawingArea):
 		#if not os.path.isfile(file):
 		#	return False
 		model = self.model
+		file_orig = file
+		encoding = sys.stdout.encoding
+		file = unicode(file,encoding)
+		file = file.encode('latin-1')
 		if prepend:
 			iter = model.prepend()
+			self.files.insert(0,file_orig)
 		else:
 			iter = model.append()
+			self.files.append(file_orig)
 		if file.split(":")[0] == "file" or \
-				os.path.isfile(file):
+				os.path.isfile(file) or \
+				os.path.isfile(file.replace('%2C',',')):
 			try:
+				file = file.replace('%2C',',')
 				tags = self.__Tagger.readTags(file)
 			except:
 				self.emit_signal("tags-found!")

@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = christine
 PACKAGE = christine
-VERSION = 0.1rc2
+VERSION = 0.1.5
 
 SHELL = /bin/sh
 
@@ -36,12 +36,12 @@ libdir = ${exec_prefix}/lib
 DATADIRNAME = share
 itlocaledir = $(prefix)/$(DATADIRNAME)/locale
 subdir = po
-install_sh = /home/markuz/programacion/python/christine/christine/install-sh
-# Automake >= 1.8 provides mkdir -p --.
+install_sh = $(SHELL) /home/markuz/programacion/python/christine/01/christine/install-sh
+# Automake >= 1.8 provides /bin/mkdir -p.
 # Until it can be supposed, use the safe fallback:
 mkdir_p = $(install_sh) -d
 
-INSTALL = /usr/bin/ginstall -c
+INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 
 GMSGFMT = /usr/bin/msgfmt
@@ -52,7 +52,7 @@ INTLTOOL_EXTRACT = $(top_builddir)/intltool-extract
 MSGMERGE = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --dist
 GENPOT   = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --pot
 
-ALL_LINGUAS = es_ES
+ALL_LINGUAS = es_ES sv sv_FI
 
 PO_LINGUAS=$(shell if test -r $(srcdir)/LINGUAS; then grep -v "^\#" $(srcdir)/LINGUAS; fi)
 
@@ -133,7 +133,7 @@ install-data-yes: all
 dvi info tags TAGS ID:
 
 # Define this as empty until I found a useful application.
-installcheck:
+install-exec installcheck:
 
 uninstall:
 	linguas="$(USE_LINGUAS)"; \

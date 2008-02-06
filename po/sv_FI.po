@@ -1,0 +1,238 @@
+# Swedish translation for christine.
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the christine package.
+# Daniel Nylander <po@danielnylander.se>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: christine\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-08-10 20:01+0200\n"
+"PO-Revision-Date: 2007-08-14 08:17+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gui/Error.glade.h:1
+msgid "Error"
+msgstr "Fel"
+
+#: ../gui/Error.glade.h:2
+msgid "Error text"
+msgstr "Feltext"
+
+#: ../gui/FileSelector.glade.h:1
+msgid "Select your files"
+msgstr "Välj dina filer"
+
+#: ../gui/JumpTo.glade.h:1
+msgid ":"
+msgstr ":"
+
+#: ../gui/JumpTo.glade.h:2
+msgid "Jump to time"
+msgstr "Hoppa till tid"
+
+#: ../gui/Preferences.glade.h:1
+msgid "<b>Allowed Files</b>"
+msgstr "<b>Tillåtna filer</b>"
+
+#: ../gui/Preferences.glade.h:2
+msgid "<b>Audiosink</b>"
+msgstr "<b>Ljudsink</b>"
+
+#: ../gui/Preferences.glade.h:3
+msgid "<b>Library columns</b>"
+msgstr "<b>Bibliotekskolumner</b>"
+
+#: ../gui/Preferences.glade.h:4
+msgid "<b>Notification</b>"
+msgstr "<b>Notifiering</b>"
+
+#: ../gui/Preferences.glade.h:5
+msgid "<b>Videosink</b>"
+msgstr "<b>Videosink</b>"
+
+#: ../gui/Preferences.glade.h:6
+#: ../gui/Properties.glade.h:1
+msgid "Album"
+msgstr "Album"
+
+#: ../gui/Preferences.glade.h:7
+#: ../gui/Properties.glade.h:2
+msgid "Artist"
+msgstr "Artist"
+
+#: ../gui/Preferences.glade.h:8
+msgid "Backend"
+msgstr "Bakände"
+
+#: ../gui/Preferences.glade.h:9
+msgid "Importing"
+msgstr "Importering"
+
+#: ../gui/Preferences.glade.h:10
+msgid "Length"
+msgstr "Längd"
+
+#: ../gui/Preferences.glade.h:11
+msgid "Play count"
+msgstr "Spelningar"
+
+#: ../gui/Preferences.glade.h:12
+msgid "Show in notification area"
+msgstr "Visa i notifieringsyta"
+
+#: ../gui/Preferences.glade.h:13
+#: ../gui/Properties.glade.h:12
+msgid "Track number"
+msgstr "Spårnummer"
+
+#: ../gui/Preferences.glade.h:14
+msgid "Type"
+msgstr "Typ"
+
+#: ../gui/Preferences.glade.h:15
+msgid "Use notification windows"
+msgstr "Använd notifieringsfönster"
+
+#: ../gui/Preferences.glade.h:16
+msgid "View"
+msgstr "Visa"
+
+#: ../gui/Preferences.glade.h:17
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+
+#: ../gui/Preferences.glade.h:21
+msgid "genre"
+msgstr "genre"
+
+#: ../gui/Preferences.glade.h:22
+msgid "gtk-add"
+msgstr "Lägg till"
+
+#: ../gui/Preferences.glade.h:23
+msgid "gtk-delete"
+msgstr "Ta bort"
+
+#: ../gui/Preferences.glade.h:24
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+"ximagesink\n"
+"xvimagesink"
+
+#: ../gui/Properties.glade.h:3
+msgid "Audio codec"
+msgstr "Ljudkodek"
+
+#: ../gui/Properties.glade.h:4
+msgid "Bitrate"
+msgstr "Bitfrekvens"
+
+#: ../gui/Properties.glade.h:5
+msgid "Date"
+msgstr "Datum"
+
+#: ../gui/Properties.glade.h:6
+msgid "File"
+msgstr "Fil"
+
+#: ../gui/Properties.glade.h:7
+msgid "Genre"
+msgstr "Genre"
+
+#: ../gui/Properties.glade.h:8
+msgid "Mode"
+msgstr "Läge"
+
+#: ../gui/Properties.glade.h:9
+msgid "None"
+msgstr "Ingen"
+
+#: ../gui/Properties.glade.h:10
+msgid "Properties"
+msgstr "Egenskaper"
+
+#: ../gui/Properties.glade.h:11
+msgid "Title"
+msgstr "Titel"
+
+#: ../gui/Properties.glade.h:13
+msgid "Video codec"
+msgstr "Videokodek"
+
+#: ../gui/WindowCore.glade.h:1
+msgid "Clean main List"
+msgstr "Töm huvudlista"
+
+#: ../gui/WindowCore.glade.h:2
+msgid "Find"
+msgstr "Sök"
+
+#: ../gui/addFiles.glade.h:1
+msgid "<b>Importing files</b>"
+msgstr "<b>Importerar filer</b>"
+
+#: ../gui/addFiles.glade.h:2
+msgid "Importing:"
+msgstr "Importerar:"
+
+#: ../gui/deleteFileFromDisk.glade.h:1
+msgid ""
+"Are you sure?\n"
+"This cannot be undone"
+msgstr ""
+"Är du säker?\n"
+"Det här kan inte ångras"
+
+#: ../gui/deleteFileFromDisk.glade.h:3
+#: ../gui/deleteQuestion.glade.h:3
+msgid "gtk-cancel"
+msgstr "Avbryt"
+
+#: ../gui/deleteFileFromDisk.glade.h:4
+#: ../gui/deleteQuestion.glade.h:4
+msgid "gtk-ok"
+msgstr "OK"
+
+#: ../gui/deleteQuestion.glade.h:1
+msgid ""
+"You are about to remove all your files in the Library. \n"
+"Note that this cannot be undone!"
+msgstr ""
+"Du är på väg att ta bort alla dina filer i biblioteket.\n"
+"Observera att det här kan inte ångras!"
+
+#: ../gui/directorySelector.glade.h:1
+msgid "Include subfolders"
+msgstr "Inkludera undermappar"
+
+#: ../gui/directorySelector.glade.h:2
+msgid "Select a folder"
+msgstr "Välj en mapp"
+
+#: ../gui/miniViewer.glade.h:1
+msgid "video player"
+msgstr "videospelare"
+
+#: ../gui/openRemote.glade.h:1
+msgid "Location"
+msgstr "Plats"
+
+#: ../gui/openRemote.glade.h:2
+msgid "Open Remote"
+msgstr "Öppna fjärr"
+

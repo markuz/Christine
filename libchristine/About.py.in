@@ -25,19 +25,19 @@
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
-import gtk
-import gst
-import gst.interfaces
-import random
-import sys
+#import gtk
+#import gst
+#import gst.interfaces
+#import random
+#import sys
 
-from libchristine.GtkMisc import *
-from libchristine.Share import * 
+#from libchristine.GtkMisc import *
+from libchristine.Share import Share
 
 #
 # Manage about GTK dialog
 #
-class guiAbout(GtkMisc):
+class guiAbout:
 	"""
 	Manange about GTK dialog
 	"""
@@ -49,7 +49,7 @@ class guiAbout(GtkMisc):
 		"""
 		Constructor
 		"""
-		GtkMisc.__init__(self)
+		#GtkMisc.__init__(self)
 		self.__Share = Share()
 
 		xml   = self.__Share.getTemplate('About')
@@ -59,6 +59,6 @@ class guiAbout(GtkMisc):
 		about.set_logo(pix)
 		about.set_name('@programname@')
 		about.set_version('@version@')
-		about.set_icon(self.__Share.getImageFromPix('logo.png'))
+		about.set_icon(self.__Share.getImageFromPix('logo'))
 		about.run()
 		about.destroy()

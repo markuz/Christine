@@ -1,5 +1,5 @@
-AC_INIT('christine', '0.1', markuz@gnu.org.mx)
-AM_INIT_AUTOMAKE('christine', '0.0.4-svn')
+AC_INIT('christine', '0.1.5', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.1.5')
 
 AC_CONFIG_SRCDIR(libchristine)
 AC_CONFIG_SRCDIR(gui)
@@ -42,7 +42,7 @@ done
 
 
 PROGRAM_NAME="christine"
-VERSION="0.1"
+VERSION="0.1.5"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib()"`
 
@@ -126,7 +126,7 @@ AC_SUBST(PYTHON_LIB_DIR)
 
 GETTEXT_PACKAGE=christine
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="es_ES"
+ALL_LINGUAS="es_ES sv sv_FI"
 AC_SUBST(ALL_LINGUAS)
 USE_NLS=yes
 AC_SUBST(USE_NLS)

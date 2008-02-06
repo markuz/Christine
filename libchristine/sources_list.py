@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: latin-1 -*-
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -57,7 +57,7 @@ class sources_list (gtk_misc):
 						icon = cp.get("source","icon")
 					else:
 						iconf = ""
-					pixbuf = self.genPixbuf(icon)
+					pixbuf = self.gen_pixbuf(icon)
 					pixbuf = pixbuf.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 					ltype = cp.get("source","type")
 					self.model.set(iter,LIST_NAME,fname,
