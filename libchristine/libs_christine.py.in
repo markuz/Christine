@@ -96,7 +96,6 @@ class lib_library(object):
 		Remove an item from the main dict and return True or False
 		'''
 		c = {}
-		print '<<<', key
 		if key in self.keys():
 			for i in self.keys():
 				if i != key:

@@ -397,7 +397,6 @@ class library(GtkMisc,gtk.DrawingArea):
 		Remove the selected iter from the library.
 		'''
 		key = self.model.getValue(iter,PATH)
-		print '>>>', key
 		value = self.library_lib.remove(key)
 		if value:
 			self.model.remove(iter)
