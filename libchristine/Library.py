@@ -33,6 +33,7 @@ from libchristine.LibraryModel import LibraryModel
 from libchristine.GstBase import CHRISTINE_VIDEO_EXT
 import time
 import sys
+import pdb
 
 (PATH,
 NAME,
@@ -395,9 +396,13 @@ class library(GtkMisc,gtk.DrawingArea):
 		'''
 		Remove the selected iter from the library.
 		'''
-		key = self.model.get_value(iter,PATH)
-		self.library_lib.remove(key)
-		self.model.remove(iter)
+		key = self.model.getValue(iter,PATH)
+		print '>>>', key
+		value = self.library_lib.remove(key)
+		if value:
+			self.model.remove(iter)
+		else:
+			print 'Le valio madres..'
 	
 	def save(self):
 		'''

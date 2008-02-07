@@ -31,8 +31,8 @@ class LibraryModel(gtk.ListStore):
 		'''
 		gtk.ListStore.__init__(self,*args)
 		self.__sortColumnID = (None,None)
-		self.__model = self
-		self.__filter = self.__model.filter_new()
+		#self.__model = self
+		self.__filter = self.filter_new()
 		self.__sorted = gtk.TreeModelSort(self.__filter)
 
 	def getModel(self):
@@ -44,14 +44,9 @@ class LibraryModel(gtk.ListStore):
 	def refilter(self):
 		self.__filter.refilter()
 	
-#	def append(self):
-#		return self.__model.append()
-
-#	def set(self,*args):
-#		self.__model.set(*args)
-
 	def remove(self,iter):
-		self.__model.remove()
+		iter = self.__getNaturalIter(iter)
+		gtk.ListStore.remove(self,iter)
 	
 	def getValue(self,iter,column):
 		niter = self.__getNaturalIter(iter)

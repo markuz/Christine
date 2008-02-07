@@ -92,15 +92,18 @@ class lib_library(object):
 		self.__files.clear()
 	
 	def remove(self,key):
+		'''
+		Remove an item from the main dict and return True or False
+		'''
 		c = {}
+		print '<<<', key
 		if key in self.keys():
 			for i in self.keys():
 				if i != key:
 					c[i]= self.__files[i]
 			self.__files = c.copy()
-		else:
-			pass
-	
+			return True
+		return False
 	def get_type(self,file):
 		ext = file.split(".").pop()
 		if ext in sound:
