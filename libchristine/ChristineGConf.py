@@ -28,8 +28,7 @@ import gconf
 import gtk
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
-from libchristine.Logger import *
-
+import logging
 #
 # GConf manager
 #
@@ -45,7 +44,7 @@ class ChristineGConf(Singleton):
 		Constructor
 		"""
 		
-		self.__Logger = ChristineLogger()
+		self.__Logger = logging.getLogger('ChristineGConf')
 
 		self.setName('ChristineGConf')
 
@@ -203,7 +202,7 @@ class ChristineGConf(Singleton):
 		"""
 		Sets value from a key
 		"""
-		self.__Logger.Log("Setting value %s to key %s"%(repr(value),key))
+		self.__Logger.info("Setting value %s to key %s"%(repr(value),key))
 		if (isInteger(value)):
 			self.__GConf.set_int(os.path.join(self.__Directory, key), value)
 		elif (isString(value)):
@@ -213,8 +212,8 @@ class ChristineGConf(Singleton):
 		elif (isFloat(value)):
 			self.__GConf.set_float(os.path.join(self.__Directory, key), value)
 		else:
-			msg = "Error: value is not int, bool or string: %s" % value
-			self.__Logger.Log(msg)
+			msg = "Value is not int, bool or string: %s" % value
+			self.__Logger.error(msg)
 			raise TypeError(msg)
 
 

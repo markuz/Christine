@@ -61,7 +61,8 @@ from libchristine.Display import Display
 #from libchristine.Plugins import *
 from libchristine.Share import SHARE_PATH, Share
 from libchristine.ChristineGConf import ChristineGConf
-from libchristine.Logger import ChristineLogger
+#from libchristine.Logger import ChristineLogger
+import logging
 
 
 #from dbus.mainloop.glib import DBusGMainLoop
@@ -96,8 +97,7 @@ class Christine(GtkMisc):
 		initialize the gnome ui client, create the XML interface descriptor,
 		initialize class variables and create some timeouts calls
 		"""
-		self.__Logger = ChristineLogger()
-		self.__Logger.Log("Starting Christine")
+		self.__Logger = logging.getLogger('Christine')
 		GtkMisc.__init__(self)
 #		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
@@ -722,7 +722,7 @@ class Christine(GtkMisc):
 
 				self.__IsFullScreen = True
 			else:
-				self.__Logger.Log('WARNING: Full screen with no visualization')
+				self.__Logger.warning('Full screen with no visualization')
 				self.__Window.fullscreen()
 				self.__IsFullScreen = True
 		else: 

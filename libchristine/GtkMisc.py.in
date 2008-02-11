@@ -25,6 +25,7 @@ import gobject
 import gconf
 import os.path
 import gtk.glade
+import logging
 
 class glade_xml:
 	def __init__(self,file,root=None):
@@ -51,6 +52,7 @@ class glade_xml:
 
 class GtkMisc:
 	def __init__(self):
+		self.__Logger = logging.getLoger('GtkMisc')
 		if os.path.isdir(os.path.join(os.getcwd(),"./gui/pixmaps/")):
 			self.wdir = os.path.join(os.getcwd(),"./gui/pixmaps/")
 		else:

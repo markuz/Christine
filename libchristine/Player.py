@@ -36,7 +36,7 @@ from libchristine.GtkMisc import GtkMisc,error
 from libchristine.GstBase import *
 from libchristine.Validator import *
 from libchristine.ChristineGConf import ChristineGConf
-from libchristine.Logger import ChristineLogger
+import logging
 
 BORDER_WIDTH = 0
 
@@ -54,7 +54,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		 Constructor
 		"""
-		self.__Logger = ChristineLogger()
+		self.__Logger = logging.getLogger('Player')
 		GtkMisc.__init__(self)
 		ChristineGConf.__init__(self)
 		gtk.DrawingArea.__init__(self)
@@ -105,7 +105,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Create the playbin
 		"""
-		self.__Logger.Log("Creating the Player")
+		self.__Logger.info("Creating the Player")
 		self.__PlayBin = self.__elementFactoryMake('playbin')
 		self.__elementSetProperty(self.__PlayBin,'delay', GST_DELAY)
 
@@ -142,7 +142,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Connect
 		"""
-		self.__Logger.Log("Connecting sinks")
+		self.__Logger.info("Connecting sinks")
 		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
 
@@ -154,7 +154,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Updates audio sink
 		"""
-		self.__Logger.Log("__updateAudioSink")
+		self.__Logger.info("__updateAudioSink")
 		state = self.getState()[1]
 		self.__AudioSinkPack = self.__elementFactoryMake('bin')
 
@@ -221,7 +221,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		@param element: element to be created (str)
 		'''
-		self.__Logger.Log("creatign a gst element %s"%element)
+		self.__Logger.info("creatign a gst element %s"%element)
 		return gst.element_factory_make(element)
 
 	def __elementSetProperty(self,element,property,value):
@@ -232,7 +232,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		@param property: string Property
 		@param value: property value
 		'''
-		self.__Logger.Log("setting property '%s' with value '%s 'for element '%s'"%(property,repr(value),repr(element)))
+		self.__Logger.info("setting property '%s' with value '%s 'for element '%s'"%(property,repr(value),repr(element)))
 		element.set_property(property,value)
 	
 	def emitExpose(self):
@@ -362,7 +362,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		@param: state: gst.STATE
 		'''
-		self.__Logger.Log("Setting the state of the Playbin to %s"%repr(state))
+		self.__Logger.info("Setting the state of the Playbin to %s"%repr(state))
 		self.__PlayBin.set_state(state)
 	
 	#
@@ -374,7 +374,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Sets visualization active or desactive
 		"""
-		self.__Logger.Log("Setting visualization to %s"%repr(active))
+		self.__Logger.info("Setting visualization to %s"%repr(active))
 		if active:
 			self.__visualizationPlugin = self.__elementFactoryMake(self.getString('backend/vis-plugin'))
 			self.VideoSink.set_property('force-aspect-ratio', self.isVideo())
@@ -397,7 +397,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			volume = 0.0
 		elif (volume > 1):
 			volume = 1.0
-		self.__Logger.Log("Setting volme to %f"%volume)
+		self.__Logger.info("Setting volme to %f"%volume)
 		self.__elementSetProperty(self.__PlayBin,'volume', volume)
 
 	#
