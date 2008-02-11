@@ -52,7 +52,7 @@ class glade_xml:
 
 class GtkMisc:
 	def __init__(self):
-		self.__Logger = logging.getLoger('GtkMisc')
+		self.__Logger = logging.getLogger('GtkMisc')
 		if os.path.isdir(os.path.join(os.getcwd(),"./gui/pixmaps/")):
 			self.wdir = os.path.join(os.getcwd(),"./gui/pixmaps/")
 		else:

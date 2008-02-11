@@ -19,7 +19,6 @@ Queue.py \
 Validator.py \
 ChristineGConf.py \
 Tagger.py \
-Logger.py \
 LibraryModel.py \
 clibrary.so
 
