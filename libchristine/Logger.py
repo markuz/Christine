@@ -33,6 +33,7 @@ import gobject
 from libchristine.Validator import *
 from libchristine.GtkMisc import GtkMisc
 from libchristine.pattern.Singleton import Singleton
+import logging
 
 
 class ChristineLogger(Singleton,GtkMisc):
@@ -43,11 +44,13 @@ class ChristineLogger(Singleton,GtkMisc):
 		'''
 		Contructor
 		'''
+		self.__logger = logging.getLogger('ChristineLogger')
 		GtkMisc.__init__(self)
 		self.__logs = []
 		gobject.timeout_add(1000,self.__save)
 	
 	def Log(self,text):
+		self.__logger.warning('This method is deprecated and should not be used')
 		if not isString(text) or isStringEmpty(text):
 			raise TypeError("First argument must be a string, got %s"%type(text))
 		text = time.ctime()+" "+text
