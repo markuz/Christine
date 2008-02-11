@@ -36,9 +36,6 @@ import gtk.gdk
 import pygst; pygst.require('0.10')
 import gst.interfaces
 import gobject
-import pdb
-#import dbus
-#import dbus.service
 from libchristine.Translator import *
 from libchristine.GtkMisc import GtkMisc, error
 from libchristine.Library import library
@@ -58,19 +55,11 @@ from libchristine.Preferences import guiPreferences
 from libchristine.About import guiAbout
 from libchristine.Player import Player
 from libchristine.Display import Display
-#from libchristine.Plugins import *
 from libchristine.Share import SHARE_PATH, Share
 from libchristine.ChristineGConf import ChristineGConf
-#from libchristine.Logger import ChristineLogger
 import logging
+import webbrowser
 
-
-#from dbus.mainloop.glib import DBusGMainLoop
-
-#DBusGMainLoop(set_as_default=True)
-
-#SYSTEM_BUS = dbus.SystemBus()
-#SYSTEM_BUS = dbus.SessionBus()
 
 try:
 	import pynotify
@@ -99,7 +88,6 @@ class Christine(GtkMisc):
 		"""
 		self.__Logger = logging.getLogger('Christine')
 		GtkMisc.__init__(self)
-#		dbus.service.Object.__init__(self,SYSTEM_BUS,"/org/christine")
 
 		self.__Share   = Share()
 		self.__GConf   = ChristineGConf()
@@ -299,6 +287,11 @@ class Christine(GtkMisc):
 
 		self.__MenuItemSmallView.set_active(self.__GConf.getBool('ui/small_view'))
 		self.toggleViewSmall(self.__MenuItemSmallView)
+
+		translateMenuItem = self.__XML['translateThisApp']
+		URL = 'https://translations.launchpad.net/christine/0.1/'
+		translateMenuItem.connect('activate', lambda widget: webbrowser.open(URL))
+
 
 		self.__HBoxToolBoxContainer = self.__XML['HBoxToolBoxContainer']
 		self.__HBoxToolBoxContainer.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
@@ -540,7 +533,6 @@ class Christine(GtkMisc):
 		Set the location in the player and
 		perform some other required actions
 		"""
-		#pdb.set_trace()
 ####	if not os.path.isfile(filename):
 ####		t = Translator()
 ####		error(t.parse("File not found"))
