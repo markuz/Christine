@@ -29,6 +29,7 @@ from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.GtkMisc import glade_xml
 import sys
+import logging
 
 # global PATH to share files required
 if "--devel" in sys.argv:
@@ -69,7 +70,7 @@ class Share(Singleton):
 		Constructor
 		"""
 		self.setName('Share')
-
+		self.__logger = logging.getLogger('Share')
 		self.__PathTemplate = os.path.join(SHARE_PATH, 'gui')
 		self.__PathPixmap   = os.path.join(self.__PathTemplate, 'pixmaps')
 		#self.__Pixmaps, used to store a pixmap. if it is here then reuse it
@@ -89,7 +90,7 @@ class Share(Singleton):
 			file = ''.join([file, '.glade'])
 			if (isFile(os.path.join(self.__PathTemplate, file))):
 				return glade_xml(os.path.join(self.__PathTemplate, file),root)
-		print 'Warning: File %s was not found'%(os.path.join(self.__PathTemplate, file))
+		self.__logger.warning('File %s was not found'%(os.path.join(self.__PathTemplate, file)))
 		return None
 	
 	#
@@ -125,11 +126,10 @@ class Share(Singleton):
 			for i in names:				
 				if (isFile(i)):
 					if self.__Pixmaps.has_key(i):
-						print 'returning %s'%i
 						return self.__Pixmaps[i]
 					else:
 						pixmap = gtk.gdk.pixbuf_new_from_file(i)
 						self.__Pixmaps[i] = pixmap
 						return pixmap
-		print 'Warning, none of this files \n%s\n where found'%repr(names)
+		self.__logger.warning('None of this files \n%s\n where found'%repr(names))
 		return None
