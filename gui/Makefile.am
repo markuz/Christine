@@ -19,7 +19,9 @@ directorySelector.glade \
 iconView.glade \
 miniViewer.glade \
 openRemote.glade \
-deleteQuestion.glade
+deleteQuestion.glade \
+errorReporter.glade
+
 
 DISTFILES= Makefile.in $(scripts_DATA)
 

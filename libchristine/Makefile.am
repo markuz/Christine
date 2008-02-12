@@ -20,6 +20,7 @@ Validator.py \
 ChristineGConf.py \
 Tagger.py \
 LibraryModel.py \
+BugReport.py \
 clibrary.so
 
 DISTFILES= Makefile.in \

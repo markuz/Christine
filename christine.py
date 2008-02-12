@@ -11,7 +11,6 @@ from libchristine.Christine import *
 from libchristine.BugReport import BugReport
 a = Christine()
 try:
-	raise TypeError
 	if len(sys.argv) > 1 and not "--devel" in sys.argv:
 		for i in sys.argv[1:]:
 			if os.path.isfile(i):

@@ -34,18 +34,17 @@ f = open(pidfile,'w')\n\
 f.write('%d'%(os.getpid()))\n\
 f.close()\n\
 from libchristine.Christine import *\n\
+a = Christine()\n\
 try:\n\
-	raise TypeError('asdfasdf')\n\
 	print 'pudrete!!!!!'\n\
-	a = Christine()\n\
 	if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
 		for i in sys.argv[1:]:\n\
 			if os.path.isfile(i):\n\
 				a.Queue.add(i,prepend=True)\n\
 		a.play()\n\
-	a.runGtk()\n\
 except:\n\
    BugReport()\n\
+a.runGtk()\n\
 ";
 
 
