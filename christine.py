@@ -8,11 +8,16 @@ elements = locals()
 from libchristine.libs_christine import sanity
 sanity()
 from libchristine.Christine import *
+from libchristine.BugReport import BugReport
 a = Christine()
-if len(sys.argv) > 1 and not "--devel" in sys.argv:
-	for i in sys.argv[1:]:
-		if os.path.isfile(i):
-			a.Queue.add(i,prepend=True)
-	a.play()
-a.runGtk()
+try:
+	raise TypeError
+	if len(sys.argv) > 1 and not "--devel" in sys.argv:
+		for i in sys.argv[1:]:
+			if os.path.isfile(i):
+				a.Queue.add(i,prepend=True)
+		a.play()
+except:
+	BugReport()
 
+a.runGtk()

@@ -94,7 +94,9 @@ def isStringEmpty(value):
 	"""
 	Compare string if it is empty or not
 	"""
-	return (len(value) == 0)
+	if isinstance(value, str):
+		return (len(value) == 0)
+	return False
 
 #
 # Compare if it is a file or not

@@ -16,6 +16,7 @@ elements = locals()\n\
 lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
 from libchristine.libs_christine import sanity\n\
+from libchristine.BugReport import BugReport\n\
 sanity()\n\
 pidfile = 	os.path.join(os.environ['HOME'],\n\
 			'.christine','christine.pid')\n\
@@ -32,15 +33,19 @@ if os.path.exists(pidfile):\n\
 f = open(pidfile,'w')\n\
 f.write('%d'%(os.getpid()))\n\
 f.close()\n\
-#sys.exit()\n\
 from libchristine.Christine import *\n\
-a = Christine()\n\
-if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
-	for i in sys.argv[1:]:\n\
-		if os.path.isfile(i):\n\
-			a.Queue.add(i,prepend=True)\n\
-	a.play()\n\
-a.runGtk()\n\
+try:\n\
+	raise TypeError('asdfasdf')\n\
+	print 'pudrete!!!!!'\n\
+	a = Christine()\n\
+	if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
+		for i in sys.argv[1:]:\n\
+			if os.path.isfile(i):\n\
+				a.Queue.add(i,prepend=True)\n\
+		a.play()\n\
+	a.runGtk()\n\
+except:\n\
+   BugReport()\n\
 ";
 
 
