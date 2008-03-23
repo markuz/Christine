@@ -1,16 +1,17 @@
-# Po translation file for Christine.
-# Copyright (C) 2006 Marco Antonio Islas Cruz
-# This file is distributed under the same license as the Christine package.
-# Marco Antonio Islas Cruz <markuz@islascruz.org>, 2006.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-18 00:32-0600\n"
-"PO-Revision-Date: 2006-12-19 00:34+6\n"
-"Last-Translator: Marco Antonio Islas Cruz <markuz@islascruz.org>\n"
-"Language-Team: es <LL@li.org>\n"
+"POT-Creation-Date: 2008-03-22 19:00-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"

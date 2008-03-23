@@ -17,7 +17,7 @@
             <child>
               <widget class="GtkMenuItem" id="media_menu">
                 <property name="visible">True</property>
-                <property name="label">_Media</property>
+                <property name="label" translatable="yes">_Media</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="music1_menu">
@@ -25,7 +25,7 @@
                       <widget class="GtkImageMenuItem" id="import_file1">
                         <property name="visible">True</property>
                         <property name="tooltip">Add a file to the list</property>
-                        <property name="label">Import File</property>
+                        <property name="label" translatable="yes">Import File</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="importFile"/>
                         <accelerator key="i" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -42,7 +42,7 @@
                       <widget class="GtkImageMenuItem" id="import_folder1">
                         <property name="visible">True</property>
                         <property name="tooltip">Add a complete folder to the list</property>
-                        <property name="label">Import Folder</property>
+                        <property name="label" translatable="yes">Import Folder</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="importFolder"/>
                         <accelerator key="i" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK" signal="activate"/>
@@ -64,7 +64,7 @@
                       <widget class="GtkMenuItem" id="import_to_queue1">
                         <property name="visible">True</property>
                         <property name="tooltip">Import a file to the queue without add it to the list</property>
-                        <property name="label">Import to queue</property>
+                        <property name="label" translatable="yes">Import to queue</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="importToQueue"/>
                         <accelerator key="o" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -78,7 +78,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="open_remote1">
                         <property name="visible">True</property>
-                        <property name="label">Open remote</property>
+                        <property name="label" translatable="yes">Open remote</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="openRemote"/>
                         <accelerator key="O" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK" signal="activate"/>
@@ -93,7 +93,7 @@
                       <widget class="GtkMenuItem" id="jump_to2">
                         <property name="visible">True</property>
                         <property name="tooltip">Jump to some second on the song</property>
-                        <property name="label">Jump _to</property>
+                        <property name="label" translatable="yes">Jump _to</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="jumpTo"/>
                         <accelerator key="j" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -102,7 +102,7 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="jump1">
                         <property name="visible">True</property>
-                        <property name="label">_Jump to playing</property>
+                        <property name="label" translatable="yes">_Jump to playing</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="jumpToPlaying"/>
                         <accelerator key="j" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK" signal="activate"/>
@@ -136,7 +136,7 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="quit1">
                         <property name="visible">True</property>
-                        <property name="label">gtk-quit</property>
+                        <property name="label" translatable="yes">gtk-quit</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="quitGtk"/>
@@ -149,14 +149,14 @@
             <child>
               <widget class="GtkMenuItem" id="edit_menu">
                 <property name="visible">True</property>
-                <property name="label">_Edit</property>
+                <property name="label" translatable="yes">_Edit</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="edit1_menu">
                     <child>
                       <widget class="GtkImageMenuItem" id="find1">
                         <property name="visible">True</property>
-                        <property name="label">gtk-find</property>
+                        <property name="label" translatable="yes">gtk-find</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="onFindActivate"/>
@@ -170,7 +170,7 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="preferences1">
                         <property name="visible">True</property>
-                        <property name="label">gtk-preferences</property>
+                        <property name="label" translatable="yes">gtk-preferences</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="showGtkPreferences"/>
@@ -188,7 +188,7 @@
             <child>
               <widget class="GtkMenuItem" id="control_menu">
                 <property name="visible">True</property>
-                <property name="label">_Control</property>
+                <property name="label" translatable="yes">_Control</property>
                 <property name="use_underline">True</property>
                 <signal name="activate" handler="on_control1_activate"/>
                 <child>
@@ -196,7 +196,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="MenuItemPlay">
                         <property name="visible">True</property>
-                        <property name="label">Play</property>
+                        <property name="label" translatable="yes">Play</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="switchPlay"/>
                         <accelerator key="space" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -210,7 +210,7 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="prev1">
                         <property name="visible">True</property>
-                        <property name="label">Prev</property>
+                        <property name="label" translatable="yes">Prev</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="goPrev"/>
                         <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="activate"/>
@@ -226,7 +226,7 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="next">
                         <property name="visible">True</property>
-                        <property name="label">_Next</property>
+                        <property name="label" translatable="yes">_Next</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="goNext"/>
                         <accelerator key="Right" modifiers="GDK_MOD1_MASK" signal="activate"/>
@@ -247,7 +247,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="MenuItemShuffle">
                         <property name="visible">True</property>
-                        <property name="label">Shuffle</property>
+                        <property name="label" translatable="yes">Shuffle</property>
                         <property name="use_underline">True</property>
                         <accelerator key="R" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
@@ -255,7 +255,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="repeat">
                         <property name="visible">True</property>
-                        <property name="label">Repeat</property>
+                        <property name="label" translatable="yes">Repeat</property>
                         <property name="use_underline">True</property>
                         <accelerator key="R" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
@@ -268,7 +268,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="less_volume1">
                         <property name="visible">True</property>
-                        <property name="label">Less volume</property>
+                        <property name="label" translatable="yes">Less volume</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="decreaseVolume"/>
                         <accelerator key="minus" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -277,7 +277,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="more_volume1">
                         <property name="visible">True</property>
-                        <property name="label">More volume</property>
+                        <property name="label" translatable="yes">More volume</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="increaseVolume"/>
                         <accelerator key="plus" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -286,7 +286,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="mute1">
                         <property name="visible">True</property>
-                        <property name="label">Mute</property>
+                        <property name="label" translatable="yes">Mute</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="mute"/>
                         <accelerator key="m" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -299,7 +299,7 @@
             <child>
               <widget class="GtkMenuItem" id="view_menu">
                 <property name="visible">True</property>
-                <property name="label">_View</property>
+                <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <signal name="activate" handler="on_view1_activate"/>
                 <child>
@@ -307,7 +307,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="ViewSmallMenuItem">
                         <property name="visible">True</property>
-                        <property name="label">_Small view</property>
+                        <property name="label" translatable="yes">_Small view</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="toggleViewSmall"/>
                         <accelerator key="d" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -315,7 +315,7 @@
                     </child>
                     <child>
                       <widget class="GtkCheckMenuItem" id="browser_menuitem">
-                        <property name="label">Browser</property>
+                        <property name="label" translatable="yes">Browser</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="toggleBrowser"/>
                         <accelerator key="B" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -324,7 +324,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="ful_scren1">
                         <property name="visible">True</property>
-                        <property name="label">Full Screen</property>
+                        <property name="label" translatable="yes">Full Screen</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="toggleFullScreen"/>
                         <accelerator key="Return" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -338,7 +338,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="MenuItemVisualMode">
                         <property name="visible">True</property>
-                        <property name="label">Visualization</property>
+                        <property name="label" translatable="yes">Visualization</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="toggleVisualization"/>
                         <accelerator key="v" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -351,7 +351,7 @@
             <child>
               <widget class="GtkMenuItem" id="help_menu">
                 <property name="visible">True</property>
-                <property name="label">_Help</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="help1_menu">
@@ -366,7 +366,7 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="about1">
                         <property name="visible">True</property>
-                        <property name="label">gtk-about</property>
+                        <property name="label" translatable="yes">gtk-about</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="showGtkAbout"/>

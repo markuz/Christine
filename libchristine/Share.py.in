@@ -24,10 +24,11 @@
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-import gtk.glade
+#import gtk.glade
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.GtkMisc import glade_xml
+import gtk
 import sys
 import logging
 

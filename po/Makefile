@@ -65,7 +65,7 @@ POFILES=$(shell LINGUAS="$(USE_LINGUAS)"; for lang in $$LINGUAS; do printf "$$la
 DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(POFILES)
 EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
 
-POTFILES = \
+POTFILES = christine.pot es_Es.po\
 	../gui/about.glade \ \
 	../gui/add_files.glade \ \
 	../gui/delete_file_from_disk_dialog.glade \ \

@@ -3,9 +3,18 @@
 # little script to update po files 
 #
 
-echo "es_ES.po"
-xgettext -p po -o christine.pot --keyword=translate --keyword=N_  --from-code=Glade libchristine/*py gui/*glade
-xgettext -p po -j -o es_ES.po --keyword=translate --keyword=N_  --from-code=Glade --omit-header gui/*glade
-xgettext -p po -j -o es_ES.po  --keyword=translate --language=Python --omit-header libchristine/*py
-#echo "christine.po"
-#xgettext -p po -j -o christine.pot -l --keyword=translate --keyword=N_  libchristine/*py gui/string*
+LOCATIONS=`ls -1 --color=none libchristine/*py` 
+LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/pattern/*py`"
+LCOATIONS="$LOCATIONS `ls -1 --color=none gui/*glade`"
+
+TRANSLATIONS="christine es_ES"
+
+for i in $TRANSLATIONS; do
+	echo "$i.po"
+	if [ "x$i" == "xchristine" ]; then
+		end='pot';
+	else
+		end='po';
+	fi
+	xgettext -p po -j -o $i.$end -l --keyword=translate --keyword=_N --from-code=Glade $LOCATIONS
+done

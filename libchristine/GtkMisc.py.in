@@ -34,21 +34,21 @@ class glade_xml:
 		locale_dir = "@datadir@/locale/"
 		gtk.glade.bindtextdomain("@programname@",locale_dir)
 		gtk.glade.textdomain("@programname@")
-		self.__xml = gtk.glade.XML(file,root,None)
-		self.get_widget = self.__xml.get_widget
+		self.xml = gtk.glade.XML(file,root,None)
+		self.get_widget = self.xml.get_widget
 
 	def __getitem__(self,widget):
 		'''
 		returns the widget according to the name of the widget.
 		This lets the instance work like a dictionary
 		'''
-		return self.__xml.get_widget(widget)
+		return self.xml.get_widget(widget)
 
 	def signal_autoconnect(self,signals):
 		'''
 		Signal autoconnect wrapper.
 		'''
-		self.__xml.signal_autoconnect(signals)
+		self.xml.signal_autoconnect(signals)
 
 class GtkMisc:
 	def __init__(self):
