@@ -255,13 +255,10 @@ class Christine(GtkMisc):
 		gobject.timeout_add(500, self.checkQueue)
 
 		self.__SourcesList = sources_list()
-		viewport = gtk.Viewport()
-		viewport.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-		viewport.add(self.__SourcesList.treeview)
-		self.__VBoxList.pack_start(viewport)
+		self.__VBoxList.pack_start(self.__SourcesList.vbox)
 		self.__SourcesList.treeview.connect('row-activated', 
 				self.__srcListRowActivated)
-		viewport.show_all()
+		self.__SourcesList.vbox.show_all()
 
 		self.__ControlButton = self.__XML['control_button']
 

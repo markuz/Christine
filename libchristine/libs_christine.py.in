@@ -84,7 +84,7 @@ class lib_library(object):
 		return self.__files.keys()
 	
 	def save(self):
-		f = open(os.path.join(wdir,self.list),"w+")
+		f = open(os.path.join(wdir,'sources',self.list),"w+")
 		pickle.dump(self.__files,f)
 		f.close()
 
@@ -126,27 +126,6 @@ class lib_library(object):
 			if self.__files[i]["type"] == "video":
 				a[i] = self.__files[i]
 		return a
-
-
-#class STDERR(Singleton):
-####def __init__(self):
-####	'''
-####	Constructor
-####	'''
-####	self.__f = open('/tmp/christine-%s'%os.environ['USER'],'w')
-####	sys.stdout = self.__f
-
-####	gobject.timeout_add(500,self.__checker)
-####
-####def __checker(self):
-####	'''
-####	Checa el contenido del error estandard
-####	'''
-####	txt = self.__f.read()
-####	print 'txt>>',(txt,)
-####	error(txt)
-####	return True
-
 
 
 

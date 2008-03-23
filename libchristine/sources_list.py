@@ -20,6 +20,8 @@
 
 from libchristine.GtkMisc import *
 from libchristine.Share import Share
+from libchristine.Translator import  *
+from libchristine.libs_christine import lib_library
 import ConfigParser
 
 (LIST_NAME,
@@ -30,15 +32,24 @@ class sources_list (GtkMisc):
 	def __init__(self):
 		GtkMisc.__init__(self)
 		self.__Share = Share()
-		self.xml = self.__Share.getTemplate('TreeViewSources','treeview')
+		self.xml = self.__Share.getTemplate('SourcesList','vbox')
 		self.__gen_model()
 		self.treeview = self.xml["treeview"]
 		self.treeview.set_headers_visible(True)
 		self.treeview.set_model(self.model)
+		self.vbox = self.xml['vbox']
+		addButton = self.xml['addSource']
+		delButton = self.xml['delSource']
+
+		addButton.connect('clicked', self.__addSource)
+		delButton.connect('clicked', self.__delSource)
 		self.__append_columns()
 	
 	def __gen_model(self):
-		self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
+		if not getattr(self,'model',False):
+			self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
+		else:
+			self.model.clear()
 		p = os.path.join(os.environ["HOME"],".christine","sources")
 		files = os.listdir(p)
 		for fname in files:
@@ -64,7 +75,41 @@ class sources_list (GtkMisc):
 		column.add_attribute(pix,"pixbuf",LIST_PIXBUF)
 		self.treeview.append_column(column)
 	
+	def __addSource(self,button):
+		xml = self.__Share.getTemplate('NewSourceDialog')
+		dialog = xml['dialog']
+		entry = xml['entry']
+		response = dialog.run()
+		if response == 1:
+			fname = os.path.join(os.environ["HOME"],
+				".christine","sources",entry.get_text())
+			if os.path.exists(fname):
+				error(translate('The source already exists!'))
+				dialog.destroy()
+				return 0
+			library = lib_library(entry.get_text())
+			library.save()
+			self.__gen_model()
+
+		dialog.destroy()
 	
+	
+	def __delSource(self,button):
+		xml = self.__Share.getTemplate('genericQuestion')
+		dialog = xml['dialog']
+		label = xml['label']
+		label.set_text(translate('Are you sure\nThis cannot be undone'))
+		response = dialog.run()
+		if response == 1:
+			selection = self.treeview.get_selection()
+			model, iter = selection.get_selected()
+			if iter != None:
+				fname = model.get_value(iter, LIST_NAME)
+				os.unlink(os.path.join(os.environ["HOME"],
+					".christine","sources",fname))
+			self.__gen_model()
+
+		dialog.destroy()
 		
 
 		

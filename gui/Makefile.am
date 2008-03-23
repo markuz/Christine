@@ -20,6 +20,9 @@ iconView.glade \
 miniViewer.glade \
 openRemote.glade \
 deleteQuestion.glade \
+genericQuestion.glade \
+SourcesList.glade \
+NewSourceDialog.glade \
 errorReporter.glade
 
 
