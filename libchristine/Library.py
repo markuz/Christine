@@ -95,7 +95,8 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.__iterator.sort()
 		self.gen_model()
 		self.__cgen_model()
-		self.model.connect("row-changed",self.__rowChanged)
+		if not getattr(self,'model', False):
+			self.model.connect("row-changed",self.__rowChanged)
 		self.tv.set_model(self.model.getModel())
 	
 	def __rowChanged(self,model,path,iter):
@@ -141,7 +142,7 @@ class library(GtkMisc,gtk.DrawingArea):
 			if self.library_lib[filename][i] == None:
 				sys.exit(-1)
 	
-	def gen_model(self,refresh=False):
+	def gen_model(self):
 		'''
 		Generates the model
 		'''
@@ -166,36 +167,35 @@ class library(GtkMisc,gtk.DrawingArea):
 		sounds = self.library_lib.get_all().copy()
 		model = self.model
 		append = self.model.append
-		iterator = sounds.iteritems()
 		keys = sounds.keys()
 		keys.sort()
 		keys.reverse()
 		pix = self.__Share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-		#gobject.idle_add(self.__append,iterator, pix, len(sounds.keys()))
 
-		while self.__append(model, append, keys,sounds,pix):
-			pass
-		del sounds
+		gobject.idle_add(self.__append, model, keys, sounds, pix)
 
-	def __append(self, model, append, keys,sounds,pix):
-		try:
-			path = keys.pop()
-			values = sounds[path]
-		except:
-			gobject.idle_add(self.__set)
-			return False
-		iter = append()
-		model.set(iter
-				,PATH,path,
-				NAME, values['name'],
-				SEARCH,
-				''.join((values['name'],
-					values['artist'],
-					values['album'],
-					values['type'])),
-				PIX,pix)
-		self.iters[path] = iter
+	def __append(self, model, keys, sounds, pix):
+		for i in range(20):
+			if len(keys):
+				path = keys.pop()
+				values = sounds[path]
+			else:
+				self.__iterator.sort()
+				self.__iterator.reverse()
+				gobject.idle_add(self.__set)
+				return False
+			iter = model.append()
+			model.set(iter
+					,PATH,path,
+					NAME, values['name'],
+					SEARCH,
+					''.join((values['name'],
+						values['artist'],
+						values['album'],
+						values['type'])),
+					PIX,pix)
+			self.iters[path] = iter
 		return True
 	
 	def set(self,iter, col1, path, col2, name, col3, search):
@@ -211,31 +211,30 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.iters[path] = iter
 	
 	def __set(self):
-		try:
-			key = self.__iterator.pop()
-		except IndexError:
-			#Nos salimos del ciclo
-			return False
-		data = self.__music[key]
+		for i in range(20):
+			if len(self.__iterator):
+				key = self.__iterator.pop()
+			else:
+				return False
 
-		iter = self.iters[key]
-		for i in data.keys():
-			try:
-				if type(data[i]) == type(''):
-					data[i] = u'%s'%data[i].encode('latin-1')
-			except:
-				pass
-		self.model.set(iter,
-				TYPE,data['type'],
-				ARTIST,data['artist'],
-				ALBUM ,data['album'],
-				TN,data['track_number'],
-				PLAY_COUNT ,data['play_count'],
-				TIME ,data['duration'],
-				GENRE ,data['genre'],
-				)
-		time.sleep(0.001)
-		del iter
+			data = self.__music[key]
+			iter = self.iters[key]
+			for i in data.keys():
+				try:
+					if type(data[i]) == type(''):
+						data[i] = u'%s'%data[i].encode('latin-1')
+				except:
+					pass
+			self.model.set(iter,
+					TYPE,data['type'],
+					ARTIST,data['artist'],
+					ALBUM ,data['album'],
+					TN,data['track_number'],
+					PLAY_COUNT ,data['play_count'],
+					TIME ,data['duration'],
+					GENRE ,data['genre'],
+					)
+		time.sleep(0.005)
 		return True
 	
 

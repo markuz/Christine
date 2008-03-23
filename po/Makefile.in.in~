@@ -65,7 +65,7 @@ POFILES=$(shell LINGUAS="$(USE_LINGUAS)"; for lang in $$LINGUAS; do printf "$$la
 DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(POFILES)
 EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
 
-POTFILES = christine.pot es_Es.po\
+POTFILES = \
 # This comment gets stripped out
 
 CATALOGS=$(shell LINGUAS="$(USE_LINGUAS)"; for lang in $$LINGUAS; do printf "$$lang.gmo "; done)

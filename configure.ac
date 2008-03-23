@@ -1,5 +1,5 @@
-AC_INIT('christine', '0.1.6', 'markuz@islascruz.org')
-AM_INIT_AUTOMAKE('christine', '0.1.6')
+AC_INIT('christine', '0.1.7', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.1.7')
 
 AC_CONFIG_SRCDIR(libchristine)
 AC_CONFIG_SRCDIR(gui)
@@ -42,7 +42,7 @@ done
 
 
 PROGRAM_NAME="christine"
-VERSION="0.1.6"
+VERSION="0.1.7"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib()"`
 

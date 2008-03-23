@@ -25,18 +25,18 @@ if os.path.exists(pidfile):\n\
 	pid = f.read()\n\
 	print pid \n\
 	f.close()\n\
-	if os.path.exists(os.path.join('/','proc',pid)):\n\
-		print 'Christine is already running...'\n\
-		sys.exit(0)\n\
-	else:\n\
-		os.unlink(pidfile)\n\
+	if not \'--devel\' in sys.argv:\n\
+		if os.path.exists(os.path.join('/','proc',pid)):\n\
+			print 'Christine is already running...'\n\
+			sys.exit(0)\n\
+		else:\n\
+			os.unlink(pidfile)\n\
 f = open(pidfile,'w')\n\
 f.write('%d'%(os.getpid()))\n\
 f.close()\n\
 from libchristine.Christine import *\n\
 a = Christine()\n\
 try:\n\
-	print 'pudrete!!!!!'\n\
 	if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
 		for i in sys.argv[1:]:\n\
 			if os.path.isfile(i):\n\
