@@ -18,20 +18,22 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-from lib_christine.gtk_misc import *
+from libchristine.GtkMisc import *
+from libchristine.Share import Share
 import ConfigParser
 
 (LIST_NAME,
 LIST_TYPE,
 LIST_PIXBUF) = xrange(3)
 
-class sources_list (gtk_misc):
+class sources_list (GtkMisc):
 	def __init__(self):
-		gtk_misc.__init__(self)
-		self.xml = glade_xml("sources_treeview.glade","treeview")
+		GtkMisc.__init__(self)
+		self.__Share = Share()
+		self.xml = self.__Share.getTemplate('TreeViewSources','treeview')
 		self.__gen_model()
 		self.treeview = self.xml["treeview"]
-		self.treeview.set_headers_visible(False)
+		self.treeview.set_headers_visible(True)
 		self.treeview.set_model(self.model)
 		self.__append_columns()
 	
@@ -39,30 +41,18 @@ class sources_list (gtk_misc):
 		self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
 		p = os.path.join(os.environ["HOME"],".christine","sources")
 		files = os.listdir(p)
-		while True:
-			if len(files) == 0:
-				break # Exit loop if there is nothing in the list.
-			fname = files.pop()
+		for fname in files:
 			file = os.path.join(os.environ["HOME"],".christine","sources",fname)
 			if os.path.isfile(os.path.join(file)):
-				cp = ConfigParser.ConfigParser()
-				try:
-					cp.read(file)
-				except:
-					pass
-				if cp.has_section("source"):
-					iter = self.model.append()
-					name = cp.get("source","name")
-					if cp.has_option("source","icon"):
-						icon = cp.get("source","icon")
-					else:
-						iconf = ""
-					pixbuf = self.gen_pixbuf(icon)
-					pixbuf = pixbuf.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-					ltype = cp.get("source","type")
-					self.model.set(iter,LIST_NAME,fname,
-							LIST_TYPE,ltype,
-							LIST_PIXBUF,pixbuf)
+				icon = 'logo'
+				fname = os.path.split(file)[-1]
+				ltype = '1'
+				pixbuf = self.__Share.getImageFromPix(icon)
+				pixbuf = pixbuf.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+				iter = self.model.append()
+				self.model.set(iter,LIST_NAME,fname,
+						LIST_TYPE,ltype,
+						LIST_PIXBUF,pixbuf)
 
 	def __append_columns(self):
 		column = gtk.TreeViewColumn("Source")
@@ -73,6 +63,8 @@ class sources_list (gtk_misc):
 		column.add_attribute(text,"text",LIST_NAME)
 		column.add_attribute(pix,"pixbuf",LIST_PIXBUF)
 		self.treeview.append_column(column)
+	
+	
 		
 
 		

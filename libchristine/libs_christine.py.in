@@ -61,8 +61,8 @@ class sanity:
 class lib_library(object):
 	def __init__(self,list):
 		sanity()
-		if os.path.exists(os.path.join(wdir,list)):
-			f =	open(os.path.join(wdir,list),"r")
+		if os.path.exists(os.path.join(wdir,'sources',list)):
+			f =	open(os.path.join(wdir,'sources',list),"r")
 			self.__files = pickle.load(f)
 			f.close()
 		else:

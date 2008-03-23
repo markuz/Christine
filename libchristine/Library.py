@@ -81,19 +81,22 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.__xml.signal_autoconnect(self)
 		self.gconf = ChristineGConf()
 		self.tv = self.__xml["treeview"]
-		self.library_lib = lib_library("music")
+		self.loadLibrary('music')
+		self.__add_columns()
+		self.set_drag_n_drop()
+		self.blank_pix = self.__Share.getImageFromPix("blank")
+		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+		self.CURRENT_ITER = self.model.get_iter_first()
+	
+	def loadLibrary(self, library):
+		self.library_lib = lib_library(library)
 		self.__music = self.library_lib.get_all()
 		self.__iterator = self.__music.keys()
 		self.__iterator.sort()
 		self.gen_model()
 		self.__cgen_model()
 		self.model.connect("row-changed",self.__rowChanged)
-		self.tv.set_model(self.model.getModel())		
-		self.__add_columns()
-		self.set_drag_n_drop()
-		self.blank_pix = self.__Share.getImageFromPix("blank")
-		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		self.CURRENT_ITER = self.model.get_iter_first()
+		self.tv.set_model(self.model.getModel())
 	
 	def __rowChanged(self,model,path,iter):
 		'''
@@ -142,7 +145,7 @@ class library(GtkMisc,gtk.DrawingArea):
 		'''
 		Generates the model
 		'''
-		if not refresh:
+		if not getattr(self, 'model', False):
 			i = gobject.TYPE_INT
 			self.model = LibraryModel(
 					str, #path
@@ -158,21 +161,6 @@ class library(GtkMisc,gtk.DrawingArea):
 					str) #Genre
 		else:
 			self.model.clear()
-
-####def __cgen_model(self):
-####	append = self.model.append
-####	sounds = self.library_lib.get_all().copy()
-####	clibrary.set_create_iter(append)
-####	clibrary.set_set(self.set)
-####	#clibrary.set_events_pending(gtk.events_pending)
-####	#clibrary.set_gtk_main_iteration(gtk.main_iteration)
-####	pix = self.__Share.getImageFromPix('blank')
-####	pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-####	self.tv.hide()
-####	clibrary.fill_model(sounds,pix)
-####	gobject.idle_add(self.__set)
-####	self.tv.show()
-####	return True
 
 	def __cgen_model(self):
 		sounds = self.library_lib.get_all().copy()

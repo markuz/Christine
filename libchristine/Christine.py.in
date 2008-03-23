@@ -57,6 +57,7 @@ from libchristine.Player import Player
 from libchristine.Display import Display
 from libchristine.Share import SHARE_PATH, Share
 from libchristine.ChristineGConf import ChristineGConf
+from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_PIXBUF
 import logging
 import webbrowser
 
@@ -253,6 +254,12 @@ class Christine(GtkMisc):
 		self.__ScrolledQueue.add(self.Queue.treeview)
 		gobject.timeout_add(500, self.checkQueue)
 
+		self.__SourcesList = sources_list()
+		self.__VBoxList.pack_start(self.__SourcesList.treeview)
+		self.__SourcesList.treeview.connect('row-activated', 
+				self.__srcListRowActivated)
+		self.__SourcesList.treeview.show()
+
 		self.__ControlButton = self.__XML['control_button']
 
 		self.__MenuItemShuffle = self.__XML['MenuItemShuffle']
@@ -378,6 +385,13 @@ class Christine(GtkMisc):
 			self.__Window.hide()
 
 		self.__IsHidden = not self.__IsHidden
+
+
+	def __srcListRowActivated(self, treeview, path, column):
+		model = treeview.get_model()
+		fname = model.get_value(model.get_iter(path),
+				LIST_NAME)
+		self.__Library.loadLibrary(fname)
 
 	#
 	# Queue list key-press-event manager
