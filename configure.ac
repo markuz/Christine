@@ -126,7 +126,7 @@ AC_SUBST(PYTHON_LIB_DIR)
 
 GETTEXT_PACKAGE=christine
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="es_ES sv sv_FI"
+ALL_LINGUAS="es_ES sv sv_FI ca cs da de el en_GB eu fr hu it nl pt sv_FI sv"
 AC_SUBST(ALL_LINGUAS)
 USE_NLS=yes
 AC_SUBST(USE_NLS)

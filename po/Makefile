@@ -52,7 +52,7 @@ INTLTOOL_EXTRACT = $(top_builddir)/intltool-extract
 MSGMERGE = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --dist
 GENPOT   = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --pot
 
-ALL_LINGUAS = es_ES sv sv_FI
+ALL_LINGUAS = es_ES sv sv_FI ca cs da de el en_GB eu fr hu it nl pt sv_FI sv
 
 PO_LINGUAS=$(shell if test -r $(srcdir)/LINGUAS; then grep -v "^\#" $(srcdir)/LINGUAS; fi)
 
@@ -65,7 +65,7 @@ POFILES=$(shell LINGUAS="$(USE_LINGUAS)"; for lang in $$LINGUAS; do printf "$$la
 DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(POFILES)
 EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
 
-POTFILES = christine.pot es_Es.po\
+POTFILES = \
 	../gui/about.glade \ \
 	../gui/add_files.glade \ \
 	../gui/delete_file_from_disk_dialog.glade \ \

@@ -1,0 +1,249 @@
+# German translation for christine
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the christine package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: christine\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2006-12-22 18:02-0600\n"
+"PO-Revision-Date: 2008-03-21 12:02+0000\n"
+"Last-Translator: Oliver Laub <oliver.laub@web.de>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-03-23 01:52+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: gui/about.glade:9
+msgid "Christine"
+msgstr "Christine"
+
+#: gui/about.glade:10
+msgid "2006 (c) Marco Antonio Islas Cruz"
+msgstr "2006 (c) Marco Antonio Islas Cruz"
+
+#: gui/about.glade:11
+msgid "A small and cute media player for GNOME"
+msgstr "Ein kleiner und reizender Mediaplayer für GNOME"
+
+#: gui/about.glade:45
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Oliver Laub https://launchpad.net/~oliver-laub\n"
+"  Sebastian1zu160 https://launchpad.net/~sebastian-benque\n"
+"  vinz https://launchpad.net/~vinz-v1nz"
+
+#: gui/add_files.glade:55
+msgid "Importing:"
+msgstr "Importieren:"
+
+#: gui/add_files.glade:65
+msgid "label2"
+msgstr "label2"
+
+#: gui/add_files.glade:102
+msgid "<b>Importing files</b>"
+msgstr "<b>Importiere Dateien</b>"
+
+#: gui/delete_file_from_disk_dialog.glade:35
+msgid ""
+"Are you sure?\n"
+"This cannot be undone"
+msgstr ""
+"Sind Sie sicher?\n"
+"Dies kann nicht rückgängig gemacht werden"
+
+#: gui/delete_file_from_disk_dialog.glade:55
+msgid "gtk-cancel"
+msgstr "GTK-Abbruch"
+
+#: gui/delete_file_from_disk_dialog.glade:63
+msgid "gtk-ok"
+msgstr "gtk-ok"
+
+#: gui/dir_selector.glade:13
+msgid "Select a folder"
+msgstr "Ordner auswählen"
+
+#: gui/dir_selector.glade:77
+msgid "Include subfolders"
+msgstr "Unterverzeichnisse einbeziehen"
+
+#: gui/error.glade:8
+msgid "Error"
+msgstr "Fehler"
+
+#: gui/error.glade:82
+msgid "Error text"
+msgstr "Fehlertext"
+
+#: gui/file_selector.glade:13
+msgid "Select your files"
+msgstr "Wählen Sie Ihre Dateien"
+
+#: gui/icon_view.glade:8 gui/treeview_reorderable.glade:8
+msgid "window1"
+msgstr "fenster1"
+
+#: gui/jump_to.glade:8
+msgid "Jump to time"
+msgstr "Springe zu Zeitpunkt"
+
+#: gui/jump_to.glade:98
+msgid ":"
+msgstr ":"
+
+#: gui/main_window.glade:387
+msgid "Find"
+msgstr "Suchen"
+
+#: gui/main_window.glade:528
+msgid "<b>Artists</b>"
+msgstr "<b>Interpreten</b>"
+
+#: gui/main_window.glade:557
+msgid "<b>Albums</b>"
+msgstr "<b>Alben</b>"
+
+#: gui/main_window.glade:630 gui/main_window.glade:655
+msgid "00:00"
+msgstr "00:00"
+
+#: gui/miniviewer.glade:10
+msgid "video player"
+msgstr "Videoplayer"
+
+#: gui/open_remote.glade:8
+msgid "Open Remote"
+msgstr "Ziel öffnen"
+
+#: gui/open_remote.glade:77
+msgid "Location"
+msgstr "Ort"
+
+#: gui/preferences.glade:41 gui/properties.glade:500
+msgid "Artist"
+msgstr "Interpret"
+
+#: gui/preferences.glade:54 gui/properties.glade:528
+msgid "Album"
+msgstr "Album"
+
+#: gui/preferences.glade:68
+msgid "Type"
+msgstr "Typ"
+
+#: gui/preferences.glade:81
+msgid "Length"
+msgstr "Länge"
+
+#: gui/preferences.glade:91 gui/properties.glade:584
+msgid "Track number"
+msgstr "Titelnummer"
+
+#: gui/preferences.glade:101
+msgid "Play count"
+msgstr "Anzahl der Wiedergaben"
+
+#: gui/preferences.glade:115
+msgid "<b>View</b>"
+msgstr "<b>Ansicht</b>"
+
+#: gui/preferences.glade:138
+msgid "Library"
+msgstr "Musiksammlung"
+
+#: gui/preferences.glade:164
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+
+#: gui/preferences.glade:184
+msgid "<b>Audiosink</b>"
+msgstr "<b>Audioschnittstelle</b>"
+
+#: gui/preferences.glade:208
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+"ximagesink\n"
+"xvimagesink"
+
+#: gui/preferences.glade:226
+msgid "<b>Videosink</b>"
+msgstr "<b>Videoschnittstelle</b>"
+
+#: gui/preferences.glade:247
+msgid "Backend"
+msgstr "Backend"
+
+#: gui/properties.glade:9
+msgid "Properties"
+msgstr "Einstellungen"
+
+#: gui/properties.glade:69
+msgid "File"
+msgstr "Datei"
+
+#: gui/properties.glade:108
+msgid "Audio codec"
+msgstr "Audiocodec"
+
+#: gui/properties.glade:136
+msgid "Mode"
+msgstr "Modus"
+
+#: gui/properties.glade:164
+msgid "Bitrate"
+msgstr "Bitrate"
+
+#: gui/properties.glade:192 gui/properties.glade:220 gui/properties.glade:248
+#: gui/properties.glade:276 gui/properties.glade:304 gui/properties.glade:332
+#: gui/properties.glade:360 gui/properties.glade:388 gui/properties.glade:416
+#: gui/properties.glade:640
+msgid "None"
+msgstr "Nichts"
+
+#: gui/properties.glade:444
+msgid "Date"
+msgstr "Datum"
+
+#: gui/properties.glade:472
+msgid "Genre"
+msgstr "Genre"
+
+#: gui/properties.glade:556
+msgid "Title"
+msgstr "Titel"
+
+#: gui/properties.glade:612
+msgid "Video codec"
+msgstr "Videocodec"
+
+#: gui/tray_menu.glade:11
+msgid "Play or pause the player"
+msgstr "Player starten oder pausieren"
+
+#: gui/tray_menu.glade:12
+msgid "Play/Pause"
+msgstr "Wiedergabe/Pause"
+
+#: gui/tray_menu.glade:33
+msgid "Next"
+msgstr "Nächster"
+
+#: gui/tray_menu.glade:54
+msgid "Previous"
+msgstr "Vorheriger"
