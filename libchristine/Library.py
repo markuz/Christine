@@ -186,6 +186,13 @@ class library(GtkMisc,gtk.DrawingArea):
 				gobject.idle_add(self.__set)
 				return False
 			iter = model.append()
+			for key in values.keys():
+				if isinstance(values[key],str):
+					try:
+						values[key] =  u'%s'%values[key].decode('latin-1')
+						values[key] =  u'%s'%values[key].encode('latin-1')
+					except :
+						pass
 			model.set(iter
 					,PATH,path,
 					NAME, values['name'],
