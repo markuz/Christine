@@ -64,7 +64,7 @@ msgstr ""
 
 #: gui/strings_about:39 gui/about.glade:45
 msgid "translator-credits"
-msgstr ""
+msgstr "Marco Antonio Islas Cruz"
 
 #: gui/strings_main_window:8
 msgid "_Media"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.2.0 on Fri Sep 21 10:51:41 2007 by markuz@cucusa
+<!--Generated with glade3 3.4.0 on Tue Mar 25 13:35:43 2008 
 	Version: 3.0.1
 	Date: Mon Feb  5 12:59:47 2007
 	User: markuz
@@ -51,7 +51,7 @@ Alejandro Ignacio Sanchez Verduzco &lt;alejandrosanchez@gmail.com&gt;</property>
     <property name="documenters">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
 Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
 Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;</property>
-    <property name="translator_credits">translator-credits</property>
+    <property name="translator_credits" translatable="yes">translator-credits</property>
     <property name="artists">Marco Antonio Islas Cruz</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">

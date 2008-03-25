@@ -33,6 +33,7 @@
 
 #from libchristine.GtkMisc import *
 from libchristine.Share import Share
+from libchristine.Translator import translate
 
 #
 # Manage about GTK dialog
@@ -49,7 +50,6 @@ class guiAbout:
 		"""
 		Constructor
 		"""
-		#GtkMisc.__init__(self)
 		self.__Share = Share()
 
 		xml   = self.__Share.getTemplate('About')
@@ -60,5 +60,7 @@ class guiAbout:
 		about.set_name('@programname@')
 		about.set_version('@version@')
 		about.set_icon(self.__Share.getImageFromPix('logo'))
+		about.set_translator_credits(translate('translator-credits'))
+		print about.get_translator_credits()
 		about.run()
 		about.destroy()
