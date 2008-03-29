@@ -30,6 +30,7 @@ import cairo
 import pango
 import gobject
 from libchristine.Validator import *
+from libchristine.GtkMisc import CairoMisc
 
 BORDER_WIDTH  = 3
 POS_INCREMENT = 3
@@ -38,7 +39,7 @@ LINE_WIDTH    = 2
 #
 # Test for writting a custom gtk-cairo widget 
 #
-class Display(gtk.DrawingArea):
+class Display(gtk.DrawingArea, CairoMisc):
 	"""
 	Test for writting a custom gtk-cairo widget
 	"""
@@ -55,11 +56,15 @@ class Display(gtk.DrawingArea):
 		# since this class inherits methods and properties
 		# from gtk.Drawind_area we need to initialize it too
 		gtk.DrawingArea.__init__(self)
+		CairoMisc.__init__(self)
 
 		# This flag is supposed to be used to check if the
 		# display y being drawed
-		self.__Drawing = False
 		self.__HPos = 0
+
+		self.__color1 = gtk.gdk.color_parse('#FFFFFF')
+		self.__color2 = gtk.gdk.color_parse('#B7BFB2')
+
 
 		# Adding some events
 		self.set_property('events', gtk.gdk.EXPOSURE_MASK |
@@ -67,7 +72,8 @@ class Display(gtk.DrawingArea):
 								    gtk.gdk.BUTTON_PRESS_MASK)
 
 		self.connect('button-press-event', self.__buttonPressEvent)
-		self.connect('expose-event',       self.exposeEvent)
+		self.connect('expose-event',       self.__doExpose)
+		self.connect('size-allocate', self._on_size_allocate)
 
 		gobject.signal_new('value-changed', self,
 				           gobject.SIGNAL_RUN_LAST,
@@ -113,6 +119,22 @@ class Display(gtk.DrawingArea):
 			self.setScale(value)
 			self.__emit()
 			self.emit("value-changed",self)
+
+	def _on_size_allocate(self, win, *args):
+		w, h = (self.allocation.width, self.allocation.height)
+
+		self.bitmap = gtk.gdk.Pixmap(None, w, h, 1)
+		context = self.bitmap.cairo_create()
+
+		# Clear the bitmap
+		context.set_source_rgb(1, 1, 1)
+		context.set_operator(cairo.OPERATOR_DEST_OUT)
+		context.paint()
+
+		#draw our shape
+		self.__drawDisplay(context, 1)
+		win.shape_combine_mask(self.bitmap, 0, 0)
+		self.parent.shape_combine_mask(self.bitmap, 0, 0)
 
 
 	#
@@ -186,7 +208,12 @@ class Display(gtk.DrawingArea):
 	# @param  widget widget
 	# @param  event  event
 	# @return void
-	def exposeEvent(self,widget,event):
+	def __doExpose(self,widget,event):
+		context = self.window.cairo_create()
+		self.__drawDisplay(context)
+
+
+	def __drawDisplay(self, context, allocation=0):
 		"""
 		This function is used to draw the display
 		"""
@@ -200,37 +227,38 @@ class Display(gtk.DrawingArea):
 		fr,fg,fb = ((tcolor.red*1)/65000.0,
 				(tcolor.green*1)/65000.0,
 				(tcolor.blue*1)/65000.0)
-		# Every speed improvement is really appreciated.
-		if (self.__Drawing) or (self.window == None):
-			return True
 
-		self.__Drawing = True
 		(x, y, w, h)   = self.allocation
+	
+		context.move_to( 0, 0 )
+		context.set_operator(cairo.OPERATOR_OVER)
 
-		self.__X, self.__Y, self.__W, self.__H = (x, y, w, h)
+		context.set_line_width( 1 )
+		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
-		self.__Context = self.window.cairo_create()
+		#context.set_source_rgb(br,bg,bb)
+		#self.render_rect(context, 1.5, 1.5, w -1 , h -2, 5)
+		#context.stroke()
 
-		self.__Context.rectangle(BORDER_WIDTH, 
-		                         BORDER_WIDTH,
-			                     (w - (2 * BORDER_WIDTH)), 
-			                     (h - (2 * BORDER_WIDTH)))
+		linear = cairo.LinearGradient(0, 0, 0, h)
+
+		linear.add_color_stop_rgba(0.05,
+					self.getCairoColor(self.__color1.red),
+					self.getCairoColor(self.__color1.green),
+					self.getCairoColor(self.__color1.blue),
+					1)
+
+		linear.add_color_stop_rgba(0.90,
+					self.getCairoColor(self.__color2.red),
+					self.getCairoColor(self.__color2.green),
+					self.getCairoColor(self.__color2.blue),
+					1)
+		self.render_rect(context, 1.5, 1.5, w -1 , h -2 , 5)
+		context.set_source(linear)
+		context.fill()
+
 		
-		self.__Context.clip()
-
-		self.__Context.rectangle(BORDER_WIDTH, 
-		                         BORDER_WIDTH,
-			                     (w - (2 * BORDER_WIDTH)), 
-			                     (h - (2 * BORDER_WIDTH)))
-		
-		self.__Context.set_source_rgb(br,bg,bb)
-		self.__Context.fill_preserve()
-		self.__Context.set_source_rgb(fr,fg,fb)
-		#self.__Context.set_source_rgb(0, 0, 0)
-		self.__Context.stroke()
-
 		# Write text
-		(x, y, w, h)   = self.allocation
 		self.__Layout  = self.create_pango_layout(self.__Song)
 
 		self.__Layout.set_font_description(pango.
@@ -244,41 +272,38 @@ class Display(gtk.DrawingArea):
 			self.__HPos = self.__HPos - 3
 		else:
 			self.__HPos = w + 1
-		self.__Context.move_to(self.__HPos, (fonth)/2)
-		self.__Context.set_source_rgb(fr,fg,fb)
-		self.__Context.update_layout(self.__Layout)
-		self.__Context.show_layout(self.__Layout)
+		context.move_to(self.__HPos, (fonth)/2)
+		context.set_source_rgb(fr,fg,fb)
+		context.update_layout(self.__Layout)
+		context.show_layout(self.__Layout)
 
 		(fw, fh) = self.__Layout.get_pixel_size()
-		width    = ((self.__W - fh) - (BORDER_WIDTH * 3))
+		width    = ((w - fh) - (BORDER_WIDTH * 3))
 
-		self.__Context.set_antialias(cairo.ANTIALIAS_NONE)
-		self.__Context.rectangle(fh, 
+		# Drawing the progress bar
+		context.set_antialias(cairo.ANTIALIAS_NONE)
+		context.rectangle(fh, 
 				((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
-		self.__Context.set_line_width(1)
-		self.__Context.set_line_cap(cairo.LINE_CAP_BUTT)
-		#self.__Context.set_source_rgb(0, 0, 0)
-		self.__Context.stroke()
+		context.set_line_width(1)
+		context.set_line_cap(cairo.LINE_CAP_BUTT)
+		#context.set_source_rgb(0, 0, 0)
+		context.stroke()
 		
 		width = (self.__Value * width)
 
-		self.__Context.rectangle(fh, 
+		context.rectangle(fh, 
 				((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
-		#self.__Context.set_source_rgb(0,0,0)
-		self.__Context.fill_preserve()
-		#self.__Context.set_source_rgb(0,0,0)
-		self.__Context.stroke()
+		context.fill_preserve()
+		context.stroke()
 
 		layout         = self.create_pango_layout(self.__Text)
 		(fontw, fonth) = layout.get_pixel_size()
 
-		self.__Context.move_to(((w - fontw) / 2), ((fonth + 33) / 2))
+		context.move_to(((w - fontw) / 2), ((fonth + 33) / 2))
 		layout.set_font_description(
 				pango.FontDescription('Sans Serif 8'))
-		self.__Context.set_source_rgb(fr,fg,fb)
-		self.__Context.update_layout(layout)
-		self.__Context.show_layout(layout)
+		context.set_source_rgb(fr,fg,fb)
+		context.update_layout(layout)
+		context.show_layout(layout)
 
-		self.__Drawing = False
-		
 	value = property(getValue, setScale)
