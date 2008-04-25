@@ -76,6 +76,9 @@ class library(GtkMisc,gtk.DrawingArea):
 		GtkMisc.__init__(self)
 		self.__Share = Share()
 		self.__Tagger = Tagger()
+		self.__row_changed_id = 0
+		self.__appending = False
+		self.__setting = False
 		gtk.DrawingArea.__init__(self)
 		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
@@ -89,12 +92,16 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.CURRENT_ITER = self.model.get_iter_first()
 	
 	def loadLibrary(self, library):
+		if self.__row_changed_id:
+			self.model.disconnect(self.__row_changed_id)
+		self.__appending = False
+		self.__setting = False
 		self.library_lib = lib_library(library)
 		self.__music = self.library_lib.get_all()
 		self.__iterator = self.__music.keys()
 		self.__iterator.sort()
 		self.gen_model()
-		self.__cgen_model()
+		self.fillModel()
 		self.tv.set_model(self.model.getModel())
 	
 	def __rowChanged(self,model,path,iter):
@@ -102,25 +109,13 @@ class library(GtkMisc,gtk.DrawingArea):
 		Handle the row changed stuff
 		'''
 		#The filename is the key in the self.library dictionary
-		a = [filename,
-		name,
-		artist,
-		album,
-		track_number,
-		path,
-		tipo,
-		pc,
-		duration,
+		a = [filename, name,artist,
+		album,track_number,path,
+		tipo,pc,duration,
 		genre] = model.get(iter,PATH,
-				    NAME,
-					ARTIST,
-					ALBUM,
-					TN,
-					PATH,
-					TYPE,
-					PLAY_COUNT,
-					TIME,
-					GENRE)
+				    NAME,ARTIST,ALBUM,
+					TN,PATH, TYPE,
+					PLAY_COUNT,TIME,GENRE)
 		if filename == None: 
 			return False
 		a = [k for k in a]
@@ -158,42 +153,42 @@ class library(GtkMisc,gtk.DrawingArea):
 					int, #play count
 					str, #time
 					str) #Genre
-			self.model.connect("row-changed",self.__rowChanged)
-			self.model.connect("row-inserted",self.__rowChanged)
 		else:
 			self.model.clear()
 
-	def __cgen_model(self):
+	def fillModel(self):
 		sounds = self.library_lib.get_all().copy()
 		model = self.model
-		append = self.model.append
 		keys = sounds.keys()
 		keys.sort()
 		keys.reverse()
 		pix = self.__Share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
+		self.__appending = True
+		gobject.idle_add(self.__append, keys, sounds, pix)
 
-		gobject.idle_add(self.__append, model, keys, sounds, pix)
-
-	def __append(self, model, keys, sounds, pix):
+	def __append(self, keys, sounds, pix):
+		if not self.__appending:
+			return False
 		for i in range(20):
 			if len(keys):
 				path = keys.pop()
 				values = sounds[path]
 			else:
-				self.__iterator.sort()
 				self.__iterator.reverse()
+				self.__row_changed_id = self.model.connect("row-changed",self.__rowChanged)
+				self.__setting = True
 				gobject.idle_add(self.__set)
 				return False
-			iter = model.append()
+			iter = self.model.append()
 			for key in values.keys():
 				if isinstance(values[key],str):
 					try:
 						values[key] =  u'%s'%values[key].decode('latin-1')
 						values[key] =  u'%s'%values[key].encode('latin-1')
-					except :
+					except:
 						pass
-			model.set(iter
+			self.model.set(iter
 					,PATH,path,
 					NAME, values['name'],
 					SEARCH,
@@ -205,30 +200,30 @@ class library(GtkMisc,gtk.DrawingArea):
 			self.iters[path] = iter
 		return True
 	
-	def set(self,iter, col1, path, col2, name, col3, search):
-		try:
-			name = u'%s'%name.encode('latin-1')
-		except:
-			pass
-			#sys.exit()
-		self.model.set(iter,
-				col1, path,
-				col2, name,
-				col3, search)
-		self.iters[path] = iter
+####def set(self,iter, col1, path, col2, name, col3, search):
+####	try:
+####		name = u'%s'%name.encode('latin-1')
+####	except:
+####		pass
+####	self.model.set(iter,
+####			col1, path,
+####			col2, name,
+####			col3, search)
+####	self.iters[path] = iter
 	
 	def __set(self):
+		if not self.__setting:
+			return False
 		for i in range(20):
 			if len(self.__iterator):
 				key = self.__iterator.pop()
 			else:
 				return False
-
 			data = self.__music[key]
 			iter = self.iters[key]
 			for i in data.keys():
 				try:
-					if type(data[i]) == type(''):
+					if isinstance(data[i], str):
 						data[i] = u'%s'%data[i].encode('latin-1')
 				except:
 					pass
@@ -241,11 +236,8 @@ class library(GtkMisc,gtk.DrawingArea):
 					TIME ,data['duration'],
 					GENRE ,data['genre'],
 					)
-		time.sleep(0.005)
 		return True
 	
-
-
 	def __add_columns(self):
 		render = gtk.CellRendererText()
 		render.set_property("ellipsize",pango.ELLIPSIZE_END)
@@ -365,15 +357,9 @@ class library(GtkMisc,gtk.DrawingArea):
 				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
 				PLAY_COUNT,0,
 				GENRE,tags["genre"])
-		#path = self.model.get_path(iter)
-		#self.tv.scroll_to_cell(path,None,True,0.5,0.5)
 
 
 	def stream_length(self,widget=None,n=1):
-		#if n==1:
-		#	d = self.discoverer
-		#else:
-		#	d = self.discoverer2
 		try: 
 			total = d.query_duration(gst.FORMAT_TIME)[0]
 			ts = total/gst.SECOND
@@ -381,7 +367,6 @@ class library(GtkMisc,gtk.DrawingArea):
 			self.model.set(self.iters[d.getLocation()],
 					TIME,text)
 		except gst.QueryError:
-			#d.setLocation(d.getLocation())
 			pass
 		return True
 

@@ -79,7 +79,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		self.__Text           = ""
 		self.__WindowPosition = 0
 		self.__Value          = 0
-		self.value = self.__Value
 		self.setText(text)
 		self.set_size_request(300, 42)
 

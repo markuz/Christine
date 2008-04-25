@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.0 on Sun Mar 23 13:45:09 2008 -->
+<!--Generated with glade3 3.4.0 on Fri Apr 25 01:36:57 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="window1">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -10,32 +10,54 @@
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <child>
-          <widget class="GtkToolbar" id="toolbar1">
+          <widget class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <child>
-              <widget class="GtkToolButton" id="addSource">
+              <widget class="GtkButton" id="addSource">
                 <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="stock_id">gtk-add</property>
+                <property name="relief">GTK_RELIEF_NONE</property>
+                <property name="response_id">0</property>
+                <child>
+                  <widget class="GtkImage" id="image1">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="stock">gtk-add</property>
+                  </widget>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkToolButton" id="delSource">
+              <widget class="GtkButton" id="delSource">
                 <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="stock_id">gtk-delete</property>
+                <property name="relief">GTK_RELIEF_NONE</property>
+                <property name="response_id">0</property>
+                <child>
+                  <widget class="GtkImage" id="image3">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="stock">gtk-delete</property>
+                  </widget>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">False</property>
           </packing>
         </child>
         <child>

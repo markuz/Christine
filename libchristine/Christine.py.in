@@ -301,6 +301,11 @@ class Christine(GtkMisc):
 		URL = 'https://translations.launchpad.net/christine/0.1/'
 		translateMenuItem.connect('activate', lambda widget: webbrowser.open(URL))
 
+		reportaBug = self.__XML['reportABug']
+		URL = 'http://sourceforge.net/tracker/?func=add&group_id=167966&atid=845044'
+		reportaBug.connect('activate', lambda widget: webbrowser.open(URL))
+
+
 
 		self.__HBoxToolBoxContainer = self.__XML['HBoxToolBoxContainer']
 		self.__HBoxToolBoxContainer.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
@@ -549,10 +554,6 @@ class Christine(GtkMisc):
 		Set the location in the player and
 		perform some other required actions
 		"""
-####	if not os.path.isfile(filename):
-####		t = Translator()
-####		error(t.parse("File not found"))
-####		self.stop()
 		self.__StatePlaying = False
 		self.__IterNatural  = None
 		# current iter is a temporal variable
@@ -597,7 +598,7 @@ class Christine(GtkMisc):
 		self.__Display.setSong(name)
 		# enable the stream-length for the current song.
 		# this will be stopped when we get the length
-		gobject.timeout_add(300,self.__streamLength)
+		gobject.idle_add(self.__streamLength)
 		# if we can't get the length, in more than 20
 		# times in the same song, then, jump to the
 		# next song
@@ -1173,11 +1174,9 @@ class Christine(GtkMisc):
 		search location in the model, if it found it then it will
 		store the iter where it was found in self.__LibraryCurrentIter
 		"""
-		iter      = model.get_iter(path)
-		mlocation = model.get_value(iter, PATH)
-
+		mlocation = model[path][PATH]
 		if (mlocation == location):
-			self.__LibraryCurrentIter = iter
+			self.__LibraryCurrentIter = model.get_iter(path)
 			return True
 	
 	#
@@ -1274,39 +1273,28 @@ class Christine(GtkMisc):
 		XML    = self.__Share.getTemplate('JumpTo')
 		dialog = XML['dialog']
 		dialog.set_icon(self.__Share.getImageFromPix('logo'))
-
 		(mins, seconds) = divmod((self.__TimeTotal / gst.SECOND), 60)
-
 		#Current minute and current second
-		(cmins, cseconds) = divmod(self.__Display.getValue(), 60)
-		(cmins, cseconds) = (int(cmins), int(cseconds))
-
+		nanos      = self.__Player.query_position(gst.FORMAT_TIME)[0]
+		ts         = (nanos / gst.SECOND)
+		(cmins, cseconds) = map(int, divmod(ts, 60))
 		mins_adj = gtk.Adjustment(value = 0, lower = 0, upper = mins, step_incr = 1)
 		secs_adj = gtk.Adjustment(value = 0, lower = 0, upper = 59, step_incr = 1)
-
 		ok_button = XML['okbutton']
-
 		mins_scale = XML['mins']
 		secs_scale = XML['secs']
-
 		mins_scale.connect('key-press-event', self.jumpToOkClicked, ok_button)
 		secs_scale.connect('key-press-event', self.jumpToOkClicked, ok_button)
-
 		mins_scale.set_adjustment(mins_adj)
 		mins_scale.set_value(cmins)
-
 		secs_scale.set_adjustment(secs_adj)
 		secs_scale.set_value(cseconds)
-
 		response = dialog.run()
 		dialog.destroy()
-
 		if (response == gtk.RESPONSE_OK):
 			time = ((mins_scale.get_value() * 60) + secs_scale.get_value())
-
 			if (time > self.__TimeTotal):
 				time = self.__TimeTotal
-
 			self.__Player.seekTo(time)
 
 	#
@@ -1321,7 +1309,8 @@ class Christine(GtkMisc):
 		"""
 		Jumpo to Accept button
 		"""
-		if (event.keyval in (gtk.gdk.keyval_from_name('Return'), gtk.gdk.keyval_from_name('KP_Enter'))):
+		if (event.keyval in (gtk.gdk.keyval_from_name('Return'), 
+					gtk.gdk.keyval_from_name('KP_Enter'))):
 			button.emit('clicked')
 
 	#
@@ -1335,10 +1324,8 @@ class Christine(GtkMisc):
 		Decrease the volume
 		"""
 		volume = (self.__HScaleVolume.get_value() - 0.1)
-
 		if (volume < 0):
 			volume = 0
-
 		self.__HScaleVolume.set_value(volume)
 	
 	#
@@ -1352,10 +1339,8 @@ class Christine(GtkMisc):
 		Increase the volume
 		"""
 		volume = (self.__HScaleVolume.get_value() + 0.1)
-
 		if (volume > 1.0):
 			volume = 1.0
-
 		self.__HScaleVolume.set_value(volume)
 	
 	#
@@ -1415,12 +1400,6 @@ class Christine(GtkMisc):
 			else:
 				self.__Library.save()
 	
-	#
-	# Import folder
-	#
-	# @access public
-	# @param  widget
-	# @return void
 	def importFolder(self, widget):
 		"""
 		This is the 'simple' way to import folders

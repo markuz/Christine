@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.0 on Tue Mar 25 13:35:43 2008 
+<!--Generated with glade3 3.4.0 on Fri Apr 25 02:57:57 2008 
 	Version: 3.0.1
 	Date: Mon Feb  5 12:59:47 2007
 	User: markuz
@@ -13,8 +13,8 @@
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
     <property name="copyright">2006 (c) Marco Antonio Islas Cruz</property>
     <property name="comments">A small and cute media player for GNOME</property>
-    <property name="website">http://christine.sourceforge.net</property>
-    <property name="website_label">http://christine.sourceforge.net</property>
+    <property name="website">http://www.christine-project.com</property>
+    <property name="website_label">http://www.christine-project.com</property>
     <property name="license">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
