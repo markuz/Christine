@@ -29,26 +29,20 @@ import gtk
 import cairo
 import pango
 import gobject
+import math
 from libchristine.Validator import *
-from libchristine.GtkMisc import CairoMisc
+from libchristine.GtkMisc import CairoMisc, GtkMisc
 
 BORDER_WIDTH  = 3
 POS_INCREMENT = 3
 LINE_WIDTH    = 2
 
-#
-# Test for writting a custom gtk-cairo widget 
-#
-class Display(gtk.DrawingArea, CairoMisc):
+class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 	"""
-	Test for writting a custom gtk-cairo widget
+	Display the track progress in christine
 	"""
 	
-	#
-	# Constructor
-	#
-	# @param  string text
-	# @return void
+	
 	def __init__(self, text= ''):
 		"""
 		Constructor
@@ -57,13 +51,14 @@ class Display(gtk.DrawingArea, CairoMisc):
 		# from gtk.Drawind_area we need to initialize it too
 		gtk.DrawingArea.__init__(self)
 		CairoMisc.__init__(self)
+		GtkMisc.__init__(self)
 
 		# This flag is supposed to be used to check if the
 		# display y being drawed
 		self.__HPos = 0
 
 		self.__color1 = gtk.gdk.color_parse('#FFFFFF')
-		self.__color2 = gtk.gdk.color_parse('#B7BFB2')
+		self.__color2 = gtk.gdk.color_parse('#3D3D3D')
 
 
 		# Adding some events
@@ -85,11 +80,9 @@ class Display(gtk.DrawingArea, CairoMisc):
 		self.__WindowPosition = 0
 		self.__Value          = 0
 		self.value = self.__Value
-
 		self.setText(text)
 		self.set_size_request(300, 42)
-		gobject.timeout_add(250,self.__emit)
-	
+
 	def __emit(self):
 		'''
 		Emits an expose event
@@ -99,17 +92,15 @@ class Display(gtk.DrawingArea, CairoMisc):
 		#self.emit("expose-event",self)
 		return True
 
-	#
-	# callback when a button is pressed
-	#
 	def __buttonPressEvent(self, widget, event):
 		"""
 		Called when a button is pressed in the display
 		"""
+		(w, h)   = (self.allocation.width,self.allocation.height)
 		(x, y)       = self.get_pointer()
 		(minx, miny) = self.__Layout.get_pixel_size()
 		minx         = miny
-		width        = (self.__W - miny - (BORDER_WIDTH * 3))
+		width        = (w - miny - (BORDER_WIDTH * 3))
 		miny         = (miny + (BORDER_WIDTH * 2))
 		maxx         = (minx + width)
 		maxy         = (miny + BORDER_WIDTH)
@@ -117,7 +108,6 @@ class Display(gtk.DrawingArea, CairoMisc):
 		if ((x >= minx) and (x <= maxx) and (y >= miny) and (y <= maxy)):
 			value = (((x - minx) * 1.0) / width)
 			self.setScale(value)
-			self.__emit()
 			self.emit("value-changed",self)
 
 	def _on_size_allocate(self, win, *args):
@@ -133,26 +123,15 @@ class Display(gtk.DrawingArea, CairoMisc):
 
 		#draw our shape
 		self.__drawDisplay(context, 1)
-		win.shape_combine_mask(self.bitmap, 0, 0)
-		self.parent.shape_combine_mask(self.bitmap, 0, 0)
+		#win.shape_combine_mask(self.bitmap, 0, 0)
+		#self.parent.shape_combine_mask(self.bitmap, 0, 0)
 
-
-	#
-	# Sets text
-	#
-	# @param  string text
-	# @return void
 	def setText(self, text):
 		"""
 		Sets text
 		"""
 		self.__Text = text.encode('latin-1')
 
-	#
-	# Sets song
-	#
-	# @param  string song
-	# @return void
 	def setSong(self, song):
 		"""
 		Sets song
@@ -164,29 +143,15 @@ class Display(gtk.DrawingArea, CairoMisc):
 		except:
 			self.__Song = song
 
-	#
-	# Gets value
-	#
-	# @return integer
 	def getValue(self):
 		"""
 		Gets value
 		"""
 		return self.__Value
 		
-	#
-	# Sets value
-	#
-	# @param  integer value
-	# @return void
 	def setValue(self, value):
 		self.__Value = value
 
-	#
-	# Sets scale value
-	#
-	# @param  integer value
-	# @return void
 	def setScale(self, value):
 		"""
 		Sets scale value
@@ -197,18 +162,12 @@ class Display(gtk.DrawingArea, CairoMisc):
 			raise ValueError(a)
 		if ((value > 1.0) or (value < 0.0)):
 			raise ValueError('value > 1.0 or value < 0.0')
-
 		self.__Value = value
+		self.__emit()
 
-		#self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
-	
-	#
-	# This function is used to draw the display
-	#
-	# @param  widget widget
-	# @param  event  event
-	# @return void
 	def __doExpose(self,widget,event):
+		if getattr(self,'window', None) == None:
+			return True
 		context = self.window.cairo_create()
 		self.__drawDisplay(context)
 
@@ -218,15 +177,17 @@ class Display(gtk.DrawingArea, CairoMisc):
 		This function is used to draw the display
 		"""
 		style = self.get_style()
-		tcolor = style.text[0]
+		tcolor = style.fg[0]
 		wcolor = style.bg[0]
-		br,bg,bb = ((wcolor.red*1)/65000.0, 
-				(wcolor.green*1)/65000.0, 
-				(wcolor.blue*1)/65000.0)
+		fontdesc = style.font_desc
 
-		fr,fg,fb = ((tcolor.red*1)/65000.0,
-				(tcolor.green*1)/65000.0,
-				(tcolor.blue*1)/65000.0)
+		br,bg,bb = (self.getCairoColor(wcolor.red), 
+				self.getCairoColor(wcolor.green), 
+				self.getCairoColor(wcolor.blue))
+
+		fr,fg,fb = (self.getCairoColor(tcolor.red),
+				self.getCairoColor(tcolor.green),
+				self.getCairoColor(tcolor.blue))
 
 		(x, y, w, h)   = self.allocation
 	
@@ -236,33 +197,15 @@ class Display(gtk.DrawingArea, CairoMisc):
 		context.set_line_width( 1 )
 		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
-		#context.set_source_rgb(br,bg,bb)
-		#self.render_rect(context, 1.5, 1.5, w -1 , h -2, 5)
-		#context.stroke()
-
-		linear = cairo.LinearGradient(0, 0, 0, h)
-
-		linear.add_color_stop_rgba(0.05,
-					self.getCairoColor(self.__color1.red),
-					self.getCairoColor(self.__color1.green),
-					self.getCairoColor(self.__color1.blue),
-					1)
-
-		linear.add_color_stop_rgba(0.90,
-					self.getCairoColor(self.__color2.red),
-					self.getCairoColor(self.__color2.green),
-					self.getCairoColor(self.__color2.blue),
-					1)
-		self.render_rect(context, 1.5, 1.5, w -1 , h -2 , 5)
-		context.set_source(linear)
+		#self.render_rect(context, 0, 0, w, h, 1)
+		context.rectangle(x,y,w,h)
+		context.set_source_rgb(br,bg,bb)
 		context.fill()
 
-		
 		# Write text
 		self.__Layout  = self.create_pango_layout(self.__Song)
 
-		self.__Layout.set_font_description(pango.
-				FontDescription('Sans Serif 8'))
+		self.__Layout.set_font_description(fontdesc)
 
 		(fontw, fonth) = self.__Layout.get_pixel_size()
 		
@@ -283,27 +226,43 @@ class Display(gtk.DrawingArea, CairoMisc):
 		# Drawing the progress bar
 		context.set_antialias(cairo.ANTIALIAS_NONE)
 		context.rectangle(fh, 
-				((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
+				((BORDER_WIDTH * 2) + fh) +1 , width, BORDER_WIDTH)
 		context.set_line_width(1)
 		context.set_line_cap(cairo.LINE_CAP_BUTT)
-		#context.set_source_rgb(0, 0, 0)
 		context.stroke()
 		
 		width = (self.__Value * width)
 
 		context.rectangle(fh, 
-				((BORDER_WIDTH * 2) + fh), width, BORDER_WIDTH)
-		context.fill_preserve()
-		context.stroke()
+				((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
+		context.fill()
+
+		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		context.arc(
+				int (fh + width), 
+				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 4, 0, 2 * math.pi)
+		context.fill()
+
+		context.arc(
+				int (fh + width), 
+				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 2, 0, 2 * math.pi)
+		context.set_source_rgb(1,1,1)
+		context.fill()
+
+		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
 		layout         = self.create_pango_layout(self.__Text)
 		(fontw, fonth) = layout.get_pixel_size()
 
-		context.move_to(((w - fontw) / 2), ((fonth + 33) / 2))
-		layout.set_font_description(
-				pango.FontDescription('Sans Serif 8'))
+		context.move_to(((w - fontw) / 2), ((fonth + 33) / 2) + 3)
+		layout.set_font_description(fontdesc)
 		context.set_source_rgb(fr,fg,fb)
 		context.update_layout(layout)
 		context.show_layout(layout)
+		#
+		width  =  int(300)
+		height =  int(fonth * 2 + BORDER_WIDTH +10)
+		#self.set_size_request(width, height)
+		
 
 	value = property(getValue, setScale)

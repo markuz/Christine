@@ -688,33 +688,14 @@ class Christine(GtkMisc):
 		"""
 		This show/hide the visualization
 		"""
-		#self.__Player.setVisualization(widget.get_active())
 		self.__GConf.setValue('ui/visualization', widget.get_active())
 		self.visualModePlayer()
 
 		# Be shure that we are not in small view mode.
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
-
 		self.__Player.setVisualization(widget.get_active())
 		
-		#if not widget.get_active() and self.__IsFullScreen:
-		#	self.__HPanedListsBox.show()
-		#	self.__VBoxVideo.show()
-		#	self.__VBoxTemporal.hide()
-
-		#if self.__IsFullScreen:
-		#	self.__IsFullScreen = False
-		#	self.toggleFullScreen()
-		#	self.__Window.fullscreen()
-		#	self.__IsFullScreen = True
-	
-	#
-	# Set the fullscreen mode
-	#
-	# @access public
-	# @param  widget
-	# @return void
 	def toggleFullScreen(self, widget = None):
 		"""
 		Set the full Screen mode
@@ -1133,8 +1114,7 @@ class Christine(GtkMisc):
 
 		if (model != None):
 			b = model.get_iter_first()
-
-			if (type(b) != gtk.TreeIter):
+			if b == None:
 				self.__ScrolledQueue.hide()
 			else:
 				self.__ScrolledQueue.show()

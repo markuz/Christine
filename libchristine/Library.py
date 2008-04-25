@@ -95,8 +95,6 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.__iterator.sort()
 		self.gen_model()
 		self.__cgen_model()
-		if not getattr(self,'model', False):
-			self.model.connect("row-changed",self.__rowChanged)
 		self.tv.set_model(self.model.getModel())
 	
 	def __rowChanged(self,model,path,iter):
@@ -160,6 +158,8 @@ class library(GtkMisc,gtk.DrawingArea):
 					int, #play count
 					str, #time
 					str) #Genre
+			self.model.connect("row-changed",self.__rowChanged)
+			self.model.connect("row-inserted",self.__rowChanged)
 		else:
 			self.model.clear()
 

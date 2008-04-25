@@ -87,12 +87,22 @@ class GtkMisc:
 			text = text.replace(i,entities[i])
 		return text
 
+	def scalePixbuf(self, pixbuf, width, height):
+		if type(pixbuf) != gtk.gdk.Pixbuf:
+			raise TypeError('First argument must be gtk.gdk.Pixbuf got %s'%repr(pixbuf))
+
+		if type(width) != int or type(height) != int:
+			raise TypeError('width and height must be integers')
+		pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_BILINEAR)
+		return pixbuf
+
+
 class CairoMisc:
 	def __init__(self):
 		pass
 
 	def getCairoColor(self, color):
-		return color/65000.0
+		return color/65535.0
 
 	def hex2float(self, hex):
 		ret = []
@@ -102,7 +112,9 @@ class CairoMisc:
 		return ret
 
 	def render_rect(self, cr, x, y, w, h, o):
-		# Crea un rettangolo con i bordi arrotondati
+		'''
+		create a rectangle with rounded corners
+		'''
 		x0 = x
 		y0 = y
 		rect_width = w
@@ -112,15 +124,17 @@ class CairoMisc:
 		x1 = x0 + rect_width
 		y1 = y0 + rect_height
 		cr.move_to(x0, y0 + radius)
-		cr.curve_to(x0, y0, x0, y0, x0 + radius, y0)
+		cr.curve_to(x0, y0+radius, x0, y0, x0 + radius, y0)
 
 		cr.line_to(x1 - radius, y0)
-		cr.curve_to(x1, y0, x1, y0, x1, y0 + radius)
+		cr.curve_to(x1-radius, y0, x1, y0, x1, y0 + radius)
 		
-		cr.curve_to(x1, y1, x1, y1, x1 - radius, y1 )
+		cr.line_to(x1, y1-radius)
+		cr.curve_to(x1, y1-radius, x1, y1, x1 -radius, y1)
 
-		cr.line_to(x0+radius, y1)
-		cr.curve_to(x0, y1, x0, y1, x0, y1-radius)
+		cr.line_to(x0 +radius, y1)
+
+		cr.curve_to(x0+radius, y1, x0, y1, x0, y1-radius -1)
 		cr.close_path()
 
 class error:

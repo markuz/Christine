@@ -95,13 +95,11 @@ class queue(GtkMisc,gtk.DrawingArea):
 			
 	def add(self,file,prepend=False):
 		self.file = file
-		#if not os.path.isfile(file):
-		#	return False
 		model = self.model
 		file_orig = file
-		encoding = sys.stdout.encoding
-		file = unicode(file,encoding)
-		file = file.encode('latin-1')
+		encoding = 'latin-1'
+		file = u'%s'%file.decode('latin-1')
+		file = u'%s'%file.encode('latin-1')
 		if prepend:
 			iter = model.prepend()
 			self.files.insert(0,file_orig)
