@@ -1,0 +1,33 @@
+#!/bin/bash
+
+destdir=/tmp/christine 
+controlfile=$destdir/DEBIAN/control
+VERSION=@VERSION@
+ARCH=i386
+
+rm -rfv $destdir
+
+mkdir -p $destdir/DEBIAN/
+
+
+make install DESTDIR=$destdir
+
+echo ''> $controlfile
+echo 'Package: christine' >> $controlfile
+echo "Version: $VERSION" >> $controlfile
+echo 'Section: sound' >> $controlfile
+echo 'Priority: Optional' >> $controlfile
+echo "Architecture: $ARCH" >> $controlfile
+echo 'Essential: no' >> $controlfile
+echo 'Depends: python-mutagen,python-gtk2 (>=2.8),python-gst0.10(>=0.10), python-gnome2-extras' >> $controlfile
+echo 'Recommends: python-notify (>=0.1)' >> $controlfile
+echo 'Suggests: ' >> $controlfile
+echo 'Installed-Size: 1798' >> $controlfile
+echo 'Maintainer: Marco Islas [markuz@islascruz.org]' >> $controlfile
+echo 'Conflicts: ' >> $controlfile
+echo 'Replaces: ' >> $controlfile
+echo 'Description: Christine Media Player.' >> $controlfile
+echo '' >> $controlfile
+
+
+dpkg -b $destdir christine_"$VERSION"_"$ARCH".deb

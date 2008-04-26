@@ -10,6 +10,8 @@ PROGRAM_NAME = @PROGRAM_NAME@
 desktopdir =  $(datadir)/applications
 pkgdatadir = $(datadir)
 desktop_DATA = christine.desktop
+local_DATA = createDeb.sh
+localdir=./
 
 prefix = @prefix@
 sysconfdir = @sysconfdir@
@@ -34,8 +36,12 @@ all: all-am
 christine.desktop: Makefile $(srcdir)/christine.desktop.in
 	$(edit) $(srcdir)/christine.desktop.in > christine.desktop
 
+createDeb.sh: Makefile $(srcdir)/createDeb.sh.in
+	$(edit) $(srcdir)/createDeb.sh.in > createDeb.sh
+
 christine: Makefile $(srcdir)/christine.c
 	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o
 	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython${pythonversion}.a -lnsl -ldl -lieee -lpthread -lutil -lm -o christine
+
 
 ACLOCAL_AMFLAGS = -I m4

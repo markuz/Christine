@@ -20,8 +20,8 @@ Validator.py \
 ChristineGConf.py \
 Tagger.py \
 LibraryModel.py \
-BugReport.py \
-clibrary.so
+BugReport.py 
+
 
 DISTFILES= Makefile.in \
 		   GtkMisc.py.in \
@@ -65,9 +65,9 @@ Plugins.py: Makefile $(srcdir)/Plugins.py.in
 libs_christine.py: Makefile $(srcdir)/libs_christine.py.in
 	$(edit) $(srcdir)/libs_christine.py.in > libs_christine.py
 
-clibrary.so: Makefile $(srcdir)/clibrary.c
-	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -I${usr_libdir} -c -o clibrary.o clibrary.c
-	gcc -shared clibrary.o -o clibrary.so -L${pythonincludedir}
+#clibrary.so: Makefile $(srcdir)/clibrary.c
+#	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -I${usr_libdir} -c -o clibrary.o clibrary.c
+#	gcc -shared clibrary.o -o clibrary.so -L${pythonincludedir}
 
 Christine.py: Makefile $(srcdir)/Christine.py.in
 	    $(edit) $(srcdir)/Christine.py.in > Christine.py
