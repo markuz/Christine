@@ -23,7 +23,8 @@ deleteQuestion.glade \
 genericQuestion.glade \
 SourcesList.glade \
 NewSourceDialog.glade \
-errorReporter.glade
+errorReporter.glade \
+walkdirectories.glade
 
 
 DISTFILES= Makefile.in $(scripts_DATA)

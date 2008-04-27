@@ -426,32 +426,12 @@
                       <widget class="GtkEntry" id="EntrySearch">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip_text">Type your search and press enter to make it.</property>
+                        <property name="tooltip_text">Type your search to make it.</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
                         <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="button5">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="relief">GTK_RELIEF_NONE</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="clearEntrySearch"/>
-                        <child>
-                          <widget class="GtkImage" id="image422">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-clear</property>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">2</property>
                       </packing>
                     </child>
                   </widget>
