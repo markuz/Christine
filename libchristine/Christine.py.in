@@ -56,7 +56,7 @@ from libchristine.About import guiAbout
 from libchristine.Player import Player
 from libchristine.Display import Display
 from libchristine.Share import SHARE_PATH, Share
-from libchristine.ChristineGConf import ChristineGConf
+from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_PIXBUF
 import logging
 import webbrowser
@@ -67,7 +67,7 @@ try:
 	pynotify.Urgency(pynotify.URGENCY_NORMAL)
 	pynotify.init('christine')
 	version = pynotify.get_server_info()['version'].split('.')
-	
+
 	if (version < [0, 3, 6]):
 		raise ImportError("server version is %d.%d.%d, 0.3.6 or major required" % version)
 
@@ -91,7 +91,7 @@ class Christine(GtkMisc):
 		GtkMisc.__init__(self)
 
 		self.__Share   = Share()
-		self.__GConf   = ChristineGConf()
+		self.__GConf   = christineConf()
 
 		self.__XML = self.__Share.getTemplate('WindowCore')
 		self.__XML.signal_autoconnect(self)
@@ -124,12 +124,12 @@ class Christine(GtkMisc):
 		if (self.__GConf.getBool('ui/show_in_notification_area')):
 			self.__buildTrayIcon()
 
-		self.__GConf.notifyAdd('/apps/christine/ui/show_in_notification_area',
+		self.__GConf.notifyAdd('ui/show_in_notification_area',
 				lambda cl,cnx,entry,widget: self.__TrayIcon.set_visible(entry.get_value().get_bool()))
 
 		gobject.timeout_add(500, self.checkTimeOnMedia)
 		self.__Window.show()
-	
+
 	def __printEvent(self,widget,event):
 		if event.type == gtk.gdk.SCROLL:
 			value = self.__HScaleVolume.get_value()
@@ -159,21 +159,21 @@ class Christine(GtkMisc):
 
 	def __buildInterface(self):
 		"""
-		This method calls most of the common used 
+		This method calls most of the common used
 		interface descriptors (widgets) from self.__XML.
-		Connects them to a callback (if needed) and 
+		Connects them to a callback (if needed) and
 		call some other methods to show/hide them.
 		"""
 		# Calling some widget descriptors with no callback connected "by hand"
 		# This interface should not be private.
 		#===================================================
 		# Public Widgets
-		self.MenuBar        = self.__XML['MenuBar'] 
+		self.MenuBar        = self.__XML['MenuBar']
 		self.HBoxSearch    = self.__XML['HBoxSearch']
-		self.EntrySearch    = self.__XML['EntrySearch'] 
+		self.EntrySearch    = self.__XML['EntrySearch']
 		self.EntrySearch.connect('changed',self.search)
 		self.EntrySearch.connect('focus-out-event', self.__EntrySearchFocusHandler)
-		self.VBoxList       = self.__XML['VBoxList'] 
+		self.VBoxList       = self.__XML['VBoxList']
 		#Private widgets
 		self.__HPanedListsBox = self.__XML['HPanedListsBox']
 		self.__VBoxTemporal   = self.__XML['VBoxTemporal']
@@ -201,10 +201,10 @@ class Christine(GtkMisc):
 
 		for i in ['media', 'edit', 'control', 'help']:
 			self.Menus["%s" % i] = self.__XML["%s_menu" % i].get_submenu()
-		
+
 		# cdisplaybox is the display gtk-Box
 		self.__HBoxCairoDisplay = self.__XML['HBoxCairoDisplay']
-		
+
 		# Create the display and attach it to the main window
 		self.__Display = Display()
 		self.__Display.connect('value-changed', self.onScaleChanged)
@@ -227,10 +227,10 @@ class Christine(GtkMisc):
 		self.__LibraryModel       = self.__Library.tv.get_model()
 		#self.__LibraryFilterModel = self.__LibraryModel.get_model()
 		self.__Library.model.set_visible_func(self.filter)
-		
+
 		#self.__LibraryNaturalModel = self.__LibraryFilterModel.get_model()
 		self.__LibraryCurrentIter = self.__Library.model.get_iter_first()
-		
+
 		self.__ScrolledMusic = self.__XML['ScrolledMusic']
 		self.__VBoxVideo = self.__XML['VBoxVideo']
 
@@ -248,7 +248,7 @@ class Christine(GtkMisc):
 
 		self.__SourcesList = sources_list()
 		self.__VBoxList.pack_start(self.__SourcesList.vbox)
-		self.__SourcesList.treeview.connect('row-activated', 
+		self.__SourcesList.treeview.connect('row-activated',
 				self.__srcListRowActivated)
 		self.__SourcesList.vbox.show_all()
 
@@ -257,28 +257,28 @@ class Christine(GtkMisc):
 		self.__MenuItemShuffle = self.__XML['MenuItemShuffle']
 		self.__MenuItemShuffle.set_active(self.__GConf.getBool('control/shuffle'))
 
-		self.__MenuItemShuffle.connect('toggled', 
-			lambda widget: self.__GConf.setValue('control/shuffle', 
+		self.__MenuItemShuffle.connect('toggled',
+			lambda widget: self.__GConf.setValue('control/shuffle',
 			widget.get_active()))
 
-		self.__GConf.notifyAdd('/apps/christine/control/shuffle', 
-			self.__GConf.toggleWidget, 
+		self.__GConf.notifyAdd('control/shuffle',
+			self.__GConf.toggleWidget,
 			self.__MenuItemShuffle)
 
 		self.__ControlRepeat = self.__XML['repeat']
 		self.__ControlRepeat.set_active(self.__GConf.getBool('control/repeat'))
-		
-		self.__ControlRepeat.connect('toggled', 
-			lambda widget: self.__GConf.setValue('control/repeat', 
+
+		self.__ControlRepeat.connect('toggled',
+			lambda widget: self.__GConf.setValue('control/repeat',
 			widget.get_active()))
 
-		self.__GConf.notifyAdd('/apps/christine/control/repeat', 
-			self.__GConf.toggleWidget, 
+		self.__GConf.notifyAdd('control/repeat',
+			self.__GConf.toggleWidget,
 			self.__ControlRepeat)
 
 		self.__BothSr = self.__XML['both_sr']
 		self.__NoneSr = self.__XML['none_sr']
-		
+
 		self.__MenuItemVisualMode = self.__XML['MenuItemVisualMode']
 		self.__MenuItemVisualMode.set_active(self.__GConf.getBool('ui/visualization'))
 
@@ -321,7 +321,7 @@ class Christine(GtkMisc):
 
 	def __buildTrayIcon(self):
 		"""
-		Show the TrayIcon 
+		Show the TrayIcon
 		"""
 		self.__TrayIcon = gtk.StatusIcon()
 		self.__TrayIcon.set_from_pixbuf(self.__Share.getImageFromPix('trayicon'))
@@ -329,24 +329,24 @@ class Christine(GtkMisc):
 		self.__TrayIcon.connect('activate',   self.__trayIconActivated)
 		self.__TrayIcon.set_tooltip('Christine Baby!')
 		self.__TrayIcon.set_visible(self.__GConf.getBool('ui/show_in_notification_area'))
-	
+
 	def __trayIconHandlerEvent(self, widget, event, time):
 		"""
 		TrayIcon handler events
 		"""
-		# If the event is a button press event and it was 
+		# If the event is a button press event and it was
 		# the third button then show a popup menu
 		if (event == 3):
 			XML = self.__Share.getTemplate('MenuTrayIcon')
 			XML.signal_autoconnect(self)
-			
+
 			popup = XML['menu']
 			popup.popup(None, None, None, 3, gtk.get_current_event_time())
 			popup.show_all()
 
 	def __trayIconActivated(self, status):
 		"""
-		This hide and then show the window, 
+		This hide and then show the window,
 		intended when you want to show the window
 		in your current workspace
 		"""
@@ -376,7 +376,7 @@ class Christine(GtkMisc):
 				name = model.get_value(iter, NAME)
 				self.Queue.remove(iter)
 				self.Queue.save()
-	
+
 	def popupMenuHandlerEvent(self, widget, event):
 		"""
 		handle the button-press-event in the library
@@ -399,7 +399,7 @@ class Christine(GtkMisc):
 
 		self.__Library.delete_from_disk(iter)
 
-	
+
 	def popupAddToQueue(self, widget):
 		"""
 		Add the selected item to the queue
@@ -410,13 +410,13 @@ class Christine(GtkMisc):
 
 		self.Queue.add(file)
 		self.Queue.show()
-	
+
 	def handlerKeyPress(self, treeview, event):
 		"""
-		Handle the key-press-event in the 
-		library. 
+		Handle the key-press-event in the
+		library.
 		Current keys: Enter to activate the row
-		and 'q' to send the selected song to the 
+		and 'q' to send the selected song to the
 		queue
 		"""
 
@@ -426,9 +426,9 @@ class Christine(GtkMisc):
 			selection     = treeview.get_selection()
 			(model, iter) = selection.get_selected()
 			name          = self.__Library.model.getValue(iter, PATH)
-			
+
 			self.Queue.add(name)
-	
+
 	def removeFromLibrary(self, widget = None):
 		"""
 		Remove file from library
@@ -465,27 +465,27 @@ class Christine(GtkMisc):
 		self.__IterNatural  = None
 		# current iter is a temporal variable
 		# that will hold a gtk.TreeIter
-		# should be setted to None 
+		# should be setted to None
 		# before using it
 		self.__LibraryCurrentIter = None
-		
+
 		self.__Player.stop()
 		self.__Library.model.foreach(self.__SearchByPath, self.__Player.getLocation())
-	
+
 		if (self.__LibraryCurrentIter != None):
 			pix = self.__Share.getImageFromPix('blank')
-			pix = pix.scale_simple(20, 20, 
+			pix = pix.scale_simple(20, 20,
 					gtk.gdk.INTERP_BILINEAR)
 			self.__Library.model.setValues(self.__LibraryCurrentIter, PIX, pix)
 			self.__IterNatural = self.__LibraryCurrentIter
-		
+
 		# Search for the item in the library.
 		# if it exists then set it in the "backend/last_played"
 		# entry in gconf to be able to select it in the next
 		# christine start-up (and other functions) and
 		self.__LibraryCurrentIter = None
 		self.__Library.model.foreach(self.__SearchByPath, filename)
-		self.__IterCurrentPlaying = self.__LibraryCurrentIter 
+		self.__IterCurrentPlaying = self.__LibraryCurrentIter
 		self.__IterCurrentPlaying = self.__Library.model.getIterValid(self.__IterCurrentPlaying)
 		if self.__IterCurrentPlaying != None:
 			if self.__Library.model.iter_is_valid(self.__IterCurrentPlaying):
@@ -513,13 +513,13 @@ class Christine(GtkMisc):
 			self.goNext()
 		else:
 			self.__LocationCount +=1
-	
+
 	def stop(self, widget=None):
 		"""
 		Stop the player
 		"""
 		self.__Player.stop()
-	
+
 	def changeVolume(self, widget):
 		"""
 		Callback for the volume scale widget
@@ -531,7 +531,7 @@ class Christine(GtkMisc):
 
 	def changeGConfVolume(self, client, cnx_id, entry, widget):
 		self.__HScaleVolume.set_value(entry.get_value().get_float())
-	
+
 	def toggleViewSmall(self, widget):
 		"""
 		Toggle between the small and the large view
@@ -574,7 +574,7 @@ class Christine(GtkMisc):
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
 		self.__Player.setVisualization(widget.get_active())
-		
+
 	def toggleFullScreen(self, widget = None):
 		"""
 		Set the full Screen mode
@@ -593,7 +593,7 @@ class Christine(GtkMisc):
 				self.__Logger.warning('Full screen with no visualization')
 				self.__Window.fullscreen()
 				self.__IsFullScreen = True
-		else: 
+		else:
 		# Non-full screen mode.
 		# hide if we are not playing a video nor
 		# visualization.
@@ -604,7 +604,7 @@ class Christine(GtkMisc):
 
 			self.__Window.unfullscreen()
 			self.__IsFullScreen = False
-	
+
 	def onWindowCoreEvent(self, player, event):
 		"""
 		Handler for the events in the window
@@ -620,12 +620,12 @@ class Christine(GtkMisc):
 					self.goPrev()
 				 	return True
 			elif ( event.keyval == gtk.gdk.keyval_from_name('f')):
-				if (self.__IsFullScreen): 
+				if (self.__IsFullScreen):
 					self.toggleFullScreen()
-	
+
 	def viewPlayButtons(self, widget = None):
 		"""
-		This show/hide the player buttons. Suppossed to work only on 
+		This show/hide the player buttons. Suppossed to work only on
 		fullscreen mode
 		"""
 		if (not self.__IsFullScreen):
@@ -643,7 +643,7 @@ class Christine(GtkMisc):
 	###########################################
 	#           search stuff begins           #
 	###########################################
-	
+
 	def onFindActivate(self, widget):
 		"""
 		Set the focus on the Search entry
@@ -654,7 +654,7 @@ class Christine(GtkMisc):
 
 	def __EntrySearchFocusHandler(self, entry, event):
 		self.HBoxSearch.hide()
-	
+
 	def search(self, widget = None):
 		"""
 		Perform the actions to make a search
@@ -664,9 +664,9 @@ class Christine(GtkMisc):
 			self.jumpToPlaying()
 		self.__lastTypeTime = time.time()
 		gobject.timeout_add(500,self.__searchTimer)
-	
+
 	def __searchTimer(self):
-		diff = time.time() - self.__lastTypeTime 
+		diff = time.time() - self.__lastTypeTime
 		if diff > 0.3 and diff < 1:
 			self.__Library.model.refilter()
 			return False
@@ -690,24 +690,24 @@ class Christine(GtkMisc):
 			value = value.lower()
 		except:
 			value = ""
-			
+
 		if (value.find(self.__TextToSearch) >= 0):
 			return True
-		else: 
+		else:
 			return False
 
 	###################################################
 	#                  Play stuff                     #
 	###################################################
-	
-	
+
+
 	def switchPlay(self, widget):
 		"""
-		This metod enable/disable the playing. Works for the 
+		This metod enable/disable the playing. Works for the
 		menuitem and for the play button.
 		"""
 		#
-		# is really needed two controls? 
+		# is really needed two controls?
 		#
 		active = widget.get_active()
 
@@ -722,7 +722,7 @@ class Christine(GtkMisc):
 		# Sync the two controls
 		self.__MenuItemPlay.set_active(active)
 		self.__PlayButton.set_active(active)
-			
+
 	def play(self, widget = None):
 		"""
 		Play!!, but only if the state is not already playing
@@ -732,19 +732,19 @@ class Christine(GtkMisc):
 
 			if location == None:
 				self.goNext()
-				return 
+				return
 
 			if os.path.isfile(location):
 				# and only if location is not None, if it is the case then
-				# go for one file to play		
+				# go for one file to play
 				if (location == None):
 					self.goNext()
 			else:
 				self.setLocation(location)
 
 			self.__Player.playIt()
-			
-	
+
+
 	def trayIconPlay(self,widget = None):
 		"""
 		Play from trayicon menu
@@ -756,10 +756,10 @@ class Christine(GtkMisc):
 		Pause method
 		"""
 		self.__PlayButton.set_active(False)
-		
+
 	def goPrev(self, widget = None):
 		"""
-		Go to play the previous song. If no previous song was played in the 
+		Go to play the previous song. If no previous song was played in the
 		current session, then plays the previous song in the library
 		"""
 		if (len(self.__LastPlayed) > 1):
@@ -770,12 +770,12 @@ class Christine(GtkMisc):
 			self.__PlayButton.set_active(True)
 		else:
 			self.__LibraryCurrentIter = None
-			self.__LibraryModel.foreach(self.__SearchByPath, 
+			self.__LibraryModel.foreach(self.__SearchByPath,
 				self.__GConf.getString('backend/last_played'))
 
 			if self.__LibraryCurrentIter != None:
 				path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
-				
+
 				if (path > 0):
 					path = (path[0] -1,)
 
@@ -789,8 +789,8 @@ class Christine(GtkMisc):
 					self.__LastPlayed.pop()
 					self.__PlayButton.set_active(False)
 					self.__PlayButton.set_active(True)
-	
-	
+
+
 	def goNext(self, widget = None):
 		"""
 		Find a new file to play. in some cases relay on self.getNextInList
@@ -845,7 +845,7 @@ class Christine(GtkMisc):
 			else:
 				self.__ScrolledQueue.show()
 		return True
-			
+
 	def getNextInList(self):
 		"""
 		Gets the next item in list
@@ -892,7 +892,7 @@ class Christine(GtkMisc):
 		if (mlocation == location):
 			self.__LibraryCurrentIter = model.get_iter(path)
 			return True
-	
+
 	def onScaleChanged(self, scale, a, value = None):
 		"""
 		Callback on the value changed signal on position scale
@@ -906,7 +906,7 @@ class Christine(GtkMisc):
 			value = 0
 
 		self.__Player.seekTo(value)
-	
+
 	def setScale(self, scale, a, b):
 		"""
 		This method changes the scale value
@@ -914,7 +914,7 @@ class Christine(GtkMisc):
 		self.__ScaleMoving = True
 		self.__ScaleValue  = b
 		self.__ScaleMoving = False
-	
+
 	def jumpToPlaying(self, widget = None, path = None):
 		"""
 		This method jumps and select the file
@@ -927,28 +927,28 @@ class Christine(GtkMisc):
 		else:
 			location = path
 		self.__LibraryCurrentIter = None
-		self.__LibraryModel.foreach(self.__SearchByPath, 
+		self.__LibraryModel.foreach(self.__SearchByPath,
 				location)
 		if (self.__LibraryCurrentIter != None):
 			state = self.__StatePlaying
 			if (self.__StatePlaying):
 				iter = self.__LibraryCurrentIter
 				pix  = self.__Share.getImageFromPix('sound')
-				pix  = pix.scale_simple(20, 20, 
+				pix  = pix.scale_simple(20, 20,
 						gtk.gdk.INTERP_BILINEAR)
 				self.__Library.model.setValues(iter, PIX, pix)
 		self.__LibraryCurrentIter = None
-		self.__LibraryModel.foreach(self.__SearchByPath, 
+		self.__LibraryModel.foreach(self.__SearchByPath,
 				location)
 		if self.__LibraryCurrentIter != None:
-			self.__IterCurrentPlaying = self.__LibraryCurrentIter 
+			self.__IterCurrentPlaying = self.__LibraryCurrentIter
 			path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
 
 			if (path != None):
 				self.TreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 				self.TreeView.set_cursor(path)
 
-	
+
 	def jumpTo(self, widget):
 		"""
 		Creates a gtk.Dialog box where
@@ -992,7 +992,7 @@ class Christine(GtkMisc):
 		"""
 		Jumpo to Accept button
 		"""
-		if (event.keyval in (gtk.gdk.keyval_from_name('Return'), 
+		if (event.keyval in (gtk.gdk.keyval_from_name('Return'),
 					gtk.gdk.keyval_from_name('KP_Enter'))):
 			button.emit('clicked')
 
@@ -1004,7 +1004,7 @@ class Christine(GtkMisc):
 		if (volume < 0):
 			volume = 0
 		self.__HScaleVolume.set_value(volume)
-	
+
 	def increaseVolume(self, widget = None):
 		"""
 		Increase the volume
@@ -1013,7 +1013,7 @@ class Christine(GtkMisc):
 		if (volume > 1.0):
 			volume = 1.0
 		self.__HScaleVolume.set_value(volume)
-	
+
 	def mute(self, widget):
 		"""
 		Set mute
@@ -1027,7 +1027,7 @@ class Christine(GtkMisc):
 	####################################################
 	#               libraty stuff begins               #
 	####################################################
-	
+
 	def importFile(self, widget, queue = False):
 		"""
 		Import a file or files
@@ -1052,12 +1052,12 @@ class Christine(GtkMisc):
 				self.Queue.save()
 			else:
 				self.__Library.save()
-	
+
 	def importFolder(self, widget):
 		"""
 		This is the 'simple' way to import folders
-		Creates and run a filechooser dialog to 
-		select the dir. 
+		Creates and run a filechooser dialog to
+		select the dir.
 		A Checkbox let you set if the import will be
 		recursive.
 		"""
@@ -1099,7 +1099,7 @@ class Christine(GtkMisc):
 				f.append(i)
 		files = f
 		self.addFiles(files)
-	
+
 	def addDirectories(self, dir):
 		"""
 		Recursive import, first and only argument
@@ -1121,7 +1121,7 @@ class Christine(GtkMisc):
 		if response:
 			self.__walking = False
 		dialog.destroy()
-	
+
 	def __walkProgressPulse(self, progress):
 		progress.pulse()
 		return True
@@ -1130,7 +1130,7 @@ class Christine(GtkMisc):
 	def __walkDirectories(self, a, f, filenames, label, dialog):
 		if not self.__walking:
 			return False
-		try: 
+		try:
 			(dirpath, dirnames, files) = a.next()
 			filenames.append([dirpath, files])
 			try:
@@ -1150,7 +1150,7 @@ class Christine(GtkMisc):
 				self.addFiles(files = f)
 			return False
 		return True
-		
+
 	def __addFile(self, list = None, data = None,queue = False):
 		"""
 		Add a single file, to the library or queue.
@@ -1162,7 +1162,7 @@ class Christine(GtkMisc):
 			queue = False
 		library = (self.__Library, self.Queue)[queue]
 		gobject.idle_add(self.__addFileCycle, library)
-	
+
 	def __addFileCycle(self, library):
 		if len(self.__FilesToAdd) > 0:
 			d,m = divmod(len(library.model), 500)
@@ -1200,7 +1200,7 @@ class Christine(GtkMisc):
 		"""
 		XML = self.__Share.getTemplate('addFiles')
 		XML.signal_autoconnect(self)
-		
+
 		self.__AddWindow       = XML['WindowCore']
 		self.__AddProgress     = XML['progressbar']
 		self.__AddCloseButton  = XML['close']
@@ -1245,7 +1245,7 @@ class Christine(GtkMisc):
 		Import file to queue
 		"""
 		self.importFile('', True)
-	
+
 	########################################
 	#          PLayer section              #
 	########################################
@@ -1296,10 +1296,10 @@ class Christine(GtkMisc):
 		except gst.QueryError:
 			pass
 		return True
-	
+
 	def __streamLength(self):
 		"""
-		Catches the lenght of the media and update it in the 
+		Catches the lenght of the media and update it in the
 		player
 		"""
 		if (self.__Player.getLocation().split(':')[0] == 'http'):
@@ -1323,7 +1323,7 @@ class Christine(GtkMisc):
 				self.__PlayButton.set_active(True)
 
 			return True
-	
+
 	def setTags(self, widget = "", b = ""):
 		"""
 		Update the current media tags in the library
@@ -1365,7 +1365,7 @@ class Christine(GtkMisc):
 
 		# Sets window title, which it will be our current song :-)
 		self.__Window.set_title("%s - Christine" % title)
-		
+
 		notify_text = "<big>%s</big>\n" % title
 
 		# Show or hide deppending if there are something
@@ -1391,7 +1391,7 @@ class Christine(GtkMisc):
 						ALBUM,  album,
 						ARTIST, artist,
 						TN,     track_number,
-						SEARCH, '.'.join([title, 
+						SEARCH, '.'.join([title,
 							artist, album, genre, type_file]),
 						GENRE,  genre)
 
@@ -1428,11 +1428,11 @@ class Christine(GtkMisc):
 		if tooltext != '':
 			self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()
-	
+
 	########################################
 	#             Gtk modes                #
 	########################################
-	
+
 	def visualModePlayer(self, widget = None):
 		"""
 		Simple or complete visualization
@@ -1450,8 +1450,8 @@ class Christine(GtkMisc):
 			else:
 				self.__HBoxPlayer.hide()
 
-	
-	
+
+
 	def openRemote(self, widget):
 		"""
 		Open a dialog to select a remote location
@@ -1482,10 +1482,10 @@ class Christine(GtkMisc):
 
 		for stream in stream_history:
 			model.append([stream])
-		
+
 		if len(model)>0:
 			comboboxentry.set_active(0)
-		
+
 		response = dialog.run()
 
 		if (response == gtk.RESPONSE_OK):
@@ -1582,19 +1582,19 @@ class Christine(GtkMisc):
 		Show the about dialog
 		"""
 		guiAbout()
-	
+
 
 	def showGtkPreferences(self, widget):
 		"""
 		Show the preferences dialog
 		"""
 		guiPreferences()
-	
+
 
 	def quitGtk(self, widget = None):
 		self.__Player.stop()
 		gtk.main_quit()
-	
+
 	def runGtk(self):
 		"""
 		GTK application running

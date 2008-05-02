@@ -35,7 +35,7 @@ import gst.interfaces
 from libchristine.GtkMisc import GtkMisc,error
 from libchristine.GstBase import *
 from libchristine.Validator import *
-from libchristine.ChristineGConf import ChristineGConf
+from libchristine.christineConf import christineConf
 import logging
 
 BORDER_WIDTH = 0
@@ -43,7 +43,7 @@ BORDER_WIDTH = 0
 #
 # Player for manager play files
 #
-class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
+class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 	"""
 	Player for manage play files
 	"""
@@ -56,12 +56,12 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		self.__Logger = logging.getLogger('Player')
 		GtkMisc.__init__(self)
-		ChristineGConf.__init__(self)
+		christineConf.__init__(self)
 		gtk.DrawingArea.__init__(self)
 
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
-		
+
 		self.set_property('events',
 				gtk.gdk.ENTER_NOTIFY_MASK|
 				gtk.gdk.LEAVE_NOTIFY_MASK|
@@ -75,13 +75,13 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		self.__createPlaybin()
 		gobject.timeout_add(5000, self.__checkScreenSaver)
-	
+
 	def __eventHandler(self,widget,event):
 		'''
 		Catch the event
 		'''
 		return False
-	
+
 	#
 	# Check if screensaver is active/desactive
 	#
@@ -89,14 +89,14 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 	def __checkScreenSaver(self):
 		"""
 		Check if we are whatching something with the player,
-		if true, then deactivate the screensaver by resetting 
+		if true, then deactivate the screensaver by resetting
 		the idle time
 		"""
-		if self.__ShouldShow: 
+		if self.__ShouldShow:
 			a = os.popen('xscreensaver-command -deactivate 2&>/dev/null')
 			b = os.popen('gnome-screensaver-command -d 2&> /dev/null')
 		return True
-	
+
 	#
 	# Creates playbin
 	#
@@ -111,14 +111,14 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		self.play = self.__PlayBin
 		self.bus  = self.__PlayBin.get_bus()
-		
+
 		self.__updateAudioSink()
 		self.__updateVideoSink()
 		self.__updateAspectRatio()
 
-		self.notifyAdd('/apps/christine/backend/audiosink',    self.__updateAudioSink)
-		self.notifyAdd('/apps/christine/backend/videosink',    self.__updateVideoSink)
-		self.notifyAdd('/apps/christine/backend/aspect-ratio', self.__updateAspectRatio)
+		self.notifyAdd('backend/audiosink',    self.__updateAudioSink)
+		self.notifyAdd('backend/videosink',    self.__updateVideoSink)
+		self.notifyAdd('backend/aspect-ratio', self.__updateAspectRatio)
 
 		self.__updateAudioSink()
 		self.__updateVideoSink()
@@ -190,7 +190,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		if (not isNull(self.getLocation())):
 			self.pause()
 
-		vsink = self.getString('backend/videosink') 
+		vsink = self.getString('backend/videosink')
 
 		self.VideoSink = self.__elementFactoryMake(vsink)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
@@ -214,7 +214,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		if (not isNull(aspect_ratio)):
 			self.VideoSink.set_property('pixel-aspect-ratio', aspect_ratio)
-	
+
 	def __elementFactoryMake(self,element):
 		'''
 		Wrap the gst.element_factory_make, but add logging capabilities
@@ -234,7 +234,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		'''
 		self.__Logger.info("setting property '%s' with value '%s 'for element '%s'"%(property,repr(value),repr(element)))
 		element.set_property(property,value)
-	
+
 	def emitExpose(self):
 		self.exposeCallback()
 		return False
@@ -248,22 +248,22 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		"""
 		Draw the player
 		"""
-		# Drawing a black background because some 
+		# Drawing a black background because some
 		# GTK themes (clearlooks) don't draw it
-	
+
 		(x, y, w, h) = self.allocation
 		try:
 			self.__Context = self.window.cairo_create()
 		except:
 			return False
 
-		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH, 
-		                         w - 2 * BORDER_WIDTH, 
+		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
+		                         w - 2 * BORDER_WIDTH,
 		                         h - 2 * BORDER_WIDTH)
 		self.__Context.clip()
 
-		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH, 
-		                         w - 2 * BORDER_WIDTH, 
+		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
+		                         w - 2 * BORDER_WIDTH,
 		                         h - 2 * BORDER_WIDTH)
 
 		self.__Context.set_source_rgba(0,0,0)
@@ -304,7 +304,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 
 		self.getType()
 		self.exposeCallback()
-	
+
 	#
 	# Gets location
 	#
@@ -323,7 +323,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		else:
 			path = None
 		return path
-	
+
 	#
 	# Play the current song
 	#
@@ -333,7 +333,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		Play the current song
 		"""
 		self.__setState(gst.STATE_PLAYING)
-	
+
 	#
 	# Pause it
 	#
@@ -343,7 +343,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		Pause the current song
 		"""
 		self.__setState(gst.STATE_PAUSED)
-	
+
 	#
 	# Stop the current song
 	#
@@ -353,10 +353,10 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		Stop the current song
 		"""
 		self.__setState(gst.STATE_NULL)
-	
+
 	def __setState(self,state):
 		'''
-		Sets the state of the playtin to the state in 
+		Sets the state of the playtin to the state in
 		the state param.
 		Add loggin capabilites
 
@@ -364,7 +364,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		'''
 		self.__Logger.info("Setting the state of the Playbin to %s"%repr(state))
 		self.__PlayBin.set_state(state)
-	
+
 	#
 	# Sets visualization active or desactive
 	#
@@ -387,11 +387,11 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
 		return True
 
-	
+
 	#
 	# Sets volume value
 	#
-	# @return boolean			
+	# @return boolean
 	def setVolume(self, volume):
 		if (volume < 0):
 			volume = 0.0
@@ -401,7 +401,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		self.__elementSetProperty(self.__PlayBin,'volume', volume)
 
 	#
-	# Gets a specific tag 
+	# Gets a specific tag
 	#
 	# @param  string key
 	# @return string
@@ -472,9 +472,9 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 		Seek to secs
 		"""
 		sec = (long(sec) * gst.SECOND)
-		self.__PlayBin.seek(1.0, 
+		self.__PlayBin.seek(1.0,
 		        gst.FORMAT_TIME,    gst.SEEK_FLAG_FLUSH,
-				gst.SEEK_TYPE_SET,  sec, 
+				gst.SEEK_TYPE_SET,  sec,
 				gst.SEEK_TYPE_NONE, -1)
 
 	#
@@ -495,7 +495,7 @@ class Player(gtk.DrawingArea, GtkMisc, ChristineGConf, object):
 			return True
 		else:
 			return False
-	
+
 	#
 	# Check if it is sound or not
 	#

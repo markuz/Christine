@@ -29,7 +29,7 @@ from libchristine.GtkMisc import GtkMisc
 from libchristine.Translator import *
 from libchristine.Share import Share
 from libchristine.Validator import *
-from libchristine.ChristineGConf import ChristineGConf
+from libchristine.christineConf import christineConf
 import gtk
 #
 # Preferences gtk dialog
@@ -38,7 +38,7 @@ class guiPreferences(GtkMisc):
 	"""
 	Preferences gtk dialog
 	"""
-	
+
 	#
 	# Constructor
 	#
@@ -48,7 +48,7 @@ class guiPreferences(GtkMisc):
 		"""
 		GtkMisc.__init__(self)
 
-		self.__GConf = ChristineGConf()
+		self.__GConf = christineConf()
 		self.__Share = Share()
 
 		self.XML = self.__Share.getTemplate('Preferences')
@@ -140,7 +140,7 @@ class guiPreferences(GtkMisc):
 		"""
 		self.__FModel.set(self.__FModel.append(), 0, translate('New extension'))
 		self.__saveFModel()
-	
+
 	#
 	# Removes extension
 	#
@@ -184,7 +184,7 @@ class guiPreferences(GtkMisc):
 				break
 
 			a += 1
-	
+
 	#
 	# Update sink
 	#
@@ -196,7 +196,7 @@ class guiPreferences(GtkMisc):
 		model    = combobox.get_model()
 		selected = model.get_value(model.get_iter(path), 0)
 		self.__GConf.setValue('backend/%s' % sink, selected)
-	
+
 	#
 	# Sets checkboxes
 	#
@@ -219,11 +219,11 @@ class guiPreferences(GtkMisc):
 		self.__Length = self.XML['length']
 		self.__Length.set_active(self.__GConf.getBool('ui/show_length'))
 		self.__Length.connect('toggled',self.__GConf.toggle,'ui/show_length')
-	
+
 		self.__TrackNumber = self.XML['track_number']
 		self.__TrackNumber.set_active(self.__GConf.getBool('ui/show_tn'))
 		self.__TrackNumber.connect('toggled',self.__GConf.toggle,'ui/show_tn')
-		
+
 		self.__PlayCount = self.XML['play_count']
 		self.__PlayCount.set_active(self.__GConf.getBool('ui/show_play_count'))
 		self.__PlayCount.connect('toggled',self.__GConf.toggle,'ui/show_play_count')

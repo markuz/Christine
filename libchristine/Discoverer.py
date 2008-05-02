@@ -34,9 +34,9 @@ import gst.interfaces
 from libchristine.GtkMisc import *
 from libchristine.GstBase import *
 from libchristine.Validator import *
-from libchristine.ChristineGConf import *
+from libchristine.christineConf import christineConf
 
-class Discoverer(gtk.DrawingArea, ChristineGConf):
+class Discoverer(gtk.DrawingArea, christineConf):
 	#
 	# Constructor
 	#
@@ -45,14 +45,14 @@ class Discoverer(gtk.DrawingArea, ChristineGConf):
 		"""
 		Constructor
 		"""
-		ChristineGConf.__init__(self)
+		christineConf.__init__(self)
 		self.__Discoverer = gst.element_factory_make('playbin')
 		self.__VideoSink  = gst.element_factory_make('fakesink')
 
 		self.__Discoverer.set_property('audio-sink', gst.element_factory_make('fakesink'))
 		self.__Discoverer.set_property('video-sink', self.__VideoSink)
 		self.__Discoverer.set_property('volume',     0.0)
-		
+
 		# self.Bus must be public
 		self.Bus            = self.__Discoverer.get_bus()
 		self.query_duration = self.__Discoverer.query_duration
@@ -72,7 +72,7 @@ class Discoverer(gtk.DrawingArea, ChristineGConf):
 			self.callbackFoundTags(message.parse_tag())
 
 		return True
-	
+
 	#
 	# Receives a file in the first argument
 	# and puts it in the discoverer pipeline
@@ -94,7 +94,7 @@ class Discoverer(gtk.DrawingArea, ChristineGConf):
 		self.__Discoverer.set_state(gst.STATE_PAUSED)
 
 		return False
-		
+
 	#
 	# Callback foundTags
 	#
@@ -106,7 +106,7 @@ class Discoverer(gtk.DrawingArea, ChristineGConf):
 		if (len(tags.keys()) > 0):
 			for i in tags.keys():
 				self.__Tags[i] = tags[i]
-	
+
 	#
 	# Returns path location for a file
 	#
@@ -116,12 +116,12 @@ class Discoverer(gtk.DrawingArea, ChristineGConf):
 		returns the current location without the 'file://' part
 		"""
 		path = self.__Discoverer.get_property('uri')
-		
+
 		if (not isNull(path)):
 			path = path[7:]
 
 		return path
-	
+
 	#
 	# Gets tag with a key
 	#

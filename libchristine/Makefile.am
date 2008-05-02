@@ -28,7 +28,6 @@ DISTFILES= Makefile.in \
 		   About.py.in \
 		   Translator.py.in \
 		   libs_christine.py.in \
-		   clibrary.c \
 		   Plugins.py.in \
 		   Christine.py.in \
 		   Share.py.in \
@@ -80,8 +79,6 @@ clean:
 	rm $(srcdir)/Christine.py
 	rm $(srcdir)/GtkMisc.py
 	rm $(srcdir)/About.py
-	rm $(srcdir)/clibrary.o
-	rm $(srcdir)/clibrary.so
 	rm $(srcdir)/Translator.py
 	rm $(srcdir)/Plugins.py
 	rm $(srcdir)/libs_christine.py
