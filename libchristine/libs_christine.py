@@ -20,10 +20,8 @@
 
 import os
 import cPickle as pickle
-from libchristine.Share import SHARE_PATH
 from libchristine.GstBase import wdir
-
-import thread
+from libchristine.globalvars import DATADIR
 
 class sanity:
 	'''
@@ -38,7 +36,7 @@ class sanity:
 				f.write("#python")
 				f.close()
 		if os.getgid() == 0:
-			self.__check_dir(os.path.join("@datadir@","christine","cplugins"))
+			self.__check_dir(os.path.join(DATADIR,"christine","cplugins"))
 
 	def __check_christine_dir(self):
 		if not os.path.exists(wdir):
@@ -46,7 +44,7 @@ class sanity:
 		else:
 			if os.path.isfile(wdir):
 				os.unlink(wdir)
-				self.__check_christine_dir()	
+				self.__check_christine_dir()
 
 	def __check_dir(self,dir):
 		if not os.path.exists(dir):
@@ -55,8 +53,6 @@ class sanity:
 			if os.path.isfile(dir):
 				os.unlink(dir)
 				self.__check_dir(dir)
-
-
 
 class lib_library(object):
 	def __init__(self,list):
@@ -74,7 +70,7 @@ class lib_library(object):
 
 	def __getitem__(self,key):
 		return self.__files[key]
-		
+
 	def append(self,name,data):
 		if type(data) != type({}):
 			raise TypeError, "data must be a dict, got %s"%type(data)
@@ -82,7 +78,7 @@ class lib_library(object):
 
 	def keys(self):
 		return self.__files.keys()
-	
+
 	def save(self):
 		f = open(os.path.join(wdir,'sources',self.list),"w+")
 		pickle.dump(self.__files,f)
@@ -90,7 +86,7 @@ class lib_library(object):
 
 	def clear(self):
 		self.__files.clear()
-	
+
 	def remove(self,key):
 		'''
 		Remove an item from the main dict and return True or False
@@ -103,13 +99,14 @@ class lib_library(object):
 			self.__files = c.copy()
 			return True
 		return False
+
 	def get_type(self,file):
 		ext = file.split(".").pop()
 		if ext in sound:
 			return "sound"
 		if ext in video:
 			return "video"
-	
+
 	def get_all(self):
 		return self.__files
 

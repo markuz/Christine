@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # This file is part of the Christine project
@@ -19,27 +18,32 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
-# @category  libchristine
-# @package   Translator
+# @category  GTK
+# @package   About
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-import os
-import gettext
-from libchristine.pattern.Singleton import *
 
-locale_dir = '@datadir@/locale/'
-gettext.bindtextdomain('@programname@', locale_dir)
-gettext.textdomain('@programname@')
+#import gtk
+#import gst
+#import gst.interfaces
+#import random
+#import sys
 
-def translate(text):
-	return gettext.gettext(text)
+#from libchristine.GtkMisc import *
+from libchristine.Share import Share
+from libchristine.Translator import translate
+from libchristine.globalvars import PROGRAMNAME, VERSION
 
-class Translator(Singleton):
+#
+# Manage about GTK dialog
+#
+class guiAbout:
 	"""
-	Translator manager
+	Manange about GTK dialog
 	"""
+
 	#
 	# Constructor
 	#
@@ -47,20 +51,17 @@ class Translator(Singleton):
 		"""
 		Constructor
 		"""
-		self.setName('Translator')
+		self.__Share = Share()
 
-		self.__Path = '@datadir@/locale/'
+		xml   = self.__Share.getTemplate('About')
+		about = xml['about']
+		pix   = self.__Share.getImageFromPix('logo')
 
-		gettext.bindtextdomain('@programname@', self.__Path)
-		gettext.textdomain('@programname@')
-	
-	#
-	# Parse text to be translate
-	#
-	# @param  string text
-	# @return string
-	def parse(self, text):
-		"""
-		Parse text to be translate
-		"""
-		return gettext.gettext(text)
+		about.set_logo(pix)
+		about.set_name('@programname@')
+		about.set_version('@version@')
+		about.set_icon(self.__Share.getImageFromPix('logo'))
+		about.set_translator_credits(translate('translator-credits'))
+		print about.get_translator_credits()
+		about.run()
+		about.destroy()

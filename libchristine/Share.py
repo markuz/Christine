@@ -28,6 +28,7 @@
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.GtkMisc import glade_xml
+from libchristine.globalvars import DATADIR
 import gtk
 import sys
 import logging
@@ -39,14 +40,14 @@ else:
 	SHARE_PATH = os.path.join('@datadir@', 'christine')
 
 #
-# Share class manager for images, glade 
+# Share class manager for images, glade
 # templates and more files
 #
 # @author Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @since 0.4
 class Share(Singleton):
 	"""
-	Share class manager for images, glade 
+	Share class manager for images, glade
 	templates and more files
 	"""
 	#
@@ -54,13 +55,13 @@ class Share(Singleton):
 	#
 	# @var string
 	__PathTemplate = None
-	
+
 	#
 	# Directory where we have images
 	#
 	# @var string
 	__PathPixmap = None
-	
+
 	#
 	# Constructor
 	#
@@ -77,7 +78,7 @@ class Share(Singleton):
 		#self.__Pixmaps, used to store a pixmap. if it is here then reuse it
 		#instead of creating another one from the same faile
 		self.__Pixmaps = {}
-	
+
 	#
 	# Gets glade template
 	#
@@ -93,7 +94,7 @@ class Share(Singleton):
 				return glade_xml(os.path.join(self.__PathTemplate, file),root)
 		self.__logger.warning('File %s was not found'%(os.path.join(self.__PathTemplate, file)))
 		return None
-	
+
 	#
 	# Gets image as path string
 	#
@@ -124,7 +125,7 @@ class Share(Singleton):
 			names = []
 			for i in ['.png','.svg']:
 				names.append(os.path.join(self.__PathPixmap, name + i))
-			for i in names:				
+			for i in names:
 				if (isFile(i)):
 					if self.__Pixmaps.has_key(i):
 						return self.__Pixmaps[i]

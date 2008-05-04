@@ -201,8 +201,10 @@ class christineConf(Singleton):
 		section, option = vals
 		if self.configParser.has_section(section):
 			if not isinstance(value, str):
-				value = str(value).lower()
-			self.configParser.set(section, option, value)
+				nvalue = str(value).lower()
+			else:
+				nvalue = value
+			self.configParser.set(section, option, nvalue)
 		else:
 			return False
 		f = open(self.filepath,'w')
@@ -212,7 +214,6 @@ class christineConf(Singleton):
 
 	def __executeNotify(self, key, value):
 		if not self.notify.has_key(key):
-			print 'key %s was not found'%key
 			return False
 		for i in self.notify[key]:
 			func = i[0]
@@ -230,7 +231,6 @@ class christineConf(Singleton):
 		@param func: func to execute
 		@param *args: user data
 		'''
-		print 'notifyAdd %s'%key
 		if not self.notify.has_key(key):
 			self.notify[key] = []
 		self.notify[key].append((func, args))

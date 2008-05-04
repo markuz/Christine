@@ -29,7 +29,6 @@
 
 import sys
 import random
-import thread
 import time
 import gtk
 import gtk.gdk
@@ -39,6 +38,7 @@ import gobject
 from libchristine.Translator import *
 from libchristine.GtkMisc import GtkMisc, error
 from libchristine.Library import library
+from libchristine.globalvars import PROGRAMNAME
 from libchristine.Library import (PATH,
 NAME,
 TYPE,
@@ -55,9 +55,9 @@ from libchristine.Preferences import guiPreferences
 from libchristine.About import guiAbout
 from libchristine.Player import Player
 from libchristine.Display import Display
-from libchristine.Share import SHARE_PATH, Share
+from libchristine.Share import Share
 from libchristine.christineConf import christineConf
-from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_PIXBUF
+from libchristine.sources_list import sources_list, LIST_NAME
 import logging
 import webbrowser
 
@@ -65,7 +65,7 @@ import webbrowser
 try:
 	import pynotify
 	pynotify.Urgency(pynotify.URGENCY_NORMAL)
-	pynotify.init('christine')
+	pynotify.init(PROGRAMNAME)
 	version = pynotify.get_server_info()['version'].split('.')
 
 	if (version < [0, 3, 6]):

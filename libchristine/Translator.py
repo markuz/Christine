@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # This file is part of the Christine project
@@ -18,31 +19,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
-# @category  GTK
-# @package   About
+# @category  libchristine
+# @package   Translator
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
+import os
+import gettext
+from libchristine.pattern.Singleton import *
+from libchristine.globalvars import DATADIR, PROGRAMNAME
 
-#import gtk
-#import gst
-#import gst.interfaces
-#import random
-#import sys
+locale_dir = '@datadir@/locale/'
+gettext.bindtextdomain('@programname@', locale_dir)
+gettext.textdomain('@programname@')
 
-#from libchristine.GtkMisc import *
-from libchristine.Share import Share
-from libchristine.Translator import translate
+def translate(text):
+	return gettext.gettext(text)
 
-#
-# Manage about GTK dialog
-#
-class guiAbout:
+class Translator(Singleton):
 	"""
-	Manange about GTK dialog
+	Translator manager
 	"""
-	
 	#
 	# Constructor
 	#
@@ -50,17 +48,20 @@ class guiAbout:
 		"""
 		Constructor
 		"""
-		self.__Share = Share()
+		self.setName('Translator')
 
-		xml   = self.__Share.getTemplate('About')
-		about = xml['about']
-		pix   = self.__Share.getImageFromPix('logo')
+		self.__Path = os.path.join(DATADIR,'locale')
 
-		about.set_logo(pix)
-		about.set_name('@programname@')
-		about.set_version('@version@')
-		about.set_icon(self.__Share.getImageFromPix('logo'))
-		about.set_translator_credits(translate('translator-credits'))
-		print about.get_translator_credits()
-		about.run()
-		about.destroy()
+		gettext.bindtextdomain(PROGRAMNAME, self.__Path)
+		gettext.textdomain(PROGRAMNAME)
+
+	#
+	# Parse text to be translate
+	#
+	# @param  string text
+	# @return string
+	def parse(self, text):
+		"""
+		Parse text to be translate
+		"""
+		return gettext.gettext(text)
