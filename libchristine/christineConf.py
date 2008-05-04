@@ -154,7 +154,12 @@ class christineConf(Singleton):
 		section, option = vals
 		if method == None:
 			method = self.configParser.get
-		return method(section, option)
+		try:
+			result = method(section, option)
+		except:
+			result = None
+		return result
+
 
 	def getBool(self, key):
 		'''
@@ -162,7 +167,9 @@ class christineConf(Singleton):
 		section to a boolean value.
 		@param key: key to work on
 		'''
-		return self.get(key, self.configParser.getboolean)
+		val = self.get(key, self.configParser.getboolean)
+		if val: return val
+		else: return False
 
 	def getString(self, key):
 		'''
@@ -170,7 +177,9 @@ class christineConf(Singleton):
 		section to a string value.
 		@param key: key to work on
 		'''
-		return self.get(key)
+		val = self.get(key)
+		if val: return val
+		else: return False
 
 	def getInt(self, key):
 		'''
@@ -178,7 +187,9 @@ class christineConf(Singleton):
 		section to a integet number.
 		@param key: key to work on
 		'''
-		return self.get(key, self.configParser.getint)
+		val = self.get(key, self.configParser.getint)
+		if val: return val
+		else: return 0
 
 	def getFloat(self, key):
 		'''
@@ -186,7 +197,9 @@ class christineConf(Singleton):
 		section to a floating point number.
 		@param key: key to work on
 		'''
-		return self.get(key, self.configParser.getfloat)
+		val = self.get(key, self.configParser.getfloat)
+		if val: return val
+		else: return 0.0
 
 	def setValue(self, key, value):
 		'''
@@ -206,7 +219,8 @@ class christineConf(Singleton):
 				nvalue = value
 			self.configParser.set(section, option, nvalue)
 		else:
-			return False
+			self.configParser.add_section(section)
+			self.configParser.set(section, option, value)
 		f = open(self.filepath,'w')
 		self.configParser.write(f)
 		f.close()

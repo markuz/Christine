@@ -38,7 +38,7 @@ def isNull(value):
 	"""
 	if (value is not None):
 		return False
-	
+
 	return True
 
 #
@@ -50,7 +50,7 @@ def isBoolean(value):
 	"""
 	Compare if it is boolean or not
 	"""
-	return (type(value) == type(True))
+	return isinstance(value, bool)
 
 #
 # Compare if it is integer or not
@@ -61,7 +61,7 @@ def isInteger(value):
 	"""
 	Compare if it is integer or not
 	"""
-	return (type(value) == type(1))
+	return isinstance(value, int)
 
 #
 # Compare if it is float or not
@@ -72,7 +72,7 @@ def isFloat(value):
 	"""
 	Compare if it is float or not
 	"""
-	return (type(value) == type(1.0))
+	return isinstance(value, float)
 
 #
 # Compare if it is string or not
@@ -83,7 +83,7 @@ def isString(value):
 	"""
 	Compare if it is string or not
 	"""
-	return (type(value) == type(""))
+	return isinstance(value, str)
 
 #
 # Compare string if it is empty or not

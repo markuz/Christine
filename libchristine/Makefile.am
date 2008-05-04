@@ -8,7 +8,6 @@ Preferences.py \
 About.py \
 Discoverer.py \
 Player.py \
-GstBase.py \
 Display.py \
 sources_list.py \
 Translator.py \

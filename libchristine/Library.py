@@ -19,7 +19,6 @@
 
 
 import os,gtk,gobject,sys,pango
-import cPickle as pickle
 import gst
 
 from libchristine.libs_christine import lib_library
@@ -29,10 +28,8 @@ from libchristine.christineConf import christineConf
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.LibraryModel import LibraryModel
-from libchristine.GstBase import CHRISTINE_VIDEO_EXT
+from libchristine.globalvars import CHRISTINE_VIDEO_EXT
 import time
-import sys
-import pdb
 
 (PATH,
 NAME,

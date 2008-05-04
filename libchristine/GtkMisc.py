@@ -21,15 +21,13 @@
 
 import gtk
 import os
-import gobject
-import gconf
 import os.path
 import gtk.glade
 import logging
 
 class glade_xml:
 	def __init__(self,file,root=None):
-		'''constructor, receives the name of the interface descriptor 
+		'''constructor, receives the name of the interface descriptor
 		and then initialize gtk.glade.XML'''
 		locale_dir = "@datadir@/locale/"
 		gtk.glade.bindtextdomain("@programname@",locale_dir)
@@ -60,17 +58,14 @@ class GtkMisc:
 
 	def gen_pixbuf(self,imagefile):
 		'''Create a pixbuf from  a file'''
-		#try:
 		pixbuf = gtk.gdk.pixbuf_new_from_file(os.path.join(self.wdir,imagefile))
 		return pixbuf
-		#except:
-		#	raise IOError,"There is no pixmap called %s"%imagefile
-	
+
 	def set_image(self,widget,filename):
 		image = gtk.Image()
 		image.set_from_pixbuf(self.gen_pixbuf(filename))
 		widget.set_image(image)
-		
+
 	def image(self,filename):
 		image = gtk.Image()
 		image.set_from_pixbuf(self.gen_pixbuf(filename))
@@ -80,9 +75,9 @@ class GtkMisc:
 	def set_toolbutton_image(self,widget,filename):
 		image = self.image(filename)
 		widget.set_icon_widget(image)
-	
+
 	def strip_XML_entities(self,text):
-		entities = {"&":"&amp;",}	
+		entities = {"&":"&amp;",}
 		for i in entities.keys():
 			text = text.replace(i,entities[i])
 		return text
@@ -128,7 +123,7 @@ class CairoMisc:
 
 		cr.line_to(x1 - radius, y0)
 		cr.curve_to(x1-radius, y0, x1, y0, x1, y0 + radius)
-		
+
 		cr.line_to(x1, y1-radius)
 		cr.curve_to(x1, y1-radius, x1, y1, x1 -radius, y1)
 

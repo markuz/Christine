@@ -20,8 +20,7 @@
 
 import os
 import cPickle as pickle
-from libchristine.GstBase import wdir
-from libchristine.globalvars import DATADIR
+from libchristine.globalvars import DATADIR, wdir
 
 class sanity:
 	'''

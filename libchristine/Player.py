@@ -24,26 +24,25 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
+from libchristine.GtkMisc import error
+from libchristine.Validator import isNull
+from libchristine.christineConf import christineConf
+from libchristine.Validator import isFile
+from globalvars import CHRISTINE_VIDEO_EXT
+import gobject
+import gst
+import gtk
+import logging
 import os
 import pygst; pygst.require('0.10')
-import gtk
-import gobject
-import cairo
-import gst
-import gst.interfaces
 
-from libchristine.GtkMisc import GtkMisc,error
-from libchristine.GstBase import *
-from libchristine.Validator import *
-from libchristine.christineConf import christineConf
-import logging
 
 BORDER_WIDTH = 0
 
 #
 # Player for manager play files
 #
-class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
+class Player(gtk.DrawingArea, object):
 	"""
 	Player for manage play files
 	"""
@@ -55,9 +54,10 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 		 Constructor
 		"""
 		self.__Logger = logging.getLogger('Player')
-		GtkMisc.__init__(self)
-		christineConf.__init__(self)
+
 		gtk.DrawingArea.__init__(self)
+
+		self.config = christineConf(self)
 
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
@@ -107,7 +107,8 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 		"""
 		self.__Logger.info("Creating the Player")
 		self.__PlayBin = self.__elementFactoryMake('playbin')
-		self.__elementSetProperty(self.__PlayBin,'delay', GST_DELAY)
+		self.__elementSetProperty(self.__PlayBin,'delay',
+								self.config.getInt('backend/gst_delay'))
 
 		self.play = self.__PlayBin
 		self.bus  = self.__PlayBin.get_bus()
@@ -116,14 +117,14 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 		self.__updateVideoSink()
 		self.__updateAspectRatio()
 
-		self.notifyAdd('backend/audiosink',    self.__updateAudioSink)
-		self.notifyAdd('backend/videosink',    self.__updateVideoSink)
-		self.notifyAdd('backend/aspect-ratio', self.__updateAspectRatio)
+		self.config.notifyAdd('backend/audiosink',    self.__updateAudioSink)
+		self.config.notifyAdd('backend/videosink',    self.__updateVideoSink)
+		self.config.notifyAdd('backend/aspect-ratio', self.__updateAspectRatio)
 
 		self.__updateAudioSink()
 		self.__updateVideoSink()
 
-		active = self.getBool("ui/visualization")
+		active = self.config.getBool("ui/visualization")
 		if active:
 			self.setVisualization(False)
 		self.setVisualization(active)
@@ -161,7 +162,7 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 		if (not isNull(self.getLocation())):
 			self.pause()
 
-		asink = self.getString('backend/audiosink')
+		asink = self.config.getString('backend/audiosink')
 
 		self.__AudioSink = self.__elementFactoryMake(asink)
 		self.__AudioSinkPack.add(self.__AudioSink)
@@ -190,7 +191,7 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 		if (not isNull(self.getLocation())):
 			self.pause()
 
-		vsink = self.getString('backend/videosink')
+		vsink = self.config.getString('backend/videosink')
 
 		self.VideoSink = self.__elementFactoryMake(vsink)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
@@ -210,7 +211,7 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 		"""
 		Updates aspect ratio
 		"""
-		aspect_ratio = self.getString('backend/aspect-ratio')
+		aspect_ratio = self.config.getString('backend/aspect-ratio')
 
 		if (not isNull(aspect_ratio)):
 			self.VideoSink.set_property('pixel-aspect-ratio', aspect_ratio)
@@ -376,7 +377,7 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 		"""
 		self.__Logger.info("Setting visualization to %s"%repr(active))
 		if active:
-			self.__visualizationPlugin = self.__elementFactoryMake(self.getString('backend/vis-plugin'))
+			self.__visualizationPlugin = self.__elementFactoryMake(self.config.getString('backend/vis-plugin'))
 			self.VideoSink.set_property('force-aspect-ratio', self.isVideo())
 			self.__ShouldShow = True
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
@@ -490,7 +491,7 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 
 		ext = self.getLocation().split('.').pop().lower()
 
-		if (('video-codec' in self.__Tags.keys()) or (ext in video)):
+		if (('video-codec' in self.__Tags.keys()) or (ext in CHRISTINE_VIDEO_EXT)):
 			self.__ShouldShow = True
 			return True
 		else:
@@ -509,7 +510,8 @@ class Player(gtk.DrawingArea, GtkMisc, christineConf, object):
 
 		ext = self.getLocation().split('.').pop().lower()
 
-		if (('audio-codec' in self.__Tags.keys()) or (ext in sound)):
+		if (('audio-codec' in self.__Tags.keys()) or
+		  	  (ext in self.config.get('backend/allowed_files'))):
 			return True
 		else:
 			return False
