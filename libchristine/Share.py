@@ -29,15 +29,17 @@ from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.GtkMisc import glade_xml
 from libchristine.globalvars import DATADIR
+import os
 import gtk
 import sys
 import logging
+from libchristine.globalvars import DATADIR
 
 # global PATH to share files required
 if "--devel" in sys.argv:
 	SHARE_PATH = os.path.join("./")
 else:
-	SHARE_PATH = os.path.join('@datadir@', 'christine')
+	SHARE_PATH = os.path.join(DATADIR, 'christine')
 
 #
 # Share class manager for images, glade
