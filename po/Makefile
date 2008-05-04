@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = christine
 PACKAGE = christine
-VERSION = 0.1.7
+VERSION = 0.2.0_t1
 
 SHELL = /bin/sh
 
@@ -36,7 +36,7 @@ libdir = ${exec_prefix}/lib
 DATADIRNAME = share
 itlocaledir = $(prefix)/$(DATADIRNAME)/locale
 subdir = po
-install_sh = $(SHELL) /home/markuz/programacion/python/christine/christine/install-sh
+install_sh = $(SHELL) /home/markuz/workspace/christine/install-sh
 # Automake >= 1.8 provides /bin/mkdir -p.
 # Until it can be supposed, use the safe fallback:
 mkdir_p = $(install_sh) -d

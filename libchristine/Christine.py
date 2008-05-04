@@ -25,6 +25,7 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
+import os
 
 
 import sys
@@ -215,6 +216,7 @@ class Christine(GtkMisc):
 
 		# Create the library by calling to libs_christine.library class
 		self.__Library  = library()
+		self.__Library.loadLibrary(self.__GConf.get('backend/last_source'))
 		self.TreeView = self.__Library.tv
 
 		# FIXME: check method if exist and change to standarization
@@ -240,10 +242,10 @@ class Christine(GtkMisc):
 		self.Queue         = queue()
 		self.__ScrolledQueue = self.__XML['ScrolledQueue']
 
-		self.Queue.treeview.connect('key-press-event', self.QueueHandlerKey)
-		self.Queue.treeview.connect('row-activated',   self.itemActivated)
+		self.Queue.tv.connect('key-press-event', self.QueueHandlerKey)
+		self.Queue.tv.connect('row-activated',   self.itemActivated)
 
-		self.__ScrolledQueue.add(self.Queue.treeview)
+		self.__ScrolledQueue.add(self.Queue.tv)
 		gobject.timeout_add(500, self.checkQueue)
 
 		self.__SourcesList = sources_list()
@@ -363,13 +365,14 @@ class Christine(GtkMisc):
 		fname = model.get_value(model.get_iter(path),
 				LIST_NAME)
 		self.__Library.loadLibrary(fname)
+		self.__Gconf.setValue('backend/last_source', fname)
 
 	def QueueHandlerKey(self, widget, event):
 		"""
 		Handler the key-press-event in the queue list
 		"""
 		if (event.keyval == gtk.gdk.keyval_from_name('Delete')):
-			selection     = self.Queue.treeview.get_selection()
+			selection     = self.Queue.tv.get_selection()
 			(model, iter) = selection.get_selected()
 
 			if (iter is not None):
@@ -800,7 +803,7 @@ class Christine(GtkMisc):
 
 		# Look for a file in the queue. Iter should not be None in the case
 		# there where something in the queue
-		model = self.Queue.treeview.get_model()
+		model = self.Queue.tv.get_model()
 		iter  = model.get_iter_first()
 
 		if (type(iter) == gtk.TreeIter):
@@ -837,7 +840,7 @@ class Christine(GtkMisc):
 				self.getNextInList()
 
 	def	checkQueue(self):
-		model = self.Queue.treeview.get_model()
+		model = self.Queue.tv.get_model()
 		if (model != None):
 			b = model.get_iter_first()
 			if b == None:

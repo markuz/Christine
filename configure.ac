@@ -1,5 +1,5 @@
-AC_INIT('christine', '0.1.6', 'markuz@islascruz.org')
-AM_INIT_AUTOMAKE('christine', '0.1.6')
+AC_INIT('christine', '0.2.0_t1', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.2.0_t1')
 
 AC_CONFIG_SRCDIR(libchristine)
 AC_CONFIG_SRCDIR(gui)
@@ -19,21 +19,11 @@ AC_PROG_CC
 AC_PROG_INSTALL
 PKG_PROG_PKG_CONFIG
 
-
-dnl PKG_CHECK_MODULES(pygtk, pygtk-2.0)
-dnl PKG_CHECK_MODULES(gstreamer,gstreamer-0.10)
-dnl PKG_CHECK_MODULES(gst_python,gst-python-0.10)
-dnl Dropping gnome dependencies
-dnl PKG_CHECK_MODULES(gnome_python,gnome-python-2.0)
-dnl PKG_CHECK_MODULES(gnome_python_extras,gnome-python-extras-2.0)
-dnl PKG_CHECK_MODULES(gconf,gconf-2.0)
-dnl PKG_CHECK_MODULES(glib,glib-2.0)
-
 AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
 
 
-for i in mutagen gtk gconf gtk.glade gst; do
+for i in mutagen gtk gtk.glade gst; do
 	(`python -c "import $i"`) < /dev/null > /dev/null 2>&1 || {
 		echo "checking for $i python module... no";
 		exit 1
@@ -43,7 +33,7 @@ done
 
 
 PROGRAM_NAME="christine"
-VERSION="0.1.6"
+VERSION="0.2.0_t1"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib()"`
 
@@ -73,7 +63,7 @@ AC_ARG_WITH(readline,
        break], [TERMLIBS=], $TERMLIBS)])
 
       AC_CHECK_LIB(readline, rl_completion_matches,
-	   [AC_DEFINE(HAVE_LIBREADLINE_NEW, 1, 
+	   [AC_DEFINE(HAVE_LIBREADLINE_NEW, 1,
 	      [Do we have rl_completion_matches?])])
     ;;
   no)
@@ -108,7 +98,7 @@ AC_ARG_WITH(readline,
 
 
       AC_CHECK_LIB(readline, rl_completion_matches,
-	   [AC_DEFINE(HAVE_LIBREADLINE_NEW, 1, 
+	   [AC_DEFINE(HAVE_LIBREADLINE_NEW, 1,
 	      [Do we have rl_completion_matches?])])
     LDFLAGS=$_ldflags
     ;;
@@ -150,7 +140,7 @@ intltool-update
 
 AC_OUTPUT
 
-echo 
+echo
 echo $PROGRAM_NAME will be installed in..........: ${prefix}/bin
 echo Python modules will be installed in.....: ${PYTHON_LIB_DIR}
 echo Shared files will be installed in.......: ${prefix}/share/christine

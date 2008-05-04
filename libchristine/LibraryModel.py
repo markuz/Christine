@@ -22,7 +22,7 @@ import gtk
 import sys
 
 class LibraryModel(gtk.ListStore):
-	'''This is a custom model that 
+	'''This is a custom model that
 	implements ListStore, Filter and Sortable
 	models
 	'''
@@ -43,16 +43,16 @@ class LibraryModel(gtk.ListStore):
 
 	def refilter(self):
 		self.__filter.refilter()
-	
+
 	def remove(self,iter):
 		iter = self.__getNaturalIter(iter)
 		gtk.ListStore.remove(self,iter)
-	
+
 	def getValue(self,iter,column):
 		niter = self.__getNaturalIter(iter)
 		if niter != None:
 			return self.get_value(niter,column)
-	
+
 	def Get(self,iter,*args):
 		niter = self.__getNaturalIter(iter)
 		if niter != None:
@@ -73,7 +73,17 @@ class LibraryModel(gtk.ListStore):
 				args1.append(value)
 			args2 = tuple(args1)
 			return self.set(niter, *args2)
-	
+
+	def get_value(self, iter, column):
+		'''
+		Wrapper for the get_value method.
+		@param iter:
+		@param column:
+		'''
+		iter = self.__getNaturalIter(iter)
+		if iter:
+			return gtk.ListStore.get_value(self, iter, column)
+
 
 	def __getNaturalIter(self,iter):
 		if self.iter_is_valid(iter):
@@ -85,7 +95,7 @@ class LibraryModel(gtk.ListStore):
 			return iter
 		iter = self.__filter.convert_iter_to_child_iter(iter)
 		if self.iter_is_valid(iter):
-			return iter 
+			return iter
 		return None
 
 	def getIterValid(self,iter):

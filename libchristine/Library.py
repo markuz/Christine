@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- encoding: latin-1 -*-
+from Translator import translate
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -61,7 +62,7 @@ QUEUE_TARGETS = [
 ## both lists (and other lists)
 ##
 
-class library(GtkMisc,gtk.DrawingArea):
+class library(GtkMisc):
 	def __init__(self):
 		'''
 		Constructor, load the
@@ -75,21 +76,21 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.__row_changed_id = 0
 		self.__appending = False
 		self.__setting = False
-		gtk.DrawingArea.__init__(self)
+		self.useQueueModel = False
 		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
 		self.tv = self.__xml["treeview"]
-		self.loadLibrary('music')
-		self.__add_columns()
+		#self.loadLibrary('music')
 		self.set_drag_n_drop()
 		self.blank_pix = self.__Share.getImageFromPix("blank")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		self.CURRENT_ITER = self.model.get_iter_first()
+
 
 	def loadLibrary(self, library):
 		if self.__row_changed_id:
 			self.model.disconnect(self.__row_changed_id)
+		self.__add_columns()
 		self.__appending = False
 		self.__setting = False
 		self.library_lib = lib_library(library)
@@ -99,6 +100,8 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.gen_model()
 		self.fillModel()
 		self.tv.set_model(self.model.getModel())
+		self.CURRENT_ITER = self.model.get_iter_first()
+
 
 	def __rowChanged(self,model,path,iter):
 		'''
@@ -196,17 +199,6 @@ class library(GtkMisc,gtk.DrawingArea):
 			self.iters[path] = iter
 		return True
 
-####def set(self,iter, col1, path, col2, name, col3, search):
-####	try:
-####		name = u'%s'%name.encode('latin-1')
-####	except:
-####		pass
-####	self.model.set(iter,
-####			col1, path,
-####			col2, name,
-####			col3, search)
-####	self.iters[path] = iter
-
 	def __set(self):
 		if not self.__setting:
 			return False
@@ -235,6 +227,23 @@ class library(GtkMisc,gtk.DrawingArea):
 		return True
 
 	def __add_columns(self):
+		if self.useQueueModel:
+			self.__addSmallColumns()
+		else:
+			self.__addSourcesColumns()
+
+	def __addSmallColumns(self):
+		render = gtk.CellRendererText()
+		tv = self.tv
+		pix = gtk.CellRendererPixbuf()
+		icon = gtk.TreeViewColumn("",pix,pixbuf=PIX)
+		icon.set_sort_column_id(TYPE)
+		name = gtk.TreeViewColumn(translate("Queue"),render,markup=NAME)
+		name.set_sort_column_id(NAME)
+		tv.append_column(name)
+		tv.set_headers_visible(False)
+
+	def __addSourcesColumns(self):
 		render = gtk.CellRendererText()
 		render.set_property("ellipsize",pango.ELLIPSIZE_END)
 		tv = self.tv
@@ -341,17 +350,51 @@ class library(GtkMisc,gtk.DrawingArea):
 		if type(tags["track"]) !=  type(1):
 			tags["track"] = 0
 
+		name	= tags["title"]
+		album	= tags["album"]
+		artist	= tags["artist"]
+		tn		= tags["track"]
+
+		if self.useQueueModel:
+			if file.split(":")[0] == "file" or \
+					os.path.isfile(file) or \
+					os.path.isfile(file.replace('%2C',',')):
+				try:
+					file = file.replace('%2C',',')
+					tags = self.__Tagger.readTags(file)
+				except:
+					self.emit_signal("tags-found!")
+					return True
+				name	= self.strip_XML_entities(tags["title"])
+				album	= self.strip_XML_entities(tags["album"])
+				artist	= self.strip_XML_entities(tags["artist"])
+				if name == "":
+					n = os.path.split(file)[1].split(".")
+					name = ".".join([k for k in n[:-1]])
+				name = "<b><i>%s</i></b>"%name
+				name = self.strip_XML_entities(name)
+				if album !="":
+					name += "\n from <i>%s</i>"%album
+				if artist != "":
+					name += "\n by <i>%s</i>"%artist
+			else:
+				name = file
+
+
 		self.model.set(iter,
-				NAME,tags["title"],
+				NAME,name,
 				PATH,file,
 				PIX,self.blank_pix,
 				TYPE,t,
-				ALBUM,tags["album"],
-				ARTIST,tags["artist"],
-				TN,tags["track"],
+				ALBUM,album,
+				ARTIST,artist,
+				TN,int(tn),
 				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
 				PLAY_COUNT,0,
 				GENRE,tags["genre"])
+
+		if self.useQueueModel:
+				self.save()
 
 
 	def stream_length(self,widget=None,n=1):

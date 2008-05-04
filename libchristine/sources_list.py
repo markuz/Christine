@@ -22,7 +22,6 @@ from libchristine.GtkMisc import *
 from libchristine.Share import Share
 from libchristine.Translator import  *
 from libchristine.libs_christine import lib_library
-import ConfigParser
 
 (LIST_NAME,
 LIST_TYPE,
@@ -44,7 +43,7 @@ class sources_list (GtkMisc):
 		addButton.connect('clicked', self.__addSource)
 		delButton.connect('clicked', self.__delSource)
 		self.__append_columns()
-	
+
 	def __gen_model(self):
 		if not getattr(self,'model',False):
 			self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
@@ -74,7 +73,7 @@ class sources_list (GtkMisc):
 		column.add_attribute(text,"text",LIST_NAME)
 		column.add_attribute(pix,"pixbuf",LIST_PIXBUF)
 		self.treeview.append_column(column)
-	
+
 	def __addSource(self,button):
 		xml = self.__Share.getTemplate('NewSourceDialog')
 		dialog = xml['dialog']
@@ -92,8 +91,8 @@ class sources_list (GtkMisc):
 			self.__gen_model()
 
 		dialog.destroy()
-	
-	
+
+
 	def __delSource(self,button):
 		xml = self.__Share.getTemplate('genericQuestion')
 		dialog = xml['dialog']
@@ -110,11 +109,11 @@ class sources_list (GtkMisc):
 			self.__gen_model()
 
 		dialog.destroy()
-		
-
-		
 
 
 
 
-	
+
+
+
+

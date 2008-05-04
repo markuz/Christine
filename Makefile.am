@@ -2,7 +2,7 @@ SUBDIRS = libchristine gui po cplugins libchristine/pattern/
 
 bin_SCRIPTS = christine
 
-EXTRA_DIST = config.rpath mkinstalldirs m4/ChangeLog  mkinstalldirs m4/ChangeLog christine.desktop.in christine.c
+EXTRA_DIST = config.rpath mkinstalldirs mkinstalldirs christine.desktop.in christine.c createDeb.sh.in
 DIST_FILES = ${EXTRA_DIST}
 
 program_name = @program_name@
@@ -10,8 +10,6 @@ PROGRAM_NAME = @PROGRAM_NAME@
 desktopdir =  $(datadir)/applications
 pkgdatadir = $(datadir)
 desktop_DATA = christine.desktop
-local_DATA = createDeb.sh
-localdir=./
 
 prefix = @prefix@
 sysconfdir = @sysconfdir@
@@ -30,6 +28,8 @@ edit = sed \
 clean-local:
 	rm -rf christine.desktop
 	rm -rf christine
+	rm -rf createDeb.sh
+	
 all: all-am
 	chmod 755 christine
 
