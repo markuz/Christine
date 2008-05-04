@@ -308,7 +308,6 @@ class library(GtkMisc,gtk.DrawingArea):
 		self.gconf.notifyAdd("ui/show_play_count",self.gconf.toggleVisible,play)
 		self.gconf.notifyAdd("ui/show_length",self.gconf.toggleVisible,length)
 		self.gconf.notifyAdd("ui/show_genre",self.gconf.toggleVisible,genre)
-		#self.discoverer = Discoverer()
 
 	def add(self,file,prepend=False):
 		if type(file) == type(()):

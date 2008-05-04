@@ -41,8 +41,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 	"""
 	Display the track progress in christine
 	"""
-	
-	
+
+
 	def __init__(self, text= ''):
 		"""
 		Constructor
@@ -68,7 +68,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 
 		self.connect('button-press-event', self.__buttonPressEvent)
 		self.connect('expose-event',       self.__doExpose)
-		self.connect('size-allocate', self._on_size_allocate)
 
 		gobject.signal_new('value-changed', self,
 				           gobject.SIGNAL_RUN_LAST,
@@ -109,22 +108,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 			self.setScale(value)
 			self.emit("value-changed",self)
 
-	def _on_size_allocate(self, win, *args):
-		w, h = (self.allocation.width, self.allocation.height)
-
-		self.bitmap = gtk.gdk.Pixmap(None, w, h, 1)
-		context = self.bitmap.cairo_create()
-
-		# Clear the bitmap
-		context.set_source_rgb(1, 1, 1)
-		context.set_operator(cairo.OPERATOR_DEST_OUT)
-		context.paint()
-
-		#draw our shape
-		self.__drawDisplay(context, 1)
-		#win.shape_combine_mask(self.bitmap, 0, 0)
-		#self.parent.shape_combine_mask(self.bitmap, 0, 0)
-
 	def setText(self, text):
 		"""
 		Sets text
@@ -147,7 +130,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		Gets value
 		"""
 		return self.__Value
-		
+
 	def setValue(self, value):
 		self.__Value = value
 
@@ -168,6 +151,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		if getattr(self,'window', None) == None:
 			return True
 		context = self.window.cairo_create()
+		#clear the bitmap
 		self.__drawDisplay(context)
 
 
@@ -180,8 +164,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		wcolor = style.bg[0]
 		fontdesc = style.font_desc
 
-		br,bg,bb = (self.getCairoColor(wcolor.red), 
-				self.getCairoColor(wcolor.green), 
+		br,bg,bb = (self.getCairoColor(wcolor.red),
+				self.getCairoColor(wcolor.green),
 				self.getCairoColor(wcolor.blue))
 
 		fr,fg,fb = (self.getCairoColor(tcolor.red),
@@ -189,14 +173,15 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 				self.getCairoColor(tcolor.blue))
 
 		(x, y, w, h)   = self.allocation
-	
+
+
 		context.move_to( 0, 0 )
 		context.set_operator(cairo.OPERATOR_OVER)
 
 		context.set_line_width( 1 )
 		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
-		#self.render_rect(context, 0, 0, w, h, 1)
+		self.render_rect(context, 0, 0, w, h, 1)
 		context.rectangle(x,y,w,h)
 		context.set_source_rgb(br,bg,bb)
 		context.fill()
@@ -207,7 +192,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		self.__Layout.set_font_description(fontdesc)
 
 		(fontw, fonth) = self.__Layout.get_pixel_size()
-		
+
 		if self.__HPos == 0 or fontw < w:
 			self.__HPos = (w - fontw) / 2
 		elif self.__HPos > (fontw-(fontw*2)):
@@ -224,26 +209,24 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 
 		# Drawing the progress bar
 		context.set_antialias(cairo.ANTIALIAS_NONE)
-		context.rectangle(fh, 
+		context.rectangle(fh,
 				((BORDER_WIDTH * 2) + fh) +1 , width, BORDER_WIDTH)
 		context.set_line_width(1)
 		context.set_line_cap(cairo.LINE_CAP_BUTT)
 		context.stroke()
-		
+
 		width = (self.__Value * width)
 
-		context.rectangle(fh, 
+		context.rectangle(fh,
 				((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
 		context.fill()
 
 		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
-		context.arc(
-				int (fh + width), 
+		context.arc(int (fh + width),
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 4, 0, 2 * math.pi)
 		context.fill()
 
-		context.arc(
-				int (fh + width), 
+		context.arc(int (fh + width),
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 2, 0, 2 * math.pi)
 		context.set_source_rgb(1,1,1)
 		context.fill()
@@ -262,6 +245,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		width  =  int(300)
 		height =  int(fonth * 2 + BORDER_WIDTH +10)
 		#self.set_size_request(width, height)
-		
+
 
 	value = property(getValue, setScale)

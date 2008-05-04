@@ -99,6 +99,7 @@ class christineConf(Singleton):
 		f = open(self.filepath, 'r')
 		self.configParser.read(f)
 		f.close()
+		del f
 		return True
 
 	def resetDefaults(self):
@@ -225,6 +226,7 @@ class christineConf(Singleton):
 		self.configParser.write(f)
 		f.close()
 		self.__executeNotify(key, value)
+		del f
 
 	def __executeNotify(self, key, value):
 		if not self.notify.has_key(key):

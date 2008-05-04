@@ -18,17 +18,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-import os,gtk,gobject,sys,pango
-import cPickle as pickle
-#import gst, gst.interfaces
+import os,gtk,gobject
 from libchristine.libs_christine import lib_library
 from libchristine.GtkMisc import GtkMisc
-#from libchristine.Discoverer import *
 from libchristine.Translator import *
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
-#from libchristine import clibrary
-#import pdb
 
 (PATH,
 		NAME,
@@ -62,8 +57,6 @@ class queue(GtkMisc,gtk.DrawingArea):
 		self.__Tagger= Tagger()
 		self.iters = {}
 		self.files = []
-		#self.discoverer = Discoverer()
-		#self.discoverer.Bus.add_watch(self.message_handler)
 		self.library = lib_library("queue")
 		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
@@ -75,8 +68,8 @@ class queue(GtkMisc,gtk.DrawingArea):
 		self.treeview.set_model(self.model)
 		self.__add_columns()
 		self.set_drag_n_drop()
-	
-		
+
+
 	def gen_model(self,refresh=False):
 		if refresh:
 			self.model.clear()
@@ -92,7 +85,7 @@ class queue(GtkMisc,gtk.DrawingArea):
 					PATH,self.library[i]["path"],
 					NAME,self.library[i]["name"],
 					TYPE,self.library[i]["type"])
-			
+
 	def add(self,file,prepend=False):
 		self.file = file
 		model = self.model
@@ -151,7 +144,7 @@ class queue(GtkMisc,gtk.DrawingArea):
 		self.model.remove(iter)
 		self.library.clear()
 		self.save()
-	
+
 	def save(self):
 		'''
 		Save the current library
@@ -159,14 +152,14 @@ class queue(GtkMisc,gtk.DrawingArea):
 		self.pos = 0
 		self.model.foreach(self.prepare_for_disk)
 		self.library.save()
-		
-		
+
+
 	def prepare_for_disk(self,model,path,iter):
 		name = self.model.get_value(iter,NAME)
 		path = self.model.get_value(iter,PATH)
 		self.library.append(self.pos,{"path":path,"name":name,"type":"sound","extra":[]})
 		self.pos += 1
-		
+
 	#def item_activated(self,widget,path,iter):
 	#	model = widget.get_model()
 	#	iter = model.get_iter(path)
@@ -176,13 +169,13 @@ class queue(GtkMisc,gtk.DrawingArea):
 	#	self.main.play_button.set_active(False)
 	#	self.main.play_button.set_active(True)
 	#	self.main.filename = filename
-	
+
 	def key_press_handler(self,widget,event,key):
 		pass
 
 	def set_drag_n_drop(self):
 	### FIXME For some reason this thing doesn't work!!! ###
-		self.treeview.enable_model_drag_dest(QUEUE_TARGETS, 
+		self.treeview.enable_model_drag_dest(QUEUE_TARGETS,
 				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_MOVE)
 		#self.treeview.connect("drag-motion",self.check_contexts)
 		#self.treeview.connect("drag-drop",self.dnd_handler)
@@ -198,7 +191,7 @@ class queue(GtkMisc,gtk.DrawingArea):
 		tgt = treeview.drag_dest_find_target(context,[('text/plain',0,0),('GTK_TREE_MODEL_ROW',2,0)])
 		data = treeview.drag_get_data(context,tgt)
 		return True
-	
+
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
 		treeview.emit_stop_by_name("drag-data-received")
 		#target = treeview.drag_dest_find_target(context,[("text/plain",0,0)])
@@ -226,5 +219,5 @@ class queue(GtkMisc,gtk.DrawingArea):
 					ext in video:
 				result.append(i)
 		return result
-		
+
 
