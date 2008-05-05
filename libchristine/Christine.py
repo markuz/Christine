@@ -216,7 +216,11 @@ class Christine(GtkMisc):
 
 		# Create the library by calling to libs_christine.library class
 		self.__Library  = library()
-		self.__Library.loadLibrary(self.__GConf.get('backend/last_source'))
+		lastSourceUsed = self.__GConf.get('backend/last_source')
+		if not lastSourceUsed:
+			lastSourceUsed = 'music'
+		self.__Library.loadLibrary(lastSourceUsed)
+		del lastSourceUsed
 		self.TreeView = self.__Library.tv
 
 		# FIXME: check method if exist and change to standarization
