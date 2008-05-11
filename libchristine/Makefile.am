@@ -1,28 +1,45 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
-scripts_DATA=__init__.py \
-GtkMisc.py \
-Library.py \
-libs_christine.py \
-Preferences.py \
-About.py \
-Player.py \
-Display.py \
-sources_list.py \
-Translator.py \
-Christine.py \
-Share.py \
-Queue.py \
-Validator.py \
-christineConf.py \
-Tagger.py \
-LibraryModel.py \
-BugReport.py \
-globalvars.py
-
+scripts_DATA=__init__.pyc \
+GtkMisc.pyc \
+Library.pyc \
+libs_christine.pyc \
+Preferences.pyc \
+About.pyc \
+Player.pyc \
+Display.pyc \
+sources_list.pyc \
+Translator.pyc \
+Christine.pyc \
+Share.pyc \
+Queue.pyc \
+Validator.pyc \
+christineConf.pyc \
+Tagger.pyc \
+LibraryModel.pyc \
+BugReport.pyc \
+globalvars.pyc
 
 DISTFILES= Makefile.in \
-		   $(scripts_DATA) 
+		   __init__.py \
+			GtkMisc.py \
+			Library.py \
+			libs_christine.py \
+			Preferences.py \
+			About.py \
+			Player.py \
+			Display.py \
+			sources_list.py \
+			Translator.py \
+			Christine.py \
+			Share.py \
+			Queue.py \
+			Validator.py \
+			christineConf.py \
+			Tagger.py \
+			LibraryModel.py \
+			BugReport.py \
+			globalvars.py 
 
 
 pkgdatadir=${datadir}
@@ -46,6 +63,7 @@ globalvars.py: Makefile $(srcdir)/globalvars.py.in
 all: all-am
 
 all-am: 
+	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'), force=True)"
 
 clean:
 	rm $(srcdir)/Share.py

@@ -3,10 +3,10 @@
 #include <graminit.h>
 #include <pythonrun.h>
 
-void error(char *msg) { 
+void error(char *msg) {
 	PyErr_Print();
-	printf("%s\n", msg); 
-	exit(1); 
+	printf("%s\n", msg);
+	exit(1);
 }
 
 char* python_code = "\
@@ -17,6 +17,7 @@ lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
 from libchristine.libs_christine import sanity\n\
 from libchristine.BugReport import BugReport\n\
+import gtk\n\
 sanity()\n\
 pidfile = 	os.path.join(os.environ['HOME'],\n\
 			'.christine','christine.pid')\n\
@@ -35,8 +36,8 @@ f = open(pidfile,'w')\n\
 f.write('%d'%(os.getpid()))\n\
 f.close()\n\
 from libchristine.Christine import *\n\
-a = Christine()\n\
 try:\n\
+	a = Christine()\n\
 	if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
 		for i in sys.argv[1:]:\n\
 			if os.path.isfile(i):\n\
@@ -44,7 +45,8 @@ try:\n\
 		a.play()\n\
 except:\n\
    BugReport()\n\
-a.runGtk()\n\
+finally:\n\
+	gtk.main()\n\
 ";
 
 

@@ -1,9 +1,10 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine/pattern
 
-scripts_DATA=__init__.py \
-			 Singleton.py
+scripts_DATA=__init__.pyc \
+			 Singleton.pyc
 DISTFILES= Makefile.in \
-		   $(scripts_DATA) 
+		   __init__.py \
+			Singleton.py 
 
 
 pkgdatadir=${datadir}
@@ -22,6 +23,7 @@ edit = sed \
 	   -e 's,@version\@,$(version),g'
 
 all: all-am
+	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'), force=True)"
 
 all-am: 
 
