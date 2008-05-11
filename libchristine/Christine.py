@@ -58,6 +58,7 @@ from libchristine.Player import Player
 from libchristine.Display import Display
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
+from libchristine.customButtons import christineButtons
 from libchristine.sources_list import sources_list, LIST_NAME
 import logging
 import webbrowser
@@ -206,6 +207,11 @@ class Christine(GtkMisc):
 
 		# cdisplaybox is the display gtk-Box
 		self.__HBoxCairoDisplay = self.__XML['HBoxCairoDisplay']
+
+		self.__controlButtons = christineButtons()
+		self.__HBoxCairoDisplay.pack_start(self.__controlButtons,
+										False, False, 0)
+		self.__controlButtons.show()
 
 		# Create the display and attach it to the main window
 		self.__Display = Display()
