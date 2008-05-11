@@ -209,10 +209,8 @@ class Christine(GtkMisc):
 		# Create the display and attach it to the main window
 		self.__Display = Display()
 		self.__Display.connect('value-changed', self.onScaleChanged)
-		eventBox = gtk.EventBox()
-		eventBox.add(self.__Display)
-		self.__HBoxCairoDisplay.pack_start(eventBox, True, True, 0)
-		eventBox.show_all()
+		self.__HBoxCairoDisplay.pack_start(self.__Display, True, True, 0)
+		self.__Display.show()
 
 		# Create the library by calling to libs_christine.library class
 		self.__Library  = library()
@@ -369,7 +367,7 @@ class Christine(GtkMisc):
 		fname = model.get_value(model.get_iter(path),
 				LIST_NAME)
 		self.__Library.loadLibrary(fname)
-		self.__Gconf.setValue('backend/last_source', fname)
+		self.__GConf.setValue('backend/last_source', fname)
 
 	def QueueHandlerKey(self, widget, event):
 		"""
@@ -1278,7 +1276,7 @@ class Christine(GtkMisc):
 			percent = 0
 			percent = b.structure['buffer-percent']
 			self.__Display.setText("%d" % percent)
-			self.__Display.setValue((percent / 100))
+			self.__Display.setScale((percent / 100))
 		elif (type_file == gst.MESSAGE_ELEMENT):
 			self.__Player.emitExpose()
 			return True
@@ -1600,6 +1598,9 @@ class Christine(GtkMisc):
 
 	def quitGtk(self, widget = None):
 		self.__Player.stop()
+		pidfile = 	os.path.join(os.environ['HOME'],'.christine',
+								'christine.pid')
+		os.unlink(pidfile)
 		gtk.main_quit()
 
 	def runGtk(self):

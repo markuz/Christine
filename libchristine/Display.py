@@ -27,7 +27,6 @@
 
 import gtk
 import cairo
-import pango
 import gobject
 import math
 from libchristine.Validator import *
@@ -37,7 +36,7 @@ BORDER_WIDTH  = 3
 POS_INCREMENT = 3
 LINE_WIDTH    = 2
 
-class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
+class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 	"""
 	Display the track progress in christine
 	"""
@@ -53,10 +52,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		CairoMisc.__init__(self)
 		GtkMisc.__init__(self)
 
-		# This flag is supposed to be used to check if the
-		# display y being drawed
-		self.__HPos = 0
-
 		self.__color1 = gtk.gdk.color_parse('#FFFFFF')
 		self.__color2 = gtk.gdk.color_parse('#3D3D3D')
 
@@ -66,8 +61,10 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 								    gtk.gdk.POINTER_MOTION_MASK |
 								    gtk.gdk.BUTTON_PRESS_MASK)
 
+		self.connect('expose-event',       self.__do_expose)
 		self.connect('button-press-event', self.__buttonPressEvent)
-		self.connect('expose-event',       self.__doExpose)
+		self.connect('configure-event', self.__on_size_allocate)
+
 
 		gobject.signal_new('value-changed', self,
 				           gobject.SIGNAL_RUN_LAST,
@@ -87,8 +84,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		'''
 
 		self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
-		#self.emit("expose-event",self)
-		return True
 
 	def __buttonPressEvent(self, widget, event):
 		"""
@@ -147,18 +142,17 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		self.__Value = value
 		self.__emit()
 
-	def __doExpose(self,widget,event):
+	def __on_size_allocate(self, widget,event):
+		self.__HPos = event.x
+
+	def __do_expose(self,widget,event):
 		if getattr(self,'window', None) == None:
-			return True
+			return False
+		x, y, w, h   = event.area
+		x,y,w,h = self.allocation
+		x,y = (0,0)
 		context = self.window.cairo_create()
 		#clear the bitmap
-		self.__drawDisplay(context)
-
-
-	def __drawDisplay(self, context, allocation=0):
-		"""
-		This function is used to draw the display
-		"""
 		style = self.get_style()
 		tcolor = style.fg[0]
 		wcolor = style.bg[0]
@@ -172,16 +166,12 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 				self.getCairoColor(tcolor.green),
 				self.getCairoColor(tcolor.blue))
 
-		(x, y, w, h)   = self.allocation
-
-
-		context.move_to( 0, 0 )
+		context.move_to( x, y )
 		context.set_operator(cairo.OPERATOR_OVER)
 
 		context.set_line_width( 1 )
 		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
-		self.render_rect(context, 0, 0, w, h, 1)
 		context.rectangle(x,y,w,h)
 		context.set_source_rgb(br,bg,bb)
 		context.fill()
@@ -193,7 +183,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 
 		(fontw, fonth) = self.__Layout.get_pixel_size()
 
-		if self.__HPos == 0 or fontw < w:
+		if self.__HPos == x or fontw < w:
 			self.__HPos = (w - fontw) / 2
 		elif self.__HPos > (fontw-(fontw*2)):
 			self.__HPos = self.__HPos - 3
@@ -204,13 +194,13 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		context.update_layout(self.__Layout)
 		context.show_layout(self.__Layout)
 
-		(fw, fh) = self.__Layout.get_pixel_size()
+		fh = self.__Layout.get_pixel_size()[1]
 		width    = ((w - fh) - (BORDER_WIDTH * 3))
 
 		# Drawing the progress bar
 		context.set_antialias(cairo.ANTIALIAS_NONE)
-		context.rectangle(fh,
-				((BORDER_WIDTH * 2) + fh) +1 , width, BORDER_WIDTH)
+		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,
+						width, BORDER_WIDTH)
 		context.set_line_width(1)
 		context.set_line_cap(cairo.LINE_CAP_BUTT)
 		context.stroke()
@@ -241,10 +231,5 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc,object):
 		context.set_source_rgb(fr,fg,fb)
 		context.update_layout(layout)
 		context.show_layout(layout)
-		#
-		width  =  int(300)
-		height =  int(fonth * 2 + BORDER_WIDTH +10)
-		#self.set_size_request(width, height)
-
 
 	value = property(getValue, setScale)
