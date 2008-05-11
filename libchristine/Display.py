@@ -76,7 +76,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.__WindowPosition = 0
 		self.__Value          = 0
 		self.setText(text)
-		self.set_size_request(300, 42)
+		#self.set_size_request(300, 42)
 
 	def __emit(self):
 		'''
@@ -156,11 +156,16 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		style = self.get_style()
 		tcolor = style.fg[0]
 		wcolor = style.bg[0]
+		basec = style.base[1]
 		fontdesc = style.font_desc
 
 		br,bg,bb = (self.getCairoColor(wcolor.red),
 				self.getCairoColor(wcolor.green),
 				self.getCairoColor(wcolor.blue))
+
+		bar,bag,bab = (self.getCairoColor(basec.red),
+				self.getCairoColor(basec.green),
+				self.getCairoColor(basec.blue))
 
 		fr,fg,fb = (self.getCairoColor(tcolor.red),
 				self.getCairoColor(tcolor.green),
@@ -176,8 +181,9 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		context.set_source_rgb(br,bg,bb)
 		context.fill()
 
+
 		# Write text
-		self.__Layout  = self.create_pango_layout(self.__Song)
+		self.__Layout  = self.create_pango_layout(self.__Song + ' -- ' + self.__Text)
 
 		self.__Layout.set_font_description(fontdesc)
 
@@ -221,15 +227,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		context.set_source_rgb(1,1,1)
 		context.fill()
 
-		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
-
-		layout         = self.create_pango_layout(self.__Text)
-		(fontw, fonth) = layout.get_pixel_size()
-
-		context.move_to(((w - fontw) / 2), ((fonth + 33) / 2) + 3)
-		layout.set_font_description(fontdesc)
-		context.set_source_rgb(fr,fg,fb)
-		context.update_layout(layout)
-		context.show_layout(layout)
+		self.set_size_request(w,((BORDER_WIDTH * 2) + fh*2) +1)
 
 	value = property(getValue, setScale)

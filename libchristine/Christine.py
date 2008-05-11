@@ -186,15 +186,9 @@ class Christine(GtkMisc):
 		# Gets window widget from glade template
 		self.__Window = self.__XML['WindowCore']
 		self.__Window.connect("destroy",gtk.main_quit)
-		print self.__Share.getImageFromPix('logo')
 		self.__Window.set_icon(self.__Share.getImageFromPix('logo'))
 		self.__Window.connect("scroll-event",self.__printEvent)
 		self.__Window.connect("key-press-event",self.onWindowCoreEvent)
-		#
-		# Next two lines of code fixes bug #1765723
-		#
-		self.__eventbox = self.__XML['eventbox1']
-		self.__eventbox.connect("scroll-event",self.__printEvent)
 
 		# Gets play button and menu play item from glade template
 		self.__PlayButton   = self.__XML['ToggleButtonPlay']
@@ -208,10 +202,10 @@ class Christine(GtkMisc):
 		# cdisplaybox is the display gtk-Box
 		self.__HBoxCairoDisplay = self.__XML['HBoxCairoDisplay']
 
-		self.__controlButtons = christineButtons()
-		self.__HBoxCairoDisplay.pack_start(self.__controlButtons,
-										False, False, 0)
-		self.__controlButtons.show()
+		#self.__controlButtons = christineButtons()
+		#self.__HBoxCairoDisplay.pack_start(self.__controlButtons,
+		#								False, False, 0)
+		#self.__controlButtons.show()
 
 		# Create the display and attach it to the main window
 		self.__Display = Display()
