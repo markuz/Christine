@@ -58,8 +58,8 @@ class guiAbout:
 		pix   = self.__Share.getImageFromPix('logo')
 
 		about.set_logo(pix)
-		about.set_name('@programname@')
-		about.set_version('@version@')
+		about.set_name(PROGRAMNAME)
+		about.set_version(VERSION)
 		about.set_icon(self.__Share.getImageFromPix('logo'))
 		about.set_translator_credits(translate('translator-credits'))
 		print about.get_translator_credits()

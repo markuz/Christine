@@ -185,6 +185,7 @@ class Christine(GtkMisc):
 		# Gets window widget from glade template
 		self.__Window = self.__XML['WindowCore']
 		self.__Window.connect("destroy",gtk.main_quit)
+		print self.__Share.getImageFromPix('logo')
 		self.__Window.set_icon(self.__Share.getImageFromPix('logo'))
 		self.__Window.connect("scroll-event",self.__printEvent)
 		self.__Window.connect("key-press-event",self.onWindowCoreEvent)
