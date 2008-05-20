@@ -1,7 +1,5 @@
 #! /usr/bin/env python
 # -*- encoding: latin-1 -*-
-from Translator import translate
-
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
 # This program is free software; you can redistribute it and/or modify
@@ -21,7 +19,7 @@ from Translator import translate
 
 import os,gtk,gobject,sys,pango
 import gst
-
+from Translator import translate
 from libchristine.libs_christine import lib_library
 from libchristine.GtkMisc import GtkMisc, error
 from libchristine.Translator import *
@@ -99,6 +97,7 @@ class library(GtkMisc):
 		self.__iterator.sort()
 		self.gen_model()
 		self.fillModel()
+		self.model.createSubmodels()
 		self.tv.set_model(self.model.getModel())
 		self.CURRENT_ITER = self.model.get_iter_first()
 
@@ -157,29 +156,24 @@ class library(GtkMisc):
 
 	def fillModel(self):
 		sounds = self.library_lib.get_all().copy()
-		model = self.model
 		keys = sounds.keys()
 		keys.sort()
-		keys.reverse()
 		pix = self.__Share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		self.__appending = True
-		gobject.idle_add(self.__append, keys, sounds, pix)
-
-	def __append(self, keys, sounds, pix):
-		if not self.__appending:
-			return False
-		for i in range(20):
-			if len(keys):
-				path = keys.pop()
-				values = sounds[path]
-			else:
-				self.__iterator.reverse()
-				self.__row_changed_id = self.model.connect("row-changed",self.__rowChanged)
-				self.__setting = True
-				gobject.idle_add(self.__set)
-				return False
-			iter = self.model.append()
+		for path in keys:
+			values = sounds[path]
+#===============================================================================
+#			if len(keys):
+#				path = keys.pop()
+#
+#			else:
+#				self.__iterator.reverse()
+#				self.__row_changed_id = self.model.connect("row-changed",self.__rowChanged)
+#				self.__setting = True
+#				gobject.idle_add(self.__set)
+#				return False
+#===============================================================================
 			for key in values.keys():
 				if isinstance(values[key],str):
 					try:
@@ -187,17 +181,22 @@ class library(GtkMisc):
 						values[key] =  u'%s'%values[key].encode('latin-1')
 					except:
 						pass
-			self.model.set(iter
-					,PATH,path,
+			iter = self.model.append(PATH,path,
 					NAME, values['name'],
 					SEARCH,
 					''.join((values['name'],
 						values['artist'],
 						values['album'],
 						values['type'])),
-					PIX,pix)
+					PIX,pix,
+					TYPE,values['type'],
+					ARTIST,values['artist'],
+					ALBUM ,values['album'],
+					TN,values['track_number'],
+					PLAY_COUNT ,values['play_count'],
+					TIME ,values['duration'],
+					GENRE ,values['genre'])
 			self.iters[path] = iter
-		return True
 
 	def __set(self):
 		if not self.__setting:
