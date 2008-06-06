@@ -79,16 +79,17 @@ class library(GtkMisc):
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
 		self.tv = self.__xml["treeview"]
-		#self.loadLibrary('music')
 		self.set_drag_n_drop()
 		self.blank_pix = self.__Share.getImageFromPix("blank")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
+		self.__add_columns()
 
 
 	def loadLibrary(self, library):
 		if self.__row_changed_id:
 			self.model.disconnect(self.__row_changed_id)
-		self.__add_columns()
+			del self.model
+		self.tv.set_model(None)
 		self.__appending = False
 		self.__setting = False
 		self.library_lib = lib_library(library)
@@ -137,22 +138,20 @@ class library(GtkMisc):
 		'''
 		Generates the model
 		'''
-		if not getattr(self, 'model', False):
-			i = gobject.TYPE_INT
-			self.model = LibraryModel(
-					str, #path
-					str, #name
-					str, #type
-					gtk.gdk.Pixbuf, #Pix
-					str, #album
-					str, #artist
-					int, #Track Number
-					str, #search
-					int, #play count
-					str, #time
-					str) #Genre
-		else:
-			self.model.clear()
+		#if not getattr(self, 'model', False):
+		i = gobject.TYPE_INT
+		self.model = LibraryModel(
+				str, #path
+				str, #name
+				str, #type
+				gtk.gdk.Pixbuf, #Pix
+				str, #album
+				str, #artist
+				int, #Track Number
+				str, #search
+				int, #play count
+				str, #time
+				str) #Genre
 
 	def fillModel(self):
 		sounds = self.library_lib.get_all().copy()
@@ -327,14 +326,16 @@ class library(GtkMisc):
 		else:
 			iter = self.model.append()
 		name = os.path.split(file)[1]
-		if type(name) == type(()):
+		if isinstance(name,()):
 			name = name[0]
 		################################
 		tags = self.__Tagger.readTags(file)
 
-		name = self.model.get_value(iter,NAME)
-		if name == os.path.split(file):
-			return True
+#===============================================================================
+#		name = self.model.get_value(iter,NAME)
+#		if name == os.path.split(file):
+#			return True
+#===============================================================================
 
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")
@@ -380,7 +381,7 @@ class library(GtkMisc):
 				name = file
 
 
-		self.model.set(iter,
+		self.model.basemodel.set(iter,
 				NAME,name,
 				PATH,file,
 				PIX,self.blank_pix,
@@ -392,6 +393,12 @@ class library(GtkMisc):
 				PLAY_COUNT,0,
 				GENRE,tags["genre"])
 
+		self.library_lib[file] = {"name":name,
+				"type":t,"artist":artist,
+				"album":album,"track_number":int(tn),
+				"play_count":0,
+				"duration":'0:00',
+				"genre":tags['genre']}
 		if self.useQueueModel:
 				self.save()
 

@@ -54,43 +54,95 @@ class christineModel(gtk.GenericTreeModel):
 		return self.on_get_flags()
 
 	def on_get_flags(self):
-		return gtk.TREE_MODEL_LIST_ONLY|gtk.TREE_MODEL_ITERS_PERSIST
+		return gtk.TREE_MODEL_LIST_ONLY#|gtk.TREE_MODEL_ITERS_PERSIST
+
+#===============================================================================
+#
+#	def row_inserted(self, path, iter):
+#		self.emit('row-inserted', path, iter)
+#
+#	def row_deleted(self, path, iter):
+#		self.emit('row-deleted', path, iter)
+#
+#	def row_changed(self, path, iter):
+#		self.emit('row-changed', path, iter)
+#===============================================================================
+
 
 	def append(self, *args):
 		self.__data.append(self.__emptyData[:])
 		iter = len(self.__data) -1
+		path = (iter,)
+		niter = self.get_iter(path)
+		self.row_inserted(path, niter)
+		if args:
+			return self.set(iter, *args)
+		return iter
+
+	def prepend(self, *args):
+		self.__data.insert(0,self.__emptyData[:])
+		iter = 0
 		if args:
 			self.set(iter, *args)
+		self.row_inserted(iter, iter)
 		return iter
 
 	def set(self, iter, *args):
-		if not isinstance(iter, int):
-			return False
+		return self.set_value(iter, *args)
+
+	def set_value(self, iter, *args):
+		if isinstance(iter, tuple):
+			iter = iter[0]
+
 		list = self.__data[iter]
 		size = len(args)
 		c = 0
 		while c < size:
 			list[args[c]] = args[c+1]
 			c +=2
+		path = (self.__data.index(list),)
+		niter = self.get_iter(path)
+		self.row_changed(path, niter)
 		self.invalidate_iters()
+		return iter
 
-	def on_get_iter(self, path):
-		return path
+	def on_get_iter(self, rowref):
+		if not isinstance(rowref, int) and rowref:
+			try:
+				rowref = int(rowref[0])
+			except:
+				rowref = self.__data.index(rowref)
+		try:
+			return self.__data[rowref]
+		except:
+			return None
+
+	def on_get_path(self, rowref):
+		if isinstance(rowref, tuple):
+			return rowref[0]
+		return self.__data.index(rowref)
 
 	def on_get_column_type(self, n):
 		return self.column_types[n]
 
 	def on_get_value(self, rowref, column):
-		if not isinstance(rowref, int):
+		if isinstance(rowref, tuple):
 			rowref = rowref[0]
+		elif isinstance(rowref,list):
+			rowref = self.__data.index(rowref)
 		try:
-			return self.__data[rowref][column]
+			value = self.__data[rowref][column]
+			return value
 		except:
 			return None
 
 	def on_iter_next(self, rowref):
 		if not isinstance(rowref, int) and rowref:
-			rowref = int(rowref[0])
+			try:
+				rowref = int(rowref[0])
+			except:
+				rowref = self.__data.index(rowref)
+
 		rowref +=1
 		if not len(self.__data) > rowref:
 			return None
@@ -104,33 +156,43 @@ class christineModel(gtk.GenericTreeModel):
 			rowref = rowref[0]
 		if rowref:
 			return None
-		try:
-			return self.__data[n]
-		except IndexError:
-			return  None
+		return self.__data[n]
 
 	def on_iter_children(self, rowref):
 		if not isinstance(rowref, int) and rowref:
 			rowref = rowref[0]
 		if rowref:
 			return None
-		return self.__data[0]
+		return self.__data[rowref]
 
 	def on_iter_has_child(self, rowref):
 		return False
 
 	def on_iter_n_children(self, rowref):
 		if not isinstance(rowref, int) and rowref:
-			rowref = rowref[0]
+			rowref = int(rowref[0])
 		if rowref:
 			return 0
 		return len(self.__data)
 
+	def on_iter_parent(self, child):
+		return None
+
+
+	def remove(self, iter):
+		path = self.__data.index(iter)
+		self.__data.pop(path)
+		self.row_deleted((path,))
+
 	def clear(self):
-		self.__data = []
+		path = 0
+		for i in self.__data:
+			self.remove(i)
+			self.row_deleted((path,))
+			path +=1
 		self.invalidate_iters()
 
-class LibraryModel(christineModel):
+class LibraryModel:
 	'''This is a custom model that
 	implements ListStore, Filter and Sortable
 	models
@@ -138,10 +200,11 @@ class LibraryModel(christineModel):
 	def __init__(self,*args):
 		'''Constructor
 		'''
-		christineModel.__init__(self,*args)
+		self.basemodel =  christineModel(*args)
 
 	def createSubmodels(self):
-		self.__filter = self.filter_new()
+
+		self.__filter = self.basemodel.filter_new()
 		self.__sorted = gtk.TreeModelSort(self.__filter)
 
 	def getModel(self):
@@ -155,24 +218,27 @@ class LibraryModel(christineModel):
 
 	def remove(self,iter):
 		iter = self.__getNaturalIter(iter)
-		christineModel.remove(self,iter)
+		if iter != None:
+			self.basemodel.remove(self,iter)
 
 	def getValue(self,iter,column):
 		niter = self.__getNaturalIter(iter)
 		if niter != None:
-			return self.get_value(niter,column)
+			return self.basemodel.get_value(niter,column)
 
 	def Get(self,iter,*args):
-		niter = self.__getNaturalIter(iter)
+		#niter = self.__getNaturalIter(iter)
+		niter = iter
 		if niter != None:
-			return self.get(niter,*args)
+			return self.basemodel.get(self.basemodel.create_tree_iter(niter),*args)
 
 	def setValues(self,iter,*args):
-		niter = self.__getNaturalIter(iter)
+		#niter = self.__getNaturalIter(iter)
+		niter = iter
 		if niter != None:
 			args1 = []
 			for i in args:
-				if type(i) == type(''):
+				if isinstance(i,str):
 					try:
 						value = u'%s'%i.encode('latin-1')
 					except:
@@ -181,7 +247,7 @@ class LibraryModel(christineModel):
 					value = i
 				args1.append(value)
 			args2 = tuple(args1)
-			return self.set(niter, *args2)
+			return self.basemodel.set(iter, *args2)
 
 	def get_value(self, iter, column):
 		'''
@@ -190,26 +256,37 @@ class LibraryModel(christineModel):
 		@param column:
 		'''
 		iter = self.__getNaturalIter(iter)
-		if iter:
-			return christineModel.get_value(self, iter, column)
+		if iter != None:
+			return self.basemodel.get_value(iter, column)
+
+	def append(self, *args):
+		return self.basemodel.append(*args)
+
+	def prepend(self, *args):
+		return self.basemodel.prepend(*args)
+
+	def get_iter_first(self):
+		return self.basemodel.get_iter_first()
+
+	def clear(self, *args):
+		return self.basemodel.clear()
 
 
 	def __getNaturalIter(self,iter):
-		print (type(iter),iter)
-		if self.iter_is_valid(iter):
+		if self.basemodel.iter_is_valid(iter):
 			return iter
 		if not self.__sorted.iter_is_valid(iter):
 			return None
 		iter = self.__sorted.convert_iter_to_child_iter(None, iter)
-		if self.iter_is_valid(iter):
+		if self.basemodel.iter_is_valid(iter):
 			return iter
 		iter = self.__filter.convert_iter_to_child_iter(iter)
-		if self.iter_is_valid(iter):
+		if self.basemodel.iter_is_valid(iter):
 			return iter
 		return None
 
 	def getIterValid(self,iter):
-		if type(iter) != gtk.TreeIter:
+		if not isinstance(iter, gtk.TreeIter):
 			return None
 		return self.__getNaturalIter(iter)
 

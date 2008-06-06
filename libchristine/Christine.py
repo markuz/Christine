@@ -476,7 +476,7 @@ class Christine(GtkMisc):
 		self.__LibraryCurrentIter = None
 
 		self.__Player.stop()
-		self.__Library.model.foreach(self.__SearchByPath, self.__Player.getLocation())
+		self.__Library.model.getModel().foreach(self.__SearchByPath, self.__Player.getLocation())
 
 		if (self.__LibraryCurrentIter != None):
 			pix = self.__Share.getImageFromPix('blank')
@@ -490,11 +490,11 @@ class Christine(GtkMisc):
 		# entry in gconf to be able to select it in the next
 		# christine start-up (and other functions) and
 		self.__LibraryCurrentIter = None
-		self.__Library.model.foreach(self.__SearchByPath, filename)
+		self.__Library.model.basemodel.foreach(self.__SearchByPath, filename)
 		self.__IterCurrentPlaying = self.__LibraryCurrentIter
 		self.__IterCurrentPlaying = self.__Library.model.getIterValid(self.__IterCurrentPlaying)
 		if self.__IterCurrentPlaying != None:
-			if self.__Library.model.iter_is_valid(self.__IterCurrentPlaying):
+			if self.__Library.model.basemodel.iter_is_valid(self.__IterCurrentPlaying):
 				self.__IterCurrentPlaying = self.__LibraryCurrentIter
 		if (self.__IterCurrentPlaying != None):
 			if (self.__Library.Exists(filename)):
@@ -776,7 +776,7 @@ class Christine(GtkMisc):
 			self.__PlayButton.set_active(True)
 		else:
 			self.__LibraryCurrentIter = None
-			self.__LibraryModel.foreach(self.__SearchByPath,
+			self.__LibraryModel.getModel().foreach(self.__SearchByPath,
 				self.__GConf.getString('backend/last_played'))
 
 			if self.__LibraryCurrentIter != None:
@@ -807,6 +807,8 @@ class Christine(GtkMisc):
 		# Look for a file in the queue. Iter should not be None in the case
 		# there where something in the queue
 		model = self.Queue.tv.get_model()
+		#import pdb
+		#pdb.set_trace()
 		iter  = model.get_iter_first()
 
 		if (type(iter) == gtk.TreeIter):
@@ -861,7 +863,7 @@ class Christine(GtkMisc):
 		if (path == None):
 			filename = self.__GConf.getString('backend/last_played')
 			self.__LibraryCurrentIter = None
-			self.__LibraryModel.foreach(self.__SearchByPath, filename)
+			self.__LibraryModel.getModel().foreach(self.__SearchByPath, filename)
 
 			if (self.__LibraryCurrentIter == None):
 				iter     = self.__LibraryModel.get_iter_first()
@@ -896,7 +898,7 @@ class Christine(GtkMisc):
 		"""
 		mlocation = model[path][PATH]
 		if (mlocation == location):
-			self.__LibraryCurrentIter = model.get_iter(path)
+			self.__LibraryCurrentIter = path
 			return True
 
 	def onScaleChanged(self, scale, a, value = None):
@@ -948,7 +950,8 @@ class Christine(GtkMisc):
 				location)
 		if self.__LibraryCurrentIter != None:
 			self.__IterCurrentPlaying = self.__LibraryCurrentIter
-			path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
+			#path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
+			path = self.__LibraryCurrentIter
 
 			if (path != None):
 				self.TreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
@@ -1171,7 +1174,7 @@ class Christine(GtkMisc):
 
 	def __addFileCycle(self, library):
 		if len(self.__FilesToAdd) > 0:
-			d,m = divmod(len(library.model), 500)
+			d,m = divmod(len(library.model.basemodel), 500)
 			new_file = self.__FilesToAdd.pop()
 			library.add(new_file)
 			if m == 0:
@@ -1222,7 +1225,7 @@ class Christine(GtkMisc):
 		# Global variable to save temporal files and paths
 		self.__FilesToAdd = []
 		self.__Paths      = []
-		self.__Library.model.foreach(self.getPaths)
+		self.__Library.model.basemodel.foreach(self.getPaths)
 		for i in files:
 			ext    = i.split('.').pop().lower()
 			if (not i in self.__Paths) and \
@@ -1316,7 +1319,7 @@ class Christine(GtkMisc):
 			text             = "%02d:%02d" % divmod(ts, 60)
 			self.__ErrorStreamCount = 0
 			if (self.__IterNatural is not None):
-				time= self.__Library.model.get(self.__IterNatural, TIME)
+				time= self.__Library.model.Get(self.__IterNatural, TIME)
 				if (time != text):
 					self.__Library.model.setValues(self.__IterNatural, TIME, text)
 					self.__Library.save()
@@ -1387,7 +1390,7 @@ class Christine(GtkMisc):
 		# Updating the info in library, only if it is available.
 		model,iter = self.__Library.tv.get_selection().get_selected()
 		self.__LibraryCurrentIter = None
-		self.__Library.model.foreach(self.__SearchByPath,
+		self.__Library.model.basemodel.foreach(self.__SearchByPath,
 				self.__Player.getLocation())
 		iter = self.__LibraryCurrentIter
 		if (iter is not None):
@@ -1398,7 +1401,7 @@ class Christine(GtkMisc):
 						ARTIST, artist,
 						TN,     track_number,
 						SEARCH, '.'.join([title,
-							artist, album, genre, type_file]),
+						artist, album, genre, type_file]),
 						GENRE,  genre)
 
 			(title1, artist1, album1, tc) = \
