@@ -88,7 +88,6 @@ class library(GtkMisc):
 	def loadLibrary(self, library):
 		if self.__row_changed_id:
 			self.model.disconnect(self.__row_changed_id)
-			del self.model
 		self.tv.set_model(None)
 		self.__appending = False
 		self.__setting = False
@@ -138,20 +137,22 @@ class library(GtkMisc):
 		'''
 		Generates the model
 		'''
-		#if not getattr(self, 'model', False):
-		i = gobject.TYPE_INT
-		self.model = LibraryModel(
-				str, #path
-				str, #name
-				str, #type
-				gtk.gdk.Pixbuf, #Pix
-				str, #album
-				str, #artist
-				int, #Track Number
-				str, #search
-				int, #play count
-				str, #time
-				str) #Genre
+		if not getattr(self, 'model', False):
+			i = gobject.TYPE_INT
+			self.model = LibraryModel(
+					str, #path
+					str, #name
+					str, #type
+					gtk.gdk.Pixbuf, #Pix
+					str, #album
+					str, #artist
+					int, #Track Number
+					str, #search
+					int, #play count
+					str, #time
+					str) #Genre
+		else:
+			self.model.clear()
 
 	def fillModel(self):
 		sounds = self.library_lib.get_all().copy()
@@ -162,17 +163,6 @@ class library(GtkMisc):
 		self.__appending = True
 		for path in keys:
 			values = sounds[path]
-#===============================================================================
-#			if len(keys):
-#				path = keys.pop()
-#
-#			else:
-#				self.__iterator.reverse()
-#				self.__row_changed_id = self.model.connect("row-changed",self.__rowChanged)
-#				self.__setting = True
-#				gobject.idle_add(self.__set)
-#				return False
-#===============================================================================
 			for key in values.keys():
 				if isinstance(values[key],str):
 					try:
@@ -331,12 +321,6 @@ class library(GtkMisc):
 		################################
 		tags = self.__Tagger.readTags(file)
 
-#===============================================================================
-#		name = self.model.get_value(iter,NAME)
-#		if name == os.path.split(file):
-#			return True
-#===============================================================================
-
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")
 			tags["title"] = ".".join([k for k in n[:-1]])
@@ -402,7 +386,6 @@ class library(GtkMisc):
 		if self.useQueueModel:
 				self.save()
 
-
 	def stream_length(self,widget=None,n=1):
 		try:
 			total = d.query_duration(gst.FORMAT_TIME)[0]
@@ -413,7 +396,6 @@ class library(GtkMisc):
 		except gst.QueryError:
 			pass
 		return True
-
 
 	def remove(self,iter):
 		'''
@@ -451,6 +433,7 @@ class library(GtkMisc):
 
 	# Need some help in the next functions
 	# They need to be retouched to work fine.
+
 	def set_drag_n_drop(self):
 		self.tv.connect("drag_motion",self.check_contexts)
 		self.tv.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
@@ -510,7 +493,6 @@ class library(GtkMisc):
 					file = file[7:].replace("%20"," ")
 				self.add(file)
 		return True
-
 
 	def delete_from_disk(self,iter):
 		dialog = self.__Share.getTemplate("deleteFileFromDisk")["dialog"]

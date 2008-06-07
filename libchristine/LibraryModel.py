@@ -77,14 +77,18 @@ class christineModel(gtk.GenericTreeModel):
 		self.row_inserted(path, niter)
 		if args:
 			return self.set(iter, *args)
+		self.invalidate_iters()
 		return iter
 
 	def prepend(self, *args):
 		self.__data.insert(0,self.__emptyData[:])
 		iter = 0
+		path = (iter,)
+		niter = self.get_iter(path)
+		self.row_inserted(path, niter)
 		if args:
-			self.set(iter, *args)
-		self.row_inserted(iter, iter)
+			return self.set(iter, *args)
+		self.invalidate_iters()
 		return iter
 
 	def set(self, iter, *args):
@@ -179,17 +183,25 @@ class christineModel(gtk.GenericTreeModel):
 		return None
 
 
-	def remove(self, iter):
-		path = self.__data.index(iter)
-		self.__data.pop(path)
-		self.row_deleted((path,))
+	def remove(self, path):
+		try:
+			self.__data.pop(path)
+			self.row_deleted((path,))
+			return True
+		except:
+			return False
+
+	def __removeLast20(self,):
+		for i in range(20):
+			path = len(self.__data) -1
+			if not self.remove(path):
+				return False
+		return True
 
 	def clear(self):
-		path = 0
-		for i in self.__data:
-			self.remove(i)
-			self.row_deleted((path,))
-			path +=1
+		while 1:
+			if not self.__removeLast20():
+				break
 		self.invalidate_iters()
 
 class LibraryModel:

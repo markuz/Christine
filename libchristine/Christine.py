@@ -62,6 +62,9 @@ from libchristine.customButtons import christineButtons
 from libchristine.sources_list import sources_list, LIST_NAME
 import logging
 import webbrowser
+import gc
+
+gc.enable()
 
 
 try:
@@ -832,8 +835,8 @@ class Christine(GtkMisc):
 				iter     = self.__LibraryModel.get_iter(randompath)
 				filename = self.__Library.model.getValue(iter, PATH)
 				self.__IterCurrentPlaying = iter
-				if ((not filename in self.__LastPlayed) or \
-						(self.__GConf.getBool('control/repeat'))):
+				if (not filename in self.__LastPlayed) or \
+						(self.__GConf.getBool('control/repeat')) and filename:
 						self.setLocation(filename)
 						self.__PlayButton.set_active(False)
 						self.__PlayButton.set_active(True)
