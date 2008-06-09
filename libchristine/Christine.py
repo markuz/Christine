@@ -38,7 +38,7 @@ import gst.interfaces
 import gobject
 from libchristine.Translator import *
 from libchristine.GtkMisc import GtkMisc, error
-from libchristine.Library import library
+from libchristine.Library import library, queue
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Library import (PATH,
 NAME,
@@ -51,7 +51,6 @@ SEARCH,
 PLAY_COUNT,
 TIME,
 GENRE)
-from libchristine.Queue import queue
 from libchristine.Preferences import guiPreferences
 from libchristine.About import guiAbout
 from libchristine.Player import Player
@@ -252,7 +251,7 @@ class Christine(GtkMisc):
 		self.Queue.tv.connect('row-activated',   self.itemActivated)
 
 		self.__ScrolledQueue.add(self.Queue.tv)
-		gobject.timeout_add(500, self.checkQueue)
+		#gobject.timeout_add(500, self.checkQueue)
 
 		self.__SourcesList = sources_list()
 		self.__VBoxList.pack_start(self.__SourcesList.vbox)
@@ -1149,7 +1148,7 @@ class Christine(GtkMisc):
 				npath = u'%s'%dirpath.decode('latin-1')
 				npath = u'%s'%npath.encode('latin-1')
 			except Exception, e:
-				npath = dirpath
+				return True
 			label.set_text('Exploring %s'%npath)
 			for path in filenames[-1][1]:
 				ext    = path.split('.').pop().lower()
@@ -1176,6 +1175,7 @@ class Christine(GtkMisc):
 		gobject.idle_add(self.__addFileCycle, library)
 
 	def __addFileCycle(self, library):
+		#c = time.time()
 		if len(self.__FilesToAdd) > 0:
 			d,m = divmod(len(library.model.basemodel), 500)
 			new_file = self.__FilesToAdd.pop()
@@ -1187,8 +1187,8 @@ class Christine(GtkMisc):
 			library.save()
 			self.__AddWindow.destroy()
 			return False
+		#print time.time() -c
 		return True
-
 
 	def __updateAddProgressBar(self, file):
 		length = len(self.__FilesToAdd)
@@ -1607,7 +1607,8 @@ class Christine(GtkMisc):
 		self.__Player.stop()
 		pidfile = 	os.path.join(os.environ['HOME'],'.christine',
 								'christine.pid')
-		os.unlink(pidfile)
+		if os.path.exists(pidfile):
+			os.unlink(pidfile)
 		gtk.main_quit()
 
 	def runGtk(self):

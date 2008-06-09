@@ -96,7 +96,9 @@ class library(GtkMisc):
 		self.__iterator = self.__music.keys()
 		self.__iterator.sort()
 		self.gen_model()
+		c = time.time()
 		self.fillModel()
+		print time.time() - c
 		self.model.createSubmodels()
 		self.tv.set_model(self.model.getModel())
 		self.CURRENT_ITER = self.model.get_iter_first()
@@ -311,10 +313,6 @@ class library(GtkMisc):
 			file = file[0]
 		if not os.path.isfile(file):
 			return False
-		if prepend:
-			iter = self.model.prepend()
-		else:
-			iter = self.model.append()
 		name = os.path.split(file)[1]
 		if isinstance(name,()):
 			name = name[0]
@@ -363,10 +361,11 @@ class library(GtkMisc):
 					name += "\n by <i>%s</i>"%artist
 			else:
 				name = file
-
-
-		self.model.basemodel.set(iter,
-				NAME,name,
+		if prepend:
+			func = self.model.prepend
+		else:
+			func = self.model.append
+		iter = func(NAME,name,
 				PATH,file,
 				PIX,self.blank_pix,
 				TYPE,t,
@@ -375,7 +374,8 @@ class library(GtkMisc):
 				TN,int(tn),
 				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
 				PLAY_COUNT,0,
-				GENRE,tags["genre"])
+				GENRE,tags["genre"]
+				)
 
 		self.library_lib[file] = {"name":name,
 				"type":t,"artist":artist,
@@ -514,3 +514,8 @@ class library(GtkMisc):
 
 
 
+class queue (library):
+	def __init__(self):
+		library.__init__(self)
+		self.useQueueModel = True
+		self.loadLibrary('queue')
