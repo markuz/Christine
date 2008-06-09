@@ -59,18 +59,15 @@ class christineModel(gtk.GenericTreeModel):
 		self.__data = []
 		self.__emptyData = map(lambda x: '', range(self.column_size))
 		#self.__data.append(self.__emptyData)
-		self.set_property('leak-references',False)
+		self.set_property('leak-references',True)
 		self.on_getIter = 0
-
-	def __len__(self):
-		return len(self.__data)
 
 	def destroy(self):
 		'''
 		Deletes everything
 		'''
 		try:
-			#self.invalidate_iters()
+			self.invalidate_iters()
 			del self.__data
 			del self.__emptyData
 		except:
@@ -83,7 +80,7 @@ class christineModel(gtk.GenericTreeModel):
 		return self.on_get_flags()
 
 	def on_get_flags(self):
-		return gtk.TREE_MODEL_LIST_ONLY|gtk.TREE_MODEL_ITERS_PERSIST
+		return gtk.TREE_MODEL_LIST_ONLY#|gtk.TREE_MODEL_ITERS_PERSIST
 
 	def append(self, *args):
 		self.__data.append(self.__emptyData[:])
@@ -93,7 +90,7 @@ class christineModel(gtk.GenericTreeModel):
 		path = (iter,)
 		niter = self.get_iter((iter,))
 		self.row_inserted(path, niter)
-		#self.invalidate_iters()
+		self.invalidate_iters()
 		return iter
 
 	def prepend(self, *args):
@@ -104,7 +101,7 @@ class christineModel(gtk.GenericTreeModel):
 		path = (iter,)
 		niter = self.get_iter((iter,))
 		self.row_inserted(path, niter)
-		#self.invalidate_iters()
+		self.invalidate_iters()
 		return iter
 
 	def set(self, iter, *args):
@@ -122,7 +119,7 @@ class christineModel(gtk.GenericTreeModel):
 		self.on_getIter = 0
 		niter = self.get_iter((iter,))
 		self.row_changed(iter, niter)
-		#self.invalidate_iters()
+		self.invalidate_iters()
 		return iter
 
 	def on_get_iter(self, rowref):
@@ -202,7 +199,7 @@ class christineModel(gtk.GenericTreeModel):
 		while 1:
 			if not self.__removeLast20():
 				break
-		#self.invalidate_iters()
+		self.invalidate_iters()
 		gc.collect()
 
 class LibraryModel:
