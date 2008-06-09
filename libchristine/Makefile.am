@@ -12,7 +12,6 @@ sources_list.pyc \
 Translator.pyc \
 Christine.pyc \
 Share.pyc \
-Queue.pyc \
 Validator.pyc \
 christineConf.pyc \
 Tagger.pyc \
@@ -33,7 +32,6 @@ DISTFILES= Makefile.in \
 			Translator.py \
 			Christine.py \
 			Share.py \
-			Queue.py \
 			Validator.py \
 			christineConf.py \
 			Tagger.py \
