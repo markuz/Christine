@@ -1,8 +1,7 @@
 SUBDIRS=pixmaps
 scriptsdir = @datadir@/christine/gui
 
-scripts_DATA=__init__.py \
-About.glade \
+scripts_DATA= About.glade \
 Error.glade \
 FileSelector.glade \
 JumpTo.glade \

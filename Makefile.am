@@ -1,9 +1,14 @@
-SUBDIRS = libchristine gui po cplugins libchristine/pattern/
+SUBDIRS = libchristine gui po libchristine/pattern/
 
 bin_SCRIPTS = christine
 
-EXTRA_DIST = config.rpath mkinstalldirs mkinstalldirs christine.desktop.in christine.c createDeb.sh.in
-DIST_FILES = ${EXTRA_DIST}
+EXTRA_DIST = createDeb.sh.in
+
+DIST_FILES = config.rpath \
+	   	    mkinstalldirs \
+	   	   	christine.desktop.in \
+	   	   	christine.c \ 
+	   	   	${EXTRA_DIST}
 
 program_name = @program_name@
 PROGRAM_NAME = @PROGRAM_NAME@
