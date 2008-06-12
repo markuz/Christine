@@ -192,12 +192,11 @@ class christineModel(gtk.GenericTreeModel):
 		@param column: Column number.
 		'''
 		c = 0
-		for i in self.__data:
-			if i[column] == value:
+		size = len(self.__data)
+		while c < size:
+			if self.__data[c][column] == value:
 				return self.get_iter((c,))
 			c += 1
-
-
 
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):

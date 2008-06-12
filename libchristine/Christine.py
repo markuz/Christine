@@ -133,6 +133,7 @@ class Christine(GtkMisc):
 
 		gobject.timeout_add(500, self.checkTimeOnMedia)
 		self.__Window.show()
+		self.HBoxSearch.hide()
 
 	def __printEvent(self,widget,event):
 		if event.type == gtk.gdk.SCROLL:
@@ -177,7 +178,6 @@ class Christine(GtkMisc):
 		self.EntrySearch    = self.__XML['EntrySearch']
 		self.EntrySearch.connect('changed',self.search)
 		self.EntrySearch.connect('focus-out-event', self.__EntrySearchFocusHandler)
-		self.HBoxSearch.hide()
 		self.VBoxList       = self.__XML['VBoxList']
 		#Private widgets
 		self.__HPanedListsBox = self.__XML['HPanedListsBox']
@@ -522,6 +522,7 @@ class Christine(GtkMisc):
 			self.goNext()
 		else:
 			self.__LocationCount +=1
+		self.__Library.tv.grab_focus()
 
 	def stop(self, widget=None):
 		"""
