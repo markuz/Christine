@@ -129,7 +129,6 @@ class christineModel(gtk.GenericTreeModel):
 
 	def on_get_iter(self, rowref):
 		try:
-			#print rowref[0]
 			return self.__data[rowref[0]]
 		except:
 			return None

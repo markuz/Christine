@@ -779,10 +779,8 @@ class Christine(GtkMisc):
 			self.__PlayButton.set_active(False)
 			self.__PlayButton.set_active(True)
 		else:
-			self.__LibraryCurrentIter = None
-			self.__LibraryModel.getModel().foreach(self.__SearchByPath,
-				self.__GConf.getString('backend/last_played'))
-
+			self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(
+										self.__GConf.getString('backend/last_played'), PATH)
 			if self.__LibraryCurrentIter != None:
 				path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
 
@@ -866,8 +864,8 @@ class Christine(GtkMisc):
 
 		if (path == None):
 			filename = self.__GConf.getString('backend/last_played')
-			self.__LibraryCurrentIter = None
-			self.__LibraryModel.getModel().foreach(self.__SearchByPath, filename)
+			self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(filename, PATH)
+			self.__Player.getLocation()
 
 			if (self.__LibraryCurrentIter == None):
 				iter     = self.__LibraryModel.get_iter_first()
@@ -877,7 +875,7 @@ class Christine(GtkMisc):
 			self.setLocation(filename)
 		else:
 			self.__LibraryCurrentIter = None
-			self.__LibraryModel.foreach(self.__SearchByPath, path)
+			self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(path, PATH)
 
 			if (self.__LibraryCurrentIter != None):
 				iter = self.__LibraryModel.iter_next(self.__LibraryCurrentIter)
@@ -941,6 +939,8 @@ class Christine(GtkMisc):
 		self.__LibraryCurrentIter = None
 		self.__LibraryModel.foreach(self.__SearchByPath,
 				location)
+
+		#self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(location, PATH)
 		if (self.__LibraryCurrentIter != None):
 			state = self.__StatePlaying
 			if (self.__StatePlaying):
@@ -949,9 +949,9 @@ class Christine(GtkMisc):
 				pix  = pix.scale_simple(20, 20,
 						gtk.gdk.INTERP_BILINEAR)
 				self.__Library.model.setValues(iter, PIX, pix)
-		self.__LibraryCurrentIter = None
-		self.__LibraryModel.foreach(self.__SearchByPath,
-				location)
+		#self.__LibraryCurrentIter = None
+		#self.__LibraryModel.foreach(self.__SearchByPath,
+		#		location)
 		if self.__LibraryCurrentIter != None:
 			self.__IterCurrentPlaying = self.__LibraryCurrentIter
 			#path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
@@ -1395,10 +1395,9 @@ class Christine(GtkMisc):
 			tooltext    += "\nfrom %s" % album
 
 		# Updating the info in library, only if it is available.
-		model,iter = self.__Library.tv.get_selection().get_selected()
-		self.__LibraryCurrentIter = None
-		self.__Library.model.basemodel.foreach(self.__SearchByPath,
-				self.__Player.getLocation())
+		iter = self.__Library.tv.get_selection().get_selected()[1]
+		self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(
+										self.__Player.getLocation(), PATH)
 		iter = self.__LibraryCurrentIter
 		if (iter is not None):
 			if title:
