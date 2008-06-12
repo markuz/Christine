@@ -109,6 +109,12 @@ class christineModel(gtk.GenericTreeModel):
 	def set_value(self, iter, *args):
 		if isinstance(iter, tuple):
 			iter = iter[0]
+		elif isinstance(iter, gtk.TreeIter):
+			path = self.get_path(iter)
+			if path:
+				iter = path[0]
+			else:
+				return False
 		list = self.__data[iter]
 		size = len(args)
 		c = 0
@@ -177,6 +183,20 @@ class christineModel(gtk.GenericTreeModel):
 
 	def on_iter_parent(self, child):
 		return None
+
+	def search_iter_on_column(self, value, column):
+		'''
+		Devuelve una referencia de la fila de la primera ocurrencia de
+		path en la columna indicada
+		@param value: Value to compare
+		@param column: Column number.
+		'''
+		c = 0
+		for i in self.__data:
+			if i[column] == value:
+				return self.get_iter((c,))
+			c += 1
+
 
 
 	def remove(self, path):
@@ -261,6 +281,8 @@ class LibraryModel:
 		if niter != None:
 			args2 = tuple(map( self.__encode, args))
 			return self.basemodel.set(iter, *args2)
+		else:
+			print 'No pude cambiar valores!'
 
 	def get_value(self, iter, column):
 		'''

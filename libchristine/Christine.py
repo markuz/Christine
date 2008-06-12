@@ -177,6 +177,7 @@ class Christine(GtkMisc):
 		self.EntrySearch    = self.__XML['EntrySearch']
 		self.EntrySearch.connect('changed',self.search)
 		self.EntrySearch.connect('focus-out-event', self.__EntrySearchFocusHandler)
+		self.HBoxSearch.hide()
 		self.VBoxList       = self.__XML['VBoxList']
 		#Private widgets
 		self.__HPanedListsBox = self.__XML['HPanedListsBox']
@@ -251,7 +252,7 @@ class Christine(GtkMisc):
 		self.Queue.tv.connect('row-activated',   self.itemActivated)
 
 		self.__ScrolledQueue.add(self.Queue.tv)
-		#gobject.timeout_add(500, self.checkQueue)
+		gobject.timeout_add(500, self.checkQueue)
 
 		self.__SourcesList = sources_list()
 		self.__VBoxList.pack_start(self.__SourcesList.vbox)
@@ -478,13 +479,14 @@ class Christine(GtkMisc):
 		self.__LibraryCurrentIter = None
 
 		self.__Player.stop()
-		self.__Library.model.getModel().foreach(self.__SearchByPath, self.__Player.getLocation())
+		self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(self.__Player.getLocation(), PATH)
 
 		if (self.__LibraryCurrentIter != None):
 			pix = self.__Share.getImageFromPix('blank')
 			pix = pix.scale_simple(20, 20,
 					gtk.gdk.INTERP_BILINEAR)
-			self.__Library.model.setValues(self.__LibraryCurrentIter, PIX, pix)
+			path = self.__Library.model.basemodel.get_path(self.__LibraryCurrentIter)
+			self.__Library.model.basemodel.set(path, PIX, pix)
 			self.__IterNatural = self.__LibraryCurrentIter
 
 		# Search for the item in the library.
@@ -492,7 +494,7 @@ class Christine(GtkMisc):
 		# entry in gconf to be able to select it in the next
 		# christine start-up (and other functions) and
 		self.__LibraryCurrentIter = None
-		self.__Library.model.basemodel.foreach(self.__SearchByPath, filename)
+		self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(filename, PATH)
 		self.__IterCurrentPlaying = self.__LibraryCurrentIter
 		self.__IterCurrentPlaying = self.__Library.model.getIterValid(self.__IterCurrentPlaying)
 		if self.__IterCurrentPlaying != None:
@@ -502,14 +504,13 @@ class Christine(GtkMisc):
 			if (self.__Library.Exists(filename)):
 				count = self.__Library.model.getValue(self.__IterCurrentPlaying, PLAY_COUNT)
 				self.__Library.model.setValues(self.__IterCurrentPlaying, PLAY_COUNT, count + 1)
-				#self.__IterNatural = self.__IterCurrentPlaying
+				self.__IterNatural = self.__IterCurrentPlaying
 
 				self.__Library.save()
 				self.__LastPlayed.append(filename)
 				self.__GConf.setValue('backend/last_played', filename)
 		self.__Player.setLocation(filename)
 		name = os.path.split(filename)[-1]
-		#print '>>>>',filename
 		self.__Display.setSong(name)
 		# enable the stream-length for the current song.
 		# this will be stopped when we get the length
@@ -817,7 +818,7 @@ class Christine(GtkMisc):
 			self.__ScrolledQueue.show()
 			location = self.Queue.model.get_value(iter,PATH)
 			self.setLocation(location)
-			self.__LibraryCurrentIter == None
+			self.__LibraryCurrentIter = None
 			self.jumpToPlaying()
 			self.Queue.remove(iter)
 			self.Queue.save()
@@ -826,14 +827,14 @@ class Christine(GtkMisc):
 		else:
 			self.__ScrolledQueue.hide()
 			if (self.__MenuItemShuffle.get_active()):
-				self.__Elements = 0
-				self.__Elements = len (self.__LibraryModel) - 1
-				if self.__Elements < 0:
+				Elements = 0
+				Elements = len (self.__LibraryModel) - 1
+				if Elements < 0:
 					return True
-				randompath = ((int(self.__Elements * random.random())),)
-				iter     = self.__LibraryModel.get_iter(randompath)
-				filename = self.__Library.model.getValue(iter, PATH)
-				self.__IterCurrentPlaying = iter
+				randompath = ((int(Elements * random.random())),)
+				#iter     = self.__LibraryModel.get_iter(randompath)
+				filename = self.__LibraryModel[randompath][PATH]
+				#self.__IterCurrentPlaying = iter
 				if (not filename in self.__LastPlayed) or \
 						(self.__GConf.getBool('control/repeat')) and filename:
 						self.setLocation(filename)
@@ -885,7 +886,7 @@ class Christine(GtkMisc):
 			self.__IterCurrentPlaying = iter
 			try:
 				self.setLocation(self.__Library.model.getValue(iter, PATH))
-				niter = iter
+				#niter = iter
 				self.__PlayButton.set_active(False)
 				self.__PlayButton.set_active(True)
 			except:
@@ -1321,10 +1322,12 @@ class Christine(GtkMisc):
 			ts               = (self.__TimeTotal / gst.SECOND)
 			text             = "%02d:%02d" % divmod(ts, 60)
 			self.__ErrorStreamCount = 0
-			if (self.__IterNatural is not None):
-				time= self.__Library.model.Get(self.__IterNatural, TIME)
+			iter = self.__Library.model.basemodel.search_iter_on_column(self.__Player.getLocation(), PATH)
+			if (iter is not None):
+				time= self.__Library.model.get_value(iter, TIME)
 				if (time != text):
-					self.__Library.model.setValues(self.__IterNatural, TIME, text)
+					path = self.__Library.model.basemodel.get_path(iter)
+					self.__Library.model.basemodel.set(path, TIME, text)
 					self.__Library.save()
 			return False
 		except gst.QueryError:
