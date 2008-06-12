@@ -58,7 +58,6 @@ class christineModel(gtk.GenericTreeModel):
 		self.column_types = args
 		self.__data = []
 		self.__emptyData = map(lambda x: '', range(self.column_size))
-		#self.__data.append(self.__emptyData)
 		self.set_property('leak-references',True)
 		self.on_getIter = 0
 
@@ -181,6 +180,8 @@ class christineModel(gtk.GenericTreeModel):
 
 
 	def remove(self, path):
+		if isinstance(path, gtk.TreeIter):
+			path = self.get_path(path)[0]
 		try:
 			self.__data.pop(path)
 			self.row_deleted((path,))
@@ -234,7 +235,7 @@ class LibraryModel:
 	def remove(self,iter):
 		iter = self.__getNaturalIter(iter)
 		if iter != None:
-			self.basemodel.remove(self,iter)
+			self.basemodel.remove(iter)
 
 	def getValue(self,iter,column):
 		niter = self.__getNaturalIter(iter)

@@ -82,7 +82,7 @@ class library(GtkMisc):
 		self.set_drag_n_drop()
 		self.blank_pix = self.__Share.getImageFromPix("blank")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-		self.__add_columns()
+		self.add_columns()
 
 
 	def loadLibrary(self, library):
@@ -216,24 +216,7 @@ class library(GtkMisc):
 					)
 		return True
 
-	def __add_columns(self):
-		if self.useQueueModel:
-			self.__addSmallColumns()
-		else:
-			self.__addSourcesColumns()
-
-	def __addSmallColumns(self):
-		render = gtk.CellRendererText()
-		tv = self.tv
-		pix = gtk.CellRendererPixbuf()
-		icon = gtk.TreeViewColumn("",pix,pixbuf=PIX)
-		icon.set_sort_column_id(TYPE)
-		name = gtk.TreeViewColumn(translate("Queue"),render,markup=NAME)
-		name.set_sort_column_id(NAME)
-		tv.append_column(name)
-		tv.set_headers_visible(False)
-
-	def __addSourcesColumns(self):
+	def add_columns(self):
 		render = gtk.CellRendererText()
 		render.set_property("ellipsize",pango.ELLIPSIZE_END)
 		tv = self.tv
@@ -516,6 +499,18 @@ class library(GtkMisc):
 
 class queue (library):
 	def __init__(self):
+		self.useQueueModel = True
 		library.__init__(self)
 		self.useQueueModel = True
 		self.loadLibrary('queue')
+
+	def add_columns(self):
+		render = gtk.CellRendererText()
+		tv = self.tv
+		pix = gtk.CellRendererPixbuf()
+		icon = gtk.TreeViewColumn("",pix,pixbuf=PIX)
+		icon.set_sort_column_id(TYPE)
+		name = gtk.TreeViewColumn(translate("Queue"),render,markup=NAME)
+		name.set_sort_column_id(NAME)
+		tv.append_column(name)
+		tv.set_headers_visible(False)
