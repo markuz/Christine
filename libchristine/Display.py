@@ -227,6 +227,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		context.set_source_rgb(1,1,1)
 		context.fill()
 
-		self.set_size_request(w,((BORDER_WIDTH * 2) + fh*2) +1)
+		#self.set_size_request(w,((BORDER_WIDTH * 2) + fh*2) +1)
 
 	value = property(getValue, setScale)
