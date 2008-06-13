@@ -213,7 +213,7 @@ class Christine(GtkMisc):
 		# Create the display and attach it to the main window
 		self.__Display = Display()
 		self.__Display.connect('value-changed', self.onScaleChanged)
-		self.__HBoxCairoDisplay.pack_start(self.__Display, False, False, 0)
+		self.__HBoxCairoDisplay.pack_start(self.__Display, True, True, 0)
 		self.__Display.show()
 
 		# Create the library by calling to libs_christine.library class
