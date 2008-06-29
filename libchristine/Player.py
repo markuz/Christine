@@ -29,10 +29,10 @@ from libchristine.Validator import isNull
 from libchristine.christineConf import christineConf
 from libchristine.Validator import isFile
 from globalvars import CHRISTINE_VIDEO_EXT
+from libchristine.christineLogger import christineLogger
 import gobject
 import gst
 import gtk
-import logging
 import os
 import pygst; pygst.require('0.10')
 
@@ -53,7 +53,8 @@ class Player(gtk.DrawingArea, object):
 		"""
 		 Constructor
 		"""
-		self.__Logger = logging.getLogger('Player')
+		self.__Logger = christineLogger('Player')
+		self.__Logger.info('Starting player')
 
 		gtk.DrawingArea.__init__(self)
 
@@ -233,7 +234,8 @@ class Player(gtk.DrawingArea, object):
 		@param property: string Property
 		@param value: property value
 		'''
-		self.__Logger.info("setting property '%s' with value '%s 'for element '%s'"%(property,repr(value),repr(element)))
+		self.__Logger.info("setting property '%s' with value '%s",
+						property,str(value))
 		element.set_property(property,value)
 
 	def emitExpose(self):

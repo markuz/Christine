@@ -25,7 +25,7 @@
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 #from libchristine.ChristineLibrary import *
-from libchristine.GtkMisc import GtkMisc
+from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.Translator import *
 from libchristine.Share import Share
 from libchristine.Validator import *

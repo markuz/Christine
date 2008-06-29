@@ -51,10 +51,10 @@ SEARCH,
 PLAY_COUNT,
 TIME,
 GENRE)
-from libchristine.Preferences import guiPreferences
-from libchristine.About import guiAbout
+from libchristine.gui.Preferences import guiPreferences
+from libchristine.gui.About import guiAbout
 from libchristine.Player import Player
-from libchristine.Display import Display
+from libchristine.gui.Display import Display
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME
