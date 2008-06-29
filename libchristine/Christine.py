@@ -936,11 +936,8 @@ class Christine(GtkMisc):
 			location = self.__Player.getLocation()
 		else:
 			location = path
-		self.__LibraryCurrentIter = None
-		self.__LibraryModel.foreach(self.__SearchByPath,
-				location)
+		self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(location, PATH)
 
-		#self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(location, PATH)
 		if (self.__LibraryCurrentIter != None):
 			state = self.__StatePlaying
 			if (self.__StatePlaying):
@@ -948,15 +945,13 @@ class Christine(GtkMisc):
 				pix  = self.__Share.getImageFromPix('sound')
 				pix  = pix.scale_simple(20, 20,
 						gtk.gdk.INTERP_BILINEAR)
-				self.__Library.model.setValues(iter, PIX, pix)
-		#self.__LibraryCurrentIter = None
-		#self.__LibraryModel.foreach(self.__SearchByPath,
-		#		location)
+				self.__Library.model.basemodel.set(iter, PIX, pix)
+		self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(location, PATH)
 		if self.__LibraryCurrentIter != None:
 			self.__IterCurrentPlaying = self.__LibraryCurrentIter
-			#path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
-			path = self.__LibraryCurrentIter
-
+			npath = self.__Library.model.basemodel.get_path(self.__LibraryCurrentIter)
+			path = self.__Library.model.convert_natural_path_to_path(npath)
+			print path
 			if (path != None):
 				self.TreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 				self.TreeView.set_cursor(path)

@@ -70,11 +70,10 @@ class library(GtkMisc):
 		self.iters = {}
 		GtkMisc.__init__(self)
 		self.__Share = Share()
-		self.__Tagger = Tagger()
+		self.tagger = Tagger()
 		self.__row_changed_id = 0
 		self.__appending = False
 		self.__setting = False
-		self.useQueueModel = False
 		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
@@ -96,9 +95,7 @@ class library(GtkMisc):
 		self.__iterator = self.__music.keys()
 		self.__iterator.sort()
 		self.gen_model()
-		c = time.time()
 		self.fillModel()
-		print time.time() - c
 		self.model.createSubmodels()
 		self.tv.set_model(self.model.getModel())
 		self.CURRENT_ITER = self.model.get_iter_first()
@@ -300,7 +297,7 @@ class library(GtkMisc):
 		if isinstance(name,()):
 			name = name[0]
 		################################
-		tags = self.__Tagger.readTags(file)
+		tags = self.tagger.readTags(file)
 
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")
@@ -320,30 +317,6 @@ class library(GtkMisc):
 		artist	= tags["artist"]
 		tn		= tags["track"]
 
-		if self.useQueueModel:
-			if file.split(":")[0] == "file" or \
-					os.path.isfile(file) or \
-					os.path.isfile(file.replace('%2C',',')):
-				try:
-					file = file.replace('%2C',',')
-					tags = self.__Tagger.readTags(file)
-				except:
-					self.emit_signal("tags-found!")
-					return True
-				name	= self.strip_XML_entities(tags["title"])
-				album	= self.strip_XML_entities(tags["album"])
-				artist	= self.strip_XML_entities(tags["artist"])
-				if name == "":
-					n = os.path.split(file)[1].split(".")
-					name = ".".join([k for k in n[:-1]])
-				name = "<b><i>%s</i></b>"%name
-				name = self.strip_XML_entities(name)
-				if album !="":
-					name += "\n from <i>%s</i>"%album
-				if artist != "":
-					name += "\n by <i>%s</i>"%artist
-			else:
-				name = file
 		if prepend:
 			func = self.model.prepend
 		else:
@@ -366,8 +339,6 @@ class library(GtkMisc):
 				"play_count":0,
 				"duration":'0:00',
 				"genre":tags['genre']}
-		if self.useQueueModel:
-				self.save()
 
 	def stream_length(self,widget=None,n=1):
 		try:
@@ -499,9 +470,7 @@ class library(GtkMisc):
 
 class queue (library):
 	def __init__(self):
-		self.useQueueModel = True
 		library.__init__(self)
-		self.useQueueModel = True
 		self.loadLibrary('queue')
 
 	def add_columns(self):
@@ -514,3 +483,76 @@ class queue (library):
 		name.set_sort_column_id(NAME)
 		tv.append_column(name)
 		tv.set_headers_visible(False)
+
+	def add(self,file,prepend=False):
+		if type(file) == type(()):
+			file = file[0]
+		if not os.path.isfile(file):
+			return False
+		name = os.path.split(file)[1]
+		if isinstance(name,()):
+			name = name[0]
+		################################
+		tags = self.tagger.readTags(file)
+
+		if tags["title"] == "":
+			n = os.path.split(file)[1].split(".")
+			tags["title"] = ".".join([k for k in n[:-1]])
+
+		if "video-codec" in tags.keys() or \
+				os.path.splitext(file)[1][1:] in CHRISTINE_VIDEO_EXT:
+			t = "video"
+		else:
+			t = "audio"
+
+		if type(tags["track"]) !=  type(1):
+			tags["track"] = 0
+
+		name	= tags["title"]
+		album	= tags["album"]
+		artist	= tags["artist"]
+		tn		= tags["track"]
+		if file.split(":")[0] == "file" or \
+				os.path.isfile(file) or \
+				os.path.isfile(file.replace('%2C',',')):
+			try:
+				file = file.replace('%2C',',')
+				tags = self.tagger.readTags(file)
+			except:
+				self.emit_signal("tags-found!")
+				return True
+			name	= self.strip_XML_entities(tags["title"])
+			album	= self.strip_XML_entities(tags["album"])
+			artist	= self.strip_XML_entities(tags["artist"])
+			if name == "":
+				n = os.path.split(file)[1].split(".")
+				name = ".".join([k for k in n[:-1]])
+			name = "<b><i>%s</i></b>"%name
+			name = self.strip_XML_entities(name)
+			if album !="":
+				name += "\n from <i>%s</i>"%album
+			if artist != "":
+				name += "\n by <i>%s</i>"%artist
+		if prepend:
+			func = self.model.prepend
+		else:
+			func = self.model.append
+		iter = func(NAME,name,
+				PATH,file,
+				PIX,self.blank_pix,
+				TYPE,t,
+				ALBUM,album,
+				ARTIST,artist,
+				TN,int(tn),
+				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
+				PLAY_COUNT,0,
+				GENRE,tags["genre"]
+				)
+
+		self.library_lib[file] = {"name":name,
+				"type":t,"artist":artist,
+				"album":album,"track_number":int(tn),
+				"play_count":0,
+				"duration":'0:00',
+				"genre":tags['genre']}
+		self.save()

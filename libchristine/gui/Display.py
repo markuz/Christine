@@ -209,6 +209,9 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 						width, BORDER_WIDTH)
 		context.set_line_width(1)
 		context.set_line_cap(cairo.LINE_CAP_BUTT)
+		context.set_source_rgb(1,1,1)
+		context.fill_preserve()
+		context.set_source_rgb(fr,fg,fb)
 		context.stroke()
 
 		width = (self.__Value * width)

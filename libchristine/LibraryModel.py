@@ -298,6 +298,14 @@ class LibraryModel:
 	def clear(self, *args):
 		return self.basemodel.clear()
 
+	def convert_natural_iter_to_iter(self, iter):
+		iter = self.__filter.convert_child_iter_to_iter(iter)
+		iter = self.__sorted.convert_child_iter_to_iter(iter)
+		return iter
+	def convert_natural_path_to_path(self, path):
+		path = self.__filter.convert_child_path_to_path(path)
+		path = self.__sorted.convert_child_path_to_path(path)
+		return path
 
 	def __getNaturalIter(self,iter):
 		if self.basemodel.iter_is_valid(iter):
