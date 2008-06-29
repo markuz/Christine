@@ -24,7 +24,7 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-from libchristine.GtkMisc import error
+from libchristine.gui.GtkMisc import error
 from libchristine.Validator import isNull
 from libchristine.christineConf import christineConf
 from libchristine.Validator import isFile

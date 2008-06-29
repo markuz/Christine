@@ -16,7 +16,7 @@ elements = locals()\n\
 lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
 from libchristine.libs_christine import sanity\n\
-from libchristine.BugReport import BugReport\n\
+from libchristine.gui.BugReport import BugReport\n\
 import gtk\n\
 sanity()\n\
 pidfile = 	os.path.join(os.environ['HOME'],\n\

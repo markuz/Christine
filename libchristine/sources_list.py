@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-from libchristine.GtkMisc import *
+from libchristine.gui.GtkMisc import *
 from libchristine.Share import Share
 from libchristine.Translator import  *
 from libchristine.libs_christine import lib_library

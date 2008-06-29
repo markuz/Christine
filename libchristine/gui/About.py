@@ -31,7 +31,6 @@
 #import random
 #import sys
 
-#from libchristine.GtkMisc import *
 from libchristine.Share import Share
 from libchristine.Translator import translate
 from libchristine.globalvars import PROGRAMNAME, VERSION

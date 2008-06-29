@@ -37,7 +37,7 @@ import pygst; pygst.require('0.10')
 import gst.interfaces
 import gobject
 from libchristine.Translator import *
-from libchristine.GtkMisc import GtkMisc, error
+from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.Library import library, queue
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Library import (PATH,
@@ -57,7 +57,6 @@ from libchristine.Player import Player
 from libchristine.Display import Display
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
-from libchristine.customButtons import christineButtons
 from libchristine.sources_list import sources_list, LIST_NAME
 import logging
 import webbrowser

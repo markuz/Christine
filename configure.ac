@@ -128,6 +128,7 @@ AC_CONFIG_FILES([ po/Makefile.in
 Makefile
 libchristine/Makefile
 libchristine/pattern/Makefile
+libchristine/gui/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
 po/Makefile

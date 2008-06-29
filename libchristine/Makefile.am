@@ -1,13 +1,9 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
 scripts_DATA=__init__.pyc \
-GtkMisc.pyc \
 Library.pyc \
 libs_christine.pyc \
-Preferences.pyc \
-About.pyc \
 Player.pyc \
-Display.pyc \
 sources_list.pyc \
 Translator.pyc \
 Christine.pyc \
@@ -16,18 +12,13 @@ Validator.pyc \
 christineConf.pyc \
 Tagger.pyc \
 LibraryModel.pyc \
-BugReport.pyc \
 globalvars.pyc
 
 DISTFILES= Makefile.in \
 		   __init__.py \
-			GtkMisc.py \
 			Library.py \
 			libs_christine.py \
-			Preferences.py \
-			About.py \
 			Player.py \
-			Display.py \
 			sources_list.py \
 			Translator.py \
 			Christine.py \
@@ -36,7 +27,6 @@ DISTFILES= Makefile.in \
 			christineConf.py \
 			Tagger.py \
 			LibraryModel.py \
-			BugReport.py \
 			globalvars.py 
 
 

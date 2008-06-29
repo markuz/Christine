@@ -27,7 +27,7 @@
 #import gtk.glade
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
-from libchristine.GtkMisc import glade_xml
+from libchristine.gui.GtkMisc import glade_xml
 from libchristine.globalvars import DATADIR
 import os
 import gtk

@@ -30,7 +30,7 @@ import cairo
 import gobject
 import math
 from libchristine.Validator import *
-from libchristine.GtkMisc import CairoMisc, GtkMisc
+from libchristine.gui.GtkMisc import CairoMisc, GtkMisc
 
 BORDER_WIDTH  = 3
 POS_INCREMENT = 3

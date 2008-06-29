@@ -21,7 +21,7 @@ import os,gtk,gobject,sys,pango
 import gst
 from Translator import translate
 from libchristine.libs_christine import lib_library
-from libchristine.GtkMisc import GtkMisc, error
+from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.Translator import *
 from libchristine.christineConf import christineConf
 from libchristine.Share import Share

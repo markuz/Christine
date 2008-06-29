@@ -1,4 +1,8 @@
-SUBDIRS = libchristine gui po libchristine/pattern/
+SUBDIRS = libchristine \
+			gui \
+			po \
+			libchristine/pattern/ \
+			libchristine/gui/
 
 bin_SCRIPTS = christine
 
