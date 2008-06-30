@@ -92,8 +92,9 @@ class library(GtkMisc):
 		self.__setting = False
 		self.library_lib = lib_library(library)
 		self.__music = self.library_lib.get_all()
-		self.__iterator = self.__music.keys()
-		self.__iterator.sort()
+		self.__iterator = self.__music
+		#self.__iterator = self.__music.keys()
+		#self.__iterator.sort()
 		self.gen_model()
 		self.fillModel()
 		self.model.createSubmodels()
@@ -154,14 +155,12 @@ class library(GtkMisc):
 			self.model.clear()
 
 	def fillModel(self):
-		sounds = self.library_lib.get_all().copy()
-		keys = sounds.keys()
-		keys.sort()
+		sounds = self.library_lib.get_all()
 		pix = self.__Share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		self.__appending = True
-		for path in keys:
-			values = sounds[path]
+		for values in sounds:
+			path = values['path']
 			for key in values.keys():
 				if isinstance(values[key],str):
 					try:

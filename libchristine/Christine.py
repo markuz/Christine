@@ -40,6 +40,7 @@ from libchristine.Translator import *
 from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.Library import library, queue
 from libchristine.globalvars import PROGRAMNAME
+from libchristine.sqlitedb import sqlite3db
 from libchristine.Library import (PATH,
 NAME,
 TYPE,
@@ -95,6 +96,7 @@ class Christine(GtkMisc):
 
 		self.__Share   = Share()
 		self.__christineGconf   = christineConf()
+		self.__sqlite = sqlite3db()
 
 		self.__XML = self.__Share.getTemplate('WindowCore')
 		self.__XML.signal_autoconnect(self)

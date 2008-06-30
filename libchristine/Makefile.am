@@ -1,18 +1,18 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
 scripts_DATA=__init__.pyc \
-Library.pyc \
-libs_christine.pyc \
-Player.pyc \
-sources_list.pyc \
-Translator.pyc \
-Christine.pyc \
-Share.pyc \
-Validator.pyc \
-christineConf.pyc \
-Tagger.pyc \
-LibraryModel.pyc \
-globalvars.pyc
+			Library.pyc \
+			libs_christine.pyc \
+			Player.pyc \
+			sources_list.pyc \
+			Translator.pyc \
+			Christine.pyc \
+			Share.pyc \
+			Validator.pyc \
+			christineConf.pyc \
+			Tagger.pyc \
+			LibraryModel.pyc \
+			globalvars.pyc
 
 DISTFILES= Makefile.in \
 		   __init__.py \
@@ -48,16 +48,15 @@ edit = sed \
 globalvars.py: Makefile $(srcdir)/globalvars.py.in
 	$(edit) $(srcdir)/globalvars.py.in > globalvars.py
 
-all: all-am
 
-all-am: 
-	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'), force=True)"
+all-am: globalvars.py
+	
 
 clean:
-	rm $(srcdir)/Share.py
-	rm $(srcdir)/Christine.py
-	rm $(srcdir)/GtkMisc.py
-	rm $(srcdir)/About.py
-	rm $(srcdir)/Translator.py
-	rm $(srcdir)/Plugins.py
-	rm $(srcdir)/libs_christine.py
+	rm $(srcdir)/Share.pyc
+	rm $(srcdir)/Christine.pyc
+	rm $(srcdir)/GtkMisc.pyc
+	rm $(srcdir)/About.pyc
+	rm $(srcdir)/Translator.pyc
+	rm $(srcdir)/Plugins.pyc
+	rm $(srcdir)/libs_christine.pyc

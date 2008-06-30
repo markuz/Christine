@@ -12,7 +12,9 @@ DATADIR = '@datadir@'
 PREFIX = '@prefix@'
 SYSCONFDIR = '@sysconfdir@'
 wdir = os.path.join(os.environ["HOME"],".christine")
+
 DBFILE = os.path.join(wdir,'christine.db')
+
 CHRISTINE_AUDIO_EXT = sound = ["mp3","ogg","wma"]
 CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
 

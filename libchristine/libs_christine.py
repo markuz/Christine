@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: latin-1 -*-
+from christineLogger import christineLogger
 
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
@@ -21,6 +22,7 @@
 import os
 import cPickle as pickle
 from libchristine.globalvars import DATADIR, wdir
+from libchristine.sqlitedb import sqlite3db
 
 class sanity:
 	'''
@@ -56,13 +58,12 @@ class sanity:
 class lib_library(object):
 	def __init__(self,list):
 		sanity()
-		if os.path.exists(os.path.join(wdir,'sources',list)):
-			f =	open(os.path.join(wdir,'sources',list),"r")
-			self.__files = pickle.load(f)
-			f.close()
-		else:
-			self.__files = {}
+		self.__logger = christineLogger('sqldb')
+		self.__db = sqlite3db()
+		idlist = self.__db.PlaylistIDFromName(list)['id']
 		self.list = list
+		self.__files = self.__db.getItemsForPlaylist(idlist)
+		self.__logger.debug(self.__files)
 
 	def __setitem__(self,name,path):
 		self.append(name,path)
@@ -76,7 +77,7 @@ class lib_library(object):
 		self.__files[name]=data
 
 	def keys(self):
-		return self.__files.keys()
+		return self.__files
 
 	def save(self):
 		f = open(os.path.join(wdir,'sources',self.list),"w+")
@@ -107,7 +108,7 @@ class lib_library(object):
 			return "video"
 
 	def get_all(self):
-		return self.__files
+		return self.__files[:]
 
 	def get_sounds(self):
 		a = {}

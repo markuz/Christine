@@ -1,18 +1,15 @@
-SUBDIRS = libchristine \
-			gui \
-			po \
-			libchristine/pattern/ \
-			libchristine/gui/
+SUBDIRS = libchristine gui po libchristine/pattern/ libchristine/gui/
 
 bin_SCRIPTS = christine
 
 EXTRA_DIST = createDeb.sh.in
 
-DIST_FILES = config.rpath \
+DIST_FILES = ${EXTRA_DIST} \
+			config.rpath \
 	   	    mkinstalldirs \
 	   	   	christine.desktop.in \
-	   	   	christine.c \ 
-	   	   	${EXTRA_DIST}
+	   	   	christine.c 
+	   	   	
 
 program_name = @program_name@
 PROGRAM_NAME = @PROGRAM_NAME@
@@ -41,6 +38,7 @@ clean-local:
 	
 all: all-am
 	chmod 755 christine
+	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'),force=True, maxlevels=11)"
 
 christine.desktop: Makefile $(srcdir)/christine.desktop.in
 	$(edit) $(srcdir)/christine.desktop.in > christine.desktop

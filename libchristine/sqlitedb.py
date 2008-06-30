@@ -31,6 +31,7 @@
 import sqlite3
 from libchristine.globalvars import DBFILE
 from libchristine.pattern.Singleton import Singleton
+from libchristine.christineLogger import christineLogger
 
 class sqlite3db(Singleton):
 	def __init__(self):
@@ -39,9 +40,21 @@ class sqlite3db(Singleton):
 		'''
 		#create the 'connection'
 		self.connection = sqlite3.connect(DBFILE)
+		self.connection.row_factory = self.dict_factory
 		self.cursor = self.connection.cursor()
+		self.__logger = christineLogger('sqldb')
 		if not self.get_db_version():
+			self.__logger.debug('No se encontro la version de la base de daos.')
+			self.__logger.debug(self.get_db_version())
 			self.createSchema()
+			self.fillRegistry()
+
+	def dict_factory(self, cursor, row):
+		d = {}
+		for idx, col in enumerate(cursor.description):
+			d[col[0]] = row[idx]
+		return d
+
 
 	def execute(self, strSQL):
 		'''
@@ -50,6 +63,25 @@ class sqlite3db(Singleton):
 		'''
 		self.__logger.debug(strSQL)
 		self.cursor.execute(strSQL)
+
+	def fetchone(self):
+		'''
+		Wrapper for the fetchone cursor's method, but saves the value on the
+		loger
+		'''
+		val = self.cursor.fetchone()
+		self.__logger.debug(val)
+		return val
+
+	def fetchall(self):
+		'''
+		Wrapper for the fetchall cursor's method, but saves the value on the
+		loger
+		'''
+		val = self.cursor.fetchall()
+		self.__logger.debug(val)
+		return val
+
 
 	def commit(self):
 		'''
@@ -64,11 +96,13 @@ class sqlite3db(Singleton):
 		Look for the version of the database schema. If it can't get the
 		database version then it returns False
 		'''
-		strSQL = 'SELECT version FROM registry'
+		strSQL = 'SELECT value FROM registry where desc="version"'
 		try:
 			self.execute(strSQL)
-			return self.cursor.fetch_all()
-		except: return False
+			return self.fetchall()
+		except Exception, e:
+			self.__logger.debug(e)
+			return False
 
 	def createSchema(self):
 		'''
@@ -77,20 +111,32 @@ class sqlite3db(Singleton):
 		tabledesc =[
 		'CREATE TABLE registry (id INTEGER PRIMARY KEY, desc VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL)',
 		'CREATE TABLE items (id INTEGER PRIMARY KEY, path text NOT NULL, \
-						title NOT NULL, artist VARCHAR(255), \
+						title VARCHAR(255) NOT NULL, artist VARCHAR(255), \
 						album VARCHAR(255), time VARCHAR(10), \
 						playcount INTEGER NOT NULL, \
-						rate ENUM(1,2,3,4,5))',
-		'CREATE TABLE playlists (id INTEGER PRIMARY KEY, name VARCHAR(255))'
+						rate INTEGER)',
+		'CREATE TABLE playlists (id INTEGER PRIMARY KEY, name VARCHAR(255))',
 		'CREATE TABLE playlist_relation (id INTEGER PRIMARY KEY, \
 					playlistid INTEGER NOT NULL, itemid INTEGER NOT NULL)',
-		'CRATE TABLE radio (id INTEGER NOT NULL, title VARCHAR(30) NOT NULL,\
-					url VARCHAR(255) NOT NULL, rate ENUM(1,2,3,4,5))',
+		'CREATE TABLE radio (id INTEGER NOT NULL, title VARCHAR(30) NOT NULL,\
+					url VARCHAR(255) NOT NULL, rate INTEGER)',
 		]
 
-		for strSQL in tablesdesc:
+		for strSQL in tabledesc:
 			self.execute(strSQL)
 			self.commit()
+
+	def fillRegistry(self):
+		'''
+		Rellena el registro con valores adecuados
+		'''
+		reglist = ['INSERT INTO registry VALUES (null, "version", "0.2")',
+				'INSERT INTO playlists VALUES (null, \'music\')',
+				'INSERT INTO playlists VALUES (null, \'queue\')']
+		for strSQL in reglist:
+			self.execute(strSQL)
+			self.commit()
+
 
 	def additem(self, path, title, artist='', album='', time='00:00'):
 		'''
@@ -156,12 +202,31 @@ class sqlite3db(Singleton):
 					a.playcount, a.rate FROM items as a \
 					INNER JOIN playlist_relation as b  \
 					ON a.id = b.itemid \
-					INNER JOIN playlist as c ON \
+					INNER JOIN playlists as c ON \
 					c.id = b.playlistid \
-					WHERE b.playlistid = %d'%(playlistid)
+					WHERE b.playlistid = %d \
+					ORDER BY a.path'%(playlistid)
 
 		self.execute(strSQL)
-		return self.cursor.fetch_all()
+		return self.fetchall()
+
+	def PlaylistIDFromName(self, playlist):
+		'''
+		Return the playlist according to the name
+		@param playlist: playlist name
+		'''
+		strSQL = 'SELECT id FROM playlists WHERE name=\'%s\''%playlist
+		self.execute(strSQL)
+		return self.fetchone()
+
+	def getPlaylists(self):
+		'''
+		Return the playlists
+		'''
+		strSQL = 'SELECT * FROM playlists'
+		self.execute(strSQL)
+		return self.fetchall()
+
 
 
 

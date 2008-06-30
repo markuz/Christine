@@ -22,6 +22,8 @@ from libchristine.gui.GtkMisc import *
 from libchristine.Share import Share
 from libchristine.Translator import  *
 from libchristine.libs_christine import lib_library
+from christineLogger import christineLogger
+from libchristine.sqlitedb import sqlite3db
 
 (LIST_NAME,
 LIST_TYPE,
@@ -30,6 +32,9 @@ LIST_PIXBUF) = xrange(3)
 class sources_list (GtkMisc):
 	def __init__(self):
 		GtkMisc.__init__(self)
+		self.__logger = christineLogger('sqldb')
+		self.__db = sqlite3db()
+		idlist = self.__db.PlaylistIDFromName(list)['id']
 		self.__Share = Share()
 		self.xml = self.__Share.getTemplate('SourcesList','vbox')
 		self.__gen_model()
@@ -49,10 +54,11 @@ class sources_list (GtkMisc):
 			self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
 		else:
 			self.model.clear()
+		sources = self.__db.getPlaylists()
 		p = os.path.join(os.environ["HOME"],".christine","sources")
 		files = os.listdir(p)
-		for fname in files:
-			file = os.path.join(os.environ["HOME"],".christine","sources",fname)
+		for source in sources:
+			#file = os.path.join(os.environ["HOME"],".christine","sources",fname)
 			if os.path.isfile(os.path.join(file)):
 				icon = 'logo'
 				fname = os.path.split(file)[-1]
@@ -60,7 +66,8 @@ class sources_list (GtkMisc):
 				pixbuf = self.__Share.getImageFromPix(icon)
 				pixbuf = pixbuf.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 				iter = self.model.append()
-				self.model.set(iter,LIST_NAME,fname,
+				self.model.set(iter,
+						LIST_NAME,source['name'],
 						LIST_TYPE,ltype,
 						LIST_PIXBUF,pixbuf)
 

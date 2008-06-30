@@ -12,6 +12,9 @@ DATADIR = '/usr/share'
 PREFIX = '/usr'
 SYSCONFDIR = '/usr/etc'
 wdir = os.path.join(os.environ["HOME"],".christine")
+
+DBFILE = os.path.join(wdir,'christine.db')
+
 CHRISTINE_AUDIO_EXT = sound = ["mp3","ogg","wma"]
 CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
 
