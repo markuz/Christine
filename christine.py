@@ -8,7 +8,7 @@ elements = locals()
 from libchristine.libs_christine import sanity
 sanity()
 from libchristine.Christine import *
-from libchristine.BugReport import BugReport
+from libchristine.gui.BugReport import BugReport
 a = Christine()
 try:
 	if len(sys.argv) > 1 and not "--devel" in sys.argv:

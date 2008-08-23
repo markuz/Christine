@@ -58,12 +58,12 @@ class sanity:
 class lib_library(object):
 	def __init__(self,list):
 		sanity()
-		self.__logger = christineLogger('sqldb')
+		self.__logger = christineLogger('liblibrary')
 		self.__db = sqlite3db()
-		idlist = self.__db.PlaylistIDFromName(list)['id']
+		self.idlist = self.__db.PlaylistIDFromName(list)['id']
 		self.list = list
-		self.__files = self.__db.getItemsForPlaylist(idlist)
-		self.__logger.debug(self.__files)
+		self.__files = self.__db.getItemsForPlaylist(self.idlist)
+		self.__logger.debug(len(self.__files))
 
 	def __setitem__(self,name,path):
 		self.append(name,path)
@@ -75,14 +75,33 @@ class lib_library(object):
 		if type(data) != type({}):
 			raise TypeError, "data must be a dict, got %s"%type(data)
 		self.__files[name]=data
+		self.__logger.debug(data)
+		id = self.__db.additem(
+						path = name,
+						title = data['title'],
+						artist = data['artist'],
+						album = data['album'],
+						time = data['time'],
+						type = data['type'],
+						genre = data['genre'],
+						track_number = data['track_number']
+						)
+		self.__db.addItemToPlaylist(self.idlist, id)
+		self.__db.commit()
+
+	def updateItem(self, path, **kwargs):
+		'''
+		Updates the data of a item in the db.
+		'''
+		self.__db.updateItemValues(path, **kwargs)
+		self.__db.commit()
 
 	def keys(self):
 		return self.__files
 
 	def save(self):
-		f = open(os.path.join(wdir,'sources',self.list),"w+")
-		pickle.dump(self.__files,f)
-		f.close()
+		return 1
+		self.__db.save(self.__files)
 
 	def clear(self):
 		self.__files.clear()
@@ -91,6 +110,7 @@ class lib_library(object):
 		'''
 		Remove an item from the main dict and return True or False
 		'''
+		self.__db.removeItem(key,self.idlist)
 		c = {}
 		if key in self.keys():
 			for i in self.keys():
@@ -108,7 +128,7 @@ class lib_library(object):
 			return "video"
 
 	def get_all(self):
-		return self.__files[:]
+		return self.__files
 
 	def get_sounds(self):
 		a = {}

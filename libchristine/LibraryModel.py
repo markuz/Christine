@@ -1,10 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: latin-1 -*-
-import time
-import gobject
-
-## Copyright (c) 2006 Marco Antonio Islas Cruz
-## <markuz@islascruz.org>
+# Copyright (c) 2006 Marco Antonio Islas Cruz
+# <markuz@islascruz.org>
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -22,7 +19,8 @@ import gobject
 
 import gtk
 import gc
-
+import time
+import gobject
 (PATH,
 		NAME,
 		TYPE,
@@ -52,6 +50,7 @@ class christineModel(gtk.GenericTreeModel):
 	Modulo basado en gtk.TreeModel que permite el manejo de datos de clientes
 	de manera mas efectiva que en gtk.ListStore.
 	'''
+
 	def __init__(self, *args):
 		gtk.GenericTreeModel.__init__(self)
 		self.column_size = len(args)
@@ -117,10 +116,8 @@ class christineModel(gtk.GenericTreeModel):
 				return False
 		list = self.__data[iter]
 		size = len(args)
-		c = 0
-		while c < size:
+		for c in range(0,size,2):
 			list[args[c]] = args[c+1]
-			c +=2
 		self.on_getIter = 0
 		niter = self.get_iter((iter,))
 		self.row_changed(iter, niter)
@@ -134,9 +131,7 @@ class christineModel(gtk.GenericTreeModel):
 			return None
 
 	def on_get_path(self, rowref):
-		if isinstance(rowref, tuple):
-			return rowref[0]
-		return self.__data.index(rowref)
+		return (self.__data.index(rowref), rowref[0])[isinstance(rowref, tuple)]
 
 	def on_get_column_type(self, n):
 		return self.column_types[n]
@@ -149,10 +144,8 @@ class christineModel(gtk.GenericTreeModel):
 
 	def on_iter_next(self, rowref):
 		try:
-			index = self.__data.index(rowref)
-			return self.__data[ index + 1 ]
+			return self.__data[ self.__data.index(rowref) + 1 ]
 		except:
-			print 'retornando None'
 			return None
 
 	def on_get_n_columns(self):
@@ -163,8 +156,6 @@ class christineModel(gtk.GenericTreeModel):
 			return None
 		if len(self.__data):
 			return self.__data[n]
-		else:
-			return None
 
 	def on_iter_children(self, rowref):
 		if rowref:
@@ -190,12 +181,14 @@ class christineModel(gtk.GenericTreeModel):
 		@param value: Value to compare
 		@param column: Column number.
 		'''
-		c = 0
-		size = len(self.__data)
-		while c < size:
-			if self.__data[c][column] == value:
-				return self.get_iter((c,))
-			c += 1
+		enum = enumerate(self.__data)
+		while 1:
+			try:
+				c,data = enum.next()
+				if data[column] == value:
+					return self.get_iter((c,))
+			except StopIteration:
+				break
 
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):
@@ -203,6 +196,7 @@ class christineModel(gtk.GenericTreeModel):
 		try:
 			self.__data.pop(path)
 			self.row_deleted((path,))
+
 			return True
 		except:
 			return False
@@ -230,6 +224,8 @@ class LibraryModel:
 		'''Constructor
 		'''
 		self.basemodel =  christineModel(*args)
+		self.TextToSearch = ''
+		self.counter = 0
 
 	def append(self, *args):
 		return  self.basemodel.append(*args)
@@ -240,6 +236,27 @@ class LibraryModel:
 	def createSubmodels(self):
 		self.__filter = self.basemodel.filter_new()
 		self.__sorted = gtk.TreeModelSort(self.__filter)
+		self.__filter.set_visible_func(self.filter)
+
+	def filter(self, model, iter):
+		if self.counter > 1000:
+			while gtk.events_pending():
+				gtk.main_iteration_do()
+			self.counter = 0
+		self.counter +=1
+		if not self.TextToSearch:
+			return True
+		value = model.get(iter, SEARCH)[0]
+
+		try:
+			value = value.lower()
+		except:
+			value = ""
+
+		if (value.find(self.TextToSearch) >= 0):
+			return True
+		else:
+			return False
 
 	def getModel(self):
 		return self.__sorted

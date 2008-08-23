@@ -41,6 +41,9 @@ from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.Library import library, queue
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.sqlitedb import sqlite3db
+from libchristine.ui import interface
+from libchristine.tryicon import tryIcon
+from libchristine.christineLogger import christineLogger
 from libchristine.Library import (PATH,
 NAME,
 TYPE,
@@ -91,12 +94,14 @@ class Christine(GtkMisc):
 		initialize the gnome ui client, create the XML interface descriptor,
 		initialize class variables and create some timeouts calls
 		"""
-		self.__Logger = logging.getLogger('Christine')
+		self.__Logger = christineLogger('Christine')
 		GtkMisc.__init__(self)
 
 		self.__Share   = Share()
 		self.__christineGconf   = christineConf()
 		self.__sqlite = sqlite3db()
+		self.interface = interface()
+		self.interface.coreClass = self
 
 		self.__XML = self.__Share.getTemplate('WindowCore')
 		self.__XML.signal_autoconnect(self)
@@ -107,7 +112,6 @@ class Christine(GtkMisc):
 		self.__VBoxCore.connect('scroll-event',self.__printEvent)
 
 		# Class variables
-		self.__TextToSearch     = ""
 		self.__ErrorStreamCount = 0
 		self.__TimeTotal        = 0     # Nanosecs for audio/video file
 		self.__LocationCount    = 0     # Count ns and jump if the file is not good
@@ -126,14 +130,15 @@ class Christine(GtkMisc):
 		self.__initPlayer()
 		self.__buildInterface()
 
-		if (self.__christineGconf.getBool('ui/show_in_notification_area')):
-			self.__buildTrayIcon()
+		# Create the try icon.
+		tryIcon()
 
 		self.__christineGconf.notifyAdd('ui/show_in_notification_area',
-				lambda cl,cnx,entry,widget: self.__TrayIcon.set_visible(entry.get_value().get_bool()))
+				lambda cl,cnx,entry,widget: \
+				self.__TrayIcon.set_visible(entry.get_value().get_bool()))
 
 		gobject.timeout_add(500, self.checkTimeOnMedia)
-		self.__Window.show()
+		self.coreWindow.show()
 		self.HBoxSearch.hide()
 
 	def __printEvent(self,widget,event):
@@ -188,14 +193,17 @@ class Christine(GtkMisc):
 		# Ends the call to widgets descriptors not connected by hadn
 
 		# Gets window widget from glade template
-		self.__Window = self.__XML['WindowCore']
-		self.__Window.connect("destroy",gtk.main_quit)
-		self.__Window.set_icon(self.__Share.getImageFromPix('logo'))
-		self.__Window.connect("scroll-event",self.__printEvent)
-		self.__Window.connect("key-press-event",self.onWindowCoreEvent)
+		self.coreWindow = self.__XML['WindowCore']
+		self.coreWindow.connect("destroy",gtk.main_quit)
+		self.coreWindow.set_icon(self.__Share.getImageFromPix('logo'))
+		self.coreWindow.connect("scroll-event",self.__printEvent)
+		self.coreWindow.connect("key-press-event",self.onWindowCoreEvent)
+
+		self.interface.coreWindow = self.coreWindow
 
 		# Gets play button and menu play item from glade template
-		self.__PlayButton   = self.__XML['ToggleButtonPlay']
+		self.PlayButton   = self.__XML['ToggleButtonPlay']
+		self.interface.playButton =  self.PlayButton
 		self.__MenuItemPlay = self.__XML['MenuItemPlay']
 
 		self.Menus = {}
@@ -234,17 +242,12 @@ class Christine(GtkMisc):
 
 		# Models in the library are assigned to class variables
 		self.__LibraryModel       = self.__Library.tv.get_model()
-		#self.__LibraryFilterModel = self.__LibraryModel.get_model()
-		self.__Library.model.set_visible_func(self.filter)
-
-		#self.__LibraryNaturalModel = self.__LibraryFilterModel.get_model()
 		self.__LibraryCurrentIter = self.__Library.model.get_iter_first()
 
 		self.__ScrolledMusic = self.__XML['ScrolledMusic']
 		self.__VBoxVideo = self.__XML['VBoxVideo']
 
 		self.__ScrolledMusic.add(self.__Library.tv)
-		#self.__VBoxCore.show_all()
 
 		self.Queue         = queue()
 		self.__ScrolledQueue = self.__XML['ScrolledQueue']
@@ -328,43 +331,9 @@ class Christine(GtkMisc):
 		if ('-q' in sys.argv):
 			sys.exit()
 
-	def __buildTrayIcon(self):
-		"""
-		Show the TrayIcon
-		"""
-		self.__TrayIcon = gtk.StatusIcon()
-		self.__TrayIcon.set_from_pixbuf(self.__Share.getImageFromPix('trayicon'))
-		self.__TrayIcon.connect('popup-menu', self.__trayIconHandlerEvent)
-		self.__TrayIcon.connect('activate',   self.__trayIconActivated)
-		self.__TrayIcon.set_tooltip('Christine Baby!')
-		self.__TrayIcon.set_visible(self.__christineGconf.getBool('ui/show_in_notification_area'))
 
-	def __trayIconHandlerEvent(self, widget, event, time):
-		"""
-		TrayIcon handler events
-		"""
-		# If the event is a button press event and it was
-		# the third button then show a popup menu
-		if (event == 3):
-			XML = self.__Share.getTemplate('MenuTrayIcon')
-			XML.signal_autoconnect(self)
 
-			popup = XML['menu']
-			popup.popup(None, None, None, 3, gtk.get_current_event_time())
-			popup.show_all()
 
-	def __trayIconActivated(self, status):
-		"""
-		This hide and then show the window,
-		intended when you want to show the window
-		in your current workspace
-		"""
-		if (self.__IsHidden == True):
-			self.__Window.show()
-		else:
-			self.__Window.hide()
-
-		self.__IsHidden = not self.__IsHidden
 
 
 	def __srcListRowActivated(self, treeview, path, column):
@@ -463,8 +432,8 @@ class Christine(GtkMisc):
 		else:
 			self.__IterCurrentPlaying = iter
 
-		self.__PlayButton.set_active(False)
-		self.__PlayButton.set_active(True)
+		self.PlayButton.set_active(False)
+		self.PlayButton.set_active(True)
 
 	def setLocation(self, filename):
 		"""
@@ -548,7 +517,7 @@ class Christine(GtkMisc):
 		Toggle between the small and the large view
 		"""
 		#
-		# The need to use the "self.__Window.get_size()" will be
+		# The need to use the "self.coreWindow.get_size()" will be
 		# erased in the future, window size will be saved in
 		# gconf.
 		#
@@ -559,20 +528,20 @@ class Christine(GtkMisc):
 			self.__HPanedListsBox.hide()
 			self.HBoxSearch.hide()
 
-			self.__WindowSize = self.__Window.get_size()
-			self.__Window.unmaximize()
-			self.__Window.resize(10, 10)
-			self.__Window.set_resizable(False)
+			self.coreWindowSize = self.coreWindow.get_size()
+			self.coreWindow.unmaximize()
+			self.coreWindow.resize(10, 10)
+			self.coreWindow.set_resizable(False)
 		else:
 			try:
-				(w, h) = self.__WindowSize
+				(w, h) = self.coreWindowSize
 			except:
 				(w, h) = (800, 480)
 
 			self.__HPanedListsBox.show()
 			self.HBoxSearch.show()
-			self.__Window.resize(w, h)
-			self.__Window.set_resizable(True)
+			self.coreWindow.resize(w, h)
+			self.coreWindow.set_resizable(True)
 
 	def toggleVisualization(self, widget):
 		"""
@@ -595,14 +564,14 @@ class Christine(GtkMisc):
 		#        visualization enabled
 		if (not self.__IsFullScreen):
 			if ((self.__Player.isVideo()) or (self.__christineGconf.getBool('ui/visualization'))):
-				self.__Window.fullscreen()
+				self.coreWindow.fullscreen()
 				self.__ScrolledMusic.set_size_request(0,0)
 				self.__VBoxList.set_size_request(0,0)
 
 				self.__IsFullScreen = True
 			else:
 				self.__Logger.warning('Full screen with no visualization')
-				self.__Window.fullscreen()
+				self.coreWindow.fullscreen()
 				self.__IsFullScreen = True
 		else:
 		# Non-full screen mode.
@@ -613,7 +582,7 @@ class Christine(GtkMisc):
 			self.__ScrolledMusic.set_size_request(200,200)
 			self.__VBoxList.set_size_request(150,0)
 
-			self.__Window.unfullscreen()
+			self.coreWindow.unfullscreen()
 			self.__IsFullScreen = False
 
 	def onWindowCoreEvent(self, player, event):
@@ -670,8 +639,8 @@ class Christine(GtkMisc):
 		"""
 		Perform the actions to make a search
 		"""
-		self.__TextToSearch = self.EntrySearch.get_text().lower()
-		if (self.__TextToSearch == ''):
+		self.__Library.model.TextToSearch = self.EntrySearch.get_text().lower()
+		if (self.__Library.model.TextToSearch == ''):
 			self.jumpToPlaying()
 		self.__lastTypeTime = time.time()
 		gobject.timeout_add(500,self.__searchTimer)
@@ -691,21 +660,7 @@ class Christine(GtkMisc):
 		"""
 		self.EntrySearch.set_text('')
 
-	def filter(self, model, iter):
-		if (self.__TextToSearch == ''):
-			return True
 
-		value = model.get(iter, SEARCH)[0]
-
-		try:
-			value = value.lower()
-		except:
-			value = ""
-
-		if (value.find(self.__TextToSearch) >= 0):
-			return True
-		else:
-			return False
 
 	###################################################
 	#                  Play stuff                     #
@@ -732,7 +687,7 @@ class Christine(GtkMisc):
 
 		# Sync the two controls
 		self.__MenuItemPlay.set_active(active)
-		self.__PlayButton.set_active(active)
+		self.PlayButton.set_active(active)
 
 	def play(self, widget = None):
 		"""
@@ -760,13 +715,13 @@ class Christine(GtkMisc):
 		"""
 		Play from trayicon menu
 		"""
-		self.__PlayButton.set_active(True)
+		self.PlayButton.set_active(True)
 
 	def pause(self, widget = None):
 		"""
 		Pause method
 		"""
-		self.__PlayButton.set_active(False)
+		self.PlayButton.set_active(False)
 
 	def goPrev(self, widget = None):
 		"""
@@ -777,8 +732,8 @@ class Christine(GtkMisc):
 			#remove the last played since it's the same that we are playing.
 			self.__LastPlayed.pop()
 			self.setLocation(self.__LastPlayed.pop())
-			self.__PlayButton.set_active(False)
-			self.__PlayButton.set_active(True)
+			self.PlayButton.set_active(False)
+			self.PlayButton.set_active(True)
 		else:
 			self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(
 										self.__christineGconf.getString('backend/last_played'), PATH)
@@ -796,8 +751,8 @@ class Christine(GtkMisc):
 					# This avoid the return to the last played song
 					# wich is the next in the list.
 					self.__LastPlayed.pop()
-					self.__PlayButton.set_active(False)
-					self.__PlayButton.set_active(True)
+					self.PlayButton.set_active(False)
+					self.PlayButton.set_active(True)
 
 
 	def goNext(self, widget = None):
@@ -822,8 +777,8 @@ class Christine(GtkMisc):
 			self.jumpToPlaying()
 			self.Queue.remove(iter)
 			self.Queue.save()
-			self.__PlayButton.set_active(False)
-			self.__PlayButton.set_active(True)
+			self.PlayButton.set_active(False)
+			self.PlayButton.set_active(True)
 		else:
 			self.__ScrolledQueue.hide()
 			if (self.__MenuItemShuffle.get_active()):
@@ -838,12 +793,12 @@ class Christine(GtkMisc):
 				if (not filename in self.__LastPlayed) or \
 						(self.__christineGconf.getBool('control/repeat')) and filename:
 						self.setLocation(filename)
-						self.__PlayButton.set_active(False)
-						self.__PlayButton.set_active(True)
+						self.PlayButton.set_active(False)
+						self.PlayButton.set_active(True)
 				else:
 					self.getNextInList()
-					self.__PlayButton.set_active(False)
-					self.__PlayButton.set_active(True)
+					self.PlayButton.set_active(False)
+					self.PlayButton.set_active(True)
 			else:
 				self.getNextInList()
 
@@ -887,12 +842,12 @@ class Christine(GtkMisc):
 			try:
 				self.setLocation(self.__Library.model.getValue(iter, PATH))
 				#niter = iter
-				self.__PlayButton.set_active(False)
-				self.__PlayButton.set_active(True)
+				self.PlayButton.set_active(False)
+				self.PlayButton.set_active(True)
 			except:
 				self.setScale('', '', b = 0)
 				self.setLocation(path)
-				self.__PlayButton.set_active(False)
+				self.PlayButton.set_active(False)
 
 	def __SearchByPath(self, model, path, iter, location):
 		"""
@@ -1323,22 +1278,22 @@ class Christine(GtkMisc):
 			if (iter is not None):
 				time= self.__Library.model.get_value(iter, TIME)
 				if (time != text):
-					path = self.__Library.model.basemodel.get_path(iter)
-					self.__Library.model.basemodel.set(path, TIME, text)
-					self.__Library.save()
+					self.__Library.updateData(self.__Player.getLocation(),
+								time=text)
 			return False
 		except gst.QueryError:
 			self.__ErrorStreamCount += 1
 			if (self.__ErrorStreamCount > 10):
 				self.setLocation(self.__Player.getLocation())
-				self.__PlayButton.set_active(False)
-				self.__PlayButton.set_active(True)
+				self.PlayButton.set_active(False)
+				self.PlayButton.set_active(True)
 
 			return True
 
 	def setTags(self, widget = "", b = ""):
 		"""
-		Update the current media tags in the library
+		This method fetchs teh data from the song/media in the player.
+		Then, ask to the library to update the values on it.
 		"""
 		#if not self.__Library.Exists(self.__Player.getLocation()):
 		#	return False
@@ -1376,7 +1331,7 @@ class Christine(GtkMisc):
 		title    = self.strip_XML_entities(title)
 
 		# Sets window title, which it will be our current song :-)
-		self.__Window.set_title("%s - Christine" % title)
+		self.coreWindow.set_title("%s - Christine" % title)
 
 		notify_text = "<big>%s</big>\n" % title
 
@@ -1390,31 +1345,15 @@ class Christine(GtkMisc):
 			notify_text += " from <big>%s</big>" % album
 			tooltext    += "\nfrom %s" % album
 
-		# Updating the info in library, only if it is available.
-		iter = self.__Library.tv.get_selection().get_selected()[1]
-		self.__LibraryCurrentIter = self.__Library.model.basemodel.search_iter_on_column(
-										self.__Player.getLocation(), PATH)
-		iter = self.__LibraryCurrentIter
-		if (iter is not None):
-			if title:
-				self.__Library.model.setValues(iter,
-						NAME,   title,
-						ALBUM,  album,
-						ARTIST, artist,
-						TN,     track_number,
-						SEARCH, '.'.join([title,
-						artist, album, genre, type_file]),
-						GENRE,  genre)
+		search = '.'.join([title,artist, album, genre, type_file])
 
-			(title1, artist1, album1, tc) = \
-					self.__Library.model.Get(iter,
-					NAME, ARTIST, ALBUM, TN)
-
-			if title != title1 \
-				or artist != artist1 \
-				or album != album \
-				or track_number != tc:
-				gobject.timeout_add(500, self.__Library.save)
+		self.__Library.updateData(self.__Player.getLocation(),
+								title=title,
+								album= album,
+								artist=artist,
+								track_number=track_number,
+								search=search,
+								genre=genre)
 
 		if ((PYNOTIFY) and (self.__christineGconf.getBool('ui/show_pynotify'))):
 			try:
@@ -1431,7 +1370,7 @@ class Christine(GtkMisc):
 					pass
 				self.__TrayIcon.set_tooltip(tooltext)
 
-			self.__Notify.set_timeout(3000)
+			#self.__Notify.set_timeout(3000)
 
 			self.__Notify.set_property('body', notify_text)
 			self.__Notify.show()
@@ -1537,8 +1476,8 @@ class Christine(GtkMisc):
 					if i.lower().find("file") > -1:
 						location = i.split("=").pop().strip()
 				self.setLocation(location)
-				self.__PlayButton.set_active(False)
-				self.__PlayButton.set_active(True)
+				self.PlayButton.set_active(False)
+				self.PlayButton.set_active(True)
 			elif extension == "m3u":
 				lines = urldesc.readlines()
 				if lines[0].lower() != "#extm3u":

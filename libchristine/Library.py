@@ -28,7 +28,7 @@ from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.LibraryModel import LibraryModel
 from libchristine.globalvars import CHRISTINE_VIDEO_EXT
-import time
+from libchristine.christineLogger import christineLogger
 
 (PATH,
 NAME,
@@ -70,6 +70,7 @@ class library(GtkMisc):
 		self.iters = {}
 		GtkMisc.__init__(self)
 		self.__Share = Share()
+		self.__logger = christineLogger('Library')
 		self.tagger = Tagger()
 		self.__row_changed_id = 0
 		self.__appending = False
@@ -123,11 +124,11 @@ class library(GtkMisc):
 					a[i] = 0
 				else:
 					a[i] = ""
-		self.library_lib[a[0]] = {"name":a[1],
+		self.library_lib[a[0]] = {"title":a[1],
 				"type":a[6],"artist":a[2],
 				"album":a[3],"track_number":a[4],
-				"play_count":a[7],
-				"duration":a[8],
+				"playcount":a[7],
+				"time":a[8],
 				"genre":a[9]}
 		for i in self.library_lib[filename].keys():
 			if self.library_lib[filename][i] == None:
@@ -159,8 +160,10 @@ class library(GtkMisc):
 		pix = self.__Share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		self.__appending = True
-		for values in sounds:
-			path = values['path']
+		keys = sounds.keys()
+		keys.sort()
+		for path in keys:
+			values = sounds[path]
 			for key in values.keys():
 				if isinstance(values[key],str):
 					try:
@@ -169,9 +172,9 @@ class library(GtkMisc):
 					except:
 						pass
 			iter = self.model.append(PATH,path,
-					NAME, values['name'],
+					NAME, values['title'],
 					SEARCH,
-					''.join((values['name'],
+					''.join((values['title'],
 						values['artist'],
 						values['album'],
 						values['type'])),
@@ -180,8 +183,8 @@ class library(GtkMisc):
 					ARTIST,values['artist'],
 					ALBUM ,values['album'],
 					TN,values['track_number'],
-					PLAY_COUNT ,values['play_count'],
-					TIME ,values['duration'],
+					PLAY_COUNT ,values['playcount'],
+					TIME ,values['time'],
 					GENRE ,values['genre'])
 			self.iters[path] = iter
 
@@ -206,8 +209,8 @@ class library(GtkMisc):
 					ARTIST,data['artist'],
 					ALBUM ,data['album'],
 					TN,data['track_number'],
-					PLAY_COUNT ,data['play_count'],
-					TIME ,data['duration'],
+					PLAY_COUNT ,data['playcount'],
+					TIME ,data['time'],
 					GENRE ,data['genre'],
 					)
 		return True
@@ -332,12 +335,13 @@ class library(GtkMisc):
 				GENRE,tags["genre"]
 				)
 
-		self.library_lib[file] = {"name":name,
+		self.library_lib[file] = {"title":name,
 				"type":t,"artist":artist,
-				"album":album,"track_number":int(tn),
-				"play_count":0,
-				"duration":'0:00',
-				"genre":tags['genre']}
+				"album":album,
+				"track_number":int(tn),
+				"playcount":0,
+				"time":'0:00',
+				"genre":tags['genre'],}
 
 	def stream_length(self,widget=None,n=1):
 		try:
@@ -366,6 +370,48 @@ class library(GtkMisc):
 		Save the current library
 		'''
 		self.library_lib.save()
+
+	def updateData(self, path, **kwargs):
+		'''
+		This method updates the data in the main library if it can. And
+		in the data base.
+
+		@param path:
+		@param title:
+		@param album:
+		@param artist:
+		@param track_number:
+		@param search:
+		@param genre:
+		@param play_count:
+		@param time:
+		'''
+		keys = {'title':NAME,
+			 	'album':ALBUM,
+			 	'artist':ARTIST,
+			 	'track_number':TN,
+			 	'search':SEARCH,
+			 	'play_count':PLAY_COUNT,
+			 	'genre':GENRE,
+			 	'time':TIME,
+			 	}
+		for key in kwargs:
+			value = keys[key]
+			iter = self.model.basemodel.search_iter_on_column(path, PATH)
+			if not iter:
+				return None
+			self.model.basemodel.set(iter, value, kwargs[key])
+		iter = self.model.basemodel.search_iter_on_column(path, PATH)
+		(path, title, artist, album, type,
+		track_number, playcount,time, genre) = self.model.basemodel.get(iter,
+												PATH,
+												NAME, ARTIST,ALBUM, TYPE,
+												TN,PLAY_COUNT, TIME, GENRE)
+		self.library_lib.updateItem(path, title=title, artist=artist,
+								album=album, type=type, track_number=track_number,
+								playcount=playcount,time=time,
+								genre=genre)
+
 
 	def key_press_handler(self,treeview,event):
 		if event.keyval == gtk.gdk.keyval_from_name('Delete'):
@@ -515,7 +561,6 @@ class queue (library):
 				os.path.isfile(file) or \
 				os.path.isfile(file.replace('%2C',',')):
 			try:
-				file = file.replace('%2C',',')
 				tags = self.tagger.readTags(file)
 			except:
 				self.emit_signal("tags-found!")
@@ -548,10 +593,10 @@ class queue (library):
 				GENRE,tags["genre"]
 				)
 
-		self.library_lib[file] = {"name":name,
+		self.library_lib[file] = {"title":name,
 				"type":t,"artist":artist,
 				"album":album,"track_number":int(tn),
-				"play_count":0,
-				"duration":'0:00',
+				"playcount":0,
+				"time":'0:00',
 				"genre":tags['genre']}
 		self.save()

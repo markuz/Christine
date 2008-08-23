@@ -41,7 +41,9 @@ class sqlite3db(Singleton):
 		#create the 'connection'
 		self.connection = sqlite3.connect(DBFILE)
 		self.connection.row_factory = self.dict_factory
+		self.connection.text_factory = str
 		self.cursor = self.connection.cursor()
+		self.cursor.row_factory = self.dict_factory
 		self.__logger = christineLogger('sqldb')
 		if not self.get_db_version():
 			self.__logger.debug('No se encontro la version de la base de daos.')
@@ -55,14 +57,20 @@ class sqlite3db(Singleton):
 			d[col[0]] = row[idx]
 		return d
 
+	#def text_factory(self, cursor, row):
+	#	print locals()
+	#	return row
 
-	def execute(self, strSQL):
+
+	def execute(self, strSQL,*args):
 		'''
 		Ejecuta una sentencia SQL enviando la sentencia al logger
 		@param strSQL:
 		'''
-		self.__logger.debug(strSQL)
-		self.cursor.execute(strSQL)
+		tup = (strSQL, args)
+		self.__logger.debug('Executing : %s',repr(tup))
+		self.__logger.debug('type args: %s', type(args))
+		self.cursor.execute(strSQL,args)
 
 	def fetchone(self):
 		'''
@@ -79,6 +87,14 @@ class sqlite3db(Singleton):
 		loger
 		'''
 		val = self.cursor.fetchall()
+		self.__logger.debug(val)
+		return val
+
+	def fetchmany(self):
+		'''
+		Fecth all rows from a resultset, and saves the value on the logger.
+		'''
+		val = self.cursor.fetchmany()
 		self.__logger.debug(val)
 		return val
 
@@ -114,7 +130,11 @@ class sqlite3db(Singleton):
 						title VARCHAR(255) NOT NULL, artist VARCHAR(255), \
 						album VARCHAR(255), time VARCHAR(10), \
 						playcount INTEGER NOT NULL, \
-						rate INTEGER)',
+						rate INTEGER, \
+						type VARCHAR(30), \
+						track_number INTEGER NOT NULL, \
+						genre varchar(30) \
+						)',
 		'CREATE TABLE playlists (id INTEGER PRIMARY KEY, name VARCHAR(255))',
 		'CREATE TABLE playlist_relation (id INTEGER PRIMARY KEY, \
 					playlistid INTEGER NOT NULL, itemid INTEGER NOT NULL)',
@@ -138,7 +158,7 @@ class sqlite3db(Singleton):
 			self.commit()
 
 
-	def additem(self, path, title, artist='', album='', time='00:00'):
+	def additem(self, **kwargs):
 		'''
 		Add a new item to the library
 		@param path: The path where the file may be located
@@ -149,11 +169,76 @@ class sqlite3db(Singleton):
 
 		@return : The last row id.
 		'''
-		strSQL = 'INSERT INTO items values(null, %s,%s,%s,%s,%s,0,1)'%(path,
-												title, artist, album, time)
-		self.execute(strSQL)
-		self.commit()
+		keys = kwargs.keys()
+		# Check if the item is not already in the registry.
+		values = self.getItemByPath(kwargs['path'])
+		if values:
+			self.__logger.info('file with path %s already exists in the db',
+							kwargs['path'])
+			return values['id'];
+		for key in keys:
+			val = kwargs[key]
+			if isinstance(val, str):
+				kwargs[key] = val.replace("'","\\'")
+		strSQL = 'INSERT INTO items VALUES(null,?,?,?,?,?,0,1,?,?,?)'
+		self.execute(strSQL,
+					kwargs['path'],
+					kwargs['title'],
+					kwargs['artist'],
+					kwargs['album'],
+					kwargs['time'],
+					kwargs['type'],
+					kwargs['track_number'],
+					kwargs['genre'])
 		return self.cursor.lastrowid
+
+	def updateItemValues(self, path, **kwargs):
+		'''
+		Updte in db the data of the given file.
+		@param path:
+		'''
+		#Check if the media is in the db.
+		self.execute('SELECT id FROM items WHERE path=?',path)
+		presult = self.fetchone()
+		if not presult:
+			self.__logger.warning('We look for %s but we cant find it on the db', path)
+			return None
+
+		strk = []
+		vals = []
+		for i in kwargs:
+			strk.append('%s=?'%i)
+			vals.append(kwargs[i])
+		strk = ','.join(strk)
+		strSQL = 'UPDATE items SET %s where path=?'%strk
+		vals.append(path)
+		vals = tuple(vals)
+		self.execute(strSQL,*vals)
+
+	def removeItem(self, path, playlist):
+		'''
+		Remove a item from a playlist
+		@param path: Path of the item
+		@param playlist: Id of the playlist
+		'''
+		self.execute('SELECT id FROM items where path=?',path)
+		itemid = self.fetchone()
+		if not itemid:
+			return None
+		strSQL = 'DELETE FROM playlist_relation WHERE playlistid=? and itemid=?'
+		self.execute(strSQL, playlist, itemid['id'])
+		return True
+
+
+
+	def addItemToPlaylist(self, playlist, itemid):
+		'''
+		Create a reference beetween a item to a playlist
+		@param playlist: playlist
+		@param itemid: ID of the item
+		'''
+		strSQL = 'INSERT INTO playlist_relation values(null, %d,%d)'%(playlist, itemid)
+		self.execute(strSQL)
 
 	def addPlaylist(self, name):
 		'''
@@ -166,20 +251,6 @@ class sqlite3db(Singleton):
 		self.execute(strSQL)
 		self.commit()
 		return self.cursor.lastrowid
-
-	def addItemtoPlaylist(self, itemid, playlistid):
-		'''
-		Add an item to the playlists
-
-		@param itemid: id of the item
-		@param playlistid: id of the playlist
-
-		@return : None
-		'''
-		strSQL = 'INSERT INTO playlist_relation values \
-					(null, %d, %d)'%(playlistid, itemid)
-		self.execute(strSQL)
-		self.commit()
 
 	def deleteItemFromPlaylist(self, itemid, playlistid):
 		'''
@@ -199,22 +270,45 @@ class sqlite3db(Singleton):
 		@param playlistid: id of the playlist
 		'''
 		strSQL = 'SELECT a.path, a.title, a.album, a.artist, a.time, \
-					a.playcount, a.rate FROM items as a \
-					INNER JOIN playlist_relation as b  \
-					ON a.id = b.itemid \
-					INNER JOIN playlists as c ON \
-					c.id = b.playlistid \
-					WHERE b.playlistid = %d \
-					ORDER BY a.path'%(playlistid)
+					\na.playcount, a.rate, a.type, a.track_number, a.genre \
+					\nFROM items as a \
+					\nINNER JOIN playlist_relation as b  \
+					\nON a.id = b.itemid \
+					\nINNER JOIN playlists as c ON \
+					\nc.id = b.playlistid \
+					\nWHERE b.playlistid = %d \
+					\nORDER BY a.path'%(playlistid)
 
 		self.execute(strSQL)
-		return self.fetchall()
+		self.__logger.debug('cursor.rowcount: %d', self.cursor.rowcount)
+		d = {}
+		while 1:
+			try:
+				value = self.cursor.next()
+			except sqlite3.OperationalError, e:
+				print e
+				continue
+			except StopIteration:
+				break
+			d[value['path']] = value
+		return d
+
+	def getItemByPath(self, path):
+		'''
+		Return the values of a item by the given path
+		@param path: Ruta en la que se encuentra el archivo
+		'''
+		strSQL = 'select * from items where path=?'
+		self.execute(strSQL,path)
+		return self.fetchone()
 
 	def PlaylistIDFromName(self, playlist):
 		'''
 		Return the playlist according to the name
 		@param playlist: playlist name
 		'''
+		if not isinstance(playlist, str):
+			return None
 		strSQL = 'SELECT id FROM playlists WHERE name=\'%s\''%playlist
 		self.execute(strSQL)
 		return self.fetchone()

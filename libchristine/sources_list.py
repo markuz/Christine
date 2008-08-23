@@ -32,9 +32,11 @@ LIST_PIXBUF) = xrange(3)
 class sources_list (GtkMisc):
 	def __init__(self):
 		GtkMisc.__init__(self)
-		self.__logger = christineLogger('sqldb')
+		self.__logger = christineLogger('sources_list')
 		self.__db = sqlite3db()
-		idlist = self.__db.PlaylistIDFromName(list)['id']
+		idlist = self.__db.PlaylistIDFromName(list)
+		if idlist != None:
+			idlist = idlist['id']
 		self.__Share = Share()
 		self.xml = self.__Share.getTemplate('SourcesList','vbox')
 		self.__gen_model()
@@ -55,21 +57,17 @@ class sources_list (GtkMisc):
 		else:
 			self.model.clear()
 		sources = self.__db.getPlaylists()
-		p = os.path.join(os.environ["HOME"],".christine","sources")
-		files = os.listdir(p)
+		#p = os.path.join(os.environ["HOME"],".christine","sources")
+		#files = os.listdir(p)
 		for source in sources:
 			#file = os.path.join(os.environ["HOME"],".christine","sources",fname)
-			if os.path.isfile(os.path.join(file)):
-				icon = 'logo'
-				fname = os.path.split(file)[-1]
-				ltype = '1'
-				pixbuf = self.__Share.getImageFromPix(icon)
-				pixbuf = pixbuf.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
-				iter = self.model.append()
-				self.model.set(iter,
-						LIST_NAME,source['name'],
-						LIST_TYPE,ltype,
-						LIST_PIXBUF,pixbuf)
+			#if os.path.isfile(os.path.join(file)):
+			#fname = os.path.split(file)[-1]
+			ltype = '1'
+			iter = self.model.append()
+			self.model.set(iter,
+					LIST_NAME,source['name'],
+					LIST_TYPE,ltype)
 
 	def __append_columns(self):
 		column = gtk.TreeViewColumn("Source")

@@ -43,8 +43,7 @@ class christineLogger:
 		f = '%(asctime)s:%(levelname)-5s:%(name)-5s:%(lineno)4s: %(message)-80s'
 		formatter = logging.Formatter(f)
 		if '--verbose' in sys.argv:
-			print 1234
-			LOGGING_MODE = logging.INFO
+			LOGGING_MODE = logging.DEBUG
 			LOGGING_HANDLER = logging.StreamHandler()
 		else:
 			LOGGING_MODE = logging.DEBUG
