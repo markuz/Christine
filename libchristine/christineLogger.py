@@ -28,7 +28,7 @@ import os
 
 import logging
 import logging.handlers
-from libchristine.globalvars import wdir
+from libchristine.globalvars import USERDIR
 import sys
 
 class christineLogger:
@@ -47,7 +47,7 @@ class christineLogger:
 			LOGGING_HANDLER = logging.StreamHandler()
 		else:
 			LOGGING_MODE = logging.DEBUG
-			log = os.path.join(wdir, 'christine.log')
+			log = os.path.join(USERDIR, 'christine.log')
 			LOGGING_HANDLER = logging.handlers.RotatingFileHandler(log,
 													'a',31457280, 10)
 
@@ -59,3 +59,5 @@ class christineLogger:
 		self.info = self.__Logger.info
 		self.debug = self.__Logger.debug
 		self.warning = self.__Logger.warning
+		self.exception = self.__Logger.exception
+		self.critical = self.__Logger.critical

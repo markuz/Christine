@@ -29,11 +29,10 @@ from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.gui.GtkMisc import glade_xml
 from libchristine.globalvars import DATADIR
+from libchristine.christineLogger import christineLogger
 import os
 import gtk
 import sys
-import logging
-from libchristine.globalvars import DATADIR
 
 # global PATH to share files required
 if "--devel" in sys.argv:
@@ -74,7 +73,7 @@ class Share(Singleton):
 		Constructor
 		"""
 		self.setName('Share')
-		self.__logger = logging.getLogger('Share')
+		self.__logger = christineLogger('Share')
 		self.__PathTemplate = os.path.join(SHARE_PATH, 'gui')
 		self.__PathPixmap   = os.path.join(self.__PathTemplate, 'pixmaps')
 		#self.__Pixmaps, used to store a pixmap. if it is here then reuse it

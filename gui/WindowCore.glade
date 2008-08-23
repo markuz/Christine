@@ -80,7 +80,6 @@
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Open remote</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="openRemote"/>
                         <accelerator key="O" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
                     </child>
@@ -551,17 +550,7 @@
                   <widget class="GtkVBox" id="VBoxList">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkScrolledWindow" id="ScrolledQueue">
-                        <property name="width_request">150</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
+                      <placeholder/>
                     </child>
                     <child>
                       <placeholder/>
@@ -591,20 +580,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkVBox" id="vbox2">
+                      <widget class="GtkVBox" id="libraryScrollPlace">
                         <property name="visible">True</property>
                         <child>
-                          <widget class="GtkScrolledWindow" id="ScrolledMusic">
-                            <property name="height_request">100</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </widget>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>

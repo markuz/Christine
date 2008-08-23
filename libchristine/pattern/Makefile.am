@@ -22,9 +22,6 @@ edit = sed \
 	   -e 's,@programname\@,$(programname),g' \
 	   -e 's,@version\@,$(version),g'
 
-all: all-am
-	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'), force=True)"
-
 all-am: 
 
 

@@ -48,15 +48,7 @@ edit = sed \
 globalvars.py: Makefile $(srcdir)/globalvars.py.in
 	$(edit) $(srcdir)/globalvars.py.in > globalvars.py
 
-
-all-am: globalvars.py
-	
+all: globalvars.py
 
 clean:
-	rm $(srcdir)/Share.pyc
-	rm $(srcdir)/Christine.pyc
-	rm $(srcdir)/GtkMisc.pyc
-	rm $(srcdir)/About.pyc
-	rm $(srcdir)/Translator.pyc
-	rm $(srcdir)/Plugins.pyc
-	rm $(srcdir)/libs_christine.pyc
+	rm $(srcdir)/*.pyc

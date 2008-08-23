@@ -21,7 +21,7 @@ from christineLogger import christineLogger
 
 import os
 import cPickle as pickle
-from libchristine.globalvars import DATADIR, wdir
+from libchristine.globalvars import DATADIR, USERDIR
 from libchristine.sqlitedb import sqlite3db
 
 class sanity:
@@ -30,21 +30,21 @@ class sanity:
 	'''
 	def __init__(self):
 		self.__check_christine_dir()
-		self.__check_dir(os.path.join(wdir,"sources"))
-		self.__check_dir(os.path.join(wdir,"uplugins"))
-		if not os.path.exists(os.path.join(wdir,"uplugins","__init__.py")):
-				f = open(os.path.join(wdir,"uplugins","__init__.py"),"w+")
+		self.__check_dir(os.path.join(USERDIR,"sources"))
+		self.__check_dir(os.path.join(USERDIR,"uplugins"))
+		if not os.path.exists(os.path.join(USERDIR,"uplugins","__init__.py")):
+				f = open(os.path.join(USERDIR,"uplugins","__init__.py"),"w+")
 				f.write("#python")
 				f.close()
 		if os.getgid() == 0:
 			self.__check_dir(os.path.join(DATADIR,"christine","cplugins"))
 
 	def __check_christine_dir(self):
-		if not os.path.exists(wdir):
-			os.mkdir(wdir)
+		if not os.path.exists(USERDIR):
+			os.mkdir(USERDIR)
 		else:
-			if os.path.isfile(wdir):
-				os.unlink(wdir)
+			if os.path.isfile(USERDIR):
+				os.unlink(USERDIR)
 				self.__check_christine_dir()
 
 	def __check_dir(self,dir):

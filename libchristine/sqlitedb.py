@@ -317,7 +317,7 @@ class sqlite3db(Singleton):
 		'''
 		Return the playlists
 		'''
-		strSQL = 'SELECT * FROM playlists'
+		strSQL = 'SELECT * FROM playlists WHERE name <> "queue" '
 		self.execute(strSQL)
 		return self.fetchall()
 

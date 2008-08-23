@@ -21,6 +21,7 @@ import gtk
 import gc
 import time
 import gobject
+from libchristine.ui import interface
 (PATH,
 		NAME,
 		TYPE,
@@ -59,6 +60,8 @@ class christineModel(gtk.GenericTreeModel):
 		self.__emptyData = map(lambda x: '', range(self.column_size))
 		self.set_property('leak-references',True)
 		self.on_getIter = 0
+		self.counter = 0
+		self.interface = interface()
 
 	def destroy(self):
 		'''

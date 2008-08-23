@@ -17,18 +17,19 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
+
 import os,gtk,gobject,sys,pango
 import gst
-from Translator import translate
 from libchristine.libs_christine import lib_library
 from libchristine.gui.GtkMisc import GtkMisc, error
-from libchristine.Translator import *
+from libchristine.Translator import translate
 from libchristine.christineConf import christineConf
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.LibraryModel import LibraryModel
 from libchristine.globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.christineLogger import christineLogger
+from libchristine.ui import interface
 
 (PATH,
 NAME,
@@ -60,7 +61,7 @@ QUEUE_TARGETS = [
 ## both lists (and other lists)
 ##
 
-class library(GtkMisc):
+class libraryBase(GtkMisc):
 	def __init__(self):
 		'''
 		Constructor, load the
@@ -69,21 +70,24 @@ class library(GtkMisc):
 		'''
 		self.iters = {}
 		GtkMisc.__init__(self)
-		self.__Share = Share()
-		self.__logger = christineLogger('Library')
+		self.share = Share()
+		self.interface = interface()
 		self.tagger = Tagger()
 		self.__row_changed_id = 0
 		self.__appending = False
 		self.__setting = False
-		self.__xml = self.__Share.getTemplate("TreeViewSources","treeview")
+		self.__xml = self.share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
 		self.tv = self.__xml["treeview"]
 		self.set_drag_n_drop()
-		self.blank_pix = self.__Share.getImageFromPix("blank")
+		self.blank_pix = self.share.getImageFromPix("blank")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.add_columns()
-
+		self.scroll = gtk.ScrolledWindow()
+		self.scroll.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
+		self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+		self.scroll.add(self.tv)
 
 	def loadLibrary(self, library):
 		if self.__row_changed_id:
@@ -101,7 +105,6 @@ class library(GtkMisc):
 		self.model.createSubmodels()
 		self.tv.set_model(self.model.getModel())
 		self.CURRENT_ITER = self.model.get_iter_first()
-
 
 	def __rowChanged(self,model,path,iter):
 		'''
@@ -157,7 +160,7 @@ class library(GtkMisc):
 
 	def fillModel(self):
 		sounds = self.library_lib.get_all()
-		pix = self.__Share.getImageFromPix('blank')
+		pix = self.share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		self.__appending = True
 		keys = sounds.keys()
@@ -412,7 +415,6 @@ class library(GtkMisc):
 								playcount=playcount,time=time,
 								genre=genre)
 
-
 	def key_press_handler(self,treeview,event):
 		if event.keyval == gtk.gdk.keyval_from_name('Delete'):
 			selection = treeview.get_selection()
@@ -494,7 +496,7 @@ class library(GtkMisc):
 		return True
 
 	def delete_from_disk(self,iter):
-		dialog = self.__Share.getTemplate("deleteFileFromDisk")["dialog"]
+		dialog = self.share.getTemplate("deleteFileFromDisk")["dialog"]
 		response = dialog.run()
 		path = self.model.getValue(iter,PATH)
 		if response == -5:
@@ -511,12 +513,80 @@ class library(GtkMisc):
 		self.library_lib.clear()
 		self.save()
 
+	def itemActivated(self,widget, path, iter):
+		model    = widget.get_model()
+		iter     = model.get_iter(path)
+		filename = model.get_value(iter, PATH)
+		self.__FileName = filename
 
+		self.interface.coreClass.setLocation(filename)
+		if model == self.Queue.model:
+			model.remove(iter)
+		else:
+			self.__IterCurrentPlaying = iter
 
-class queue (library):
+		self.interface.playButton.set_active(False)
+		self.interface.playButton.set_active(True)
+
+class library(libraryBase):
 	def __init__(self):
-		library.__init__(self)
+		libraryBase.__init__(self)
+		self.__logger = christineLogger('Library')
+		self.tv.connect('button-press-event', self.popupMenuHandlerEvent)
+		self.tv.connect('key-press-event',    self.handlerKeyPress)
+		self.tv.connect('row-activated',      self.itemActivated)
+		self.scroll.show_all()
+
+	def handlerKeyPress(self, treeview, event):
+		"""
+		Handle the key-press-event in the
+		library.
+		Current keys: Enter to activate the row
+		and 'q' to send the selected song to the
+		queue
+		"""
+
+		if (event.keyval == gtk.gdk.keyval_from_name('Delete')):
+			self.removeFromLibrary()
+		elif (event.keyval == gtk.gdk.keyval_from_name('q')):
+			selection     = treeview.get_selection()
+			iter = selection.get_selected()[1]
+			name          = self.model.getValue(iter, PATH)
+			self.interface.Queue.add(name)
+
+
+	def popupMenuHandlerEvent(self, widget, event):
+		"""
+		handle the button-press-event in the library
+		"""
+		if (event.button == 3):
+			XML = self.share.getTemplate('PopupMenu')
+			XML.signal_autoconnect(self)
+
+			popup = XML['menu']
+			popup.popup(None, None, None, 3, gtk.get_current_event_time())
+			popup.show_all()
+
+	def popupAddToQueue(self, widget):
+		"""
+		Add the selected item to the queue
+		"""
+		selection       = self.tv.get_selection()
+		(model, iter,)  = selection.get_selected()
+		file            = model.get_value(iter, PATH)
+
+		self.interface.Queue.add(file)
+
+class queue (libraryBase):
+	def __init__(self):
+		libraryBase.__init__(self)
+		self.__logger = christineLogger('Library')
 		self.loadLibrary('queue')
+		self.tv.connect('key-press-event', self.QueueHandlerKey)
+		gobject.timeout_add(500, self.checkQueue)
+		self.scroll.set_size_request(100,150)
+		self.interface.Queue = self
+
 
 	def add_columns(self):
 		render = gtk.CellRendererText()
@@ -600,3 +670,24 @@ class queue (library):
 				"time":'0:00',
 				"genre":tags['genre']}
 		self.save()
+
+	def QueueHandlerKey(self, widget, event):
+		"""
+		Handler the key-press-event in the queue list
+		"""
+		if (event.keyval == gtk.gdk.keyval_from_name('Delete')):
+			selection     = self.tv.get_selection()
+			(model, iter) = selection.get_selected()
+
+			if (iter is not None):
+				name = model.get_value(iter, NAME)
+				self.remove(iter)
+	def	checkQueue(self):
+		model = self.tv.get_model()
+		if (model != None):
+			b = model.get_iter_first()
+			if b == None:
+				self.scroll.hide()
+			else:
+				self.scroll.show()
+		return True

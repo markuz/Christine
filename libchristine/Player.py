@@ -55,53 +55,20 @@ class Player(gtk.DrawingArea, object):
 		"""
 		self.__Logger = christineLogger('Player')
 		self.__Logger.info('Starting player')
-
 		gtk.DrawingArea.__init__(self)
-
 		self.config = christineConf(self)
-
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
-
 		self.set_property('events',
 				gtk.gdk.ENTER_NOTIFY_MASK|
 				gtk.gdk.LEAVE_NOTIFY_MASK|
 				gtk.gdk.KEY_PRESS_MASK|
 				gtk.gdk.KEY_RELEASE_MASK)
-		events = self.get_property('events')
 		self.connect('destroy',
 				lambda x: self.VideoSink.set_xwindow_id(0L))
 		self.connect('expose-event', self.exposeCallback)
-		self.connect('event', self.__eventHandler)
-
 		self.__createPlaybin()
-		gobject.timeout_add(5000, self.__checkScreenSaver)
 
-	def __eventHandler(self,widget,event):
-		'''
-		Catch the event
-		'''
-		return False
-
-	#
-	# Check if screensaver is active/desactive
-	#
-	# @return boolean
-	def __checkScreenSaver(self):
-		"""
-		Check if we are whatching something with the player,
-		if true, then deactivate the screensaver by resetting
-		the idle time
-		"""
-		if self.__ShouldShow:
-			a = os.popen('xscreensaver-command -deactivate 2&>/dev/null')
-			b = os.popen('gnome-screensaver-command -d 2&> /dev/null')
-		return True
-
-	#
-	# Creates playbin
-	#
-	# @return void
 	def __createPlaybin(self):
 		"""
 		Create the playbin
@@ -110,104 +77,66 @@ class Player(gtk.DrawingArea, object):
 		self.__PlayBin = self.__elementFactoryMake('playbin')
 		self.__elementSetProperty(self.__PlayBin,'delay',
 								self.config.getInt('backend/gst_delay'))
-
 		self.play = self.__PlayBin
 		self.bus  = self.__PlayBin.get_bus()
-
 		self.__updateAudioSink()
 		self.__updateVideoSink()
 		self.__updateAspectRatio()
-
 		self.config.notifyAdd('backend/audiosink',    self.__updateAudioSink)
 		self.config.notifyAdd('backend/videosink',    self.__updateVideoSink)
 		self.config.notifyAdd('backend/aspect-ratio', self.__updateAspectRatio)
-
 		self.__updateAudioSink()
 		self.__updateVideoSink()
-
 		active = self.config.getBool("ui/visualization")
-		if active:
-			self.setVisualization(False)
+		if active: self.setVisualization(False)
 		self.setVisualization(active)
-
-
-		self.__connect()
-
+		self.__connectSinks()
 		self.query_duration = self.__PlayBin.query_duration
 		self.query_position = self.__PlayBin.query_position
 
-	#
-	# Connect
-	#
-	# @return void
-	def __connect(self):
+	def __connectSinks(self):
 		"""
-		Connect
+		Connect the sinks to tye playbin by setting the sinks as elements in the
+		playbin
 		"""
 		self.__Logger.info("Connecting sinks")
 		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
 
-	#
-	# Updates audio sink
-	#
-	# @return void
-	def __updateAudioSink(self, client = '', cnx_id = '', entry = '', userdata = ''):
+	def __updateAudioSink(self, *args):
 		"""
 		Updates audio sink
 		"""
 		self.__Logger.info("__updateAudioSink")
 		state = self.getState()[1]
 		self.__AudioSinkPack = self.__elementFactoryMake('bin')
-
-		if (not isNull(self.getLocation())):
-			self.pause()
-
+		if (not isNull(self.getLocation())): self.pause()
 		asink = self.config.getString('backend/audiosink')
-
 		self.__AudioSink = self.__elementFactoryMake(asink)
 		self.__AudioSinkPack.add(self.__AudioSink)
-
 		self.audio_ghost = gst.GhostPad('sink', self.__AudioSink.get_pad('sink'))
 		self.__AudioSinkPack.add_pad(self.audio_ghost)
-
 		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
-
 		if (asink == 'alsasink'):
 			self.__AudioSink.set_property('device', 'default')
-
 		if (gst.State(gst.STATE_PLAYING) == state):
 			self.playIt()
 
-	#
-	# Updates video sink
-	#
-	# @return void
-	def __updateVideoSink(self, client = '', cnx_id = '', entry = '', userdata = ''):
+	def __updateVideoSink(self, *args):
 		"""
 		Updates video sink
 		"""
 		state = self.getState()[1]
-
 		if (not isNull(self.getLocation())):
 			self.pause()
-
 		vsink = self.config.getString('backend/videosink')
-
 		self.VideoSink = self.__elementFactoryMake(vsink)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
-
 		if (vsink in ['xvimagesink', 'ximagesink']):
 			self.VideoSink.set_property('force-aspect-ratio', True)
-
 		if (gst.State(gst.STATE_PLAYING) == state):
 			self.playIt()
-			#self.exposeCallback()
 
-	#
-	# Updates aspect ratio
-	#
-	# @return void
 	def __updateAspectRatio(self, client = '', cnx_id = '', entry = '', userdata = ''):
 		"""
 		Updates aspect ratio
@@ -215,7 +144,8 @@ class Player(gtk.DrawingArea, object):
 		aspect_ratio = self.config.getString('backend/aspect-ratio')
 
 		if (not isNull(aspect_ratio)):
-			self.VideoSink.set_property('pixel-aspect-ratio', aspect_ratio)
+			self.__elementSetProperty(self.VideoSink, 'pixel-aspect-ratio',
+									aspect_ratio)
 
 	def __elementFactoryMake(self,element):
 		'''
@@ -242,19 +172,14 @@ class Player(gtk.DrawingArea, object):
 		self.exposeCallback()
 		return False
 
-
-	#
-	# Draw the player
-	#
-	# @return void
 	def exposeCallback(self, window = None, event = None):
 		"""
-		Draw the player
+		Draw the visualization widget.
 		"""
 		# Drawing a black background because some
 		# GTK themes (clearlooks) don't draw it
 
-		(x, y, w, h) = self.allocation
+		w, h = (self.allocation.width, self.allocation.height)
 		try:
 			self.__Context = self.window.cairo_create()
 		except:
@@ -273,26 +198,16 @@ class Player(gtk.DrawingArea, object):
 		self.__Context.fill_preserve()
 		self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
-
-
 		self.VideoSink.set_xwindow_id(self.window.xid)
 		if self.__ShouldShow:
 			self.show()
 		return True
 
-
-	#
-	# Sets location
-	#
-	# @return string file
-	# @return string
 	def setLocation(self, file):
 		self.__Tags = {}
 		self.Tags = self.__Tags
-
 		if self.__visualizationPlugin is not None:
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
-
 		if (isFile(file)):
 			self.__setState(gst.STATE_READY)
 			nfile = 'file://' + file
@@ -308,10 +223,6 @@ class Player(gtk.DrawingArea, object):
 		self.getType()
 		self.exposeCallback()
 
-	#
-	# Gets location
-	#
-	# @return string
 	def getLocation(self):
 		"""
 		Gets location
@@ -327,30 +238,18 @@ class Player(gtk.DrawingArea, object):
 			path = None
 		return path
 
-	#
-	# Play the current song
-	#
-	# @return void
 	def playIt(self):
 		"""
 		Play the current song
 		"""
 		self.__setState(gst.STATE_PLAYING)
 
-	#
-	# Pause it
-	#
-	# @return void
 	def pause(self):
 		"""
 		Pause the current song
 		"""
 		self.__setState(gst.STATE_PAUSED)
 
-	#
-	# Stop the current song
-	#
-	# @return void
 	def stop(self):
 		"""
 		Stop the current song
@@ -368,11 +267,6 @@ class Player(gtk.DrawingArea, object):
 		self.__Logger.info("Setting the state of the Playbin to %s"%repr(state))
 		self.__PlayBin.set_state(state)
 
-	#
-	# Sets visualization active or desactive
-	#
-	# @param  boolean active
-	# @return boolean
 	def setVisualization(self, active = False):
 		"""
 		Sets visualization active or desactive
@@ -390,24 +284,13 @@ class Player(gtk.DrawingArea, object):
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
 		return True
 
-
-	#
-	# Sets volume value
-	#
-	# @return boolean
 	def setVolume(self, volume):
 		if (volume < 0):
 			volume = 0.0
 		elif (volume > 1):
 			volume = 1.0
-		self.__Logger.info("Setting volme to %f"%volume)
 		self.__elementSetProperty(self.__PlayBin,'volume', volume)
 
-	#
-	# Gets a specific tag
-	#
-	# @param  string key
-	# @return string
 	def getTag(self, key):
 		"""
 		Gets a specific tag
@@ -417,10 +300,6 @@ class Player(gtk.DrawingArea, object):
 		except:
 			return ""
 
-	#
-	# Callback to found tags
-	#
-	# @return void
 	def foundTagCallback(self, tags):
 		"""
 		Callback to found tags
@@ -429,20 +308,12 @@ class Player(gtk.DrawingArea, object):
 			for i in tags.keys():
 				self.__Tags[i] = tags[i]
 
-	#
-	# Gets current state
-	#
-	# @return string
 	def getState(self):
 		"""
 		Gets current state
 		"""
 		return self.__PlayBin.get_state()
 
-	#
-	# Sets file type
-	#
-	# @return void
 	def getType(self):
 		"""
 		Sets file type
@@ -455,21 +326,13 @@ class Player(gtk.DrawingArea, object):
 			self.__Type = "Unknown"
 		return self.__Type
 
-	#
-	# Returns nano secs format
-	#
-	# @return string
 	def nano2str(self,nanos):
 		"""
-		Returns something like 00:00:00.000000
+		Returns a string like 00:00:00.000000
 		"""
 		ts = (nanos / gst.SECOND)
 		return '%02d:%02d:%02d.%06d' % ((ts / 3600), (ts / 60), (ts % 60), (nanos % gst.SECOND))
 
-	#
-	# Seek to secs
-	#
-	# @return void
 	def seekTo(self, sec):
 		"""
 		Seek to secs
@@ -480,10 +343,6 @@ class Player(gtk.DrawingArea, object):
 				gst.SEEK_TYPE_SET,  sec,
 				gst.SEEK_TYPE_NONE, -1)
 
-	#
-	# Check if it is video or not
-	#
-	# @return boolean
 	def isVideo(self):
 		"""
 		Check if it is video or not
@@ -499,10 +358,6 @@ class Player(gtk.DrawingArea, object):
 		else:
 			return False
 
-	#
-	# Check if it is sound or not
-	#
-	# @return boolean
 	def isSound(self):
 		"""
 		Check if it is sound or not

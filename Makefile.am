@@ -38,7 +38,6 @@ clean-local:
 	
 all: all-am
 	chmod 755 christine
-	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'),force=True, maxlevels=11)"
 
 christine.desktop: Makefile $(srcdir)/christine.desktop.in
 	$(edit) $(srcdir)/christine.desktop.in > christine.desktop
@@ -49,6 +48,7 @@ createDeb.sh: Makefile $(srcdir)/createDeb.sh.in
 christine: Makefile $(srcdir)/christine.c
 	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o
 	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython${pythonversion}.a -lnsl -ldl -lieee -lpthread -lutil -lm -o christine
+	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'),force=True, maxlevels=11)"
 
 
 ACLOCAL_AMFLAGS = -I m4

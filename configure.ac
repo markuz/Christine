@@ -24,8 +24,8 @@ AC_SUBST(pygtk_LIBS)
 
 
 for i in mutagen gtk gtk.glade gst; do
-	(`python -c "import $i"`) < /dev/null > /dev/null 2>&1 || {
-		echo "checking for $i python module... no";
+	(`$PYTHON -c "import $i"`) < /dev/null > /dev/null 2>&1 || {
+		AC_MSG_ERROR([Python module '$i' not found])
 		exit 1
 	}
 	echo "checking for $i python module... yes"

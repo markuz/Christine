@@ -3,6 +3,7 @@ import os
 import sys
 sys.path.insert(0,os.getcwd())
 elements = locals()
+print os.getcwd()
 #lista = [k for k in elements['arguments'] if type(k) == str]
 #sys.argv = lista
 from libchristine.libs_christine import sanity
