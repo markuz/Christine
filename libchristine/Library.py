@@ -518,15 +518,11 @@ class libraryBase(GtkMisc):
 		iter     = model.get_iter(path)
 		filename = model.get_value(iter, PATH)
 		self.__FileName = filename
-
 		self.interface.coreClass.setLocation(filename)
-		if model == self.Queue.model:
-			model.remove(iter)
-		else:
-			self.__IterCurrentPlaying = iter
-
+		self.IterCurrentPlaying = iter
 		self.interface.playButton.set_active(False)
 		self.interface.playButton.set_active(True)
+		
 
 class library(libraryBase):
 	def __init__(self):
@@ -553,7 +549,6 @@ class library(libraryBase):
 			iter = selection.get_selected()[1]
 			name          = self.model.getValue(iter, PATH)
 			self.interface.Queue.add(name)
-
 
 	def popupMenuHandlerEvent(self, widget, event):
 		"""
@@ -671,7 +666,7 @@ class queue (libraryBase):
 				"genre":tags['genre']}
 		self.save()
 
-	def QueueHandlerKey(self, widget, event):
+	def QueueHandlerKey(self, widget, event): 
 		"""
 		Handler the key-press-event in the queue list
 		"""
@@ -682,6 +677,7 @@ class queue (libraryBase):
 			if (iter is not None):
 				name = model.get_value(iter, NAME)
 				self.remove(iter)
+				
 	def	checkQueue(self):
 		model = self.tv.get_model()
 		if (model != None):
@@ -691,3 +687,8 @@ class queue (libraryBase):
 			else:
 				self.scroll.show()
 		return True
+	
+	def itemActivated(self,widget, path, iter):
+		libraryBase.itemActivated(widget, path, iter)
+		model    = widget.get_model()
+		model.remove(iter)

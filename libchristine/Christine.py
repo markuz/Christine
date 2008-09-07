@@ -102,7 +102,7 @@ class Christine(GtkMisc):
 		self.__LocationCount    = 0     # Count ns and jump if the file is not good
 		self.__LastPlayed       = []
 		self.__IterNatural      = None
-		self.__IterCurrentPlaying = None # Temporal store for the current iter playing
+		self.IterCurrentPlaying = None # Temporal store for the current iter playing
 		self.__ScaleMoving      = False
 		self.__StatePlaying     = False
 		self.__IsFullScreen     = False
@@ -180,7 +180,7 @@ class Christine(GtkMisc):
 
 		# Gets window widget from glade template
 		self.coreWindow = xml['WindowCore']
-		self.coreWindow.connect("destroy",gtk.main_quit)
+		self.coreWindow.connect("destroy",lambda widget: widget.hide())
 		self.coreWindow.set_icon(self.share.getImageFromPix('logo'))
 		self.coreWindow.connect("scroll-event",self.__printEvent)
 		self.coreWindow.connect("key-press-event",self.onWindowCoreEvent)
@@ -235,7 +235,7 @@ class Christine(GtkMisc):
 		scrollplace.pack_start(self.__ScrolledMusic, True, True)
 		self.__VBoxVideo = xml['VBoxVideo']
 
-		self.__ScrolledMusic.add(self.mainLibrary.tv)
+		#self.__ScrolledMusic.add(self.mainLibrary.tv)
 
 		self.Queue = queue()
 
@@ -371,16 +371,16 @@ class Christine(GtkMisc):
 		# christine start-up (and other functions) and
 		self.__LibraryCurrentIter = None
 		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
-		self.__IterCurrentPlaying = self.__LibraryCurrentIter
-		self.__IterCurrentPlaying = self.mainLibrary.model.getIterValid(self.__IterCurrentPlaying)
-		if self.__IterCurrentPlaying != None:
-			if self.mainLibrary.model.basemodel.iter_is_valid(self.__IterCurrentPlaying):
-				self.__IterCurrentPlaying = self.__LibraryCurrentIter
-		if (self.__IterCurrentPlaying != None):
+		self.IterCurrentPlaying = self.__LibraryCurrentIter
+		self.IterCurrentPlaying = self.mainLibrary.model.getIterValid(self.IterCurrentPlaying)
+		if self.IterCurrentPlaying != None:
+			if self.mainLibrary.model.basemodel.iter_is_valid(self.IterCurrentPlaying):
+				self.IterCurrentPlaying = self.__LibraryCurrentIter
+		if (self.IterCurrentPlaying != None):
 			if (self.mainLibrary.Exists(filename)):
-				count = self.mainLibrary.model.getValue(self.__IterCurrentPlaying, PLAY_COUNT)
-				self.mainLibrary.model.setValues(self.__IterCurrentPlaying, PLAY_COUNT, count + 1)
-				self.__IterNatural = self.__IterCurrentPlaying
+				count = self.mainLibrary.model.getValue(self.IterCurrentPlaying, PLAY_COUNT)
+				self.mainLibrary.model.setValues(self.IterCurrentPlaying, PLAY_COUNT, count + 1)
+				self.__IterNatural = self.IterCurrentPlaying
 
 				#self.mainLibrary.save()
 				self.__LastPlayed.append(filename)
@@ -707,7 +707,7 @@ class Christine(GtkMisc):
 			if (self.__LibraryCurrentIter == None):
 				iter     = self.__LibraryModel.get_iter_first()
 				filename = self.mainLibrary.model.getValue(iter, PATH)
-				self.__IterCurrentPlaying = iter
+				self.IterCurrentPlaying = iter
 
 			self.setLocation(filename)
 		else:
@@ -719,7 +719,7 @@ class Christine(GtkMisc):
 			else:
 				iter = self.__LibraryModel.get_iter_first()
 
-			self.__IterCurrentPlaying = iter
+			self.IterCurrentPlaying = iter
 			try:
 				self.setLocation(self.mainLibrary.model.getValue(iter, PATH))
 				#niter = iter
@@ -785,7 +785,7 @@ class Christine(GtkMisc):
 				self.mainLibrary.model.basemodel.set(iter, PIX, pix)
 		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
 		if self.__LibraryCurrentIter != None:
-			self.__IterCurrentPlaying = self.__LibraryCurrentIter
+			self.IterCurrentPlaying = self.__LibraryCurrentIter
 			npath = self.mainLibrary.model.basemodel.get_path(self.__LibraryCurrentIter)
 			path = self.mainLibrary.model.convert_natural_path_to_path(npath)
 			print path

@@ -249,8 +249,11 @@ class LibraryModel:
 		self.counter +=1
 		if not self.TextToSearch:
 			return True
+		iter = self.__getNaturalIter(iter)
+		if not iter or not model.iter_is_valid(iter):
+			return
 		value = model.get(iter, SEARCH)[0]
-
+			
 		try:
 			value = value.lower()
 		except:
@@ -324,7 +327,7 @@ class LibraryModel:
 		return iter
 	def convert_natural_path_to_path(self, path):
 		path = self.__filter.convert_child_path_to_path(path)
-		path = self.__sorted.convert_child_path_to_path(path)
+		#path = self.__sorted.convert_child_path_to_path(path)
 		return path
 
 	def __getNaturalIter(self,iter):

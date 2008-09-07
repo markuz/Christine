@@ -24,14 +24,15 @@ import os
 import os.path
 import gtk.glade
 import logging
+from  libchristine.globalvars import DATADIR, PROGRAMNAME, SHARE_PATH
 
 class glade_xml:
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of the interface descriptor
 		and then initialize gtk.glade.XML'''
-		locale_dir = "@datadir@/locale/"
-		gtk.glade.bindtextdomain("@programname@",locale_dir)
-		gtk.glade.textdomain("@programname@")
+		locale_dir = os.path.join(DATADIR, 'locale')
+		gtk.glade.bindtextdomain(PROGRAMNAME,locale_dir)
+		gtk.glade.textdomain(PROGRAMNAME)
 		self.xml = gtk.glade.XML(file,root,None)
 		self.get_widget = self.xml.get_widget
 
@@ -51,10 +52,7 @@ class glade_xml:
 class GtkMisc:
 	def __init__(self):
 		self.__Logger = logging.getLogger('GtkMisc')
-		if os.path.isdir(os.path.join(os.getcwd(),"./gui/pixmaps/")):
-			self.wdir = os.path.join(os.getcwd(),"./gui/pixmaps/")
-		else:
-			self.wdir = "@datadir@/christine/gui/pixmaps"
+		self.wdir = SHARE_PATH
 
 	def gen_pixbuf(self,imagefile):
 		'''Create a pixbuf from  a file'''
@@ -137,7 +135,7 @@ class error:
 		if os.path.isdir("./gui/"):
 			path = "./gui"
 		else:
-			path = os.path.join("@datadir@","christine","gui")
+			path = os.path.join(DATADIR,"christine","gui")
 		xml = glade_xml(os.path.join(path,"Error.glade"))
 		dialog		= xml["dialog"]
 		error_label = xml["error"]

@@ -17,7 +17,10 @@ try:
 			if os.path.isfile(i):
 				a.Queue.add(i,prepend=True)
 		a.play()
-except:
-	BugReport()
+except Exception, e:
+	if '--debug' in sys.argv:
+		print e
+	else:
+		BugReport()
 
 a.runGtk()

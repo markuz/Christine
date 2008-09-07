@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "./libchristine/Library.py", line 523, in itemActivated
+    if model == self.Queue.model:
+AttributeError: library instance has no attribute 'Queue'
