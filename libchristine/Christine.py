@@ -998,7 +998,7 @@ class Christine(GtkMisc):
 		"""
 		if not isinstance(queue, bool):
 			queue = False
-		library = (self.__Library, self.Queue)[queue]
+		library = (self.mainLibrary, self.Queue)[queue]
 		gobject.idle_add(self.__addFileCycle, library)
 
 	def __addFileCycle(self, library):
