@@ -174,7 +174,7 @@ class Christine(GtkMisc):
 		#Private widgets
 		self.__HPanedListsBox = xml['HPanedListsBox']
 		self.__VBoxTemporal   = xml['VBoxTemporal']
-		self.__ScrolledMusic  = xml["ScrolledMusic"]
+		#self.__ScrolledMusic  = xml["ScrolledMusic"]
 		self.__VBoxList       = xml["VBoxList"]
 		# Ends the call to widgets descriptors not connected by hadn
 
@@ -223,19 +223,18 @@ class Christine(GtkMisc):
 		self.mainLibrary.loadLibrary(lastSourceUsed)
 		del lastSourceUsed
 
-		# FIXME: check method if exist and change to standarization
 		self.mainLibrary.tv.show()
 
 		# Models in the library are assigned to class variables
 		self.__LibraryModel       = self.mainLibrary.tv.get_model()
 		self.__LibraryCurrentIter = self.mainLibrary.model.get_iter_first()
 
-		self.__ScrolledMusic = self.mainLibrary.scroll
-		scrollplace = xml['libraryScrollPlace']
-		scrollplace.pack_start(self.__ScrolledMusic, True, True)
+		self.mainLibrary.scroll
+		self.libraryVBox = xml['libraryVBox']
+		self.libraryVBox.pack_start(self.mainLibrary.scroll, True, True)
 		self.__VBoxVideo = xml['VBoxVideo']
 
-		#self.__ScrolledMusic.add(self.mainLibrary.tv)
+		#self.mainLibray.scroll.add(self.mainLibrary.tv)
 
 		self.Queue = queue()
 
@@ -467,7 +466,7 @@ class Christine(GtkMisc):
 		if (not self.__IsFullScreen):
 			if ((self.__Player.isVideo()) or (self.__christineGconf.getBool('ui/visualization'))):
 				self.coreWindow.fullscreen()
-				self.__ScrolledMusic.set_size_request(0,0)
+				self.mainLibray.scroll.set_size_request(0,0)
 				self.__VBoxList.set_size_request(0,0)
 
 				self.__IsFullScreen = True
@@ -481,7 +480,7 @@ class Christine(GtkMisc):
 		# visualization.
 			if ((not self.__Player.isVideo()) and (not self.__christineGconf.getBool('ui/visualization'))):
 				self.__Player.hide()
-			self.__ScrolledMusic.set_size_request(200,200)
+			self.mainLibray.scroll.set_size_request(200,200)
 			self.__VBoxList.set_size_request(150,0)
 
 			self.coreWindow.unfullscreen()
@@ -561,8 +560,6 @@ class Christine(GtkMisc):
 		Entry search cleaning
 		"""
 		self.EntrySearch.set_text('')
-
-
 
 	###################################################
 	#                  Play stuff                     #
@@ -783,15 +780,14 @@ class Christine(GtkMisc):
 				pix  = pix.scale_simple(20, 20,
 						gtk.gdk.INTERP_BILINEAR)
 				self.mainLibrary.model.basemodel.set(iter, PIX, pix)
-		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
+		self.__LibraryCurrentIter = self.mainLibrary.model.search(location, PATH)
 		if self.__LibraryCurrentIter != None:
 			self.IterCurrentPlaying = self.__LibraryCurrentIter
-			npath = self.mainLibrary.model.basemodel.get_path(self.__LibraryCurrentIter)
-			path = self.mainLibrary.model.convert_natural_path_to_path(npath)
-			print path
-			if (path != None):
-				self.mainLibrary.tv.scroll_to_cell(path, None, True, 0.5, 0.5)
-				self.mainLibrary.tv.set_cursor(path)
+			npath = self.mainLibrary.model.get_path(self.__LibraryCurrentIter)
+			#path = self.mainLibrary.model.convert_natural_path_to_path(npath)
+			if (npath != None):
+				self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
+				self.mainLibrary.tv.set_cursor(npath)
 
 	def jumpTo(self, widget):
 		"""

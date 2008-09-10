@@ -242,11 +242,13 @@ class LibraryModel:
 		self.__filter.set_visible_func(self.filter)
 
 	def filter(self, model, iter):
-		if self.counter > 1000:
-			while gtk.events_pending():
-				gtk.main_iteration_do()
-			self.counter = 0
-		self.counter +=1
+#===============================================================================
+#		if self.counter > 1000:
+#			while gtk.events_pending():
+#				gtk.main_iteration_do()
+#			self.counter = 0
+#		self.counter +=1
+#===============================================================================
 		if not self.TextToSearch:
 			return True
 		iter = self.__getNaturalIter(iter)
@@ -277,6 +279,11 @@ class LibraryModel:
 		iter = self.__getNaturalIter(iter)
 		if iter != None:
 			self.basemodel.remove(iter)
+	
+	def get_path(self, iter):
+		iter = self.__getNaturalIter(iter)
+		if iter != None:
+			return self.basemodel.get_path(iter)
 
 	def getValue(self,iter,column):
 		niter = self.__getNaturalIter(iter)
@@ -297,6 +304,7 @@ class LibraryModel:
 		else:
 			return item
 		return value
+	
 	def setValues(self,iter,*args):
 		niter = iter
 		if niter != None:
@@ -325,12 +333,15 @@ class LibraryModel:
 		iter = self.__filter.convert_child_iter_to_iter(iter)
 		iter = self.__sorted.convert_child_iter_to_iter(iter)
 		return iter
+	
 	def convert_natural_path_to_path(self, path):
+		print 'path>>>>>.......',path
 		path = self.__filter.convert_child_path_to_path(path)
 		#path = self.__sorted.convert_child_path_to_path(path)
 		return path
 
 	def __getNaturalIter(self,iter):
+		print iter
 		if self.basemodel.iter_is_valid(iter):
 			return iter
 		if not self.__sorted.iter_is_valid(iter):
@@ -348,4 +359,26 @@ class LibraryModel:
 			return None
 		return self.__getNaturalIter(iter)
 
+	def search(self, search_string, column):
+		self.__searchResult = None
+		self.__sorted.foreach(self.__search, (search_string, column))
+		return self.__searchResult
+	
+	
+		
+	
+	def __search(self, model, path, iter, userdata):
+		'''
+		This function is called every time that the model needs to do an 
+		iteration over a foreach call.
+		@param model: reference to self.model
+		@param path: path in the current interation
+		@param iter: iter in the current iteration
+		@param userdata:  (user data)
+		'''
+		search_string, column = userdata
+		value = model.get_value(iter, column)
+		if value == search_string:
+			self.__searchResult = iter
+			return True
 
