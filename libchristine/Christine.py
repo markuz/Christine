@@ -1244,7 +1244,7 @@ class Christine(GtkMisc):
 
 			self.__Notify.set_property('body', notify_text)
 			self.__Notify.show()
-			self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
+		self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
 		if tooltext != '':
 			self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()
