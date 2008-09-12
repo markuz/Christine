@@ -101,9 +101,10 @@ class libraryBase(GtkMisc):
 		#self.__iterator = self.__music.keys()
 		#self.__iterator.sort()
 		self.gen_model()
-		self.fillModel()
 		self.model.createSubmodels()
+		self.fillModel()
 		self.tv.set_model(self.model.getModel())
+		self.tv.set_property('fixed-height-mode', True)
 		self.CURRENT_ITER = self.model.get_iter_first()
 
 	def __rowChanged(self,model,path,iter):
@@ -234,7 +235,6 @@ class libraryBase(GtkMisc):
 		name.set_sort_column_id(NAME)
 		name.set_resizable(True)
 		name.set_fixed_width(250)
-		name.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
 		name.pack_start(pix,False)
 		rtext = gtk.CellRendererText()
 		rtext.set_property("ellipsize",pango.ELLIPSIZE_END)
@@ -248,7 +248,6 @@ class libraryBase(GtkMisc):
 		artist.set_sort_column_id(ARTIST)
 		artist.set_resizable(True)
 		artist.set_fixed_width(150)
-		artist.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
 		artist.set_visible(self.gconf.getBool("ui/show_artist"))
 		tv.append_column(artist)
 
@@ -256,7 +255,6 @@ class libraryBase(GtkMisc):
 		album.set_sort_column_id(ALBUM)
 		album.set_resizable(True)
 		album.set_fixed_width(150)
-		album.set_property("sizing",gtk.TREE_VIEW_COLUMN_FIXED)
 		album.set_visible(self.gconf.getBool("ui/show_album"))
 		tv.append_column(album)
 
@@ -283,6 +281,9 @@ class libraryBase(GtkMisc):
 		genre.set_resizable(True)
 		genre.set_visible(self.gconf.getBool("ui/show_genre"))
 		tv.append_column(genre)
+		
+		for i in (tn, name, artist, album, type, play, length, genre):
+			i.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
 
 
 		self.gconf.notifyAdd("ui/show_artist",self.gconf.toggleVisible,artist)
@@ -610,6 +611,7 @@ class queue (libraryBase):
 		name = gtk.TreeViewColumn(translate("Queue"),render,markup=NAME)
 		name.set_sort_column_id(NAME)
 		tv.append_column(name)
+		name.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
 		tv.set_headers_visible(False)
 
 	def add(self,file,prepend=False):

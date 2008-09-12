@@ -59,7 +59,6 @@ class christineModel(gtk.GenericTreeModel):
 		self.__data = []
 		self.__emptyData = map(lambda x: '', range(self.column_size))
 		#@self.set_property('leak-references',True)
-		self.on_getIter = 0
 		self.counter = 0
 		self.interface = interface()
 
@@ -117,10 +116,8 @@ class christineModel(gtk.GenericTreeModel):
 			else:
 				return False
 		list = self.__data[iter]
-		size = len(args)
-		for c in range(0,size,2):
+		for c in range(0,len(args),2):
 			list[args[c]] = args[c+1]
-		self.on_getIter = 0
 		niter = self.get_iter((iter,))
 		self.row_changed(iter, niter)
 		#self.invalidate_iters()
@@ -156,15 +153,15 @@ class christineModel(gtk.GenericTreeModel):
 	def on_iter_nth_child(self, rowref, n):
 		if rowref:
 			return None
-		if len(self.__data):
+		elif len(self.__data):
 			return self.__data[n]
 
 	def on_iter_children(self, rowref):
 		if rowref:
 			return None
-		if len(self.__data):
+		elif len(self.__data):
 			return self.__data[0]
-
+		
 	def on_iter_has_child(self, rowref):
 		return False
 
