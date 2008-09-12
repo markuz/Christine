@@ -523,7 +523,25 @@ class libraryBase(GtkMisc):
 		self.interface.playButton.set_active(False)
 		self.interface.playButton.set_active(True)
 		
-
+	def set(self, *args):
+		'''
+		wraper for the self.model.set
+		'''
+		return self.model.set(*args)
+		
+	def search(self, *args):
+		'''
+		wrapper for the self.model.search
+		'''
+		return self.model.search(*args)
+	
+	def get_path(self, *args):
+		'''
+		wrapper for the self.model.get_path
+		'''
+		return self.model.get_path(*args)
+		
+		
 class library(libraryBase):
 	def __init__(self):
 		libraryBase.__init__(self)

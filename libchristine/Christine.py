@@ -361,15 +361,15 @@ class Christine(GtkMisc):
 			pix = pix.scale_simple(20, 20,
 					gtk.gdk.INTERP_BILINEAR)
 			path = self.mainLibrary.model.basemodel.get_path(self.__LibraryCurrentIter)
-			self.mainLibrary.model.basemodel.set(path, PIX, pix)
+			self.mainLibrary.set(path, PIX, pix)
 			self.__IterNatural = self.__LibraryCurrentIter
 
 		# Search for the item in the library.
 		# if it exists then set it in the "backend/last_played"
 		# entry in gconf to be able to select it in the next
 		# christine start-up (and other functions) and
-		self.__LibraryCurrentIter = None
-		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
+		#self.__LibraryCurrentIter = None
+		#self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
 		self.IterCurrentPlaying = self.__LibraryCurrentIter
 		self.IterCurrentPlaying = self.mainLibrary.model.getIterValid(self.IterCurrentPlaying)
 		if self.IterCurrentPlaying != None:
@@ -540,16 +540,19 @@ class Christine(GtkMisc):
 		"""
 		Perform the actions to make a search
 		"""
-		self.mainLibrary.model.TextToSearch = self.EntrySearch.get_text().lower()
-		if (self.mainLibrary.model.TextToSearch == ''):
-			self.jumpToPlaying()
+#===============================================================================
+#		if not self.EntrySearch.get_text().lower():
+#			self.jumpToPlaying()
+#===============================================================================
 		self.__lastTypeTime = time.time()
 		gobject.timeout_add(500,self.__searchTimer)
 
 	def __searchTimer(self):
 		diff = time.time() - self.__lastTypeTime
 		if diff > 0.3 and diff < 1:
+			self.mainLibrary.model.TextToSearch = self.EntrySearch.get_text().lower() 
 			self.mainLibrary.model.refilter()
+			self.jumpToPlaying()
 			return False
 		if diff > 1:
 			return False
@@ -633,8 +636,7 @@ class Christine(GtkMisc):
 
 				if (path > 0):
 					path = (path[0] -1,)
-
-				if (path[0] > -1):
+				elif (path[0] > -1):
 					iter     = self.__LibraryModel.get_iter(path)
 					location = self.mainLibrary.model.getValue(iter, PATH)
 					self.setLocation(location)
@@ -699,8 +701,7 @@ class Christine(GtkMisc):
 		if (path == None):
 			filename = self.__christineGconf.getString('backend/last_played')
 			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
-			self.__Player.getLocation()
-
+			#self.__Player.getLocation()
 			if (self.__LibraryCurrentIter == None):
 				iter     = self.__LibraryModel.get_iter_first()
 				filename = self.mainLibrary.model.getValue(iter, PATH)
@@ -708,9 +709,8 @@ class Christine(GtkMisc):
 
 			self.setLocation(filename)
 		else:
-			self.__LibraryCurrentIter = None
-			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(path, PATH)
-
+			#@self.__LibraryCurrentIter = None
+			#self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(path, PATH)
 			if (self.__LibraryCurrentIter != None):
 				iter = self.__LibraryModel.iter_next(self.__LibraryCurrentIter)
 			else:
@@ -772,19 +772,18 @@ class Christine(GtkMisc):
 			location = path
 		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
 
-		if (self.__LibraryCurrentIter != None):
-			state = self.__StatePlaying
-			if (self.__StatePlaying):
+		if self.__LibraryCurrentIter != None:
+			if self.__StatePlaying:
 				iter = self.__LibraryCurrentIter
 				pix  = self.share.getImageFromPix('sound')
 				pix  = pix.scale_simple(20, 20,
 						gtk.gdk.INTERP_BILINEAR)
-				self.mainLibrary.model.basemodel.set(iter, PIX, pix)
-		self.__LibraryCurrentIter = self.mainLibrary.model.search(location, PATH)
-		if self.__LibraryCurrentIter != None:
-			self.IterCurrentPlaying = self.__LibraryCurrentIter
-			npath = self.mainLibrary.model.get_path(self.__LibraryCurrentIter)
-			#path = self.mainLibrary.model.convert_natural_path_to_path(npath)
+				self.mainLibrary.set(iter, PIX, pix)
+		#iter = self.mainLibrary.search(location, PATH)
+		iter = self.mainLibrary.model.convert_natural_iter_to_iter(self.__LibraryCurrentIter)
+		if iter != None:
+			self.IterCurrentPlaying = iter
+			npath = self.mainLibrary.get_path(iter)
 			if (npath != None):
 				self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
 				self.mainLibrary.tv.set_cursor(npath)
@@ -1144,7 +1143,7 @@ class Christine(GtkMisc):
 			ts               = (self.__TimeTotal / gst.SECOND)
 			text             = "%02d:%02d" % divmod(ts, 60)
 			self.__ErrorStreamCount = 0
-			iter = self.mainLibrary.model.basemodel.search_iter_on_column(self.__Player.getLocation(), PATH)
+			iter = self.__LibraryCurrentIter
 			if (iter is not None):
 				time= self.mainLibrary.model.get_value(iter, TIME)
 				if (time != text):

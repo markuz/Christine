@@ -58,7 +58,7 @@ class christineModel(gtk.GenericTreeModel):
 		self.column_types = args
 		self.__data = []
 		self.__emptyData = map(lambda x: '', range(self.column_size))
-		self.set_property('leak-references',True)
+		#@self.set_property('leak-references',True)
 		self.on_getIter = 0
 		self.counter = 0
 		self.interface = interface()
@@ -75,7 +75,6 @@ class christineModel(gtk.GenericTreeModel):
 			pass
 		del self
 		gc.collect()
-
 
 	def get_flags(self):
 		return self.on_get_flags()
@@ -124,7 +123,7 @@ class christineModel(gtk.GenericTreeModel):
 		self.on_getIter = 0
 		niter = self.get_iter((iter,))
 		self.row_changed(iter, niter)
-		self.invalidate_iters()
+		#self.invalidate_iters()
 		return iter
 
 	def on_get_iter(self, rowref):
@@ -242,29 +241,13 @@ class LibraryModel:
 		self.__filter.set_visible_func(self.filter)
 
 	def filter(self, model, iter):
-#===============================================================================
-#		if self.counter > 1000:
-#			while gtk.events_pending():
-#				gtk.main_iteration_do()
-#			self.counter = 0
-#		self.counter +=1
-#===============================================================================
 		if not self.TextToSearch:
 			return True
-		iter = self.__getNaturalIter(iter)
-		if not iter or not model.iter_is_valid(iter):
-			return
-		value = model.get(iter, SEARCH)[0]
-			
-		try:
-			value = value.lower()
-		except:
-			value = ""
-
-		if (value.find(self.TextToSearch) >= 0):
-			return True
-		else:
+		value = model.get_value(iter, SEARCH)
+		if not isinstance(value, str):
 			return False
+		value = value.lower()
+		return value.find(self.TextToSearch) >= 0 
 
 	def getModel(self):
 		return self.__sorted
@@ -330,18 +313,21 @@ class LibraryModel:
 		return self.basemodel.clear()
 
 	def convert_natural_iter_to_iter(self, iter):
-		iter = self.__filter.convert_child_iter_to_iter(iter)
-		iter = self.__sorted.convert_child_iter_to_iter(iter)
-		return iter
+		if not self.basemodel.iter_is_valid(iter):
+			return None
+		try:
+			iter = self.__filter.convert_child_iter_to_iter(iter)
+			iter = self.__sorted.convert_child_iter_to_iter(None, iter)
+			return iter	
+		except:
+			return None
 	
 	def convert_natural_path_to_path(self, path):
-		print 'path>>>>>.......',path
 		path = self.__filter.convert_child_path_to_path(path)
 		#path = self.__sorted.convert_child_path_to_path(path)
 		return path
 
 	def __getNaturalIter(self,iter):
-		print iter
 		if self.basemodel.iter_is_valid(iter):
 			return iter
 		if not self.__sorted.iter_is_valid(iter):
@@ -364,9 +350,6 @@ class LibraryModel:
 		self.__sorted.foreach(self.__search, (search_string, column))
 		return self.__searchResult
 	
-	
-		
-	
 	def __search(self, model, path, iter, userdata):
 		'''
 		This function is called every time that the model needs to do an 
@@ -382,3 +365,9 @@ class LibraryModel:
 			self.__searchResult = iter
 			return True
 
+	def set(self, *args):
+		'''
+		Wrapper to the self.basemodel.set method
+		'''
+		self.basemodel.set(*args)
+		
