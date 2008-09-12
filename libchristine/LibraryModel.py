@@ -264,6 +264,9 @@ class LibraryModel:
 		iter = self.__getNaturalIter(iter)
 		if iter != None:
 			return self.basemodel.get_path(iter)
+	
+	def sorted_path(self, iter):
+		return self.__sorted.get_path(iter)
 
 	def getValue(self,iter,column):
 		niter = self.__getNaturalIter(iter)

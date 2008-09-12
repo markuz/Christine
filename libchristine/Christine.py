@@ -709,8 +709,8 @@ class Christine(GtkMisc):
 
 			self.setLocation(filename)
 		else:
-			#@self.__LibraryCurrentIter = None
-			#self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(path, PATH)
+			self.__LibraryCurrentIter = None
+			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(path, PATH)
 			if (self.__LibraryCurrentIter != None):
 				iter = self.__LibraryModel.iter_next(self.__LibraryCurrentIter)
 			else:
@@ -779,11 +779,11 @@ class Christine(GtkMisc):
 				pix  = pix.scale_simple(20, 20,
 						gtk.gdk.INTERP_BILINEAR)
 				self.mainLibrary.set(iter, PIX, pix)
-		#iter = self.mainLibrary.search(location, PATH)
-		iter = self.mainLibrary.model.convert_natural_iter_to_iter(self.__LibraryCurrentIter)
+		iter = self.mainLibrary.search(location, PATH)
+		#iter = self.mainLibrary.model.convert_natural_iter_to_iter(self.__LibraryCurrentIter)
 		if iter != None:
 			self.IterCurrentPlaying = iter
-			npath = self.mainLibrary.get_path(iter)
+			npath = self.mainLibrary.model.sorted_path(iter)
 			if (npath != None):
 				self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
 				self.mainLibrary.tv.set_cursor(npath)
