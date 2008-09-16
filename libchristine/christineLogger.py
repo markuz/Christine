@@ -21,7 +21,6 @@
 # @category  GTK
 # @package   Preferences
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
-# @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 import os

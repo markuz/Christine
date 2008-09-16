@@ -22,7 +22,7 @@
 # @package   About
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
-# @copyright 2007 Christine Development Group
+# @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 #import gtk

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.0 on Fri Apr 25 02:57:57 2008 
+<!--Generated with glade3 3.4.5 on Tue Sep 16 13:09:15 2008 
 	Version: 3.0.1
 	Date: Mon Feb  5 12:59:47 2007
 	User: markuz
@@ -47,10 +47,12 @@ proprietary programs.
     <property name="authors">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
 Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
 Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;
-Alejandro Ignacio Sanchez Verduzco &lt;alejandrosanchez@gmail.com&gt;</property>
+Alejandro Ignacio Sanchez Verduzco &lt;alejandrosanchez@gmail.com&gt;
+GaRaGeD &lt;garaged@gmail.com&gt;</property>
     <property name="documenters">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
 Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
-Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;</property>
+Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;
+</property>
     <property name="translator_credits" translatable="yes">translator-credits</property>
     <property name="artists">Marco Antonio Islas Cruz</property>
     <child internal-child="vbox">
