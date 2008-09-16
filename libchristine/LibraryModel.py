@@ -346,9 +346,16 @@ class LibraryModel:
 		return self.__getNaturalIter(iter)
 
 	def search(self, search_string, column):
-		self.__searchResult = None
-		self.__sorted.foreach(self.__search, (search_string, column))
-		return self.__searchResult
+		iter = self.basemodel.search_iter_on_column(search_string, column)
+		if iter:
+			try:
+				fiter = self.__filter.convert_child_iter_to_iter(iter)
+				niter = self.__sorted.convert_child_iter_to_iter(None, fiter)
+				if niter:
+					return niter
+			except:
+				return None
+		return None
 	
 	def __search(self, model, path, iter, userdata):
 		'''
