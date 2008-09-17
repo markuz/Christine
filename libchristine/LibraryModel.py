@@ -241,10 +241,9 @@ class LibraryModel:
 		if not self.TextToSearch:
 			return True
 		value = model.get_value(iter, SEARCH)
-		if not isinstance(value, str):
-			return False
-		value = value.lower()
-		return value.find(self.TextToSearch) >= 0 
+		#if not isinstance(value, str):
+		#	return False
+		return value.lower().find(self.TextToSearch) >= 0 
 
 	def getModel(self):
 		return self.__sorted
