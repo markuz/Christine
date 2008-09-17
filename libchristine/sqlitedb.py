@@ -57,11 +57,6 @@ class sqlite3db(Singleton):
 			d[col[0]] = row[idx]
 		return d
 
-	#def text_factory(self, cursor, row):
-	#	print locals()
-	#	return row
-
-
 	def execute(self, strSQL,*args):
 		'''
 		Ejecuta una sentencia SQL enviando la sentencia al logger
@@ -98,14 +93,12 @@ class sqlite3db(Singleton):
 		self.__logger.debug(val)
 		return val
 
-
 	def commit(self):
 		'''
 		Do a self.connection.commit storing the event in the log.
 		'''
 		self.__logger.info('Doing a commit')
 		self.connection.commit()
-
 
 	def get_db_version(self):
 		'''
@@ -157,7 +150,6 @@ class sqlite3db(Singleton):
 			self.execute(strSQL)
 			self.commit()
 
-
 	def additem(self, **kwargs):
 		'''
 		Add a new item to the library
@@ -178,8 +170,10 @@ class sqlite3db(Singleton):
 			return values['id'];
 		for key in keys:
 			val = kwargs[key]
-			if isinstance(val, str):
-				kwargs[key] = val.replace("'","\\'")
+#===============================================================================
+#			if isinstance(val, str):
+#				kwargs[key] = val.replace("'","\\'")
+#===============================================================================
 		strSQL = 'INSERT INTO items VALUES(null,?,?,?,?,?,0,1,?,?,?)'
 		self.execute(strSQL,
 					kwargs['path'],
@@ -229,8 +223,6 @@ class sqlite3db(Singleton):
 		self.execute(strSQL, playlist, itemid['id'])
 		return True
 
-
-
 	def addItemToPlaylist(self, playlist, itemid):
 		'''
 		Create a reference beetween a item to a playlist
@@ -247,10 +239,21 @@ class sqlite3db(Singleton):
 		@param name: name of the playlists
 		@return: The playlist id
 		'''
-		strSQL = 'INSERT INTO playlists values(null, %s)'%name
-		self.execute(strSQL)
+		strSQL = 'INSERT INTO playlists values(null, ?)'
+		self.execute(strSQL,name)
 		self.commit()
 		return self.cursor.lastrowid
+
+	def removePlayList(self, name):
+		strSQL = 'SELECT id FROM playlists WHERE name = ?'
+		self.execute(strSQL,name)
+		id = self.fetchone()['id']
+		if id:
+			strSQL = 'DELETE FROM playlist_relation WHERE playlistid=?'
+			self.execute(strSQL,id)
+			strSQL = 'DELETE FROM playlists WHERE id=?'
+			self.execute(strSQL,id)
+		self.commit()
 
 	def deleteItemFromPlaylist(self, itemid, playlistid):
 		'''
@@ -309,8 +312,8 @@ class sqlite3db(Singleton):
 		'''
 		if not isinstance(playlist, str):
 			return None
-		strSQL = 'SELECT id FROM playlists WHERE name=\'%s\''%playlist
-		self.execute(strSQL)
+		strSQL = 'SELECT id FROM playlists WHERE name=?'
+		self.execute(strSQL, playlist)
 		return self.fetchone()
 
 	def getPlaylists(self):

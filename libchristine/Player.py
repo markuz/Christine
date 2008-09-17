@@ -215,7 +215,7 @@ class Player(gtk.DrawingArea, object):
 			if self.isVideo():
 				self.VideoSink.set_property('force-aspect-ratio', True)
 		else:
-			file.replace( "\\'", r"'\''" ) + "'"
+			file = file.replace( "\\'", r"'\''" ) + "'"
 			if file:
 				if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
 					self.__elementSetProperty(self.__PlayBin,'uri', file)

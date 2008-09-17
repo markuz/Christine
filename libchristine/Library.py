@@ -314,10 +314,8 @@ class libraryBase(GtkMisc):
 			t = "video"
 		else:
 			t = "audio"
-
 		if type(tags["track"]) !=  type(1):
 			tags["track"] = 0
-
 		name	= tags["title"]
 		album	= tags["album"]
 		artist	= tags["artist"]

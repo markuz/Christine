@@ -60,7 +60,10 @@ class lib_library(object):
 		sanity()
 		self.__logger = christineLogger('liblibrary')
 		self.__db = sqlite3db()
-		self.idlist = self.__db.PlaylistIDFromName(list)['id']
+		self.idlist = self.__db.PlaylistIDFromName(list)
+		if self.idlist == None:
+			self.idlist = self.__db.PlaylistIDFromName('music')
+		self.idlist = self.idlist['id']
 		self.list = list
 		self.__files = self.__db.getItemsForPlaylist(self.idlist)
 		self.__logger.debug(len(self.__files))

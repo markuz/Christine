@@ -85,16 +85,12 @@ class sources_list (GtkMisc):
 		entry = xml['entry']
 		response = dialog.run()
 		if response == 1:
-			fname = os.path.join(os.environ["HOME"],
-				".christine","sources",entry.get_text())
-			if os.path.exists(fname):
-				error(translate('The source already exists!'))
-				dialog.destroy()
-				return 0
-			library = lib_library(entry.get_text())
-			library.save()
-			self.__gen_model()
-
+			exists = False
+			for row in self.model:
+				name = row[LIST_NAME]
+				if entry.get_text() != name:
+					self.__db.addPlaylist(entry.get_text())
+					self.__gen_model()
 		dialog.destroy()
 
 
@@ -109,8 +105,7 @@ class sources_list (GtkMisc):
 			model, iter = selection.get_selected()
 			if iter != None:
 				fname = model.get_value(iter, LIST_NAME)
-				os.unlink(os.path.join(os.environ["HOME"],
-					".christine","sources",fname))
+				self.__db.removePlayList(fname)
 			self.__gen_model()
 
 		dialog.destroy()
