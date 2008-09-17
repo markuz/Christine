@@ -1,21 +1,6 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
-scripts_DATA=__init__.pyc \
-			Library.pyc \
-			libs_christine.pyc \
-			Player.pyc \
-			sources_list.pyc \
-			Translator.pyc \
-			Christine.pyc \
-			Share.pyc \
-			Validator.pyc \
-			christineConf.pyc \
-			Tagger.pyc \
-			LibraryModel.pyc \
-			globalvars.pyc
-
-DISTFILES= Makefile.in \
-		   __init__.py \
+scripts_DATA=__init__.py \
 			Library.py \
 			libs_christine.py \
 			Player.py \
@@ -27,7 +12,14 @@ DISTFILES= Makefile.in \
 			christineConf.py \
 			Tagger.py \
 			LibraryModel.py \
-			globalvars.py 
+			globalvars.py \
+			christineLogger.py \
+			sqlitedb.py \
+			ui.py \
+			tryicon.py
+
+DISTFILES= Makefile.in \
+			${scripts_DATA}
 
 
 pkgdatadir=${datadir}

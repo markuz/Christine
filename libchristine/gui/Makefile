@@ -223,21 +223,17 @@ sysconfdir = ${prefix}/etc
 target_alias = 
 top_builddir = ../..
 top_srcdir = ../..
-scriptsdir = /usr/lib/python2.5/site-packages/libchristine
-scripts_DATA = __init__.pyc \
-			About.pyc \
-			BugReport.pyc \
-			Display.pyc \
-			Preferences.pyc \
-			GtkMisc.pyc 
-
-DISTFILES = Makefile.in \
-		   __init__.py \
-		   About.py \
+scriptsdir = /usr/lib/python2.5/site-packages/libchristine/gui/
+scripts_DATA = __init__.py \
+			About.py \
 			BugReport.py \
 			Display.py \
 			Preferences.py \
-			GtkMisc.pyc  
+			GtkMisc.py \
+			openRemote.py
+
+DISTFILES = Makefile.in \
+			${scripts_DATA}
 
 pkgsysconfdir = ${sysconfdir}
 pythonincludedir = /usr/include/python2.5

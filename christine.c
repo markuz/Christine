@@ -11,10 +11,13 @@ void error(char *msg) {
 
 char* python_code = "\
 import os\n\
-sys.path.insert(0,os.getcwd())\n\
+import sys\n\
+if '--devel' in sys.path:\n\
+	sys.path.insert(0,os.getcwd())\n\
 elements = locals()\n\
 lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
+print sys.path\n\
 from libchristine.libs_christine import sanity\n\
 from libchristine.gui.BugReport import BugReport\n\
 import gtk\n\

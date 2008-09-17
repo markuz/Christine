@@ -223,21 +223,17 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine
-scripts_DATA = __init__.pyc \
-			About.pyc \
-			BugReport.pyc \
-			Display.pyc \
-			Preferences.pyc \
-			GtkMisc.pyc 
-
-DISTFILES = Makefile.in \
-		   __init__.py \
-		   About.py \
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/gui/
+scripts_DATA = __init__.py \
+			About.py \
 			BugReport.py \
 			Display.py \
 			Preferences.py \
-			GtkMisc.pyc  
+			GtkMisc.py \
+			openRemote.py
+
+DISTFILES = Makefile.in \
+			${scripts_DATA}
 
 pkgsysconfdir = ${sysconfdir}
 pythonincludedir = @PYTHON_INCLUDE_DIR@

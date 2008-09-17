@@ -1,19 +1,15 @@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/gui/
 
-scripts_DATA=__init__.pyc \
-			About.pyc \
-			BugReport.pyc \
-			Display.pyc \
-			Preferences.pyc \
-			GtkMisc.pyc 
-
-DISTFILES= Makefile.in \
-		   __init__.py \
-		   About.py \
+scripts_DATA=__init__.py \
+			About.py \
 			BugReport.py \
 			Display.py \
 			Preferences.py \
-			GtkMisc.pyc  
+			GtkMisc.py \
+			openRemote.py
+
+DISTFILES= Makefile.in \
+			${scripts_DATA}
 
 
 pkgdatadir=${datadir}

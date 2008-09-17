@@ -1,7 +1,7 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine/pattern
 
-scripts_DATA=__init__.pyc \
-			 Singleton.pyc
+scripts_DATA=__init__.py \
+			 Singleton.py
 DISTFILES= Makefile.in \
 		   __init__.py \
 			Singleton.py 

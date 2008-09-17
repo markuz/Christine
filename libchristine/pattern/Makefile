@@ -224,8 +224,8 @@ target_alias =
 top_builddir = ../..
 top_srcdir = ../..
 scriptsdir = /usr/lib/python2.5/site-packages/libchristine/pattern
-scripts_DATA = __init__.pyc \
-			 Singleton.pyc
+scripts_DATA = __init__.py \
+			 Singleton.py
 
 DISTFILES = Makefile.in \
 		   __init__.py \

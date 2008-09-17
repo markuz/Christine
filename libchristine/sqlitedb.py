@@ -170,10 +170,6 @@ class sqlite3db(Singleton):
 			return values['id'];
 		for key in keys:
 			val = kwargs[key]
-#===============================================================================
-#			if isinstance(val, str):
-#				kwargs[key] = val.replace("'","\\'")
-#===============================================================================
 		strSQL = 'INSERT INTO items VALUES(null,?,?,?,?,?,0,1,?,?,?)'
 		self.execute(strSQL,
 					kwargs['path'],
