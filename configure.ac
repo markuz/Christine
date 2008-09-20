@@ -35,7 +35,7 @@ done
 PROGRAM_NAME="christine"
 VERSION="0.2.0_t1"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
-PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib()"`
+PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib(plat_specific=True)"`
 
 # gross readline autconf kludge courtesy of samba -- thanks tpot!
 # Samba original version is in 1.10; I've improved it a bit to work with
