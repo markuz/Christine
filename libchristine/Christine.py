@@ -674,7 +674,6 @@ class Christine(GtkMisc):
 		else:
 			self.interface.Queue.scroll.hide()
 			if (self.__MenuItemShuffle.get_active()):
-				Elements = 0
 				Elements = len (self.__LibraryModel) - 1
 				if Elements < 0:
 					return True
