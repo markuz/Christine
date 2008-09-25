@@ -46,7 +46,7 @@ class sqlite3db(Singleton):
 		self.cursor.row_factory = self.dict_factory
 		self.__logger = christineLogger('sqldb')
 		if not self.get_db_version():
-			self.__logger.debug('No se encontro la version de la base de daos.')
+			self.__logger.debug('No se encontro la version de la base de datos.')
 			self.__logger.debug(self.get_db_version())
 			self.createSchema()
 			self.fillRegistry()
