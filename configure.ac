@@ -10,6 +10,7 @@ AC_PATH_X
 AC_HEADER_STDC
 AC_PROG_CC
 AC_HEADER_STDC
+AC_PYTHON_DEVEL(">= '2.4'")
 
 AM_MAINTAINER_MODE
 AM_PATH_PYTHON(2.4)
@@ -23,7 +24,7 @@ AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
 
 
-for i in mutagen gtk gtk.glade gst; do
+for i in mutagen gtk gtk.glade gst sqlite3; do
 	(`$PYTHON -c "import $i"`) < /dev/null > /dev/null 2>&1 || {
 		AC_MSG_ERROR([Python module '$i' not found])
 		exit 1
@@ -121,7 +122,7 @@ ALL_LINGUAS="es_ES sv sv_FI ca cs da de el en_GB eu fr hu it nl pt sv_FI sv"
 AC_SUBST(ALL_LINGUAS)
 USE_NLS=yes
 AC_SUBST(USE_NLS)
-AM_GLIB_GNU_GETTEXT
+AM_GNU_GETTEXT
 IT_PROG_INTLTOOL
 
 AC_CONFIG_FILES([ po/Makefile.in
