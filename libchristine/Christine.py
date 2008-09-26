@@ -36,6 +36,7 @@ import pygst; pygst.require('0.10')
 import gst.interfaces
 import gobject
 import os
+import signal
 from libchristine.Translator import translate
 from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.gui.Preferences import guiPreferences
@@ -60,6 +61,17 @@ import webbrowser
 import gc
 
 gc.enable()
+
+def close(*args):
+	pidfile = 	os.path.join(os.environ['HOME'],'.christine',
+								'christine.pid')
+	if os.path.exists(pidfile):
+		os.unlink(pidfile)
+	gtk.main_quit()
+
+
+signal.signal(signal.SIGTERM, close)
+
 
 
 try:
@@ -1290,12 +1302,7 @@ class Christine(GtkMisc):
 
 	def quitGtk(self, widget = None):
 		self.__Player.stop()
-		pidfile = 	os.path.join(os.environ['HOME'],'.christine',
-								'christine.pid')
-		if os.path.exists(pidfile):
-			os.unlink(pidfile)
-		gtk.main_quit()
-
+		close()
 	def runGtk(self):
 		"""
 		GTK application running
