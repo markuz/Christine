@@ -1,0 +1,259 @@
+------------------------------------------------------------------------
+r420 | thesystems | 2007-07-29 14:05:29 -0500 (Sun, 29 Jul 2007) | 1 line
+
+Christine 0.1
+------------------------------------------------------------------------
+r421 | thesystems | 2007-07-30 12:01:31 -0500 (Mon, 30 Jul 2007) | 1 line
+
+Better python module check out
+------------------------------------------------------------------------
+r423 | thesystems | 2007-08-01 14:57:02 -0500 (Wed, 01 Aug 2007) | 1 line
+
+Fixed bug #1765625
+------------------------------------------------------------------------
+r424 | thesystems | 2007-08-01 14:57:45 -0500 (Wed, 01 Aug 2007) | 1 line
+
+'print's removed
+------------------------------------------------------------------------
+r425 | thesystems | 2007-08-01 15:10:35 -0500 (Wed, 01 Aug 2007) | 1 line
+
+Fixed bug #1765629 [http://sourceforge.net/tracker/index.php?func=detail&aid=1765629&group_id=167966&atid=845044]
+------------------------------------------------------------------------
+r426 | thesystems | 2007-08-02 10:39:13 -0500 (Thu, 02 Aug 2007) | 1 line
+
+bugfixes
+------------------------------------------------------------------------
+r427 | thesystems | 2007-08-02 11:29:44 -0500 (Thu, 02 Aug 2007) | 1 line
+
+Fixes bug #1765723 [http://sourceforge.net/tracker/index.php?func=detail&aid=1765723&group_id=167966&atid=845044]
+------------------------------------------------------------------------
+r429 | demrit | 2007-08-04 23:03:08 -0500 (Sat, 04 Aug 2007) | 2 lines
+
+n0sferatu fixed a problem with the title and list reported by pcero
+
+------------------------------------------------------------------------
+r430 | thesystems | 2007-08-05 13:11:29 -0500 (Sun, 05 Aug 2007) | 20 lines
+
+M    christine/libchristine/Player.py
+	Trying to improve the visualiztion stuff
+M    christine/libchristine/Christine.py.in
+	Fixed bug # 1767980 [http://sourceforge.net/tracker/index.php?func=detail&aid=1767980&group_id=167966&atid=845044]
+    Improve the fix for bug #1765744 [http://sourceforge.net/tracker/index.php?func=detail&aid=1765744&group_id=167966&atid=845044]
+	+- The First bugfix resolve the problem with items that are from the internet or anywhere else where os.path.isfile can't reach
+	   but, if you open a file to the queue, it will be reached by os.path.isfile and will reproduce the same bug, but with a local
+       file. The bugfix is in the libchristine.Christine.setTag method
+M    christine/libchristine/Library.py
+	Added the Exists method, with check if the given file exists in the library. (by checking in the keys of the library dictionary)
+M    christine/libchristine/libs_christine.py.in
+	Can't rememeber
+M    christine/libchristine/Queue.py
+	Can't rememeber
+M    christine/gui/WindowCore.glade
+	
+	Fixed bug # 1767980 [http://sourceforge.net/tracker/index.php?func=detail&aid=1767980&group_id=167966&atid=845044]
+M    christine/christine.c
+	Was playing with this but no mayor changes where made
+
+------------------------------------------------------------------------
+r431 | thesystems | 2007-08-05 13:44:57 -0500 (Sun, 05 Aug 2007) | 3 lines
+
+Garbage...
+
+
+------------------------------------------------------------------------
+r432 | thesystems | 2007-08-05 13:57:25 -0500 (Sun, 05 Aug 2007) | 1 line
+
+:-)
+------------------------------------------------------------------------
+r433 | alejandrosv | 2007-08-06 01:31:42 -0500 (Mon, 06 Aug 2007) | 3 lines
+
+Added support for stream history. Another GConf key was added "backend/last_stream_played".
+Bug fixed, if you played an internet stream the tags of the song wasn't shown on the player.
+
+------------------------------------------------------------------------
+r434 | thesystems | 2007-08-06 19:19:33 -0500 (Mon, 06 Aug 2007) | 1 line
+
+minor bugfix
+------------------------------------------------------------------------
+r435 | alejandrosv | 2007-08-07 12:51:15 -0500 (Tue, 07 Aug 2007) | 2 lines
+
+Now we use gtk.gdk.keyval_from_name() to compare with event.keyval
+
+------------------------------------------------------------------------
+r436 | alejandrosv | 2007-08-07 13:12:20 -0500 (Tue, 07 Aug 2007) | 2 lines
+
+:)
+
+------------------------------------------------------------------------
+r437 | alejandrosv | 2007-08-08 00:42:12 -0500 (Wed, 08 Aug 2007) | 2 lines
+
+Added event handler for the  key-press-event signal in the  WindowCore
+
+------------------------------------------------------------------------
+r438 | alejandrosv | 2007-08-12 03:26:23 -0500 (Sun, 12 Aug 2007) | 3 lines
+
+Now we can save up to 10 streams in the openRemote dialog.
+Please some one check a warning that i'm getting. I can't find why. ;)
+
+------------------------------------------------------------------------
+r439 | alejandrosv | 2007-08-12 03:27:44 -0500 (Sun, 12 Aug 2007) | 2 lines
+
+We have comboboxentry now in the openRemote dialog
+
+------------------------------------------------------------------------
+r440 | thesystems | 2007-08-12 15:19:42 -0500 (Sun, 12 Aug 2007) | 7 lines
+
+M    clibrary.c
+M    Library.py
+	Fixed this bug: The Song name column is composed by two cell renders, one for the pixbuf and one for the text, when christine starts, there is nothing in the first cell render. Fixed, now christine starts with a blank pixbuf
+M    Display.py
+	* Minor code Improvement (less operations)
+	* Display now slides the text while there is not enought space to allocate it.
+
+------------------------------------------------------------------------
+r441 | thesystems | 2007-08-12 16:12:19 -0500 (Sun, 12 Aug 2007) | 1 line
+
+Fixed a small bug
+------------------------------------------------------------------------
+r442 | thesystems | 2007-08-14 09:59:12 -0500 (Tue, 14 Aug 2007) | 4 lines
+
+M    christine/libchristine/Christine.py.in
+	Partially fix bug 1771590 [http://sourceforge.net/tracker/index.php?func=detail&aid=1771590&group_id=167966&atid=845044]
+
+
+------------------------------------------------------------------------
+r443 | alejandrosv | 2007-08-14 15:59:14 -0500 (Tue, 14 Aug 2007) | 2 lines
+
+:) Lo que es del cesar al cesar
+
+------------------------------------------------------------------------
+r444 | alejandrosv | 2007-08-15 21:12:35 -0500 (Wed, 15 Aug 2007) | 2 lines
+
+Wrong glade file ;)
+
+------------------------------------------------------------------------
+r445 | thesystems | 2007-08-16 16:16:40 -0500 (Thu, 16 Aug 2007) | 3 lines
+
+M    christine/christine.c
+	Fixes bug #1772470 [http://sourceforge.net/tracker/index.php?func=detail&aid=1772470&group_id=167966&atid=845044]
+
+------------------------------------------------------------------------
+r446 | nibblesmx | 2007-08-16 17:49:41 -0500 (Thu, 16 Aug 2007) | 3 lines
+
+
+"no header" bug corrected
+
+------------------------------------------------------------------------
+r447 | thesystems | 2007-08-16 18:21:50 -0500 (Thu, 16 Aug 2007) | 1 line
+
+Cucharazo para que se peudan agregar canciones con encoding raro al Queue
+------------------------------------------------------------------------
+r448 | alejandrosv | 2007-08-17 01:09:35 -0500 (Fri, 17 Aug 2007) | 2 lines
+
+;)
+
+------------------------------------------------------------------------
+r449 | thesystems | 2007-08-17 11:50:13 -0500 (Fri, 17 Aug 2007) | 1 line
+
+:-(
+------------------------------------------------------------------------
+r450 | thesystems | 2007-08-17 12:55:57 -0500 (Fri, 17 Aug 2007) | 3 lines
+
+:-(
+
+
+------------------------------------------------------------------------
+r451 | thesystems | 2007-08-17 13:00:15 -0500 (Fri, 17 Aug 2007) | 14 lines
+
+Fixes this:
+
+
+Traceback (most recent call last):
+<markuz>   File "/home/markuz/programacion/python/christine/01/christine/libchristine/Christine.py", line 505, in itemActivated
+<markuz>     self.setLocation(filename)
+<markuz>   File "/home/markuz/programacion/python/christine/01/christine/libchristine/Christine.py", line 549, in setLocation
+<markuz>     count = self.__LibraryNaturalModel.get_value(self.__IterCurrentPlaying, PLAY_COUNT)
+<markuz>   File "/usr/lib/python2.4/warnings.py", line 61, in warn
+<markuz>     warn_explicit(message, category, filename, lineno, module, registry)
+<markuz>   File "/usr/lib/python2.4/warnings.py", line 82, in warn_explicit
+<markuz>     for item in filters:
+<markuz> TypeError: unknown type (null)
+
+------------------------------------------------------------------------
+r452 | thesystems | 2007-08-17 14:13:00 -0500 (Fri, 17 Aug 2007) | 1 line
+
+I thin I fix this bug 1776492 [http://sourceforge.net/tracker/index.php?func=detail&aid=1776492&group_id=167966&atid=845044]
+------------------------------------------------------------------------
+r453 | thesystems | 2007-08-18 09:24:58 -0500 (Sat, 18 Aug 2007) | 7 lines
+
+This class implements gtk.ListStore, gtk.TreeModelFilter and
+gtk.TreeModelSort
+
+I Have to say that is not what I was thinking but, it helps
+to avoit creating three models in Library Stuff
+
+
+------------------------------------------------------------------------
+r454 | thesystems | 2007-08-18 09:25:59 -0500 (Sat, 18 Aug 2007) | 4 lines
+
+M    christine/libchristine/Christine.py.in
+M    christine/libchristine/Library.py
+	Make use of libchristine.LibraryModel.LibraryModel
+
+------------------------------------------------------------------------
+r455 | thesystems | 2007-08-18 14:20:37 -0500 (Sat, 18 Aug 2007) | 1 line
+
+Addeld LibraryModel.py
+------------------------------------------------------------------------
+r456 | thesystems | 2007-08-20 09:10:25 -0500 (Mon, 20 Aug 2007) | 1 line
+
+small bugfix
+------------------------------------------------------------------------
+r457 | alejandrosv | 2007-08-20 16:35:22 -0500 (Mon, 20 Aug 2007) | 2 lines
+
+;)
+
+------------------------------------------------------------------------
+r458 | nibblesmx | 2007-08-21 02:58:42 -0500 (Tue, 21 Aug 2007) | 1 line
+
+corregido un problema al manejar extensiones permitidas
+------------------------------------------------------------------------
+r459 | alejandrosv | 2007-08-21 11:12:07 -0500 (Tue, 21 Aug 2007) | 1 line
+
+
+------------------------------------------------------------------------
+r460 | thesystems | 2007-09-01 09:09:54 -0500 (Sat, 01 Sep 2007) | 3 lines
+
+
+Check the diff. Should fix the problem with invalid iters
+
+------------------------------------------------------------------------
+r461 | thesystems | 2007-09-02 15:48:03 -0500 (Sun, 02 Sep 2007) | 9 lines
+
+In all python files:
+	Retouched the import stuff, to avoid wild imports that just increment the size of the application.
+
+Fixed some bugs that n0sferatu couldn't fix in the week.
+
+Fixed a bug in the Delete from disk method; Was calling to the wrong glade file (wrong name).
+
+
+
+------------------------------------------------------------------------
+r462 | alejandrosv | 2007-09-03 15:04:25 -0500 (Mon, 03 Sep 2007) | 3 lines
+
+Fixed a bug when you tried to import something
+
+
+------------------------------------------------------------------------
+r463 | thesystems | 2007-09-03 15:46:28 -0500 (Mon, 03 Sep 2007) | 1 line
+
+better import
+------------------------------------------------------------------------
+r464 | thesystems | 2007-09-03 15:50:27 -0500 (Mon, 03 Sep 2007) | 1 line
+
+Bugfix: Clean mainlist works fine
+------------------------------------------------------------------------
+r471 | thesystems | 2007-09-21 11:00:07 -0500 (Fri, 21 Sep 2007) | 1 line
+
+Christine 0.1.1
