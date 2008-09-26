@@ -1160,6 +1160,7 @@ class Christine(GtkMisc):
 				if (time != text):
 					self.mainLibrary.updateData(self.__Player.getLocation(),
 								time=text)
+			self.__LocationCount = 0
 			return False
 		except gst.QueryError:
 			self.__ErrorStreamCount += 1
