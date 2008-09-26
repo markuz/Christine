@@ -193,7 +193,6 @@ class Christine(GtkMisc):
 		self.menuItemPlay = xml['MenuItemPlay']
 
 		openremotemitem = xml['open_remote1']
-		openremotemitem.connect('activate', lambda widget: sys.stderr.write('openremote...'))
 		openremotemitem.connect('activate', lambda widget: openRemote())
 
 		self.Menus = {}
@@ -347,6 +346,7 @@ class Christine(GtkMisc):
 		"""
 		self.__StatePlaying = False
 		self.__IterNatural  = None
+		print filename
 		# current iter is a temporal variable
 		# that will hold a gtk.TreeIter
 		# should be setted to None

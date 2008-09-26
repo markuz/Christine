@@ -25,7 +25,12 @@
 # @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
-from libchristine.gui.GtkMisc import GtkMisc, glade_xml
+from libchristine.gui.GtkMisc import GtkMisc, glade_xml, error
+from libchristine.Translator import translate
+from libchristine.Share import Share
+from libchristine.christineConf import christineConf
+from libchristine.ui import interface
+import gtk
 
 
 class openRemote(GtkMisc):
@@ -33,6 +38,119 @@ class openRemote(GtkMisc):
 		'''
 		Shows a dialog that let the user open a remote location.
 		'''
-		pass
+		print 'Holy Shit!'
+		self.__Share = Share()
+		self.__christineConf = christineConf()
+		self.interface = interface()
+		XML    = self.__Share.getTemplate('openRemote')
+		comboboxentry  = XML['comboboxentry']
+		entry = comboboxentry.get_child()
+		dialog = XML['dialog']
+		button  = XML['okbutton']
+		entry.connect("key-press-event", self.__oRButtonClick,button)
+		comboboxentry.connect("changed",self.__orChanged)
+		dialog.set_icon(self.__Share.getImageFromPix('logo'))
+		model = gtk.ListStore(str)
+		comboboxentry.set_model(model)
+		comboboxentry.set_text_column(0)
+		stream_history = self.__christineConf.getString('backend/last_stream_played')
+		if stream_history != "" and (type(stream_history) == str):
+			stream_history=stream_history.split(",")
+			if len(stream_history) > 0:
+				last_stream=stream_history[-1]
+		else:
+			stream_history = []
+			last_stream = ""
+
+		for stream in stream_history:
+			model.append([stream])
+		
+		if len(model)>0:
+			comboboxentry.set_active(0)
+		
+		response = dialog.run()
+
+		if (response == gtk.RESPONSE_OK):
+			location = entry.get_text()
+			if location == "":
+				return False
+			if location in stream_history:
+				del stream_history[stream_history.index(location)]
+				stream_history.append(location)
+			else:
+				if len(stream_history) < 10:
+					stream_history.append(location)
+				else:
+					del stream_history[0]
+					stream_history.append(location)
+			stream_history=",".join(["%s" % stream for stream in stream_history])
+			self.__christineConf.setValue('backend/last_stream_played',stream_history)
+			extension = location.split(".").pop()
+			if location.split(":")[0] == "file" or \
+				location[0] == '/':
+				if location.split(":")[0] == "file":
+					file = ":".join(location.split(":")[1:])[2:]
+				else:
+					file = location
+				try:
+					urldesc = open(file)
+				except IOError:
+					error(translate('%s does not exists'%file))
+					dialog.destroy()
+					return False
+			else:
+				import urllib
+				gate = urllib.FancyURLopener()
+				urldesc = gate.open(location)
+
+			if extension == "pls":
+				for i in urldesc.readlines():
+					print i
+					if i.lower().find("file") >= 0:
+						location = i.split("=").pop().strip()
+						break
+				self.interface.coreClass.setLocation(location)
+				self.interface.playButton.set_active(False)
+				self.interface.playButton.set_active(True)
+			elif extension == "m3u":
+				lines = urldesc.readlines()
+				if lines[0].lower() != "#extm3u":
+					self.goNext()
+				sites = []
+				for i in range(len(lines)):
+					if lines[i].split(":")[0].lower() == "#extinf":
+						sites.append(lines[i+1])
+					#else:
+					#	print lines[i].split(":")[0].lower()
+				for i in sites:
+					i = i.strip("\r")
+					i = i.strip("\n")
+					i = i.strip()
+					self.interface.Queue.add(i)
+				self.goNext()
+			urldesc.close()
+		dialog.destroy()
+
+	def __orChanged(self,widget):
+		'''
+		Listen for items selected in the combobox
+		'''
+		model = widget.get_model()
+		index = widget.get_active()
+		entry = widget.get_child()
+		if index > -1:
+			selected = model[index][0]
+			if selected and type(selected) == str:
+				entry.set_text(selected)
+
+	def __oRButtonClick(self,widget,event,button):
+		'''
+		Clicks the okbutton on ENTER key pressed
+		'''
+		if not widget.get_text():
+			return False
+		if event.keyval in (gtk.gdk.keyval_from_name('Return'),
+				gtk.gdk.keyval_from_name('KP_Enter')):
+			button.clicked()
 		
 		
