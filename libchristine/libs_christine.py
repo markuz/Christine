@@ -22,7 +22,7 @@ from christineLogger import christineLogger
 import os
 import cPickle as pickle
 from libchristine.globalvars import DATADIR, USERDIR
-from libchristine.sqlitedb import sqlite3db
+from libchristine.Storage.sqlitedb import sqlite3db
 
 class sanity:
 	'''

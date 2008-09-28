@@ -14,7 +14,6 @@ scripts_DATA=__init__.py \
 			LibraryModel.py \
 			globalvars.py \
 			christineLogger.py \
-			sqlitedb.py \
 			ui.py \
 			tryicon.py
 

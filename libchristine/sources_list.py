@@ -23,7 +23,7 @@ from libchristine.Share import Share
 from libchristine.Translator import  translate
 from libchristine.libs_christine import lib_library
 from christineLogger import christineLogger
-from libchristine.sqlitedb import sqlite3db
+from libchristine.Storage.sqlitedb import sqlite3db
 import gtk
 
 (LIST_NAME,

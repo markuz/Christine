@@ -43,7 +43,7 @@ from libchristine.gui.Preferences import guiPreferences
 from libchristine.gui.About import guiAbout
 from libchristine.gui.Display import Display
 from libchristine.globalvars import PROGRAMNAME, BUGURL
-from libchristine.sqlitedb import sqlite3db
+from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.ui import interface
 from libchristine.tryicon import tryIcon
 from libchristine.gui.openRemote import openRemote
