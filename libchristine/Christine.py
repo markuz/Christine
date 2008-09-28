@@ -358,7 +358,6 @@ class Christine(GtkMisc):
 		"""
 		self.__StatePlaying = False
 		self.__IterNatural  = None
-		print filename
 		# current iter is a temporal variable
 		# that will hold a gtk.TreeIter
 		# should be setted to None

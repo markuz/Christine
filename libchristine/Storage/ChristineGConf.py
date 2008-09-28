@@ -28,7 +28,7 @@ import gconf
 import gtk
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
-from libchristine.Logger import *
+from libchristine.Logger import ChristineLogger
 
 #
 # GConf manager

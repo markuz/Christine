@@ -347,10 +347,10 @@ class libraryBase(GtkMisc):
 
 	def stream_length(self,widget=None,n=1):
 		try:
-			total = d.query_duration(gst.FORMAT_TIME)[0]
+			total = self.interface.Player.query_duration(gst.FORMAT_TIME)[0]
 			ts = total/gst.SECOND
 			text = "%02d:%02d"%divmod(ts,60)
-			self.model.set(self.iters[d.getLocation()],
+			self.model.set(self.iters[self.interface.Player.getLocation()],
 					TIME,text)
 		except gst.QueryError:
 			pass

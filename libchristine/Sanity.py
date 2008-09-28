@@ -26,7 +26,7 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 
-from libchristine.globalvars import *
+from libchristine.globalvars import USERDIR
 import os
 
 

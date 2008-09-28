@@ -37,7 +37,7 @@ class Singleton(object):
 	__Instance = None
 	
 	#
-	# Name of the child
+	# Name of the self
 	#
 	# @var string
 	__Name = 'Singleton'
@@ -45,16 +45,16 @@ class Singleton(object):
 	#
 	# callback
 	#
-	def __new__(child,*args):
-		if (not child.__Instance):
-			child.__Instance = super(Singleton, child).__new__(child,*args)
+	def __new__(self,*args):
+		if (not self.__Instance):
+			self.__Instance = super(Singleton, self).__new__(self,*args)
 		else:
-			child.__init__ = child.__doNothing
+			self.__init__ = self.__doNothing
 		
-		return child.__Instance
+		return self.__Instance
 
 
-	def __doNothing(child,*args):
+	def __doNothing(self,*args):
 		'''
 		This method do nothing. is used to override the __init__ method
 		and then, do not re-declare values that may be declared at first
@@ -63,24 +63,24 @@ class Singleton(object):
 		pass
 
 	#
-	# Sets name of the child
+	# Sets name of the self
 	#
-	def setName(child, value = 'Singleton'):
-		child.__Name = value
+	def setName(self, value = 'Singleton'):
+		self.__Name = value
 
 	#
 	# Returns name of the class
 	#
 	# @return string
-	def getName(child):
-		return child.__Name
+	def getName(self):
+		return self.__Name
 
 	#
 	# Returns Id of the object
 	#
 	# @return integer
-	def getId(child):
+	def getId(self):
 		"""
 		Returns singleton Id
 		"""
-		return id(child)
+		return id(self)

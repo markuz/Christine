@@ -18,12 +18,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-from libchristine.gui.GtkMisc import *
+from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.Share import Share
-from libchristine.Translator import  *
+from libchristine.Translator import  translate
 from libchristine.libs_christine import lib_library
 from christineLogger import christineLogger
 from libchristine.sqlitedb import sqlite3db
+import gtk
 
 (LIST_NAME,
 LIST_TYPE,

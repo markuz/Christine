@@ -30,6 +30,7 @@ from libchristine.christineConf import christineConf
 from libchristine.Validator import isFile
 from globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.christineLogger import christineLogger
+from libchristine.ui import interface
 import gobject
 import gst
 import gtk
@@ -53,6 +54,8 @@ class Player(gtk.DrawingArea, object):
 		"""
 		 Constructor
 		"""
+		self.interface = interface()
+		self.interface.Player = self
 		self.__Logger = christineLogger('Player')
 		self.__Logger.info('Starting player')
 		gtk.DrawingArea.__init__(self)
