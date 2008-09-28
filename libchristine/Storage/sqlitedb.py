@@ -217,6 +217,7 @@ class sqlite3db(Singleton):
 			return None
 		strSQL = 'DELETE FROM playlist_relation WHERE playlistid=? and itemid=?'
 		self.execute(strSQL, playlist, itemid['id'])
+		self.commit()
 		return True
 
 	def addItemToPlaylist(self, playlist, itemid):

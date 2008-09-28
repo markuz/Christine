@@ -672,8 +672,8 @@ class Christine(GtkMisc):
 		#pdb.set_trace()
 		iter  = model.get_iter_first()
 
-		if (type(iter) == gtk.TreeIter):
-			self.interface.Queue.scroll.show()
+		if isinstance(iter,gtk.TreeIter):
+			self.Queue.scroll.show()
 			location = self.Queue.model.get_value(iter,PATH)
 			self.setLocation(location)
 			self.__LibraryCurrentIter = None
