@@ -30,6 +30,7 @@ from libchristine.LibraryModel import LibraryModel
 from libchristine.globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.christineLogger import christineLogger
 from libchristine.ui import interface
+from libchristine.Storage.sqlitedb import sqlite3db
 
 (PATH,
 NAME,
@@ -72,6 +73,7 @@ class libraryBase(GtkMisc):
 		GtkMisc.__init__(self)
 		self.share = Share()
 		self.interface = interface()
+		self.db = sqlite3db()
 		self.tagger = Tagger()
 		self.__row_changed_id = 0
 		self.__appending = False
@@ -303,7 +305,16 @@ class libraryBase(GtkMisc):
 		if isinstance(name,()):
 			name = name[0]
 		################################
-		tags = self.tagger.readTags(file)
+		vals = self.db.getItemByPath(file)
+		if not vals:
+			tags = self.tagger.readTags(file)
+		else:
+			tags = {}
+			tags['title'] = vals['title']
+			tags['album'] =  vals['album']
+			tags['artist'] = vals['artist']
+			tags['track'] = vals['track_number']
+			tags['genre'] = vals['genre']
 
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")

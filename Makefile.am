@@ -1,4 +1,4 @@
-SUBDIRS = libchristine gui po libchristine/pattern/ libchristine/gui/
+SUBDIRS = libchristine gui po libchristine/pattern/ libchristine/gui/ libchristine/Storage
 
 bin_SCRIPTS = christine
 

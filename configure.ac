@@ -130,6 +130,7 @@ Makefile
 libchristine/Makefile
 libchristine/pattern/Makefile
 libchristine/gui/Makefile
+libchristine/Storage/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
 po/Makefile

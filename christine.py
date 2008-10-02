@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
-if '--devel' in sys.argv:
-	sys.path.insert(0,os.getcwd())
+sys.path.insert(0,os.getcwd())
+print sys.path
 elements = locals()
 #lista = [k for k in elements['arguments'] if type(k) == str]
 #sys.argv = lista

@@ -161,15 +161,12 @@ class sqlite3db(Singleton):
 
 		@return : The last row id.
 		'''
-		keys = kwargs.keys()
 		# Check if the item is not already in the registry.
 		values = self.getItemByPath(kwargs['path'])
 		if values:
 			self.__logger.info('file with path %s already exists in the db',
 							kwargs['path'])
 			return values['id'];
-		for key in keys:
-			val = kwargs[key]
 		strSQL = 'INSERT INTO items VALUES(null,?,?,?,?,?,0,1,?,?,?)'
 		self.execute(strSQL,
 					kwargs['path'],
@@ -319,9 +316,7 @@ class sqlite3db(Singleton):
 		'''
 		strSQL = 'SELECT * FROM playlists WHERE name <> "queue" '
 		self.execute(strSQL)
-		return self.fetchall()
-
-
+		return self.fetchall()		
 
 
 
