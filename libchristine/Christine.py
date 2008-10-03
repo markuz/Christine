@@ -56,6 +56,7 @@ from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME
+import pidgin
 import logging
 import webbrowser
 import gc
@@ -320,6 +321,10 @@ class Christine(GtkMisc):
 
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(path = self.__christineGconf.getString('backend/last_played'))
+		self.__pidginMessage = self.__christineGconf.getString('pidgin/message')
+		if (not self.__pidginMessage):
+			self.__pidginMessage = "Escuchando: %s - %s - en Christine"
+			self.__christineGconf.setValue('pidgin/message', self.__pidginMessage)
 
 	def __srcListRowActivated(self, treeview, path, column):
 		model = treeview.get_model()
@@ -1255,6 +1260,7 @@ class Christine(GtkMisc):
 			self.__Notify.set_property('body', notify_text)
 			self.__Notify.show()
 		self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
+		pidgin.set_message( self.__pidginMessage % (title, artist) )
 		if tooltext != '':
 			self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()
