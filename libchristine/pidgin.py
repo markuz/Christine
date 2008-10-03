@@ -40,10 +40,13 @@ class Pidgin():
 
 	def SetMessage(self,message):
 		if ( self.obj is not None ):
-			current = self.purple.PurpleSavedstatusGetType(self.purple.PurpleSavedstatusGetCurrent())
-			status = self.purple.PurpleSavedstatusNew("", current)
-			self.purple.PurpleSavedstatusSetMessage(status, message)
-			self.purple.PurpleSavedstatusActivate(status)
+			try:
+				current = self.purple.PurpleSavedstatusGetType(self.purple.PurpleSavedstatusGetCurrent())
+				status = self.purple.PurpleSavedstatusNew("", current)
+				self.purple.PurpleSavedstatusSetMessage(status, message)
+				self.purple.PurpleSavedstatusActivate(status)
+			except:
+				self.obj = None
 
 	def SessionStart(self):
 		dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
