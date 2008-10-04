@@ -44,10 +44,17 @@ class twitter:
 		self.interface = interface()
 		self.christineConf = christineConf()
 		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
+		self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
 		self.tagger = Tagger()
+		self.__switch_enabled()
+	
+	def __switch_enabled(self, *args):
+		self.enabled =  self.christineConf.getBool('twitter/enabled')
 	
 
 	def postMessage(self, args):
+		if not self.enabled:
+			return
 		file = self.christineConf.getString('backend/last_played')
 		username = self.christineConf.getString('twitter/username')
 		if not username:
