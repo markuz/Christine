@@ -44,7 +44,7 @@ class christineConf(Singleton):
 	using the configParser module.
 
 	This module serves as proxy to the configParser module, and it will know
-	when any value is changed, then, notify to any watcher.
+	when any value is changed, then, __notify to any watcher.
 	'''
 	def __init__(self):
 		'''
@@ -53,7 +53,7 @@ class christineConf(Singleton):
 		self.filepath = os.path.join(os.environ['HOME'],
 									'.christine','christine.conf')
 		self.configParser = ConfigParser()
-		self.notify = {}
+		self.__notify = {}
 		if os.path.exists(self.filepath):
 			if not os.path.isfile(self.filepath):
 				msg = translate('%s is not a file'%self.filepath)
@@ -158,7 +158,7 @@ class christineConf(Singleton):
 			method = self.configParser.get
 		try:
 			result = method(section, option)
-		except:
+		except Exception, e:
 			result = None
 		return result
 
@@ -230,16 +230,16 @@ class christineConf(Singleton):
 		del f
 
 	def __executeNotify(self, key, value):
-		if not self.notify.has_key(key):
+		if not self.__notify.has_key(key):
 			return False
-		for i in self.notify[key]:
+		for i in self.__notify[key]:
 			func = i[0]
 			args = i[1]
 			func(value, *args)
 
 	def notifyAdd(self, key, func, *args):
 		'''
-		Save the func reference in the notify list to be run every time the
+		Save the func reference in the __notify list to be run every time the
 		value of the key changes.
 
 		func(value, userdata..)
@@ -248,9 +248,9 @@ class christineConf(Singleton):
 		@param func: func to execute
 		@param *args: user data
 		'''
-		if not self.notify.has_key(key):
-			self.notify[key] = []
-		self.notify[key].append((func, args))
+		if not self.__notify.has_key(key):
+			self.__notify[key] = []
+		self.__notify[key].append((func, args))
 
 	def notify_add(self, key, func, *args):
 		'''

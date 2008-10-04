@@ -60,6 +60,8 @@ import pidgin
 import logging
 import webbrowser
 import gc
+from libchristine.Plugins.twitter import twitter
+
 
 gc.enable()
 
@@ -105,6 +107,7 @@ class Christine(GtkMisc):
 
 		self.share   = Share()
 		self.__christineGconf   = christineConf()
+		twitter()
 		self.__sqlite = sqlite3db()
 		self.interface = interface()
 		self.interface.coreClass = self
@@ -1260,7 +1263,7 @@ class Christine(GtkMisc):
 			self.__Notify.set_property('body', notify_text)
 			self.__Notify.show()
 		self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
-		pidgin.set_message( self.__pidginMessage % (title, artist) )
+		self.interface.Pidgin.set_message( self.__pidginMessage % (title, artist) )
 		if tooltext != '':
 			self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()

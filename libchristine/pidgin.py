@@ -21,14 +21,13 @@
 #
 # @category  Multimedia
 # @package   Christine
-# @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
-# @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @author    Maximiliano Valdez Gonzalez <garaged@gmail.com>
-# @copyright 2006-2007 Christine Development Group
+# @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 import dbus, gobject
 from dbus.mainloop.glib import DBusGMainLoop
+from libchristine.ui import interface
 
 class Pidgin():
 	"""
@@ -36,6 +35,8 @@ class Pidgin():
 	"""
 	def __init__(self):
 		self.obj = None
+		self.interface = interface()
+		self.interface.Pidgin = self
 		self.SessionStart()
 
 	def SetMessage(self,message):
@@ -57,17 +58,13 @@ class Pidgin():
 		except:
 			self.obj = None
 
-pidgin_obj = Pidgin()
-def set_message(message):
-	"""
-	Convenient helper function to try the DBus connection if it's not already opened
-	Could be done inside the Pidgin.SetMessage() but I don't like the idea, this is more flexible
-	"""
-	if ( pidgin_obj.obj is None ):
-		pidgin_obj.SessionStart()
-	pidgin_obj.SetMessage(message)
+	def set_message(self, message):
+		"""
+		Convenient helper function to try the DBus connection if it's not already opened
+		Could be done inside the Pidgin.SetMessage() but I don't like the idea, this is more flexible
+		"""
+		if ( self.obj is None ):
+			self.SessionStart()
+		self.SetMessage(message)
 
-if __name__ == "__main__":
-	pass
-
-
+Pidgin()
