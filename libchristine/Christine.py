@@ -56,7 +56,7 @@ from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME
-import pidgin
+from libchristine.Plugins.pidgin import pidgin
 import logging
 import webbrowser
 import gc
