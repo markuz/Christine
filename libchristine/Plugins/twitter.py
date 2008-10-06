@@ -38,7 +38,7 @@ from libchristine.Tagger import Tagger
 
 class twitter:
 	"""
-	Class to set pidgin's message, tests if pidgin and its dbus is accesible, and puts the current song played on the message
+	Class to update twitter with the song being played on Christine
 	"""
 	def __init__(self):
 		self.interface = interface()

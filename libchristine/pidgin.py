@@ -28,8 +28,9 @@
 import dbus, gobject
 from dbus.mainloop.glib import DBusGMainLoop
 from libchristine.ui import interface
+from libchristine.pattern.Singleton import Singleton
 
-class Pidgin():
+class Pidgin(Singleton):
 	"""
 	Class to set pidgin's message, tests if pidgin and its dbus is accesible, and puts the current song played on the message
 	"""
