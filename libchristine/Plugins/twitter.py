@@ -35,6 +35,9 @@ import os
 from libchristine.ui import interface
 from libchristine.christineConf import christineConf
 from libchristine.Tagger import Tagger
+import urllib2
+from urllib import urlencode
+
 
 class twitter:
 	"""
@@ -66,10 +69,30 @@ class twitter:
 		if not msg:
 			self.christineConf.setValue('twitter/message',' [christine] _title_ by _artist_ from _album_')
 		tags =  self.tagger.readTags(file)
-		print '>>', msg
 		for i in tags.keys():
 			msg = msg.replace('_%s_'%i, str(tags[i]))
-		print '>>', msg
-		tweetcmd = '''curl -u %s:%s -d status="%s" http://twitter.com/statuses/update.xml 
-		'''%(username, password, msg)
-		os.popen4(tweetcmd)
+		url = "http://twitter.com/statuses/update.xml"
+		self.httpConn(url, msg, username, password)
+
+	def httpConn(self,url, msg, username, password):
+		"""
+		Makes authenticated http connection, to avoid shell opening with curl
+		This could be on another module... coded smartly
+		"""
+		pwd_mngr = urllib2.HTTPBasicAuthHandler()
+		pwd_mngr.add_password("Twitter API", url, username, password)
+		opener = urllib2.build_opener(pwd_mngr)
+		urllib2.install_opener(opener)
+		try:
+			urllib2.urlopen(url,urlencode({"status": msg}))
+		except urllib2.HTTPError, e :
+			if e.code == 401:
+				print 'not authorized'
+			elif e.code == 404:
+				print 'not found'
+			elif e.code == 503:
+				print 'service unavailable'
+			else:
+				print 'unknown error: '
+		else:
+			print 'twitt ->', msg
