@@ -53,7 +53,7 @@ class pidgin(plugin_base):
 		message = self.christineConf.getString('pidgin/message')
 		if (not message):
 			message = "Escuchando: %s - %s - en Christine"
-			self.__christineGconf.setValue('pidgin/message', self.__pidginMessage)
+			self.christineConf.setValue('pidgin/message', message)
 		message = message % (tags['title'], tags['artist'])
 		if ( self.obj is not None ):
 			try:

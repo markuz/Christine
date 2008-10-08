@@ -25,6 +25,7 @@
 # @author    Maximiliano Valdez Gonzalez <garaged@gmail.com>
 # @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
+import thread
 
 
 #
@@ -71,7 +72,7 @@ class twitter(plugin_base):
 		for i in tags.keys():
 			msg = msg.replace('_%s_'%i, str(tags[i]))
 		url = "http://twitter.com/statuses/update.xml"
-		self.httpConn(url, msg, username, password)
+		thread.start_new(self.httpConn, (url, msg, username, password))
 
 	def httpConn(self,url, msg, username, password):
 		"""

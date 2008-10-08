@@ -50,9 +50,7 @@ class plugin_base(object, GtkMisc):
 		This method will be called when in the christien plugins preferences
 		tab get the preferences button get pressed
 		'''
-		dialog = gtk.Dialog()
-		response = dialog.run()
-		dialog.destroy()
+		return None
 
 	def get_active(self):
 		self.__active
