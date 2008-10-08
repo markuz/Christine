@@ -37,6 +37,7 @@ import gst.interfaces
 import gobject
 import os
 import signal
+from  libchristine.Plugins import Manager
 from libchristine.Translator import translate
 from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.gui.Preferences import guiPreferences
@@ -56,14 +57,14 @@ from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME
-from libchristine.Plugins.pidgin import Pidgin
 import logging
 import webbrowser
 import gc
-from libchristine.Plugins.twitter import twitter
 
 
 gc.enable()
+
+plugins_manager = Manager()
 
 def close(*args):
 	pidfile = 	os.path.join(os.environ['HOME'],'.christine',
@@ -107,7 +108,6 @@ class Christine(GtkMisc):
 
 		self.share   = Share()
 		self.__christineGconf   = christineConf()
-		twitter()
 		self.__sqlite = sqlite3db()
 		self.interface = interface()
 		self.interface.coreClass = self
@@ -325,9 +325,6 @@ class Christine(GtkMisc):
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(path = self.__christineGconf.getString('backend/last_played'))
 		self.__pidginMessage = self.__christineGconf.getString('pidgin/message')
-		if (not self.__pidginMessage):
-			self.__pidginMessage = "Escuchando: %s - %s - en Christine"
-			self.__christineGconf.setValue('pidgin/message', self.__pidginMessage)
 
 	def __srcListRowActivated(self, treeview, path, column):
 		model = treeview.get_model()
@@ -569,7 +566,7 @@ class Christine(GtkMisc):
 	def __searchTimer(self):
 		diff = time.time() - self.__lastTypeTime
 		if diff > 0.3 and diff < 1:
-			self.mainLibrary.model.TextToSearch = self.EntrySearch.get_text().lower() 
+			self.mainLibrary.model.TextToSearch = self.EntrySearch.get_text().lower()
 			self.mainLibrary.model.refilter()
 			self.jumpToPlaying()
 			return False
@@ -1263,7 +1260,6 @@ class Christine(GtkMisc):
 			self.__Notify.set_property('body', notify_text)
 			self.__Notify.show()
 		self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
-		self.interface.Pidgin.set_message( self.__pidginMessage % (title, artist) )
 		if tooltext != '':
 			self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()

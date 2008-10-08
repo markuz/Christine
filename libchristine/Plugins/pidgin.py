@@ -22,28 +22,43 @@
 # @category  Multimedia
 # @package   Christine
 # @author    Maximiliano Valdez Gonzalez <garaged@gmail.com>
+# @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 import dbus, gobject
 from dbus.mainloop.glib import DBusGMainLoop
 from libchristine.ui import interface
-from libchristine.pattern.Singleton import Singleton
+from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Tagger import Tagger
 
-class Pidgin(Singleton):
+class pidgin(plugin_base):
 	"""
-	Class to set pidgin's message, tests if pidgin and its dbus is accesible, and puts the current song played on the message
+	Class to set pidgin's message, tests if pidgin and its dbus is accesible,
+	and puts the current song played on the message
 	"""
 	def __init__(self):
+		plugin_base.__init__(self)
+		self.name = 'Pidgin'
+		self.description = 'This plugin set the song you are playing on pidgin'
 		self.obj = None
 		self.interface = interface()
-		self.interface.Pidgin = self
+		self.christineConf.notifyAdd('backend/last_played', self.set_message)
 		self.SessionStart()
+		self.tagger = Tagger()
 
-	def SetMessage(self,message):
+	def SetMessage(self,):
+		file = self.christineConf.getString('backend/last_played')
+		tags =  self.tagger.readTags(file)
+		message = self.christineConf.getString('pidgin/message')
+		if (not message):
+			message = "Escuchando: %s - %s - en Christine"
+			self.__christineGconf.setValue('pidgin/message', self.__pidginMessage)
+		message = message % (tags['title'], tags['artist'])
 		if ( self.obj is not None ):
 			try:
-				current = self.purple.PurpleSavedstatusGetType(self.purple.PurpleSavedstatusGetCurrent())
+				current = self.purple.PurpleSavedstatusGetType(
+									self.purple.PurpleSavedstatusGetCurrent())
 				status = self.purple.PurpleSavedstatusNew("", current)
 				self.purple.PurpleSavedstatusSetMessage(status, message)
 				self.purple.PurpleSavedstatusActivate(status)
@@ -54,18 +69,29 @@ class Pidgin(Singleton):
 		dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 		session_bus = dbus.SessionBus()
 		try:
-			self.obj = session_bus.get_object("im.pidgin.purple.PurpleService", "/im/pidgin/purple/PurpleObject")
-			self.purple = dbus.Interface(self.obj, "im.pidgin.purple.PurpleInterface")
+			self.obj = session_bus.get_object("im.pidgin.purple.PurpleService",
+											"/im/pidgin/purple/PurpleObject")
+			self.purple = dbus.Interface(self.obj,
+										"im.pidgin.purple.PurpleInterface")
 		except:
 			self.obj = None
 
-	def set_message(self, message):
+	def set_message(self, *args):
 		"""
-		Convenient helper function to try the DBus connection if it's not already opened
-		Could be done inside the Pidgin.SetMessage() but I don't like the idea, this is more flexible
+		Convenient helper function to try the DBus connection if it's not
+		already opened
+		Could be done inside the self.SetMessage() but I don't
+		like the idea, this is more flexible
 		"""
-		if ( self.obj is None ):
+		if ( self.obj is None and self.active):
 			self.SessionStart()
-		self.SetMessage(message)
+		self.SetMessage()
 
-Pidgin()
+	def get_active(self):
+		return self.christineConf.getBool('pidgin/enabled')
+
+	def set_active(self, value):
+		return self.christineConf.setValue('pidgin/enabled', value)
+
+	active = property(get_active, set_active, None,
+					'Determine if the plugin is active or inactive')

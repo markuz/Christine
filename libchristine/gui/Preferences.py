@@ -30,6 +30,7 @@ from libchristine.Translator import *
 from libchristine.Share import Share
 from libchristine.Validator import *
 from libchristine.christineConf import christineConf
+from libchristine.ui import interface
 import gtk
 #
 # Preferences gtk dialog
@@ -38,6 +39,11 @@ class guiPreferences(GtkMisc):
 	"""
 	Preferences gtk dialog
 	"""
+	(
+	PLUGIN_ACTIVE,
+	PLUGIN_DESC,
+	PLUGIN_INSTANCE
+	) = range(3)
 
 	#
 	# Constructor
@@ -47,7 +53,7 @@ class guiPreferences(GtkMisc):
 		Constructor
 		"""
 		GtkMisc.__init__(self)
-
+		self.interface = interface()
 		self.__GConf = christineConf()
 		self.__Share = Share()
 
@@ -71,6 +77,18 @@ class guiPreferences(GtkMisc):
 		self.__setFColumns()
 		self.__GConf.notify_add('/apps/christine/backend/allowed_files',
 								lambda a,b,c,d:self.updateFModel())
+
+		self.pluginstreeview = self.XML['pluginstreeview']
+		self.pluginstreeview.connect('cursor-changed',
+									self.__set_plugin_configure_button_sensitive)
+		model = gtk.ListStore(bool, str, object)
+		self.pluginstreeview.set_model(model)
+		self.__set_plugins_columns()
+		self.fill_plugins_model()
+		self.configure_button = self.XML['plugins_configure_button']
+		self.configure_button.connect('clicked', self.__configure_plugin)
+
+
 
 		self.selectSinks()
 
@@ -239,3 +257,64 @@ class guiPreferences(GtkMisc):
 		self.__LibNotify = self.XML['pynotify']
 		self.__LibNotify.set_active(self.__GConf.getBool('ui/show_pynotify'))
 		self.__LibNotify.connect('toggled',self.__GConf.toggle,'ui/show_pynotify')
+
+
+	def __set_plugins_columns(self):
+		textrender = gtk.CellRendererText()
+		boolrender = gtk.CellRendererToggle()
+		boolrender.connect('toggled', self.__plugin_active_toggled)
+		enabled = gtk.TreeViewColumn('Enabled', boolrender, active = self.PLUGIN_ACTIVE)
+		desc = gtk.TreeViewColumn('Name', textrender, text = self.PLUGIN_DESC)
+		self.pluginstreeview.append_column(enabled)
+		self.pluginstreeview.append_column(desc)
+
+	def fill_plugins_model(self):
+		model = self.pluginstreeview.get_model()
+		for name, plugin in self.interface.plugins.plugins.iteritems():
+			iter = model.append()
+			model.set(iter,
+					self.PLUGIN_ACTIVE, plugin.active,
+					self.PLUGIN_DESC, plugin.name,
+					self.PLUGIN_INSTANCE, plugin
+					)
+
+	def __set_plugin_configure_button_sensitive(self, treeview):
+		'''
+		Set the configure button on plugin tab active
+		@param treeview:
+		'''
+		model, iter = treeview.get_selection().get_selected()
+		if iter:
+			enabled = model.get_value(iter, self.PLUGIN_ACTIVE)
+			self.configure_button.set_sensitive(enabled)
+
+	def __configure_plugin(self, button):
+		model, iter = self.pluginstreeview.get_selection().get_selected()
+		if iter:
+			plugin = model.get_value(iter, self.PLUGIN_INSTANCE)
+			plugin.configure()
+
+	def __plugin_active_toggled(self, cellrender, path):
+		model = self.pluginstreeview.get_model()
+		model[path][self.PLUGIN_ACTIVE] = not model[path][self.PLUGIN_ACTIVE]
+		model[path][self.PLUGIN_INSTANCE].active = model[path][self.PLUGIN_ACTIVE]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

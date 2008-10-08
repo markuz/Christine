@@ -21,13 +21,14 @@
 #
 # @category  Multimedia
 # @package   Christine
-# @author    Marco Antonio Islas Cruz
+# @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
+# @author    Maximiliano Valdez Gonzalez <garaged@gmail.com>
 # @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 
 #
-# This is just a hack... And if we plan to use it as a plugin should be 
+# This is just a hack... And if we plan to use it as a plugin should be
 # Bigger and Stronger!
 #
 
@@ -35,28 +36,26 @@ import os
 from libchristine.ui import interface
 from libchristine.christineConf import christineConf
 from libchristine.Tagger import Tagger
+from libchristine.Plugins.plugin_base import plugin_base
 import urllib2
 from urllib import urlencode
 
 
-class twitter:
+class twitter(plugin_base):
 	"""
 	Class to update twitter with the song being played on Christine
 	"""
 	def __init__(self):
-		self.interface = interface()
-		self.christineConf = christineConf()
+		plugin_base.__init__(self)
+		self.name = 'Twitter'
+		self.description = 'This plugins send and update to your twitter account'
 		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
 		self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
 		self.tagger = Tagger()
-		self.__switch_enabled()
-	
-	def __switch_enabled(self, *args):
-		self.enabled =  self.christineConf.getBool('twitter/enabled')
-	
 
 	def postMessage(self, args):
-		if not self.enabled:
+		print 'twitter.active', self.active
+		if not self.active:
 			return
 		file = self.christineConf.getString('backend/last_played')
 		username = self.christineConf.getString('twitter/username')
@@ -96,3 +95,13 @@ class twitter:
 				print 'unknown error: '
 		else:
 			print 'twitt ->', msg
+
+
+	def get_active(self):
+		return self.christineConf.getBool('twitter/enabled')
+
+	def set_active(self, value):
+		return self.christineConf.setValue('twitter/enabled', value)
+
+	active = property(get_active, set_active, None,
+					'Determine if the plugin is active or inactive')

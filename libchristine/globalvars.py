@@ -38,17 +38,21 @@ PREFIX = '/usr/local'
 SYSCONFDIR = '/usr/local/etc'
 USERDIR  = os.path.join(os.environ["HOME"],".christine")
 
+
 DBFILE = os.path.join(USERDIR,'christine.db')
 LOGFILE  = os.path.join(USERDIR,"log")
 
 CHRISTINE_AUDIO_EXT = sound = ["mp3","ogg","wma"]
 CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
 
+
 # global PATH to share files required
 if "--devel" in sys.argv:
 	SHARE_PATH = os.path.join("./")
+	PLUGINSDIR = './libchristine/Plugins'
 else:
 	SHARE_PATH = os.path.join('/usr/local/share', 'christine')
+	PLUGINSDIR = '/usr/lib/python2.5/site-packages/libchristine/Plugins'
 
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
 LOCALE_DIR = "/usr/local/share/locale/"

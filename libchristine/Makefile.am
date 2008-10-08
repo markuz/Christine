@@ -24,6 +24,7 @@ DISTFILES= Makefile.in \
 pkgdatadir=${datadir}
 pkgsysconfdir=${sysconfdir}
 pythonincludedir = @PYTHON_INCLUDE_DIR@
+pythonlibdir = @PYTHON_LIB_DIR@
 usr_libdir = @includedir@
 
 programname=@PROGRAM_NAME@
@@ -34,6 +35,7 @@ edit = sed \
 	   -e 's,@prefix\@,$(prefix),g' \
 	   -e 's,@sysconfdir\@,$(pkgsysconfdir),g' \
 	   -e 's,@programname\@,$(programname),g' \
+	   -e 's,@pythonlibdir\@,$(pythonlibdir),g' \
 	   -e 's,@version\@,$(version),g'
 
 globalvars.py: Makefile $(srcdir)/globalvars.py.in
