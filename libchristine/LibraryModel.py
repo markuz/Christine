@@ -377,3 +377,15 @@ class LibraryModel:
 		'''
 		self.basemodel.set(*args)
 		
+	def iter_next(self, iter):
+		'''
+		Trys to get a next iter for the sortable model.
+		@param iter:
+		'''
+		if self.basemodel.iter_is_valid(iter):
+			iter = self.__filter.convert_child_iter_to_iter(iter)
+		if self.__filter.iter_is_valid(iter):
+			iter =  self.__sorted.convert_child_iter_to_iter(iter)
+		if self.__sorted.iter_is_valid(iter):
+			iter = self.__sorted.iter_next()
+		return iter

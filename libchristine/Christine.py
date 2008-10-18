@@ -727,7 +727,7 @@ class Christine(GtkMisc):
 			self.__LibraryCurrentIter = None
 			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(path, PATH)
 			if (self.__LibraryCurrentIter != None):
-				iter = self.__LibraryModel.iter_next(self.__LibraryCurrentIter)
+				iter = self.mainLibrary.iter_next(self.__LibraryCurrentIter)
 			else:
 				iter = self.__LibraryModel.get_iter_first()
 
