@@ -550,6 +550,8 @@ class libraryBase(GtkMisc):
 		wrapper for the self.model.get_path
 		'''
 		return self.model.get_path(*args)
+	def iter_next(self, iter):
+		return self.model.iter_next(iter)
 		
 		
 class library(libraryBase):
