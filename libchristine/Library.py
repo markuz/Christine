@@ -75,9 +75,9 @@ class libraryBase(GtkMisc):
 		self.interface = interface()
 		self.db = sqlite3db()
 		self.tagger = Tagger()
-		self.__row_changed_id = 0
-		self.__appending = False
-		self.__setting = False
+		#self.__row_changed_id = 0
+		#self.__appending = False
+		#self.__setting = False
 		self.__xml = self.share.getTemplate("TreeViewSources","treeview")
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
@@ -92,11 +92,11 @@ class libraryBase(GtkMisc):
 		self.scroll.add(self.tv)
 
 	def loadLibrary(self, library):
-		if self.__row_changed_id:
-			self.model.disconnect(self.__row_changed_id)
+		#if self.__row_changed_id:
+		#	self.model.disconnect(self.__row_changed_id)
 		self.tv.set_model(None)
-		self.__appending = False
-		self.__setting = False
+		#self.__appending = False
+		#self.__setting = False
 		self.library_lib = lib_library(library)
 		self.__music = self.library_lib.get_all()
 		self.__iterator = self.__music
@@ -106,7 +106,6 @@ class libraryBase(GtkMisc):
 		self.model.createSubmodels()
 		self.fillModel()
 		self.tv.set_model(self.model.getModel())
-		self.tv.set_property('fixed-height-mode', True)
 		self.CURRENT_ITER = self.model.get_iter_first()
 
 	def __rowChanged(self,model,path,iter):
@@ -165,7 +164,7 @@ class libraryBase(GtkMisc):
 		sounds = self.library_lib.get_all()
 		pix = self.share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-		self.__appending = True
+		#self.__appending = True
 		keys = sounds.keys()
 		keys.sort()
 		for path in keys:
@@ -195,8 +194,8 @@ class libraryBase(GtkMisc):
 			self.iters[path] = iter
 
 	def __set(self):
-		if not self.__setting:
-			return False
+		#if not self.__setting:
+		#	return False
 		for i in range(20):
 			if len(self.__iterator):
 				key = self.__iterator.pop()
@@ -295,6 +294,7 @@ class libraryBase(GtkMisc):
 		self.gconf.notifyAdd("ui/show_play_count",self.gconf.toggleVisible,play)
 		self.gconf.notifyAdd("ui/show_length",self.gconf.toggleVisible,length)
 		self.gconf.notifyAdd("ui/show_genre",self.gconf.toggleVisible,genre)
+		self.tv.set_property('fixed-height-mode', True)
 
 	def add(self,file,prepend=False):
 		if type(file) == type(()):
@@ -611,6 +611,7 @@ class queue (libraryBase):
 		gobject.timeout_add(500, self.checkQueue)
 		self.scroll.set_size_request(100,150)
 		self.interface.Queue = self
+		self.tv.set_property('fixed-height-mode', False)
 
 
 	def add_columns(self):
@@ -622,7 +623,7 @@ class queue (libraryBase):
 		name = gtk.TreeViewColumn(translate("Queue"),render,markup=NAME)
 		name.set_sort_column_id(NAME)
 		tv.append_column(name)
-		name.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+		#name.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
 		tv.set_headers_visible(False)
 
 	def add(self,file,prepend=False):

@@ -409,7 +409,7 @@ class Christine(GtkMisc):
 		# if we can't get the length, in more than 20
 		# times in the same song, then, jump to the
 		# next song
-		if (self.__LocationCount > 10):
+		if (self.__LocationCount > 20):
 			self.goNext()
 		else:
 			self.__LocationCount +=1
@@ -624,8 +624,13 @@ class Christine(GtkMisc):
 					self.goNext()
 			else:
 				self.setLocation(location)
-
 			self.__Player.playIt()
+	def simplePlay(self):
+		'''
+		
+		'''
+		self.PlayButton.set_active(False)
+		self.PlayButton.set_active(True)
 
 	def pause(self, widget = None):
 		"""
@@ -698,12 +703,10 @@ class Christine(GtkMisc):
 				if (not filename in self.__LastPlayed) or \
 						(self.__christineGconf.getBool('control/repeat')) and filename:
 						self.setLocation(filename)
-						self.PlayButton.set_active(False)
-						self.PlayButton.set_active(True)
+						self.simplePlay()
 				else:
 					self.getNextInList()
-					self.PlayButton.set_active(False)
-					self.PlayButton.set_active(True)
+					self.simplePlay()
 			else:
 				self.getNextInList()
 
@@ -735,8 +738,7 @@ class Christine(GtkMisc):
 			try:
 				self.setLocation(self.mainLibrary.model.getValue(iter, PATH))
 				#niter = iter
-				self.PlayButton.set_active(False)
-				self.PlayButton.set_active(True)
+				self.simplePlay()
 			except:
 				self.setScale('', '', b = 0)
 				self.setLocation(path)

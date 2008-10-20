@@ -213,6 +213,13 @@ class christineModel(gtk.GenericTreeModel):
 				break
 		self.invalidate_iters()
 		gc.collect()
+	
+	def filter(self, text, column):
+		self.__data = []
+		for i in self.__all_data:
+			if i[column].lower().find(text) >= 0:
+				self.__data.append(i)
+				iter = self.get_iter(self.data[-1])
 
 class LibraryModel:
 	'''This is a custom model that
