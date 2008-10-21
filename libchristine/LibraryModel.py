@@ -390,9 +390,5 @@ class LibraryModel:
 		@param iter:
 		'''
 		if self.basemodel.iter_is_valid(iter):
-			iter = self.__filter.convert_child_iter_to_iter(iter)
-		if self.__filter.iter_is_valid(iter):
-			iter =  self.__sorted.convert_child_iter_to_iter(iter)
-		if self.__sorted.iter_is_valid(iter):
-			iter = self.__sorted.iter_next()
+			iter = self.basemodel.iter_next(iter)
 		return iter

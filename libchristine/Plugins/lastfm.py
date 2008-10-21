@@ -100,8 +100,8 @@ class lastfm(plugin_base):
 
 	def configure(self):
 		'''
-		This method will be called when in the christien plugins preferences
-		tab get the preferences button get pressed
+		This method will be called in the christine plugins preferences
+		tab when the preferences button get pressed
 		'''
 		xml = self.Share.getTemplate('plugin_lastfm_main')
 		dialog = xml['dialog']

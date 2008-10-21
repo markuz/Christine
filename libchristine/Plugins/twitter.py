@@ -97,7 +97,6 @@ class twitter(plugin_base):
 		else:
 			print 'twitt ->', msg
 
-
 	def get_active(self):
 		return self.christineConf.getBool('twitter/enabled')
 
