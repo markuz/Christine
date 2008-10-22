@@ -36,6 +36,7 @@ import threading
 from xml.dom import minidom
 from libchristine.Plugins.plugin_base import plugin_base
 from libchristine.Share import Share
+from libchristine.Tagger import Tagger
 import gtk
 import webbrowser
 
@@ -91,12 +92,15 @@ USER_FEMALE = 'Female'
 class lastfm(plugin_base):
 	def __init__(self):
 		plugin_base.__init__(self)
+		self.tagger = Tagger()
 		self.name = 'Lastfm'
 		self.description = 'Enables the last.fm interaction'
 		self.configurable = True #If christine should ask for the config dialog
 		self.Share = Share()
 		if not self.christineConf.configParser.has_section('lastfm'):
 			self.christineConf.configParser.add_section('lastfm')
+
+		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
 
 	def configure(self):
 		'''
@@ -121,8 +125,6 @@ class lastfm(plugin_base):
 	def set_active(self, value):
 		return self.christineConf.setValue('lastfm/enabled', value)
 
-	active = property(get_active, set_active, None,
-					'Determine if the plugin is active or inactive')
 
 	def __send_auth_request(self, button):
 		sessiong = SessionGenerator()
@@ -138,6 +140,39 @@ class lastfm(plugin_base):
 			self.christineConf.setValue('lastfm/name',data['name'])
 			self.christineConf.setValue('lastfm/key',data['key'])
 			self.christineConf.setValue('lastfm/subscriber',data['subscriber'])
+	
+	def postMessage(self, *arsg):
+		'''
+		Agrega la cancion que se esta tocando al playlist por defecto
+		'''
+		print 'Entrando en lastfm.Postmesage'
+		if not self.active:
+			return
+		file = self.christineConf.getString('backend/last_played')
+		tags =  self.tagger.readTags(file)
+		for key in ('artist','title'):
+			if not tags[key]:
+				print 'La etitqueta %s no es valida'%key
+		apikey = '0da3b11c97759f044bd4223dda212daa'
+		secret = 'b8c00f5548c053033b89633d1004d059'
+		sessionkey = self.christineConf.getString('lastfm/key')
+		username = self.christineConf.getString('lastfm/name')
+
+		user = User(username, apikey, secret, sessionkey)
+
+		track = Track(tags['artist'], tags['title'], apikey, secret, sessionkey)
+		playlists = user.getPlaylistIDs()
+		print 'playlists >>', playlists
+		if playlists:
+			track.addToPlaylist(playlists[0]['id'])
+			print 'posted to last.fm'
+
+		username = self.christineConf.getString('twitter/username')
+
+
+	active = property(get_active, set_active, None,
+					'Determine if the plugin is active or inactive')
+
 
 
 def _status2str(lastfm_status):
@@ -2457,7 +2492,6 @@ class User(BaseObject, Cacheable):
 		title = self._extract(e, 'name')
 
 		return Track(artist, title, *self.auth_data)
-
 
 	def getRecentTracks(self, limit = None):
 		"""Returns this user's recent listened-to tracks. """
