@@ -219,6 +219,9 @@ class christineConf(Singleton):
 				nvalue = str(value).lower()
 			else:
 				nvalue = value
+			oldvalue = self.getString(key)
+			if oldvalue == nvalue:
+				return True
 			self.configParser.set(section, option, nvalue)
 		else:
 			self.configParser.add_section(section)
