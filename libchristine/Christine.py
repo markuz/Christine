@@ -302,8 +302,7 @@ class Christine(GtkMisc):
 		translateMenuItem.connect('activate', lambda widget: webbrowser.open(URL))
 
 		reportaBug = xml['reportABug']
-		URL = BUGURL
-		reportaBug.connect('activate', lambda widget: webbrowser.open(URL))
+		reportaBug.connect('activate', lambda widget: webbrowser.open(BUGURL))
 
 		self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
 		self.__HBoxToolBoxContainer.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
