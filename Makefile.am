@@ -4,8 +4,7 @@ bin_SCRIPTS = christine
 
 EXTRA_DIST = createDeb.sh.in
 
-DIST_FILES = ${EXTRA_DIST} \
-			config.rpath \
+DIST_FILES = config.rpath \
 	   	    mkinstalldirs \
 	   	   	christine.desktop.in \
 	   	   	christine.c 
