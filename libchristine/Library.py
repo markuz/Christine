@@ -176,13 +176,11 @@ class libraryBase(GtkMisc):
 						values[key] =  u'%s'%values[key].encode('latin-1')
 					except:
 						pass
+			track_number = values['track_number']
 			iter = self.model.append(PATH,path,
 					NAME, values['title'],
 					SEARCH,
-					''.join((values['title'],
-						values['artist'],
-						values['album'],
-						values['type'])),
+					''.join((values['title'], values['artist'],values['album'],	values['type'])),
 					PIX,pix,
 					TYPE,values['type'],
 					ARTIST,values['artist'],
@@ -228,7 +226,10 @@ class libraryBase(GtkMisc):
 
 		tn = tvc(translate("T#"),render,text=TN)
 		tn.set_sort_column_id(TN)
+		tn.set_min_width(30)
+		tn.set_resizable(True)
 		tn.set_visible(self.gconf.getBool("ui/show_tn"))
+		tn.set_visible(True)
 		tv.append_column(tn)
 
 		pix = gtk.CellRendererPixbuf()
@@ -262,6 +263,7 @@ class libraryBase(GtkMisc):
 		type = tvc(translate("Type"),render,text=TYPE)
 		type.set_sort_column_id(TYPE)
 		type.set_resizable(True)
+		type.set_min_width(250)
 		type.set_visible(self.gconf.getBool("ui/show_type"))
 		tv.append_column(type)
 
@@ -269,18 +271,21 @@ class libraryBase(GtkMisc):
 		play.set_sort_column_id(PLAY_COUNT)
 		play.set_resizable(True)
 		play.set_visible(self.gconf.getBool("ui/show_play_count"))
+		play.set_min_width(50)
 		tv.append_column(play)
 
 		length = tvc(translate("Lenght"),render,text=TIME)
 		length.set_sort_column_id(TIME)
 		length.set_resizable(True)
 		length.set_visible(self.gconf.getBool("ui/show_length"))
+		length.set_min_width(100)
 		tv.append_column(length)
 
 		genre = tvc(translate("Genre"),render,text=GENRE)
 		genre.set_sort_column_id(GENRE)
 		genre.set_resizable(True)
 		genre.set_visible(self.gconf.getBool("ui/show_genre"))
+		genre.set_min_width(250)
 		tv.append_column(genre)
 		
 		for i in (tn, name, artist, album, type, play, length, genre):
@@ -290,7 +295,7 @@ class libraryBase(GtkMisc):
 		self.gconf.notifyAdd("ui/show_artist",self.gconf.toggleVisible,artist)
 		self.gconf.notifyAdd("ui/show_album",self.gconf.toggleVisible,album)
 		self.gconf.notifyAdd("ui/show_type",self.gconf.toggleVisible,type)
-		self.gconf.notifyAdd("ui/show_tn",self.gconf.toggleVisible,tn)
+		#self.gconf.notifyAdd("ui/show_tn",self.gconf.toggleVisible,tn)
 		self.gconf.notifyAdd("ui/show_play_count",self.gconf.toggleVisible,play)
 		self.gconf.notifyAdd("ui/show_length",self.gconf.toggleVisible,length)
 		self.gconf.notifyAdd("ui/show_genre",self.gconf.toggleVisible,genre)
@@ -331,6 +336,7 @@ class libraryBase(GtkMisc):
 		album	= tags["album"]
 		artist	= tags["artist"]
 		tn		= tags["track"]
+		print tn
 
 		if prepend:
 			func = self.model.prepend

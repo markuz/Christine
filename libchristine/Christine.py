@@ -205,7 +205,7 @@ class Christine(GtkMisc):
 		self.coreWindow.connect("destroy",lambda widget: widget.hide())
 		self.coreWindow.set_icon(self.share.getImageFromPix('logo'))
 		self.coreWindow.connect("scroll-event",self.__printEvent)
-		self.coreWindow.connect("key-press-event",self.onWindowCoreEvent)
+		self.coreWindow.connect("key-press-event",self.onWindowkeyPressEvent)
 		self.coreWindow.connect('size-allocate', self.__on_corewindow_resized)
 
 		self.interface.coreWindow = self.coreWindow
@@ -517,23 +517,22 @@ class Christine(GtkMisc):
 			self.coreWindow.unfullscreen()
 			self.__IsFullScreen = False
 
-	def onWindowCoreEvent(self, player, event):
+	def onWindowkeyPressEvent(self, player, event):
 		"""
-		Handler for the events in the window
+		Handler for the key press events in the window
 		"""
-		if (event.type == gtk.gdk.KEY_PRESS):
-			if (event.keyval == gtk.gdk.keyval_from_name('g')):
-				self.viewPlayButtons()
-			elif (event.keyval == gtk.gdk.keyval_from_name('Page_Down')):
-				if (self.__IsFullScreen):
-					self.goNext()
-			elif (event.keyval == gtk.gdk.keyval_from_name('Page_Up')):
-				if (self.__IsFullScreen):
-					self.goPrev()
-				 	return True
-			elif ( event.keyval == gtk.gdk.keyval_from_name('f')):
-				if (self.__IsFullScreen):
-					self.toggleFullScreen()
+		if (event.keyval == gtk.gdk.keyval_from_name('g')):
+			self.viewPlayButtons()
+		elif (event.keyval == gtk.gdk.keyval_from_name('Page_Down')):
+			if (self.__IsFullScreen):
+				self.goNext()
+		elif (event.keyval == gtk.gdk.keyval_from_name('Page_Up')):
+			if (self.__IsFullScreen):
+				self.goPrev()
+				return True
+		elif ( event.keyval == gtk.gdk.keyval_from_name('f')):
+			if (self.__IsFullScreen):
+				self.toggleFullScreen()
 
 	def viewPlayButtons(self, widget = None):
 		"""
@@ -1029,7 +1028,6 @@ class Christine(GtkMisc):
 		gobject.idle_add(self.__addFileCycle, library)
 
 	def __addFileCycle(self, library):
-		#c = time.time()
 		if len(self.__FilesToAdd) > 0:
 			d,m = divmod(len(library.model.basemodel), 500)
 			new_file = self.__FilesToAdd.pop()
@@ -1041,7 +1039,6 @@ class Christine(GtkMisc):
 			library.save()
 			self.__AddWindow.destroy()
 			return False
-		#print time.time() -c
 		return True
 
 	def __updateAddProgressBar(self, file):
@@ -1194,11 +1191,9 @@ class Christine(GtkMisc):
 
 	def setTags(self, widget = "", b = ""):
 		"""
-		This method fetchs teh data from the song/media in the player.
+		This method fetchs the data from the song/media in the player.
 		Then, ask to the library to update the values on it.
 		"""
-		#if not self.mainLibrary.Exists(self.__Player.getLocation()):
-		#	return False
 		title     = self.__Player.getTag('title').replace('_', ' ')
 		artist    = self.__Player.getTag('artist')
 		album     = self.__Player.getTag('album')
@@ -1258,24 +1253,17 @@ class Christine(GtkMisc):
 								genre=genre)
 
 		if ((PYNOTIFY) and (self.__christineGconf.getBool('ui/show_pynotify'))):
-			try:
-				self.__Notify.close()
-			except:
-				pass
+			if getattr(self, 'Notify', False):
+				self.Notify.close()
 			pixmap = self.share.getImage('trayicon')
-			self.__Notify = pynotify.Notification('christine', '',pixmap)
+			self.Notify = pynotify.Notification('christine', '',pixmap)
 
 			if (self.__christineGconf.getBool('ui/show_in_notification_area')):
-				try:
-					self.__Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
-				except:
-					pass
+				if getattr(self, 'Notify', False):
+					self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
 				self.interface.TrayIcon.TrayIcon.set_tooltip(tooltext)
-
-			#self.__Notify.set_timeout(3000)
-
-			self.__Notify.set_property('body', notify_text)
-			self.__Notify.show()
+			self.Notify.set_property('body', notify_text)
+			self.Notify.show()
 		self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
 		if tooltext != '':
 			self.__Display.setSong(tooltext.replace('\n', ' '))
@@ -1325,6 +1313,7 @@ class Christine(GtkMisc):
 	def quitGtk(self, widget = None):
 		self.__Player.stop()
 		close()
+	
 	def runGtk(self):
 		"""
 		GTK application running
