@@ -53,14 +53,15 @@ class guiAbout:
 		self.__Share = Share()
 
 		xml   = self.__Share.getTemplate('About')
-		about = xml['about']
+		self.about = xml['about']
 		pix   = self.__Share.getImageFromPix('logo')
 
-		about.set_logo(pix)
-		about.set_name(PROGRAMNAME)
-		about.set_version(VERSION)
-		about.set_icon(self.__Share.getImageFromPix('logo'))
-		about.set_translator_credits(translate('translator-credits'))
-		print about.get_translator_credits()
-		about.run()
-		about.destroy()
+		self.about.set_logo(pix)
+		self.about.set_name(PROGRAMNAME)
+		self.about.set_version(VERSION)
+		self.about.set_icon(self.__Share.getImageFromPix('logo'))
+		self.about.set_translator_credits(translate('translator-credits'))
+
+	def run(self):
+		self.about.run()
+		self.about.destroy()

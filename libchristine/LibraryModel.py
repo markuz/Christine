@@ -59,7 +59,6 @@ class christineModel(gtk.GenericTreeModel):
 		self.__data = []
 		self.__emptyData = map(lambda x: '', range(self.column_size))
 		#@self.set_property('leak-references',True)
-		self.counter = 0
 		self.interface = interface()
 
 	def destroy(self):
@@ -116,11 +115,11 @@ class christineModel(gtk.GenericTreeModel):
 			else:
 				return False
 		list = self.__data[iter]
-		for c in range(0,len(args),2):
+		size = len(args)
+		for c in range(0,size,2):
 			list[args[c]] = args[c+1]
 		niter = self.get_iter((iter,))
 		self.row_changed(iter, niter)
-		#self.invalidate_iters()
 		return iter
 
 	def on_get_iter(self, rowref):
@@ -214,13 +213,6 @@ class christineModel(gtk.GenericTreeModel):
 		self.invalidate_iters()
 		gc.collect()
 	
-	def filter(self, text, column):
-		self.__data = []
-		for i in self.__all_data:
-			if i[column].lower().find(text) >= 0:
-				self.__data.append(i)
-				iter = self.get_iter(self.data[-1])
-
 class LibraryModel:
 	'''This is a custom model that
 	implements ListStore, Filter and Sortable
@@ -231,7 +223,6 @@ class LibraryModel:
 		'''
 		self.basemodel =  christineModel(*args)
 		self.TextToSearch = ''
-		self.counter = 0
 
 	def append(self, *args):
 		return  self.basemodel.append(*args)
@@ -248,8 +239,6 @@ class LibraryModel:
 		if not self.TextToSearch:
 			return True
 		value = model.get_value(iter, SEARCH)
-		#if not isinstance(value, str):
-		#	return False
 		return value.lower().find(self.TextToSearch) >= 0 
 
 	def getModel(self):
@@ -299,8 +288,6 @@ class LibraryModel:
 		if niter != None:
 			args2 = tuple(map( self.__encode, args))
 			return self.basemodel.set(iter, *args2)
-		else:
-			print 'No pude cambiar valores!'
 
 	def get_value(self, iter, column):
 		'''
@@ -330,7 +317,6 @@ class LibraryModel:
 	
 	def convert_natural_path_to_path(self, path):
 		path = self.__filter.convert_child_path_to_path(path)
-		#path = self.__sorted.convert_child_path_to_path(path)
 		return path
 
 	def __getNaturalIter(self,iter):

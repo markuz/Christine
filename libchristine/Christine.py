@@ -570,12 +570,10 @@ class Christine(GtkMisc):
 		"""
 		Perform the actions to make a search
 		"""
-#===============================================================================
-#		if not self.EntrySearch.get_text().lower():
-#			self.jumpToPlaying()
-#===============================================================================
+		if not self.EntrySearch.get_text().lower():
+			self.jumpToPlaying()
 		self.__lastTypeTime = time.time()
-		gobject.timeout_add(500,self.__searchTimer)
+		gobject.timeout_add(1000,self.__searchTimer)
 
 	def __searchTimer(self):
 		diff = time.time() - self.__lastTypeTime
@@ -1303,7 +1301,9 @@ class Christine(GtkMisc):
 		"""
 		Show the about dialog
 		"""
-		guiAbout()
+		a = guiAbout()
+		a.about.set_transient_for(self.coreWindow)
+		a.run()
 
 	def showGtkPreferences(self, widget):
 		"""
