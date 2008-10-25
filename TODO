@@ -1,4 +1,17 @@
-* Create a universal player compatible with gst 0.8 and 0.10
-* Improve the import, avoid freezes (done)
-* Create the preferences dialog
-* Gconf-ize everything
+* Improve the plugins interface
+* Create configure dialogs for plugins
+	* pidgin
+	* twitter
+* Improve plugin last.fm
+	There are a lot of things here. Im thinking on:
+	* Let the user mark loved tracks
+	* Let the user add a track to a playlist
+	* The 'must-have' now playing
+	* Fetch the current item album cover
+* Improve the search stuff, currently there is a freeze while the search is
+  being done.
+* Create playlist "types" where radio stations may be allocated
+* Create more artwork to support last.fm, radio stations, video.
+* Create a plugin to give iPod support to christine.
+* All string must be translatable.
+	
