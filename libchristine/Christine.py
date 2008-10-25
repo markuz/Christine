@@ -1064,12 +1064,13 @@ class Christine(GtkMisc):
 		XML = self.share.getTemplate('addFiles')
 		XML.signal_autoconnect(self)
 
-		self.__AddWindow       = XML['WindowCore']
+		self.__AddWindow       = XML['dialog']
+		self.__AddWindow.set_transient_for(self.coreWindow)
 		self.__AddProgress     = XML['progressbar']
 		self.__AddCloseButton  = XML['close']
 		self.__AddFileLabel    = XML['file_label']
 		self.__AddFileLabel.set_text('None')
-		self.__AddCloseButton.connect("clicked",self.importCancel)
+		self.__AddWindow.connect('response', self.importCancel)
 
 		self.__AddCloseButton.grab_add()
 		# Be sure that we are working with a list of files
@@ -1095,7 +1096,7 @@ class Christine(GtkMisc):
 		"""
 		self.__Paths.append(model.get_value(iter, PATH))
 
-	def importCancel(self, widget):
+	def importCancel(self, dialog, response):
 		"""
 		Cancel de import stuff
 		"""

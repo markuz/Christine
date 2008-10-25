@@ -336,7 +336,6 @@ class libraryBase(GtkMisc):
 		album	= tags["album"]
 		artist	= tags["artist"]
 		tn		= tags["track"]
-		print tn
 
 		if prepend:
 			func = self.model.prepend
@@ -381,8 +380,6 @@ class libraryBase(GtkMisc):
 		value = self.library_lib.remove(key)
 		if value:
 			self.model.remove(iter)
-		else:
-			print 'Le valio madres..'
 
 	def save(self):
 		'''
