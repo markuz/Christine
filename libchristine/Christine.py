@@ -196,10 +196,17 @@ class Christine(GtkMisc):
 
 		# Gets window widget from glade template
 		self.coreWindow = xml['WindowCore']
+		width = self.__christineGconf.getInt('ui/width')
+		height = self.__christineGconf.getInt('ui/height')
+		if width and height:
+			self.coreWindow.set_default_size(width, height)
+		else:
+			self.coreWindow.set_default_size(800,600)
 		self.coreWindow.connect("destroy",lambda widget: widget.hide())
 		self.coreWindow.set_icon(self.share.getImageFromPix('logo'))
 		self.coreWindow.connect("scroll-event",self.__printEvent)
 		self.coreWindow.connect("key-press-event",self.onWindowCoreEvent)
+		self.coreWindow.connect('size-allocate', self.__on_corewindow_resized)
 
 		self.interface.coreWindow = self.coreWindow
 
@@ -352,7 +359,14 @@ class Christine(GtkMisc):
 		if self.__christineGconf.getString("backend/last_played") == path:
 			self.__christineGconf.setValue("backend/last_played","")
 		self.mainLibrary.remove(iter)
-		#self.mainLibrary.save()
+
+	def __on_corewindow_resized(self, window, event):
+		'''
+		This method is called every time the main window is resized
+		'''
+		width,height = window.get_size()
+		self.__christineGconf.setValue('ui/width',width)
+		self.__christineGconf.setValue('ui/height',height)
 
 
 	def setLocation(self, filename):
@@ -452,7 +466,9 @@ class Christine(GtkMisc):
 			try:
 				(w, h) = self.coreWindowSize
 			except:
-				(w, h) = (800, 480)
+				w = self.__christineGconf.getInt('ui/width')
+				h = self.__christineGconf.getInt('ui/height')
+
 
 			self.__HPanedListsBox.show()
 			self.HBoxSearch.show()
