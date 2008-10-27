@@ -31,6 +31,7 @@ from dbus.mainloop.glib import DBusGMainLoop
 from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base
 from libchristine.Tagger import Tagger
+from libchristine.Share import Share
 
 class pidgin(plugin_base):
 	"""
@@ -44,8 +45,38 @@ class pidgin(plugin_base):
 		self.obj = None
 		self.interface = interface()
 		self.christineConf.notifyAdd('backend/last_played', self.set_message)
+		self.Share = Share()
 		self.SessionStart()
 		self.tagger = Tagger()
+
+	def configure(self):
+		'''
+		This method will be called in the christine plugins preferences
+		tab when pidgin's preferences button get pressed
+		'''
+		print "Pidgin"
+		xml = self.Share.getTemplate('plugin_pidgin_main')
+		self.dialog = xml['dialog']
+		vbox = xml['vbox']
+		self.entry = xml['pidgin_message']
+		self.entry.set_text(self.christineConf.configParser.get('pidgin','message'))
+		acceptbutton = xml['accept']
+		acceptbutton.connect('clicked', self.save_prefs)
+		cancelbutton = xml['cancel']
+		cancelbutton.connect('clicked', self.window_destroy)
+		response = self.dialog.run()
+		if response:
+			pass
+		self.dialog.destroy()
+
+	def save_prefs(self, button):
+		message = self.entry.get_text()
+		self.christineConf.configParser.set('pidgin','message',message)
+		print message
+		self.dialog.destroy()
+
+	def window_destroy(self, button):
+		self.dialog.destroy()
 
 	def SetMessage(self,):
 		file = self.christineConf.getString('backend/last_played')
