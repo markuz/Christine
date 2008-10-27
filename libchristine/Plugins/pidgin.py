@@ -72,7 +72,6 @@ class pidgin(plugin_base):
 	def save_prefs(self, button):
 		message = self.entry.get_text()
 		self.christineConf.configParser.set('pidgin','message',message)
-		print message
 		self.dialog.destroy()
 
 	def window_destroy(self, button):
@@ -80,12 +79,11 @@ class pidgin(plugin_base):
 
 	def SetMessage(self,):
 		file = self.christineConf.getString('backend/last_played')
-		tags =  self.tagger.readTags(file)
 		message = self.christineConf.getString('pidgin/message')
 		if (not message):
-			message = "Escuchando: %s - %s - en Christine"
+			message = "Escuchando: _artist_ - _title_ - en Christine"
 			self.christineConf.setValue('pidgin/message', message)
-		message = message % (tags['title'], tags['artist'])
+		message = self.tagger.taggify(file, message)
 		if ( self.obj is not None ):
 			try:
 				current = self.purple.PurpleSavedstatusGetType(

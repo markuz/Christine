@@ -68,9 +68,7 @@ class twitter(plugin_base):
 		msg = self.christineConf.getString('twitter/message')
 		if not msg:
 			self.christineConf.setValue('twitter/message',' [christine] _title_ by _artist_ from _album_')
-		tags =  self.tagger.readTags(file)
-		for i in tags.keys():
-			msg = msg.replace('_%s_'%i, str(tags[i]))
+		msg = tags.taggify(file, msg)
 		url = "http://twitter.com/statuses/update.xml"
 		thread.start_new(self.httpConn, (url, msg, username, password))
 

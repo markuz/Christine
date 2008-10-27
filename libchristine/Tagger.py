@@ -149,3 +149,9 @@ class Tagger(Singleton):
 		else:
 			self.Rola = FakeTrack()
 		return self.Rola.readTags(self.Song)
+	def taggify(self, file, msg):
+		tags = self.readTags(file)
+		for i in tags.keys():
+			msg = msg.replace('_%s_'%i, str(tags[i]))
+		return msg
+
