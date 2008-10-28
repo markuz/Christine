@@ -70,7 +70,7 @@
                 <child>
                   <widget class="GtkLabel" id="label1">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Twitter&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Pidgin&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </widget>
                   <packing>
