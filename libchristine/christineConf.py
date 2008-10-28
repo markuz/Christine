@@ -229,8 +229,8 @@ class christineConf(Singleton):
 		f = open(self.filepath,'w')
 		self.configParser.write(f)
 		f.close()
-		self.__executeNotify(key, value)
 		del f
+		self.__executeNotify(key, value)
 
 	def __executeNotify(self, key, value):
 		if not self.__notify.has_key(key):

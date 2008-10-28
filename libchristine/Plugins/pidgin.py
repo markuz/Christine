@@ -44,7 +44,8 @@ class pidgin(plugin_base):
 		self.description = 'This plugin set the song you are playing on pidgin'
 		self.obj = None
 		self.interface = interface()
-		self.christineConf.notifyAdd('backend/last_played', self.set_message)
+		#self.christineConf.notifyAdd('backend/last_played', self.set_message)
+		self.events.addToEvent('onPlay', self.set_message)
 		self.Share = Share()
 		self.SessionStart()
 		self.tagger = Tagger()
@@ -54,7 +55,6 @@ class pidgin(plugin_base):
 		This method will be called in the christine plugins preferences
 		tab when pidgin's preferences button get pressed
 		'''
-		print "Pidgin"
 		xml = self.Share.getTemplate('plugin_pidgin_main')
 		self.dialog = xml['dialog']
 		vbox = xml['vbox']

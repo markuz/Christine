@@ -27,6 +27,7 @@
 from libchristine.gui.GtkMisc import error
 from libchristine.Validator import isNull
 from libchristine.christineConf import christineConf
+from libchristine.Events import christineEvents
 from libchristine.Validator import isFile
 from globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.christineLogger import christineLogger
@@ -60,6 +61,7 @@ class Player(gtk.DrawingArea, object):
 		self.__Logger.info('Starting player')
 		gtk.DrawingArea.__init__(self)
 		self.config = christineConf(self)
+		self.events = christineEvents()
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
 		self.set_property('events',
@@ -247,6 +249,7 @@ class Player(gtk.DrawingArea, object):
 		Play the current song
 		"""
 		self.__setState(gst.STATE_PLAYING)
+		self.events.executeEvent('onPlay')
 
 	def pause(self):
 		"""

@@ -1,6 +1,6 @@
 * Improve the plugins interface
 * Create configure dialogs for plugins
-	* pidgin
+	* pidgin (Done)
 	* twitter
 * Improve plugin last.fm
 	There are a lot of things here. Im thinking on:

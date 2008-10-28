@@ -30,6 +30,8 @@
 from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.ui import interface
 from libchristine.christineConf import christineConf
+from libchristine.Events import christineEvents
+
 import gtk
 
 class plugin_base(object, GtkMisc):
@@ -44,10 +46,11 @@ class plugin_base(object, GtkMisc):
 		self.__active =  True
 		self.interface = interface()
 		self.christineConf = christineConf()
+		self.events = christineEvents()
 
 	def configure(self):
 		'''
-		This method will be called when in the christien plugins preferences
+		This method will be called when in the christine plugins preferences
 		tab get the preferences button get pressed
 		'''
 		return None
