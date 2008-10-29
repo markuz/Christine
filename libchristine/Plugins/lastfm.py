@@ -33,6 +33,7 @@ import md5
 import httplib
 import urllib
 import threading
+import thread
 from xml.dom import minidom
 from libchristine.Plugins.plugin_base import plugin_base
 from libchristine.Share import Share
@@ -145,13 +146,13 @@ class lastfm(plugin_base):
 		'''
 		Agrega la cancion que se esta tocando al playlist por defecto
 		'''
-		print 'Entrando en lastfm.Postmesage'
 		if not self.active:
 			return
 		file = self.christineConf.getString('backend/last_played')
 		tags =  self.tagger.readTags(file)
 		for key in ('artist','title'):
 			if not tags[key]:
+				#TODO: Usar christine Logger
 				print 'La etitqueta %s no es valida'%key
 		apikey = '0da3b11c97759f044bd4223dda212daa'
 		secret = 'b8c00f5548c053033b89633d1004d059'
@@ -162,10 +163,8 @@ class lastfm(plugin_base):
 
 		track = Track(tags['artist'], tags['title'], apikey, secret, sessionkey)
 		playlists = user.getPlaylistIDs()
-		print 'playlists >>', playlists
 		if playlists:
-			track.addToPlaylist(playlists[0]['id'])
-			print 'posted to last.fm'
+			thread.start_new(track.addToPlaylist, (playlists[0]['id'], ))
 
 		username = self.christineConf.getString('twitter/username')
 
