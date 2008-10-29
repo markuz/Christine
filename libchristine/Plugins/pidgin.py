@@ -62,8 +62,6 @@ class pidgin(plugin_base):
 		self.entry.set_text(self.christineConf.configParser.get('pidgin','message'))
 		acceptbutton = xml['accept']
 		acceptbutton.connect('clicked', self.save_prefs)
-		cancelbutton = xml['cancel']
-		cancelbutton.connect('clicked', self.window_destroy)
 		response = self.dialog.run()
 		if response:
 			pass
