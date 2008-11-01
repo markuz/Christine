@@ -15,6 +15,7 @@ class Manager(Singleton):
 		self.interface.plugins = self
 		self.plugins = {}
 		self.load_plugins()
+		self.logger = self.interface.LoggerManager.getLogger('PluginsManager')
 
 	def load_plugins(self):
 		'''
@@ -24,14 +25,11 @@ class Manager(Singleton):
 		filteredf = [k for k in files if k.endswith('py') \
 					and not k.endswith('plugin_base.py') \
 					and not k.endswith('__init__.py')]
-		print filteredf
 		for i in filteredf:
-			print i
 			pluginname = os.path.split(i)[-1].split('.')[0]
 			plugin = self.__importByName('libchristine.Plugins.'+pluginname, pluginname)
 			if plugin:
 				instance = plugin()
-				print 'appending' , instance.name
 				self.plugins[instance.name] = instance
 
 
@@ -46,6 +44,6 @@ class Manager(Singleton):
 			module = __import__(modulename,
 						globals(), locals(), [name])
 		except ImportError, e:
-			print e
+			self.logger.exception(e)
 			return None
 		return vars(module)[name]

@@ -48,11 +48,8 @@ from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.ui import interface
 from libchristine.tryicon import tryIcon
 from libchristine.gui.openRemote import openRemote
-from libchristine.Library import library, queue,PATH, \
-NAME,\
-PIX,\
-PLAY_COUNT,\
-TIME
+from libchristine.Library import library, queue,PATH
+from libchristine.Library import NAME,PIX,PLAY_COUNT,TIME
 from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
@@ -107,7 +104,7 @@ class Christine(GtkMisc):
 		GtkMisc.__init__(self)
 
 		self.share   = Share()
-		self.__christineGconf   = christineConf()
+		self.christineConf   = christineConf()
 		self.__sqlite = sqlite3db()
 		self.interface = interface()
 		self.interface.coreClass = self
@@ -130,7 +127,7 @@ class Christine(GtkMisc):
 		# Create the try icon.
 		tryIcon()
 
-		self.__christineGconf.notifyAdd('ui/show_in_notification_area',
+		self.christineConf.notifyAdd('ui/show_in_notification_area',
 				lambda cl,cnx,entry,widget: \
 				self.interface.TrayIcon.TrayIcon.set_visible(entry.get_value().get_bool()))
 
@@ -196,8 +193,8 @@ class Christine(GtkMisc):
 
 		# Gets window widget from glade template
 		self.coreWindow = xml['WindowCore']
-		width = self.__christineGconf.getInt('ui/width')
-		height = self.__christineGconf.getInt('ui/height')
+		width = self.christineConf.getInt('ui/width')
+		height = self.christineConf.getInt('ui/height')
 		if width and height:
 			self.coreWindow.set_default_size(width, height)
 		else:
@@ -239,7 +236,7 @@ class Christine(GtkMisc):
 
 		# Create the library by calling to libs_christine.library class
 		self.mainLibrary  = library()
-		lastSourceUsed = self.__christineGconf.get('backend/last_source')
+		lastSourceUsed = self.christineConf.get('backend/last_source')
 		if not lastSourceUsed:
 			lastSourceUsed = 'music'
 		self.mainLibrary.loadLibrary(lastSourceUsed)
@@ -272,36 +269,36 @@ class Christine(GtkMisc):
 		self.__ControlButton = xml['control_button']
 
 		self.__MenuItemShuffle = xml['MenuItemShuffle']
-		self.__MenuItemShuffle.set_active(self.__christineGconf.getBool('control/shuffle'))
+		self.__MenuItemShuffle.set_active(self.christineConf.getBool('control/shuffle'))
 
 		self.__MenuItemShuffle.connect('toggled',
-			lambda widget: self.__christineGconf.setValue('control/shuffle',
+			lambda widget: self.christineConf.setValue('control/shuffle',
 			widget.get_active()))
 
-		self.__christineGconf.notifyAdd('control/shuffle',
-			self.__christineGconf.toggleWidget,
+		self.christineConf.notifyAdd('control/shuffle',
+			self.christineConf.toggleWidget,
 			self.__MenuItemShuffle)
 
 		self.__ControlRepeat = xml['repeat']
-		self.__ControlRepeat.set_active(self.__christineGconf.getBool('control/repeat'))
+		self.__ControlRepeat.set_active(self.christineConf.getBool('control/repeat'))
 
 		self.__ControlRepeat.connect('toggled',
-			lambda widget: self.__christineGconf.setValue('control/repeat',
+			lambda widget: self.christineConf.setValue('control/repeat',
 			widget.get_active()))
 
-		self.__christineGconf.notifyAdd('control/repeat',
-			self.__christineGconf.toggleWidget,
+		self.christineConf.notifyAdd('control/repeat',
+			self.christineConf.toggleWidget,
 			self.__ControlRepeat)
 
 		self.__BothSr = xml['both_sr']
 		self.__NoneSr = xml['none_sr']
 
 		self.__MenuItemVisualMode = xml['MenuItemVisualMode']
-		self.__MenuItemVisualMode.set_active(self.__christineGconf.getBool('ui/visualization'))
+		self.__MenuItemVisualMode.set_active(self.christineConf.getBool('ui/visualization'))
 
 		self.visualModePlayer()
 
-		self.__MenuItemSmallView.set_active(self.__christineGconf.getBool('ui/small_view'))
+		self.__MenuItemSmallView.set_active(self.christineConf.getBool('ui/small_view'))
 		self.toggleViewSmall(self.__MenuItemSmallView)
 
 		translateMenuItem = xml['translateThisApp']
@@ -322,22 +319,31 @@ class Christine(GtkMisc):
 		self.__HScaleVolume         = xml['HScaleVolume']
 		self.__HScaleVolume.connect("scroll-event",self.__printEvent)
 
-		volume = self.__christineGconf.getFloat('control/volume')
+		volume = self.christineConf.getFloat('control/volume')
 		if (volume):
 			self.__HScaleVolume.set_value(volume)
 		else:
 			self.__HScaleVolume.set_value(0.8)
 
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
-		self.jumpToPlaying(path = self.__christineGconf.getString('backend/last_played'))
-		self.__pidginMessage = self.__christineGconf.getString('pidgin/message')
+		self.jumpToPlaying(path = self.christineConf.getString('backend/last_played'))
+		self.__pidginMessage = self.christineConf.getString('pidgin/message')
 
 	def __srcListRowActivated(self, treeview, path, column):
 		model = treeview.get_model()
 		fname = model.get_value(model.get_iter(path),
 				LIST_NAME)
 		self.mainLibrary.loadLibrary(fname)
-		self.__christineGconf.setValue('backend/last_source', fname)
+		self.christineConf.setValue('backend/last_source', fname)
+	
+	def __on_corewindow_resized(self, window, event):
+		'''
+		This method is called every time the main window is resized
+		'''
+		width,height = window.get_size()
+		self.christineConf.setValue('ui/width',width)
+		self.christineConf.setValue('ui/height',height)
+
 
 	def deleteFileFromDisk(self, widget):
 		"""
@@ -356,18 +362,9 @@ class Christine(GtkMisc):
 		selection     = self.mainLibrary.tv.get_selection()
 		(model, iter) = selection.get_selected()
 		name,path     = model.get(iter, NAME, PATH)
-		if self.__christineGconf.getString("backend/last_played") == path:
-			self.__christineGconf.setValue("backend/last_played","")
+		if self.christineConf.getString("backend/last_played") == path:
+			self.christineConf.setValue("backend/last_played","")
 		self.mainLibrary.remove(iter)
-
-	def __on_corewindow_resized(self, window, event):
-		'''
-		This method is called every time the main window is resized
-		'''
-		width,height = window.get_size()
-		self.__christineGconf.setValue('ui/width',width)
-		self.__christineGconf.setValue('ui/height',height)
-
 
 	def setLocation(self, filename):
 		"""
@@ -383,36 +380,23 @@ class Christine(GtkMisc):
 		self.__LibraryCurrentIter = None
 
 		self.__Player.stop()
-		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(self.__Player.getLocation(), PATH)
-
+		basemodel = self.mainLibrary.model.basemodel
+		self.__LibraryCurrentIter = basemodel.search_iter_on_column(
+											self.__Player.getLocation(), PATH)
 		if (self.__LibraryCurrentIter != None):
 			pix = self.share.getImageFromPix('blank')
-			pix = pix.scale_simple(20, 20,
-					gtk.gdk.INTERP_BILINEAR)
-			path = self.mainLibrary.model.basemodel.get_path(self.__LibraryCurrentIter)
+			pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
+			path = basemodel.get_path(self.__LibraryCurrentIter)
 			self.mainLibrary.set(path, PIX, pix)
 			self.__IterNatural = self.__LibraryCurrentIter
-
-		# Search for the item in the library.
-		# if it exists then set it in the "backend/last_played"
-		# entry in gconf to be able to select it in the next
-		# christine start-up (and other functions) and
-		#self.__LibraryCurrentIter = None
-		#self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
-		self.IterCurrentPlaying = self.__LibraryCurrentIter
 		self.IterCurrentPlaying = self.mainLibrary.model.getIterValid(self.IterCurrentPlaying)
-		if self.IterCurrentPlaying != None:
-			if self.mainLibrary.model.basemodel.iter_is_valid(self.IterCurrentPlaying):
-				self.IterCurrentPlaying = self.__LibraryCurrentIter
 		if (self.IterCurrentPlaying != None):
 			if (self.mainLibrary.Exists(filename)):
 				count = self.mainLibrary.model.getValue(self.IterCurrentPlaying, PLAY_COUNT)
 				self.mainLibrary.model.setValues(self.IterCurrentPlaying, PLAY_COUNT, count + 1)
 				self.__IterNatural = self.IterCurrentPlaying
-
-				#self.mainLibrary.save()
 				self.__LastPlayed.append(filename)
-				self.__christineGconf.setValue('backend/last_played', filename)
+		self.christineConf.setValue('backend/last_played', filename)
 		self.__Player.setLocation(filename)
 		name = os.path.split(filename)[-1]
 		self.__Display.setSong(name)
@@ -440,7 +424,7 @@ class Christine(GtkMisc):
 		"""
 		value = widget.get_value()
 		self.__Player.setVolume(value)
-		self.__christineGconf.setValue('control/volume', value)
+		self.christineConf.setValue('control/volume', value)
 
 	def toggleViewSmall(self, widget):
 		"""
@@ -452,7 +436,7 @@ class Christine(GtkMisc):
 		# gconf.
 		#
 		active = widget.get_active()
-		self.__christineGconf.setValue('ui/small_view', active)
+		self.christineConf.setValue('ui/small_view', active)
 
 		if (active):
 			self.__HPanedListsBox.hide()
@@ -466,8 +450,8 @@ class Christine(GtkMisc):
 			try:
 				(w, h) = self.coreWindowSize
 			except:
-				w = self.__christineGconf.getInt('ui/width')
-				h = self.__christineGconf.getInt('ui/height')
+				w = self.christineConf.getInt('ui/width')
+				h = self.christineConf.getInt('ui/height')
 
 
 			self.__HPanedListsBox.show()
@@ -479,7 +463,7 @@ class Christine(GtkMisc):
 		"""
 		This show/hide the visualization
 		"""
-		self.__christineGconf.setValue('ui/visualization', widget.get_active())
+		self.christineConf.setValue('ui/visualization', widget.get_active())
 		self.visualModePlayer()
 
 		# Be shure that we are not in small view mode.
@@ -495,7 +479,7 @@ class Christine(GtkMisc):
 		# FIXME: We must enable the full screen if christine has
 		#        visualization enabled
 		if (not self.__IsFullScreen):
-			if ((self.__Player.isVideo()) or (self.__christineGconf.getBool('ui/visualization'))):
+			if ((self.__Player.isVideo()) or (self.christineConf.getBool('ui/visualization'))):
 				self.coreWindow.fullscreen()
 				self.mainLibray.scroll.set_size_request(0,0)
 				self.__VBoxList.set_size_request(0,0)
@@ -509,9 +493,9 @@ class Christine(GtkMisc):
 		# Non-full screen mode.
 		# hide if we are not playing a video nor
 		# visualization.
-			if ((not self.__Player.isVideo()) and (not self.__christineGconf.getBool('ui/visualization'))):
+			if ((not self.__Player.isVideo()) and (not self.christineConf.getBool('ui/visualization'))):
 				self.__Player.hide()
-			self.mainLibray.scroll.set_size_request(200,200)
+			self.mainLibrary.scroll.set_size_request(200,200)
 			self.__VBoxList.set_size_request(150,0)
 
 			self.coreWindow.unfullscreen()
@@ -570,19 +554,24 @@ class Christine(GtkMisc):
 		"""
 		Perform the actions to make a search
 		"""
-		if not self.EntrySearch.get_text().lower():
+		text = self.EntrySearch.get_text()
+		if not text:
+			self.mainLibrary.model.TextToSearch = ''
+			self.mainLibrary.model.refilter()
 			self.jumpToPlaying()
-		self.__lastTypeTime = time.time()
-		gobject.timeout_add(1000,self.__searchTimer)
+			return True
+		else:
+			self.__lastTypeTime = time.time()
+			gobject.timeout_add(1000,self.__searchTimer)
 
 	def __searchTimer(self):
 		diff = time.time() - self.__lastTypeTime
-		if diff > 0.3 and diff < 1:
+		if diff > 0.5 and diff < 1:
 			self.mainLibrary.model.TextToSearch = self.EntrySearch.get_text().lower()
 			self.mainLibrary.model.refilter()
 			self.jumpToPlaying()
 			return False
-		if diff > 1:
+		if diff > 1.5:
 			return False
 		return True
 
@@ -663,7 +652,7 @@ class Christine(GtkMisc):
 			self.PlayButton.set_active(True)
 		else:
 			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(
-										self.__christineGconf.getString('backend/last_played'), PATH)
+										self.christineConf.getString('backend/last_played'), PATH)
 			if self.__LibraryCurrentIter != None:
 				path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
 
@@ -713,7 +702,7 @@ class Christine(GtkMisc):
 				randompath = ((int(Elements * random.random())),)
 				filename = self.__LibraryModel[randompath][PATH]
 				if (not filename in self.__LastPlayed) or \
-						(self.__christineGconf.getBool('control/repeat')) and filename:
+						(self.christineConf.getBool('control/repeat')) and filename:
 						self.setLocation(filename)
 						self.simplePlay()
 				else:
@@ -726,10 +715,10 @@ class Christine(GtkMisc):
 		"""
 		Gets the next item in list
 		"""
-		path = self.__christineGconf.getString('backend/last_played')
+		path = self.christineConf.getString('backend/last_played')
 
 		if (path == None):
-			filename = self.__christineGconf.getString('backend/last_played')
+			filename = self.christineConf.getString('backend/last_played')
 			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
 			#self.__Player.getLocation()
 			if (self.__LibraryCurrentIter == None):
@@ -903,7 +892,7 @@ class Christine(GtkMisc):
 		"""
 		XML = self.share.getTemplate('FileSelector')
 		fs  = XML['fs']
-		uri = self.__christineGconf.getString("ui/LastFolder")
+		uri = self.christineConf.getString("ui/LastFolder")
 		if uri:
 			fs.set_uri(uri)
 		fs.set_icon(self.share.getImageFromPix('logo'))
@@ -913,7 +902,7 @@ class Christine(GtkMisc):
 		if (response == gtk.RESPONSE_OK):
 			self.addFiles(files = files, queue = queue)
 			path = os.path.join(os.path.split(files[0])[:-1])[0]
-			self.__christineGconf.setValue("ui/LastFolder",path)
+			self.christineConf.setValue("ui/LastFolder",path)
 
 	def importFolder(self, widget):
 		"""
@@ -926,14 +915,14 @@ class Christine(GtkMisc):
 		XML  = self.share.getTemplate('directorySelector')
 		ds   = XML['ds']
 		walk = XML['walk']
-		uri = self.__christineGconf.getString("ui/LastFolder")
+		uri = self.christineConf.getString("ui/LastFolder")
 		if uri:
 			ds.set_uri(uri)
 		ds.set_icon(self.share.getImageFromPix('logo'))
 		response  = ds.run()
 		filenames = ds.get_filenames()
 		if (response == gtk.RESPONSE_OK):
-			self.__christineGconf.setValue("ui/LastFolder",filenames[0])
+			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
 			for i in filenames:
 				if (walk.get_active()):
@@ -957,7 +946,7 @@ class Christine(GtkMisc):
 		self.f = []
 		for i in files:
 			ext = i.split('.').pop()
-			if (ext in self.__christineGconf.getString('backend/allowed_files').split(',')):
+			if (ext in self.christineConf.getString('backend/allowed_files').split(',')):
 				f.append(i)
 		files = f
 		self.addFiles(files)
@@ -1004,7 +993,7 @@ class Christine(GtkMisc):
 			for path in filenames[-1][1]:
 				ext    = path.split('.').pop().lower()
 				exists = os.path.join(filenames[-1][0], path) in self.f
-				if ext in self.__christineGconf.getString('backend/allowed_files').split(',') and not exists:
+				if ext in self.christineConf.getString('backend/allowed_files').split(',') and not exists:
 					f.append(os.path.join(filenames[-1][0],path))
 		except StopIteration:
 			dialog.destroy()
@@ -1082,7 +1071,7 @@ class Christine(GtkMisc):
 		for i in files:
 			ext    = i.split('.').pop().lower()
 			if (not i in self.__Paths) and \
-					(ext in self.__christineGconf.getString('backend/allowed_files').split(',')):
+					(ext in self.christineConf.getString('backend/allowed_files').split(',')):
 				self.__FilesToAdd.append(i)
 		self.__Percentage      = 0
 		self.__TimeTotalNFiles = len(self.__FilesToAdd)
@@ -1251,13 +1240,13 @@ class Christine(GtkMisc):
 								search=search,
 								genre=genre)
 
-		if ((PYNOTIFY) and (self.__christineGconf.getBool('ui/show_pynotify'))):
+		if ((PYNOTIFY) and (self.christineConf.getBool('ui/show_pynotify'))):
 			if getattr(self, 'Notify', False):
 				self.Notify.close()
 			pixmap = self.share.getImage('trayicon')
 			self.Notify = pynotify.Notification('christine', '',pixmap)
 
-			if (self.__christineGconf.getBool('ui/show_in_notification_area')):
+			if (self.christineConf.getBool('ui/show_in_notification_area')):
 				if getattr(self, 'Notify', False):
 					self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
 				self.interface.TrayIcon.TrayIcon.set_tooltip(tooltext)
@@ -1284,7 +1273,7 @@ class Christine(GtkMisc):
 		if (self.__Player.isVideo()):
 			self.__HBoxPlayer.show_all()
 		else:
-			if (self.__christineGconf.getBool('ui/visualization') and isPlaying):
+			if (self.christineConf.getBool('ui/visualization') and isPlaying):
 				self.__HBoxPlayer.show_all()
 			else:
 				self.__HBoxPlayer.hide()

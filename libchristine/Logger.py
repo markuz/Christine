@@ -26,39 +26,69 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 
-import time
-import os
-import gobject
-
+import logging
 from libchristine.Validator import *
-from libchristine.GtkMisc import *
 from libchristine.pattern.Singleton import Singleton
+from libchristine.options import options
 
-
-class ChristineLogger(Singleton,GtkMisc):
-	'''
-	This class helps in the christine logging functions
-	'''
+class LoggerManager(Singleton):
 	def __init__(self):
-		'''
-		Contructor
-		'''
-		GtkMisc.__init__(self)
-		self.__logs = []
-		gobject.timeout_add(1000,self.__save)
+		self.loggers = {}
 	
-	def Log(self,text):
-		if not isString(text) or isStringEmpty(text):
-			raise TypeError("First argument must be a string, got %s"%type(text))
-		text = time.ctime()+" "+text
-		self.__logs.append(text)
+	def getLogger(self, loggername):
+		if not self.loggers.has_key(loggername):
+			logger = Logger(loggername)
+			self.loggers[loggername] = logger
+		return self.loggers[loggername]
 
-	def __save(self):
-		if len(self.__logs)==0:
-			return True
-		f = os.path.join(os.environ["HOME"],".christine","log")
-		file = open(f,"a")
-		file.write("\n".join(self.__logs)+"\n")
-		file.close()
-		self.__logs = []
-		return True
+class Logger:
+	'''
+	Implements the christine logging facility.
+	'''
+	def __init__(self, loggername, type='event'):
+		'''
+		Constructor, construye una clase de logger.
+		
+		@param loggername: Nombre que el logger tendra.
+		@param type: Tipo de logger. Los valores disponibles son : event y error
+					por defecto apunta a event. En caso de utilizarse otro
+					que no sea event o error se apuntara a event.
+		'''
+		opts = options()
+		# Create two logger,one for info, debug and warnings and another for  
+		# errors, exceptions and criticals
+		self.__Logger = logging.getLogger(loggername)
+		self.__ErrorLogger = logging.getLogger('Error'+ loggername)
+		formatter = logging.Formatter('%(asctime)s:%(levelname)-8s:%(name)-10s:%(lineno)4s: %(message)-80s')
+		level = 'DEBUG'
+		nlevel = getattr(logging, level, None)
+		if nlevel != None:
+			LOGGING_MODE = nlevel
+		else:
+			LOGGING_MODE = logging.DEBUG
+		if opts.options.debug:
+			LOGGING_HANDLER = logging.StreamHandler()
+			ERROR_HANDLER = logging.StreamHandler()
+		else:
+			LOGGING_HANDLER = logging.handlers.RotatingFileHandler('./christine_events.log','a',31457280, 10)
+			ERROR_HANDLER = logging.handlers.RotatingFileHandler('./cristine_errors.log','a',31457280, 10)
+
+		LOGGING_HANDLER.setFormatter(formatter)
+		LOGGING_HANDLER.setLevel(LOGGING_MODE)
+		ERROR_HANDLER.setFormatter(formatter)
+		ERROR_HANDLER.setLevel(LOGGING_MODE)
+		#Establecemos las propiedades de los loggers.
+		self.__Logger.setLevel(LOGGING_MODE)
+		self.__Logger.addHandler(LOGGING_HANDLER)
+		
+		self.__ErrorLogger.setLevel(LOGGING_MODE)
+		self.__ErrorLogger.addHandler(ERROR_HANDLER)
+
+		self.info = self.__Logger.info
+		self.debug = self.__Logger.debug
+		self.warning = self.__Logger.warning
+		
+		self.critical = self.__ErrorLogger.critical
+		self.error = self.__ErrorLogger.error
+		self.exception = self.__ErrorLogger.exception
+	

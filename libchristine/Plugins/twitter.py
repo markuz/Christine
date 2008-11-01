@@ -53,9 +53,10 @@ class twitter(plugin_base):
 		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
 		self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
 		self.tagger = Tagger()
+		self.interface = interface()
+		self.logger = self.interface.LoggerManager.getLogger('PluginTwitter')
 
 	def postMessage(self, args):
-		print 'twitter.active', self.active
 		if not self.active:
 			return
 		file = self.christineConf.getString('backend/last_played')
@@ -85,15 +86,15 @@ class twitter(plugin_base):
 			urllib2.urlopen(url,urlencode({"status": msg}))
 		except urllib2.HTTPError, e :
 			if e.code == 401:
-				print 'not authorized'
+				self.logger.info(_('not authorized'))
 			elif e.code == 404:
-				print 'not found'
+				self.logger.info(_('not found'))
 			elif e.code == 503:
-				print 'service unavailable'
+				self.logger.info(_('service not available'))
 			else:
-				print 'unknown error: '
+				self.logger.info(_('unknown error'))
 		else:
-			print 'twitt ->', msg
+			self.logger.info(_('twitt -> %s'%msg))
 
 	def get_active(self):
 		return self.christineConf.getBool('twitter/enabled')

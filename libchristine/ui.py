@@ -18,6 +18,7 @@
 
 
 from libchristine.pattern.Singleton import Singleton
+from libchristine.Logger import LoggerManager
 
 class interface(Singleton):
 	'''
@@ -25,3 +26,5 @@ class interface(Singleton):
 	'''
 	def __init__(self):
 		self.empty = ''
+		self.LoggerManager = LoggerManager()
+	
