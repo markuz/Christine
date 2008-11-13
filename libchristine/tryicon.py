@@ -19,7 +19,7 @@
 import gtk
 
 from libchristine.christineConf import christineConf
-from libchristine.christineLogger import christineLogger
+from libchristine.Logger import LoggerManager
 from libchristine.Share import Share
 from libchristine.ui import interface
 
@@ -29,7 +29,7 @@ class tryIcon:
 	'''
 	def __init__(self):
 		self.__Share   = Share()
-		self.__Logger = christineLogger('tryIcon')
+		self.__Logger = LoggerManager().getLogger('tryIcon')
 		self.interface = interface()
 		self.__IsHidden =  False
 		print self.interface

@@ -27,6 +27,7 @@
 
 
 import logging
+import logging.handlers
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.options import options
@@ -66,7 +67,7 @@ class Logger:
 			LOGGING_MODE = nlevel
 		else:
 			LOGGING_MODE = logging.DEBUG
-		if opts.options.debug:
+		if opts.options.verbose:
 			LOGGING_HANDLER = logging.StreamHandler()
 			ERROR_HANDLER = logging.StreamHandler()
 		else:

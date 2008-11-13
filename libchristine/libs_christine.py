@@ -1,7 +1,5 @@
 #! /usr/bin/env python
 # -*- coding: latin-1 -*-
-from christineLogger import christineLogger
-
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
 # This program is free software; you can redistribute it and/or modify
@@ -23,6 +21,7 @@ import os
 import cPickle as pickle
 from libchristine.globalvars import DATADIR, USERDIR
 from libchristine.Storage.sqlitedb import sqlite3db
+from libchristine.Logger import LoggerManager
 
 class sanity:
 	'''
@@ -58,7 +57,7 @@ class sanity:
 class lib_library(object):
 	def __init__(self,list):
 		sanity()
-		self.__logger = christineLogger('liblibrary')
+		self.__logger = LoggerManager().getLogger('liblibrary')
 		self.__db = sqlite3db()
 		self.idlist = self.__db.PlaylistIDFromName(list)
 		if self.idlist == None:

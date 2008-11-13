@@ -31,7 +31,7 @@
 import sqlite3
 from libchristine.globalvars import DBFILE
 from libchristine.pattern.Singleton import Singleton
-from libchristine.christineLogger import christineLogger
+from libchristine.Logger import LoggerManager
 
 class sqlite3db(Singleton):
 	def __init__(self):
@@ -44,7 +44,7 @@ class sqlite3db(Singleton):
 		self.connection.text_factory = str
 		self.cursor = self.connection.cursor()
 		self.cursor.row_factory = self.dict_factory
-		self.__logger = christineLogger('sqldb')
+		self.__logger = LoggerManager().getLogger('sqldb')
 		if not self.get_db_version():
 			self.__logger.debug('No se encontro la version de la base de datos.')
 			self.__logger.debug(self.get_db_version())

@@ -24,6 +24,7 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 from libchristine.pattern.Singleton import Singleton
 from libchristine.christineConf import christineConf
+from libchristine.Logger import LoggerManager
 
 class christineEvents(Singleton):
 	'''
@@ -44,6 +45,7 @@ class christineEvents(Singleton):
 		'''
 		Constructor: creates config if it doesn't exist
 		'''
+		self.__Logger = LoggerManager().getLogger('Events')
 		self.christineConf = christineConf()
 		if not self.christineConf.configParser.has_section('plugins'):
 			self.christineConf.configParser.add_section('plugins')

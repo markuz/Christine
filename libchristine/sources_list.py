@@ -22,8 +22,8 @@ from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.Share import Share
 from libchristine.Translator import  translate
 from libchristine.libs_christine import lib_library
-from christineLogger import christineLogger
 from libchristine.Storage.sqlitedb import sqlite3db
+from libchristine.Logger import LoggerManager
 import gtk
 
 (LIST_NAME,
@@ -33,7 +33,7 @@ LIST_PIXBUF) = xrange(3)
 class sources_list (GtkMisc):
 	def __init__(self):
 		GtkMisc.__init__(self)
-		self.__logger = christineLogger('sources_list')
+		self.__logger = LoggerManager().getLogger('sources_list')
 		self.__db = sqlite3db()
 		idlist = self.__db.PlaylistIDFromName(list)
 		if idlist != None:

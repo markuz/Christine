@@ -28,7 +28,7 @@ from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.LibraryModel import LibraryModel
 from libchristine.globalvars import CHRISTINE_VIDEO_EXT
-from libchristine.christineLogger import christineLogger
+from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
 from libchristine.Storage.sqlitedb import sqlite3db
 
@@ -560,7 +560,7 @@ class libraryBase(GtkMisc):
 class library(libraryBase):
 	def __init__(self):
 		libraryBase.__init__(self)
-		self.__logger = christineLogger('Library')
+		self.__logger = LoggerManager().getLogger('Library')
 		self.tv.connect('button-press-event', self.popupMenuHandlerEvent)
 		self.tv.connect('key-press-event',    self.handlerKeyPress)
 		self.tv.connect('row-activated',      self.itemActivated)
@@ -608,7 +608,7 @@ class library(libraryBase):
 class queue (libraryBase):
 	def __init__(self):
 		libraryBase.__init__(self)
-		self.__logger = christineLogger('Library')
+		self.__logger = LoggerManager().getLogger('Library')
 		self.loadLibrary('queue')
 		self.tv.connect('key-press-event', self.QueueHandlerKey)
 		gobject.timeout_add(500, self.checkQueue)

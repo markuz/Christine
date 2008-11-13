@@ -54,6 +54,7 @@ from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME
+from libchristine.Logger import LoggerManager
 import logging
 import webbrowser
 import gc
@@ -100,7 +101,7 @@ class Christine(GtkMisc):
 		initialize the gnome ui client, create the XML interface descriptor,
 		initialize class variables and create some timeouts calls
 		"""
-		self.__Logger = logging.getLogger('Christine')
+		self.__Logger = LoggerManager().getLogger('Christine')
 		GtkMisc.__init__(self)
 
 		self.share   = Share()

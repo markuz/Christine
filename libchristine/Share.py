@@ -29,7 +29,7 @@ from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.gui.GtkMisc import glade_xml
 from libchristine.globalvars import DATADIR
-from libchristine.christineLogger import christineLogger
+from libchristine.Logger import LoggerManager
 import os
 import gtk
 import sys
@@ -63,28 +63,18 @@ class Share(Singleton):
 	# @var string
 	__PathPixmap = None
 
-	#
-	# Constructor
-	#
-	# @param  string sharePath Path to share files
-	# @return void
 	def __init__(self):
 		"""
 		Constructor
 		"""
 		self.setName('Share')
-		self.__logger = christineLogger('Share')
+		self.__logger = LoggerManager().getLogger('Share')
 		self.__PathTemplate = os.path.join(SHARE_PATH, 'gui')
 		self.__PathPixmap   = os.path.join(self.__PathTemplate, 'pixmaps')
 		#self.__Pixmaps, used to store a pixmap. if it is here then reuse it
 		#instead of creating another one from the same faile
 		self.__Pixmaps = {}
 
-	#
-	# Gets glade template
-	#
-	# @param  string file The file name without extension
-	# @return string or None
 	def getTemplate(self, file = None, root = None):
 		"""
 		Gets glade template
@@ -95,12 +85,7 @@ class Share(Singleton):
 				return glade_xml(os.path.join(self.__PathTemplate, file),root)
 		self.__logger.warning('File %s was not found'%(os.path.join(self.__PathTemplate, file)))
 		return None
-
-	#
-	# Gets image as path string
-	#
-	# @param  string name The image name without extension
-	# @return string or None
+	
 	def getImage(self, name):
 		"""
 		Gets image as path string
@@ -113,11 +98,6 @@ class Share(Singleton):
 
 		return None
 
-	#
-	# Gets image as path string
-	#
-	# @param  string name The image name without extension
-	# @return string or None
 	def getImageFromPix(self, name):
 		"""
 		Gets image from pixbuf
