@@ -22,35 +22,56 @@ from libchristine.christineConf import christineConf
 from libchristine.Logger import LoggerManager
 from libchristine.Share import Share
 from libchristine.ui import interface
+from libchristine.Plugins.plugin_base import plugin_base
 
-class tryIcon:
+class tryicon(plugin_base):
 	'''
 	This class creates the tray icon for the christine media player.
 	'''
 	def __init__(self):
+		plugin_base.__init__(self)
+		self.name = 'TryIcon'
+		self.description = 'This plugins shows a Try Icon on the notification area'
+		self.christineConf   = christineConf()
+		if not self.christineConf.exists('trayicon/enabled'):
+			self.christineConf.setValue('trayicon/enabled', True)
+		self.christineConf.notifyAdd('trayicon/enabled', 
+							lambda *args: self.__create_and_delete())
 		self.__Share   = Share()
 		self.__Logger = LoggerManager().getLogger('tryIcon')
 		self.interface = interface()
 		self.__IsHidden =  False
-		print self.interface
-		self.__christineGconf   = christineConf()
+		
 		self.__buildTrayIcon()
-		self.pause = self.interface.coreClass.pause
-		self.goPrev = self.interface.coreClass.goPrev
-		self.goNext = self.interface.coreClass.goNext
 		self.interface.TrayIcon = self
-
+	
+	def __create_and_delete(self, *args):
+		if self.active:
+			self.__buildTrayIcon()
+		else:
+			del self.TrayIcon
+			#self.TrayIcon.destroy()
+	
+	def pause(self, *args):
+		self.interface.coreClass.pause(*args)
+	
+	def goPrev(self, *args):
+		self.interface.coreClass.goPrev(*args)
+	
+	def goNext(self,*args):
+		self.interface.coreClass.goNext(*args)
+	
 	def __buildTrayIcon(self):
 		"""
 		Show the TrayIcon
 		"""
-		self.TrayIcon = gtk.StatusIcon()
-		self.TrayIcon.set_from_pixbuf(self.__Share.getImageFromPix('trayicon'))
-		self.TrayIcon.connect('popup-menu', self.__trayIconHandlerEvent)
-		self.TrayIcon.connect('activate',   self.__trayIconActivated)
-		self.TrayIcon.set_tooltip('Christine Baby!')
-		value = self.__christineGconf.getBool('ui/show_in_notification_area')
-		self.TrayIcon.set_visible(value)
+		if self.active:
+			self.TrayIcon = gtk.StatusIcon()
+			self.TrayIcon.set_from_pixbuf(self.__Share.getImageFromPix('trayicon'))
+			self.TrayIcon.connect('popup-menu', self.__trayIconHandlerEvent)
+			self.TrayIcon.connect('activate',   self.__trayIconActivated)
+			self.TrayIcon.set_tooltip('Christine Baby!')
+			self.TrayIcon.set_visible(True)
 
 	def __trayIconHandlerEvent(self, widget, event, time):
 		"""
@@ -80,3 +101,12 @@ class tryIcon:
 
 	def trayIconPlay(self,widget = None):
 		self.interface.playButton.set_active(True)
+
+	def get_active(self):
+		return self.christineConf.getBool('trayicon/enabled')
+	
+	def set_active(self, value):
+		return self.christineConf.setValue('trayicon/enabled', value)
+
+	active = property(get_active, set_active, None,
+					'Determine if the plugin is active or inactive')

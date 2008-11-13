@@ -56,4 +56,4 @@ else:
 
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
 LOCALE_DIR = "/usr/local/share/locale/"
-BUGURL='https://bugs.launchpad.net/christine'
+BUGURL='https://sourceforge.net/tracker2/?atid=845044&group_id=167966&func=browse'

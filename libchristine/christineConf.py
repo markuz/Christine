@@ -102,6 +102,19 @@ class christineConf(Singleton):
 		f.close()
 		del f
 		return True
+	
+	def exists(self, path):
+		'''
+		Creates a new section/key 
+		@param path:
+		'''
+		sp = path.split('/')
+		if len(sp) < 2:
+			return False
+		
+		if self.configParser.has_section(sp[0]) and \
+		 	self.configParser.has_option(sp[0], sp[1]):
+			return True
 
 	def resetDefaults(self):
 		'''

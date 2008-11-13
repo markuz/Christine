@@ -44,9 +44,7 @@ from libchristine.gui.Preferences import guiPreferences
 from libchristine.gui.About import guiAbout
 from libchristine.gui.Display import Display
 from libchristine.globalvars import PROGRAMNAME, BUGURL
-from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.ui import interface
-from libchristine.tryicon import tryIcon
 from libchristine.gui.openRemote import openRemote
 from libchristine.Library import library, queue,PATH
 from libchristine.Library import NAME,PIX,PLAY_COUNT,TIME
@@ -106,7 +104,6 @@ class Christine(GtkMisc):
 
 		self.share   = Share()
 		self.christineConf   = christineConf()
-		self.__sqlite = sqlite3db()
 		self.interface = interface()
 		self.interface.coreClass = self
 
@@ -126,7 +123,7 @@ class Christine(GtkMisc):
 		self.__lastTypeTime		= time.time()
 
 		# Create the try icon.
-		tryIcon()
+		#tryIcon()
 
 		self.christineConf.notifyAdd('ui/show_in_notification_area',
 				lambda cl,cnx,entry,widget: \
