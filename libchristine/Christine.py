@@ -1170,54 +1170,34 @@ class Christine(GtkMisc):
 		album     = self.__Player.getTag('album')
 		genre     = self.__Player.getTag('genre')
 		type_file = self.__Player.getType()
-
 		tags = [title,artist,album,genre]
-
 		if tags == self.__LastTags:
 			return True
 		else:
 			self.__LastTags = tags
-
 		if (type(genre) == type([])):
 			genre = ','.join(genre)
 		elif type(genre) != type(""):
 			genre = ""
-
 		track_number = self.__Player.getTag('track-number')
 		if type(track_number) == type(""):
 			if track_number.isdigit():
 				track_number = int(track_number)
 			else:
 				track_number = 0
-
 		if (title == ''):
 			title = os.path.split(self.__Player.getLocation())[1]
 			title = '.'.join(title.split('.')[:-1])
-
 		# stript_XML_entities is a method inherited from gtk_misc
 		tooltext = title
 		title    = self.strip_XML_entities(title)
-
 		# Sets window title, which it will be our current song :-)
 		self.coreWindow.set_title("%s - Christine" % title)
-
-		# Show or hide deppending if there are something
-		# to show or hide
+		# Show or hide deppending if there are something to show or hide
 		if (artist != ''):
 			tooltext    += "\nby %s" % artist
 		if (album != ''):
 			tooltext    += "\nfrom %s" % album
-
-		search = '.'.join([title,artist, album, genre, type_file])
-
-		self.mainLibrary.updateData(self.__Player.getLocation(),
-								title=title,
-								album= album,
-								artist=artist,
-								track_number=track_number,
-								search=search,
-								genre=genre)
-		
 		tags = {'title': title, 'artist': artist, 'album': album,
 			'track_number': track_number, 'genre': genre}
 		self.Events.emit('gotTags', tags)

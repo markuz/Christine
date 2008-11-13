@@ -31,6 +31,7 @@ from libchristine.globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
 from libchristine.Storage.sqlitedb import sqlite3db
+from libchristine.Events import christineEvents
 
 (PATH,
 NAME,
@@ -75,6 +76,7 @@ class libraryBase(GtkMisc):
 		self.interface = interface()
 		self.db = sqlite3db()
 		self.tagger = Tagger()
+		self.Events = christineEvents()
 		#self.__row_changed_id = 0
 		#self.__appending = False
 		#self.__setting = False
@@ -90,7 +92,7 @@ class libraryBase(GtkMisc):
 		self.scroll.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
 		self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 		self.scroll.add(self.tv)
-
+		
 	def loadLibrary(self, library):
 		#if self.__row_changed_id:
 		#	self.model.disconnect(self.__row_changed_id)
@@ -565,6 +567,25 @@ class library(libraryBase):
 		self.tv.connect('key-press-event',    self.handlerKeyPress)
 		self.tv.connect('row-activated',      self.itemActivated)
 		self.scroll.show_all()
+		self.Events.addWatcher('gotTags', self.gotTags)
+	
+	def gotTags(self, tags):
+		title = tags['title']
+		artist = tags['artist']
+		album = tags['album']
+		genre = tags['genre']
+		track_number  = tags['track_number']
+		type_file = self.interface.Player.getType()
+		
+		search = '.'.join([title,artist, album, genre, type_file])
+
+		self.updateData(self.interface.Player.getLocation(),
+								title=title,
+								album= album,
+								artist=artist,
+								track_number=track_number,
+								search=search,
+								genre=genre)
 
 	def handlerKeyPress(self, treeview, event):
 		"""
