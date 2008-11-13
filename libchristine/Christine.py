@@ -481,7 +481,7 @@ class Christine(GtkMisc):
 		if (not self.__IsFullScreen):
 			if ((self.__Player.isVideo()) or (self.christineConf.getBool('ui/visualization'))):
 				self.coreWindow.fullscreen()
-				self.mainLibray.scroll.set_size_request(0,0)
+				#self.mainLibray.scroll.set_size_request(0,0)
 				self.__VBoxList.set_size_request(0,0)
 
 				self.__IsFullScreen = True
