@@ -31,6 +31,7 @@ import gobject
 import math
 from libchristine.Validator import *
 from libchristine.gui.GtkMisc import CairoMisc, GtkMisc
+from libchristine.Events import christineEvents
 
 BORDER_WIDTH  = 3
 POS_INCREMENT = 3
@@ -51,6 +52,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		gtk.DrawingArea.__init__(self)
 		CairoMisc.__init__(self)
 		GtkMisc.__init__(self)
+		self.Events = christineEvents()
 
 		self.__color1 = gtk.gdk.color_parse('#FFFFFF')
 		self.__color2 = gtk.gdk.color_parse('#3D3D3D')
@@ -77,7 +79,17 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.__Value          = 0
 		self.setText(text)
 		self.set_size_request(150, 2)
-
+		self.Events.addWatcher('gotTags', self.gotTags)
+	
+	def gotTags(self, tags):
+		tooltext = tags['title']
+		if (tags['artist'] != ''):
+			tooltext    += " by %s" % tags['artist']
+		if (tags['album'] != ''):
+			tooltext    +=  " from %s" % tags['album']
+		if tooltext:
+			self.setSong(tooltext)
+			
 	def __emit(self):
 		'''
 		Emits an expose event

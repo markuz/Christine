@@ -1169,7 +1169,6 @@ class Christine(GtkMisc):
 		artist    = self.__Player.getTag('artist')
 		album     = self.__Player.getTag('album')
 		genre     = self.__Player.getTag('genre')
-		type_file = self.__Player.getType()
 		tags = [title,artist,album,genre]
 		if tags == self.__LastTags:
 			return True
@@ -1188,21 +1187,12 @@ class Christine(GtkMisc):
 		if (title == ''):
 			title = os.path.split(self.__Player.getLocation())[1]
 			title = '.'.join(title.split('.')[:-1])
-		# stript_XML_entities is a method inherited from gtk_misc
-		tooltext = title
 		title    = self.strip_XML_entities(title)
 		# Sets window title, which it will be our current song :-)
 		self.coreWindow.set_title("%s - Christine" % title)
-		# Show or hide deppending if there are something to show or hide
-		if (artist != ''):
-			tooltext    += "\nby %s" % artist
-		if (album != ''):
-			tooltext    += "\nfrom %s" % album
 		tags = {'title': title, 'artist': artist, 'album': album,
 			'track_number': track_number, 'genre': genre}
 		self.Events.emit('gotTags', tags)
-		if tooltext:
-			self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()
 
 	########################################
