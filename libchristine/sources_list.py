@@ -86,9 +86,7 @@ class sources_list (GtkMisc):
 		entry = xml['entry']
 		response = dialog.run()
 		if response == 1:
-			exists = False
 			for row in self.model:
-				print row, LIST_NAME
 				name = row[LIST_NAME]
 				if entry.get_text() != name:
 					self.__db.addPlaylist(entry.get_text())

@@ -609,6 +609,7 @@ class Christine(GtkMisc):
 			else:
 				self.setLocation(location)
 			self.__Player.playIt()
+			
 	def simplePlay(self):
 		'''
 		
@@ -950,7 +951,8 @@ class Christine(GtkMisc):
 		label = xml['label1']
 		self.__walking = True
 		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
-		gobject.timeout_add(100, self.__walkProgressPulse,progress)
+		#gobject.timeout_add(100, self.__walkProgressPulse,progress)
+		gobject.idle_add(self.__walkProgressPulse, progress)
 		response = dialog.run()
 		if response:
 			self.__walking = False
@@ -958,7 +960,7 @@ class Christine(GtkMisc):
 
 	def __walkProgressPulse(self, progress):
 		progress.pulse()
-		return True
+		return not self.__walking
 
 	def __walkDirectories(self, a, f, filenames, label, dialog):
 		if not self.__walking:
@@ -970,13 +972,15 @@ class Christine(GtkMisc):
 			try:
 				npath = u'%s'%dirpath.decode('latin-1')
 				npath = u'%s'%npath.encode('latin-1')
-			except Exception, e:
+			except:
 				return True
-			label.set_text('Exploring %s'%npath)
+			label.set_text(translate('Exploring') + '%s'%npath)
+			allowdexts = self.christineConf.getString('backend/allowed_files')
+			allowdexts = allowdexts.split(',')
 			for path in filenames[-1][1]:
 				ext    = path.split('.').pop().lower()
 				exists = os.path.join(filenames[-1][0], path) in self.f
-				if ext in self.christineConf.getString('backend/allowed_files').split(',') and not exists:
+				if ext in allowdexts and not exists:
 					f.append(os.path.join(filenames[-1][0],path))
 		except StopIteration:
 			dialog.destroy()
@@ -1008,6 +1012,7 @@ class Christine(GtkMisc):
 		else:
 			library.save()
 			self.__AddWindow.destroy()
+			self.__walking = False
 			return False
 		return True
 
@@ -1155,8 +1160,7 @@ class Christine(GtkMisc):
 			self.__ErrorStreamCount += 1
 			if (self.__ErrorStreamCount > 10):
 				self.setLocation(self.__Player.getLocation())
-				self.PlayButton.set_active(False)
-				self.PlayButton.set_active(True)
+				self.simplePlay()
 
 			return True
 
@@ -1211,10 +1215,8 @@ class Christine(GtkMisc):
 		if (self.__Player.isVideo()):
 			self.__HBoxPlayer.show_all()
 		else:
-			if (self.christineConf.getBool('ui/visualization') and isPlaying):
-				self.__HBoxPlayer.show_all()
-			else:
-				self.__HBoxPlayer.hide()
+			visible = self.christineConf.getBool('ui/visualization') and isPlaying
+			self.__HBoxPlayer.set_property('visible', visible) 
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")
