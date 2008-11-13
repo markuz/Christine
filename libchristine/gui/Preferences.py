@@ -250,17 +250,6 @@ class guiPreferences(GtkMisc):
 		self.__Genre.set_active(self.__GConf.getBool('ui/show_genre'))
 		self.__Genre.connect('toggled',self.__GConf.toggle,'ui/show_genre')
 
-#===============================================================================
-#		self__NotifyArea = self.XML['notification_area']
-#		self__NotifyArea.set_active(self.__GConf.getBool('ui/show_in_notification_area'))
-#		self__NotifyArea.connect('toggled',self.__GConf.toggle,'ui/show_in_notification_area')
-# 
-#		self.__LibNotify = self.XML['pynotify']
-#		self.__LibNotify.set_active(self.__GConf.getBool('ui/show_pynotify'))
-#		self.__LibNotify.connect('toggled',self.__GConf.toggle,'ui/show_pynotify')
-#===============================================================================
-
-
 	def __set_plugins_columns(self):
 		textrender = gtk.CellRendererText()
 		boolrender = gtk.CellRendererToggle()

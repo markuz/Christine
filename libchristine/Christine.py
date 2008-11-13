@@ -53,6 +53,7 @@ from libchristine.Share import Share
 from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME
 from libchristine.Logger import LoggerManager
+from libchristine.Events import christineEvents
 import logging
 import webbrowser
 import gc
@@ -63,30 +64,13 @@ gc.enable()
 plugins_manager = Manager()
 
 def close(*args):
-	pidfile = 	os.path.join(os.environ['HOME'],'.christine',
-								'christine.pid')
+	pidfile = 	os.path.join(os.environ['HOME'],'.christine','christine.pid')
 	if os.path.exists(pidfile):
 		os.unlink(pidfile)
 	gtk.main_quit()
 
 
 signal.signal(signal.SIGTERM, close)
-
-
-
-try:
-	import pynotify
-	pynotify.Urgency(pynotify.URGENCY_NORMAL)
-	pynotify.init(PROGRAMNAME)
-	version = pynotify.get_server_info()['version'].split('.')
-
-	if (version < [0, 3, 6]):
-		raise ImportError("server version is %d.%d.%d, 0.3.6 or major required" % version)
-
-	PYNOTIFY = True
-except ImportError:
-	print 'no pynotify available'
-	PYNOTIFY = False
 
 if (gtk.gtk_version < (2, 10, 0)):
 	print translate('Gtk+ 2.10 or better is required')
@@ -106,6 +90,7 @@ class Christine(GtkMisc):
 		self.christineConf   = christineConf()
 		self.interface = interface()
 		self.interface.coreClass = self
+		self.Events = christineEvents()
 
 		# Class variables
 		self.__ErrorStreamCount = 0
@@ -1237,19 +1222,13 @@ class Christine(GtkMisc):
 								track_number=track_number,
 								search=search,
 								genre=genre)
+		
+		tags = {'title': title, 'artist': artist, 'album': album,
+			'track_number': track_number, 'genre': genre}
+		self.Events.emit('gotTags', tags)
+		print self.Events
 
-		if ((PYNOTIFY) and (self.christineConf.getBool('ui/show_pynotify'))):
-			if getattr(self, 'Notify', False):
-				self.Notify.close()
-			pixmap = self.share.getImage('trayicon')
-			self.Notify = pynotify.Notification('christine', '',pixmap)
-
-			if (self.christineConf.getBool('ui/show_in_notification_area')):
-				if getattr(self, 'Notify', False):
-					self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
-				self.interface.TrayIcon.TrayIcon.set_tooltip(tooltext)
-			self.Notify.set_property('body', notify_text)
-			self.Notify.show()
+		
 		self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
 		if tooltext != '':
 			self.__Display.setSong(tooltext.replace('\n', ' '))
