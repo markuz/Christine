@@ -863,7 +863,7 @@ class Christine(GtkMisc):
 			self.__HScaleVolume.set_value(self.__Volume)
 
 	####################################################
-	#               libraty stuff begins               #
+	#               library stuff begins               #
 	####################################################
 
 	def importFile(self, widget, queue = False):
@@ -1201,16 +1201,11 @@ class Christine(GtkMisc):
 		# Sets window title, which it will be our current song :-)
 		self.coreWindow.set_title("%s - Christine" % title)
 
-		notify_text = "<big>%s</big>\n" % title
-
 		# Show or hide deppending if there are something
 		# to show or hide
 		if (artist != ''):
-			notify_text += " by <big>%s</big>\n" % artist
 			tooltext    += "\nby %s" % artist
-
 		if (album != ''):
-			notify_text += " from <big>%s</big>" % album
 			tooltext    += "\nfrom %s" % album
 
 		search = '.'.join([title,artist, album, genre, type_file])
@@ -1226,11 +1221,7 @@ class Christine(GtkMisc):
 		tags = {'title': title, 'artist': artist, 'album': album,
 			'track_number': track_number, 'genre': genre}
 		self.Events.emit('gotTags', tags)
-		print self.Events
-
-		
-		self.interface.TrayIcon.TrayIcon.set_tooltip(title + ' - ' + artist)
-		if tooltext != '':
+		if tooltext:
 			self.__Display.setSong(tooltext.replace('\n', ' '))
 		self.visualModePlayer()
 

@@ -23,6 +23,7 @@ from libchristine.Logger import LoggerManager
 from libchristine.Share import Share
 from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Events import christineEvents
 
 class tryicon(plugin_base):
 	'''
@@ -33,6 +34,7 @@ class tryicon(plugin_base):
 		self.name = 'TryIcon'
 		self.description = 'This plugins shows a Try Icon on the notification area'
 		self.christineConf   = christineConf()
+		self.Events = christineEvents()
 		if not self.christineConf.exists('trayicon/enabled'):
 			self.christineConf.setValue('trayicon/enabled', True)
 		self.christineConf.notifyAdd('trayicon/enabled', 
@@ -41,8 +43,9 @@ class tryicon(plugin_base):
 		self.__Logger = LoggerManager().getLogger('tryIcon')
 		self.interface = interface()
 		self.__IsHidden =  False
-		
 		self.__buildTrayIcon()
+		self.Events.addWatcher('gotTags', self.gotTags)
+		
 		self.interface.TrayIcon = self
 	
 	def __create_and_delete(self, *args):
@@ -101,6 +104,16 @@ class tryicon(plugin_base):
 
 	def trayIconPlay(self,widget = None):
 		self.interface.playButton.set_active(True)
+	
+	def gotTags(self, tags):
+		if self.active:
+			tooltext = "%s\n" % tags['title']
+			if tags['artist']:
+				tooltext += "by %s\n" % tags['artist']
+			if tags['album']:
+				tooltext += " from %s " % tags['album']
+			self.TrayIcon.set_tooltip(tooltext)	
+			
 
 	def get_active(self):
 		return self.christineConf.getBool('trayicon/enabled')

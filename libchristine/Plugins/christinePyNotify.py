@@ -49,7 +49,6 @@ class christinePyNotify(plugin_base):
 		self.description = 'Shows notify bubbles'
 		self.christineConf   = christineConf()
 		self.Events = christineEvents()
-		print self.Events
 		if not self.christineConf.exists('pynotify/enabled'):
 			self.christineConf.setValue('pynotify/enabled', True)
 		self.__Share   = Share()
