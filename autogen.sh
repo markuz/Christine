@@ -84,7 +84,9 @@ esac
 	  echo "intltoolize"
 	  intltoolize --force --copy --automake	  
       echo "Running aclocal --install ..."
-	  mkdir m4
+	  if ! [ -d m4 ]; then
+		  mkdir m4
+	  fi
       aclocal -I m4 --install
       if grep "^AM_CONFIG_HEADER" configure.ac >/dev/null; then
         echo "Running autoheader..."

@@ -1,23 +1,27 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
-scripts_DATA=__init__.py \
+scripts_DATA=christineConf.py \
+			christineLogger.py \
+			Christine.py \
+			Events.py \
+			globalvars.py \
+			__init__.py \
+			LibraryModel.py \
 			Library.py \
 			libs_christine.py \
+			Logger.py \
+			options.py \
 			Player.py \
-			sources_list.py \
-			Translator.py \
-			Christine.py \
+			Sanity.py \
 			Share.py \
-			Validator.py \
-			christineConf.py \
+			sources_list.py \
 			Tagger.py \
-			LibraryModel.py \
-			globalvars.py \
-			christineLogger.py \
+			Translator.py \
 			ui.py \
-			tryicon.py
+			Validator.py
 
 DISTFILES= Makefile.in \
+		   globalvars.py.in\
 			${scripts_DATA}
 
 

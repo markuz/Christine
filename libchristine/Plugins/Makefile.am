@@ -3,6 +3,8 @@ scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins
 scripts_DATA=__init__.py \
 			 twitter.py \
 			 pidgin.py \
+			 christinePyNotify.py \
+			 tryicon.py \
 			 plugin_base.py
 
 

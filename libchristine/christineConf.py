@@ -94,7 +94,6 @@ class christineConf(Singleton):
 		self.configParser.set('backend','allowed_files','mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav')
 		self.configParser.set('backend','vis-plugin','goom')
 		self.configParser.set('backend','last_played','')
-		self.configParser.set('pidgin','message',"Escuchando: _artist_ - _title_ - en Christine")
 		self.configParser.write(f)
 		f.close()
 		f = open(self.filepath, 'r')

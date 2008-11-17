@@ -33,9 +33,9 @@ import sys
 
 VERSION = '0.2.0_r1'
 PROGRAMNAME = 'christine'
-DATADIR = '/usr/local/share'
-PREFIX = '/usr/local'
-SYSCONFDIR = '/usr/local/etc'
+DATADIR = '/usr/share'
+PREFIX = '/usr'
+SYSCONFDIR = '/usr/etc'
 USERDIR  = os.path.join(os.environ["HOME"],".christine")
 
 
@@ -51,9 +51,9 @@ if "--devel" in sys.argv:
 	SHARE_PATH = os.path.join("./")
 	PLUGINSDIR = './libchristine/Plugins'
 else:
-	SHARE_PATH = os.path.join('/usr/local/share', 'christine')
+	SHARE_PATH = os.path.join('/usr/share', 'christine')
 	PLUGINSDIR = '/usr/lib/python2.5/site-packages/libchristine/Plugins'
 
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
-LOCALE_DIR = "/usr/local/share/locale/"
+LOCALE_DIR = "/usr/share/locale/"
 BUGURL='https://sourceforge.net/tracker2/?atid=845044&group_id=167966&func=browse'

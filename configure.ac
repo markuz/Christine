@@ -1,6 +1,9 @@
 AC_INIT('christine', '0.2.0_r1', 'markuz@islascruz.org')
 AM_INIT_AUTOMAKE('christine', '0.2.0_r1')
 
+AC_CONFIG_MACRO_DIR([m4])
+
+AC_GNU_SOURCE
 AC_CONFIG_SRCDIR(libchristine)
 AC_CONFIG_SRCDIR(gui)
 
@@ -15,7 +18,7 @@ AC_PYTHON_DEVEL(">= '2.4'")
 AM_MAINTAINER_MODE
 AM_PATH_PYTHON(2.4)
 AM_PROG_LIBTOOL
-LIBTOOL="$LIBTOOL --silent"
+LIBTOOL="$LIBTOOL"
 AC_PROG_CC
 AC_PROG_INSTALL
 PKG_PROG_PKG_CONFIG
@@ -131,6 +134,7 @@ libchristine/Makefile
 libchristine/pattern/Makefile
 libchristine/gui/Makefile
 libchristine/Storage/Makefile
+libchristine/Plugins/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
 po/Makefile

@@ -22,5 +22,4 @@ except Exception, e:
 		print e
 	else:
 		BugReport()
-
 a.runGtk()

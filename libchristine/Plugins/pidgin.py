@@ -44,11 +44,16 @@ class pidgin(plugin_base):
 		self.description = 'This plugin set the song you are playing on pidgin'
 		self.obj = None
 		self.interface = interface()
-		#self.christineConf.notifyAdd('backend/last_played', self.set_message)
 		self.events.addToEvent('onPlay', self.set_message)
 		self.Share = Share()
 		self.SessionStart()
 		self.tagger = Tagger()
+		self.__create_conf_entries()
+	
+	def __create_conf_entries(self):
+		if not self.christineConf.configParser.has_section('pidgin'):
+			self.christineConf.configParser.add_section('pidgin')
+		self.christineConf.configParser.set('pidgin','message',"_artist_ - _title_ - on Christine")
 
 	def configure(self):
 		'''
