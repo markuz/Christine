@@ -31,7 +31,7 @@
 import os
 import sys
 
-VERSION = '0.2.0_r1'
+VERSION = '0.2.0_alpha1'
 PROGRAMNAME = 'christine'
 DATADIR = '/usr/share'
 PREFIX = '/usr'

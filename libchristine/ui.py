@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# -*- coding: latin-1 -*-
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
 # This program is free software; you can redistribute it and/or modify

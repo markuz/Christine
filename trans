@@ -5,16 +5,21 @@
 
 LOCATIONS=`ls -1 --color=none libchristine/*py` 
 LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/pattern/*py`"
-LCOATIONS="$LOCATIONS `ls -1 --color=none gui/*glade`"
+LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/Plugins/*py`"
+LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/gui/*py`"
+LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/Storage/*py`"
+LOCATIONS="$LOCATIONS `ls -1 --color=none gui/*glade`"
 
-TRANSLATIONS="christine es_ES"
+TRANSLATIONS="christine es_ES ca cs da de el en_GB  eu fr hu it nl pt sv_FI sv"
 
 for i in $TRANSLATIONS; do
-	echo "$i.po"
 	if [ "x$i" == "xchristine" ]; then
 		end='pot';
+		xgettext -p po  -o $i.$end -l --keyword=translate --keyword=_N --keyword=_ --from-code=Glade $LOCATIONS
 	else
 		end='po';
+		xgettext -p po -j -o $i.$end -l --keyword=translate --keyword=_N --keyword=_ --from-code=Glade $LOCATIONS
 	fi
-	xgettext -p po -j -o $i.$end -l --keyword=translate --keyword=_N --from-code=Glade $LOCATIONS
+	echo "$i.$end"
+
 done

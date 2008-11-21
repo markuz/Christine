@@ -1,5 +1,3 @@
-# -*- coding: latin-1 -*-
-#
 # This file is part of the Christine project
 #
 # Copyright (c) 2006-2007 Marco Antonio Islas Cruz
