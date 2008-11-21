@@ -2,29 +2,31 @@ SUBDIRS=pixmaps
 scriptsdir = @datadir@/christine/gui
 
 scripts_DATA= About.glade \
+addFiles.glade \
+deleteFileFromDisk.glade \
+deleteQuestion.glade \
+directorySelector.glade \
 Error.glade \
+errorReporter.glade \
 FileSelector.glade \
+genericQuestion.glade \
+iconView.glade \
 JumpTo.glade \
+mainWindow.glade \
 MenuTrayIcon.glade \
+miniViewer.glade \
+NewSourceDialog.glade \
+openRemote.glade \
+plugin_lastfm_main.glade \
+plugin_pidgin_main.glade \
 PopupMenu.glade \
 Preferences.glade \
 Properties.glade \
+SourcesList.glade \
 TreeViewReorderable.glade \
 TreeViewSources.glade \
-WindowCore.glade \
-addFiles.glade \
-deleteFileFromDisk.glade \
-directorySelector.glade \
-iconView.glade \
-miniViewer.glade \
-openRemote.glade \
-deleteQuestion.glade \
-genericQuestion.glade \
-SourcesList.glade \
-NewSourceDialog.glade \
-errorReporter.glade \
-walkdirectories.glade
-
+walkdirectories.glade \
+WindowCore.glade
 
 DISTFILES= Makefile.in $(scripts_DATA)
 
