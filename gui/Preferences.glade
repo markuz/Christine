@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Nov 13 01:49:41 2008 
+<!--Generated with glade3 3.4.5 on Tue Nov 25 14:37:21 2008 
 	Version: 3.0.1
 	Date: Wed Dec 27 19:54:15 2006
 	User: markuz
@@ -198,7 +198,8 @@
                                 <property name="items" translatable="yes">gconfaudiosink
 alsasink
 esdsink
-autoaudiosink</property>
+autoaudiosink
+pulsesink</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
