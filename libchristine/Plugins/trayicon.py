@@ -24,7 +24,7 @@ from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base
 from libchristine.Events import christineEvents
 
-class tryicon(plugin_base):
+class trayicon(plugin_base):
 	'''
 	This class creates the tray icon for the christine media player.
 	'''

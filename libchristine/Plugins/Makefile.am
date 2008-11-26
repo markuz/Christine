@@ -4,7 +4,7 @@ scripts_DATA=__init__.py \
 			 twitter.py \
 			 pidgin.py \
 			 christinePyNotify.py \
-			 tryicon.py \
+			 trayicon.py \
 			 plugin_base.py
 
 
