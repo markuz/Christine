@@ -744,6 +744,6 @@ class queue (libraryBase):
 		return True
 	
 	def itemActivated(self,widget, path, iter):
-		libraryBase.itemActivated(widget, path, iter)
+		libraryBase.itemActivated(self, widget, path, iter)
 		model    = widget.get_model()
 		model.remove(iter)
