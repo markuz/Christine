@@ -97,10 +97,13 @@ class libraryBase(GtkMisc):
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
 			self.last_scroll_time = time.time()
-			gobject.timeout_add(100, self.__check_file_data)
+			gobject.timeout_add(100, self.check_file_data)
 	
-	def __check_file_data(self):
-		diff = time.time() - self.last_scroll_time
+	def check_file_data(self, override = False):
+		if not override:
+			diff = time.time() - self.last_scroll_time
+		else:
+			diff = 0.6
 		if diff > 0.5 and diff < 1 :
 			paths = self.tv.get_visible_range()
 			if paths:
@@ -637,6 +640,7 @@ class library(libraryBase):
 								track_number=track_number,
 								search=search,
 								genre=genre)
+		self.check_file_data(True)
 
 	def handlerKeyPress(self, treeview, event):
 		"""
