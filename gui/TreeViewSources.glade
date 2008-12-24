@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.0.3 on Sun Apr  8 20:21:41 2007 by markuz@cucusa
+<!--Generated with glade3 3.4.5 on Tue Dec 23 22:10:30 2008 
 	Version: 3.0.1
 	Date: Tue Dec 12 21:26:00 2006
 	User: markuz
@@ -9,10 +9,20 @@
 <glade-interface>
   <widget class="GtkWindow" id="window1">
     <child>
-      <widget class="GtkTreeView" id="treeview">
+      <widget class="GtkScrolledWindow" id="scrolledwindow">
         <property name="visible">True</property>
-        <property name="rules_hint">True</property>
-        <property name="enable_search">False</property>
+        <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+        <property name="window_placement_set">True</property>
+        <property name="shadow_type">GTK_SHADOW_IN</property>
+        <child>
+          <widget class="GtkTreeView" id="treeview">
+            <property name="visible">True</property>
+            <property name="rules_hint">True</property>
+            <property name="enable_search">False</property>
+          </widget>
+        </child>
       </widget>
     </child>
   </widget>

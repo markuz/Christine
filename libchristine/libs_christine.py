@@ -150,5 +150,11 @@ class lib_library(object):
 				a[i] = self.__files[i]
 		return a
 
-
+	def get_by_path(self, path):
+		'''
+		Return the info os a song in the given path, if path doesn't exists 
+		then return None
+		@param path: Path of the file to be looked.
+		'''
+		return self.__db.getItemByPath(path)
 

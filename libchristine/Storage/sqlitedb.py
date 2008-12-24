@@ -201,6 +201,7 @@ class sqlite3db(Singleton):
 		vals.append(path)
 		vals = tuple(vals)
 		self.execute(strSQL,*vals)
+		self.commit()
 
 	def removeItem(self, path, playlist):
 		'''
@@ -271,7 +272,6 @@ class sqlite3db(Singleton):
 		self.execute(strSQL)
 		self.commit()
 		
-
 	def getItemsForPlaylist(self, playlistid):
 		'''
 		Return all the items on a given playlist
@@ -306,7 +306,7 @@ class sqlite3db(Singleton):
 		Return the values of a item by the given path
 		@param path: Ruta en la que se encuentra el archivo
 		'''
-		strSQL = 'select * from items where path=?'
+		strSQL = 'SELECT * FROM items WHERE path=?'
 		self.execute(strSQL,path)
 		return self.fetchone()
 
@@ -328,8 +328,6 @@ class sqlite3db(Singleton):
 		strSQL = 'SELECT * FROM playlists WHERE name <> "queue" '
 		self.execute(strSQL)
 		return self.fetchall()		
-
-
 
 
 

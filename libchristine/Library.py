@@ -17,7 +17,7 @@
 
 
 
-import os,gtk,gobject,sys,pango
+import os,gtk,gobject,sys,pango, time
 import gst
 from libchristine.libs_christine import lib_library
 from libchristine.gui.GtkMisc import GtkMisc, error
@@ -76,10 +76,11 @@ class libraryBase(GtkMisc):
 		self.db = sqlite3db()
 		self.tagger = Tagger()
 		self.Events = christineEvents()
+		self.last_scroll_time = 0
 		#self.__row_changed_id = 0
 		#self.__appending = False
 		#self.__setting = False
-		self.__xml = self.share.getTemplate("TreeViewSources","treeview")
+		self.__xml = self.share.getTemplate("TreeViewSources","scrolledwindow")
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
 		self.tv = self.__xml["treeview"]
@@ -87,11 +88,58 @@ class libraryBase(GtkMisc):
 		self.blank_pix = self.share.getImageFromPix("blank")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.add_columns()
-		self.scroll = gtk.ScrolledWindow()
-		self.scroll.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
-		self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-		self.scroll.add(self.tv)
-		
+		self.scroll = self.__xml['scrolledwindow']
+		self.scroll.add_events(gtk.gdk.SCROLL_MASK)
+		#self.scroll.connect('scroll-event', self.__check_file_data)
+		self.scroll.connect('scroll-event', self.__scroll_child)
+		self.tv.connect('scroll-event', self.__scroll_child)
+	
+	def __scroll_child(self, scroll, event):
+		if event.type == gtk.gdk.SCROLL:
+			self.last_scroll_time = time.time()
+			gobject.timeout_add(100, self.__check_file_data)
+	
+	def __check_file_data(self):
+		diff = time.time() - self.last_scroll_time
+		if diff > 0.5 and diff < 1 :
+			paths = self.tv.get_visible_range()
+			if paths:
+				startpath = paths[0][0]
+				endpath = paths[1][0]
+				model = self.model.getModel()
+				for i in range(startpath, endpath +1):
+					siter = model.get_iter(i)
+					#niter = self.model.getNaturalIter(siter)
+					filepath  = self.model.get_value(siter, PATH)
+					title  = self.model.get_value(siter, NAME)
+					album  = self.model.get_value(siter, ALBUM)
+					artist  = self.model.get_value(siter, ARTIST)
+					if not title or not album or not artist:
+						metatags = self.tagger.readTags(filepath)
+					else:
+						metatags = self.library_lib.get_by_path(filepath)
+					try:
+						tn = int(metatags['track'])
+					except:
+						tn = 0
+					if not metatags['title']:
+						filenamesplit = os.path.split(filepath)[1]
+						metatags['title'] = filenamesplit.split('.')[0]
+					kwargs = {"title":metatags['title'],
+							"artist":metatags['artist'],
+							"album":metatags['album'],
+							"track_number": tn, 
+							"play_count":0,
+							"time":'0:00',
+							"genre":metatags['genre'],}
+						#self.library_lib.updateItem(filepath, **kwargs)
+					self.updateData(filepath,**kwargs)
+		if diff > 1.5:
+			return False
+		return True
+			
+		return False
+
 	def loadLibrary(self, library):
 		#if self.__row_changed_id:
 		#	self.model.disconnect(self.__row_changed_id)
@@ -308,7 +356,13 @@ class libraryBase(GtkMisc):
 		################################
 		vals = self.db.getItemByPath(file)
 		if not vals:
-			tags = self.tagger.readTags(file)
+			#tags = self.tagger.readTags(file)
+			tags = {}
+			tags['title'] = os.path.split(file)[1].split('.')[0]
+			tags['album'] =  ''
+			tags['artist'] = ''
+			tags['track'] = ''
+			tags['genre'] = ''
 		else:
 			tags = {}
 			tags['title'] = self.encode_text(self.strip_XML_entities(vals['title']))

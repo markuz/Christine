@@ -212,6 +212,7 @@ class christineModel(gtk.GenericTreeModel):
 		self.invalidate_iters()
 		gc.collect()
 	
+		
 class LibraryModel:
 	'''This is a custom model that
 	implements ListStore, Filter and Sortable
@@ -250,12 +251,12 @@ class LibraryModel:
 		self.__filter.refilter()
 
 	def remove(self,iter):
-		iter = self.__getNaturalIter(iter)
+		iter = self.getNaturalIter(iter)
 		if iter != None:
 			self.basemodel.remove(iter)
 	
 	def get_path(self, iter):
-		iter = self.__getNaturalIter(iter)
+		iter = self.getNaturalIter(iter)
 		if iter != None:
 			return self.basemodel.get_path(iter)
 	
@@ -263,7 +264,7 @@ class LibraryModel:
 		return self.__sorted.get_path(iter)
 
 	def getValue(self,iter,column):
-		niter = self.__getNaturalIter(iter)
+		niter = self.getNaturalIter(iter)
 		if niter != None:
 			return self.basemodel.get_value(niter,column)
 
@@ -294,7 +295,7 @@ class LibraryModel:
 		@param iter:
 		@param column:
 		'''
-		iter = self.__getNaturalIter(iter)
+		iter = self.getNaturalIter(iter)
 		if iter != None:
 			return self.basemodel.get_value(iter, column)
 
@@ -318,7 +319,7 @@ class LibraryModel:
 		path = self.__filter.convert_child_path_to_path(path)
 		return path
 
-	def __getNaturalIter(self,iter):
+	def getNaturalIter(self,iter):
 		if self.basemodel.iter_is_valid(iter):
 			return iter
 		if not self.__sorted.iter_is_valid(iter):
@@ -334,7 +335,7 @@ class LibraryModel:
 	def getIterValid(self,iter):
 		if not isinstance(iter, gtk.TreeIter):
 			return None
-		return self.__getNaturalIter(iter)
+		return self.getNaturalIter(iter)
 
 	def search(self, search_string, column):
 		iter = self.basemodel.search_iter_on_column(search_string, column)
@@ -381,3 +382,4 @@ class LibraryModel:
 	
 	def iter_is_valid(self, iter):
 		return self.__sorted.iter_is_valid(iter)
+	
