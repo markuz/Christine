@@ -165,19 +165,14 @@ class libraryBase(GtkMisc):
 		sounds = self.library_lib.get_all()
 		pix = self.share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-		#self.__appending = True
 		keys = sounds.keys()
 		keys.sort()
 		for path in keys:
 			values = sounds[path]
 			for key in values.keys():
 				if isinstance(values[key],str):
-					try:
-						values[key] =  u'%s'%values[key].decode('latin-1')
-						values[key] =  u'%s'%values[key].encode('latin-1')
-					except:
-						pass
-			track_number = values['track_number']
+					#values[key] = self.strip_XML_entities(self.encode_text(values[key]))
+					values[key] = self.encode_text(values[key])
 			iter = self.model.append(PATH,path,
 					NAME, values['title'],
 					SEARCH,
@@ -316,11 +311,11 @@ class libraryBase(GtkMisc):
 			tags = self.tagger.readTags(file)
 		else:
 			tags = {}
-			tags['title'] = vals['title']
-			tags['album'] =  vals['album']
-			tags['artist'] = vals['artist']
+			tags['title'] = self.encode_text(self.strip_XML_entities(vals['title']))
+			tags['album'] =  self.encode_text(self.strip_XML_entities(vals['album']))
+			tags['artist'] = self.encode_text(self.strip_XML_entities(vals['artist']))
 			tags['track'] = vals['track_number']
-			tags['genre'] = vals['genre']
+			tags['genre'] = self.encode_text(self.strip_XML_entities(vals['genre']))
 
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")
@@ -525,7 +520,7 @@ class libraryBase(GtkMisc):
 	def clear(self):
 		self.model.clear()
 		self.library_lib.clear()
-		self.save()
+		self.library_lib.clean_playlist()
 
 	def itemActivated(self,widget, path, iter):
 		model    = widget.get_model()
@@ -554,9 +549,12 @@ class libraryBase(GtkMisc):
 		wrapper for the self.model.get_path
 		'''
 		return self.model.get_path(*args)
+	
 	def iter_next(self, iter):
 		return self.model.iter_next(iter)
-		
+	
+	def iter_is_valid(self, iter):
+		return self.model.iter_is_valid(iter)
 		
 class library(libraryBase):
 	def __init__(self):
@@ -636,7 +634,6 @@ class queue (libraryBase):
 		self.interface.Queue = self
 		self.tv.set_property('fixed-height-mode', False)
 
-
 	def add_columns(self):
 		render = gtk.CellRendererText()
 		tv = self.tv
@@ -650,7 +647,7 @@ class queue (libraryBase):
 		tv.set_headers_visible(False)
 
 	def add(self,file,prepend=False):
-		if type(file) == type(()):
+		if isinstance(file, tuple):
 			file = file[0]
 		if not os.path.isfile(file):
 			return False
@@ -673,10 +670,12 @@ class queue (libraryBase):
 		if type(tags["track"]) !=  type(1):
 			tags["track"] = 0
 
-		name	= tags["title"]
-		album	= tags["album"]
-		artist	= tags["artist"]
+		name	= self.strip_XML_entities(self.encode_text(tags["title"]))
+		album	= self.strip_XML_entities(self.encode_text(tags["album"]))
+		artist	= self.strip_XML_entities(self.encode_text(tags["artist"]))
 		tn		= tags["track"]
+		genre	= self.strip_XML_entities(self.encode_text(tags["genre"]))
+		
 		if file.split(":")[0] == "file" or \
 				os.path.isfile(file) or \
 				os.path.isfile(file.replace('%2C',',')):
@@ -685,14 +684,10 @@ class queue (libraryBase):
 			except:
 				self.emit_signal("tags-found!")
 				return True
-			name	= self.strip_XML_entities(tags["title"])
-			album	= self.strip_XML_entities(tags["album"])
-			artist	= self.strip_XML_entities(tags["artist"])
 			if name == "":
 				n = os.path.split(file)[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			name = "<b><i>%s</i></b>"%name
-			name = self.strip_XML_entities(name)
 			if album !="":
 				name += "\n from <i>%s</i>"%album
 			if artist != "":
@@ -708,18 +703,58 @@ class queue (libraryBase):
 				ALBUM,album,
 				ARTIST,artist,
 				TN,int(tn),
-				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
+				SEARCH,",".join([name,album,artist]),
 				PLAY_COUNT,0,
-				GENRE,tags["genre"]
+				GENRE,genre
 				)
-
-		self.library_lib[file] = {"title":name,
-				"type":t,"artist":artist,
-				"album":album,"track_number":int(tn),
+		self.library_lib[file] = {"title": tags['title'],
+				"type":t,"artist":tags['artist'],
+				"album":tags['album'],"track_number":int(tn),
 				"playcount":0,
 				"time":'0:00',
 				"genre":tags['genre']}
 		self.save()
+
+		
+	
+	def fillModel(self):
+		sounds = self.library_lib.get_all()
+		pix = self.share.getImageFromPix('blank')
+		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
+		keys = sounds.keys()
+		keys.sort()
+		for path in keys:
+			values = sounds[path]
+			for key in values.keys():
+				if isinstance(values[key],str):
+					values[key] = self.strip_XML_entities(self.encode_text(values[key]))
+			name	= self.strip_XML_entities(self.encode_text(values["title"]))
+			album	= self.strip_XML_entities(self.encode_text(values["album"]))
+			artist	= self.strip_XML_entities(self.encode_text(values["artist"]))
+			tn		= values["track_number"]
+			genre	= self.strip_XML_entities(self.encode_text(values["genre"]))
+			if name == "":
+				n = os.path.split(file)[1].split(".")
+				name = ".".join([k for k in n[:-1]])
+			name = "<b><i>%s</i></b>"%name
+			if album !="":
+				name += "\n from <i>%s</i>"%album
+			if artist != "":
+				name += "\n by <i>%s</i>"%artist
+				
+			iter = self.model.append(PATH,path,
+					NAME, name,
+					SEARCH,
+					''.join((values['title'], values['artist'],values['album'],	values['type'])),
+					PIX,pix,
+					TYPE,values['type'],
+					ARTIST,values['artist'],
+					ALBUM ,values['album'],
+					TN,values['track_number'],
+					PLAY_COUNT ,values['playcount'],
+					TIME ,values['time'],
+					GENRE ,values['genre'])
+			self.iters[path] = iter
 
 	def QueueHandlerKey(self, widget, event): 
 		"""
@@ -743,7 +778,7 @@ class queue (libraryBase):
 				self.scroll.show()
 		return True
 	
-	def itemActivated(self,widget, path, iter):
+	def itemActivated(self, widget, path, iter):
 		libraryBase.itemActivated(self, widget, path, iter)
 		model    = widget.get_model()
 		model.remove(iter)

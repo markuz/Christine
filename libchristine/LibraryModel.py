@@ -115,7 +115,7 @@ class christineModel(gtk.GenericTreeModel):
 				return False
 		list = self.__data[iter]
 		size = len(args)
-		for c in range(0,size,2):
+		for c in xrange(0,size,2):
 			list[args[c]] = args[c+1]
 		niter = self.get_iter((iter,))
 		self.row_changed(iter, niter)
@@ -199,7 +199,7 @@ class christineModel(gtk.GenericTreeModel):
 			return False
 
 	def __removeLast20(self,):
-		for i in range(20):
+		for i in xrange(20):
 			path = len(self.__data)-1
 			if not self.remove(path):
 				return False
@@ -374,6 +374,10 @@ class LibraryModel:
 		Trys to get a next iter for the sortable model.
 		@param iter:
 		'''
-		if self.basemodel.iter_is_valid(iter):
-			iter = self.basemodel.iter_next(iter)
-		return iter
+		if isinstance(iter, gtk.TreeIter):
+			if self.__sorted.iter_is_valid(iter):
+				return self.__sorted.iter_next(iter)
+		print iter
+	
+	def iter_is_valid(self, iter):
+		return self.__sorted.iter_is_valid(iter)

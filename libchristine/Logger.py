@@ -31,14 +31,37 @@ import logging.handlers
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.options import options
+from libchristine.globalvars import USERDIR
 
 class LoggerManager(Singleton):
 	def __init__(self):
 		self.loggers = {}
+		opts = options()
+		formatter = logging.Formatter('%(asctime)s:%(levelname)-8s:%(name)-10s:%(lineno)4s: %(message)-80s')
+		level = 'DEBUG'
+		nlevel = getattr(logging, level, None)
+		if nlevel != None:
+			self.LOGGING_MODE = nlevel
+		else:
+			self.LOGGING_MODE = logging.DEBUG
+		if opts.options.verbose:
+			self.LOGGING_HANDLER = logging.StreamHandler()
+			self.ERROR_HANDLER = logging.StreamHandler()
+		else:
+			logfile = os.path.join(USERDIR, 'christine_events.log')
+			errorfile = os.path.join(USERDIR, 'christine_errors.log')
+			self.LOGGING_HANDLER = logging.handlers.RotatingFileHandler(logfile,'a',3145728, 3)
+			self.ERROR_HANDLER = logging.handlers.RotatingFileHandler(errorfile,'a',1048576, 2)
+
+		self.LOGGING_HANDLER.setFormatter(formatter)
+		self.LOGGING_HANDLER.setLevel(self.LOGGING_MODE)
+		self.ERROR_HANDLER.setFormatter(formatter)
+		self.ERROR_HANDLER.setLevel(self.LOGGING_MODE)
 	
 	def getLogger(self, loggername):
 		if not self.loggers.has_key(loggername):
-			logger = Logger(loggername)
+			logger = Logger(loggername, self.LOGGING_HANDLER, 
+						self.ERROR_HANDLER, self.LOGGING_MODE)
 			self.loggers[loggername] = logger
 		return self.loggers[loggername]
 
@@ -46,7 +69,8 @@ class Logger:
 	'''
 	Implements the christine logging facility.
 	'''
-	def __init__(self, loggername, type='event'):
+	def __init__(self, loggername, logging_handler, error_handler, logging_mode, 
+				type='event'):
 		'''
 		Constructor, construye una clase de logger.
 		
@@ -55,35 +79,18 @@ class Logger:
 					por defecto apunta a event. En caso de utilizarse otro
 					que no sea event o error se apuntara a event.
 		'''
-		opts = options()
+		
 		# Create two logger,one for info, debug and warnings and another for  
 		# errors, exceptions and criticals
 		self.__Logger = logging.getLogger(loggername)
 		self.__ErrorLogger = logging.getLogger('Error'+ loggername)
-		formatter = logging.Formatter('%(asctime)s:%(levelname)-8s:%(name)-10s:%(lineno)4s: %(message)-80s')
-		level = 'DEBUG'
-		nlevel = getattr(logging, level, None)
-		if nlevel != None:
-			LOGGING_MODE = nlevel
-		else:
-			LOGGING_MODE = logging.DEBUG
-		if opts.options.verbose:
-			LOGGING_HANDLER = logging.StreamHandler()
-			ERROR_HANDLER = logging.StreamHandler()
-		else:
-			LOGGING_HANDLER = logging.handlers.RotatingFileHandler('./christine_events.log','a',31457280, 10)
-			ERROR_HANDLER = logging.handlers.RotatingFileHandler('./cristine_errors.log','a',31457280, 10)
-
-		LOGGING_HANDLER.setFormatter(formatter)
-		LOGGING_HANDLER.setLevel(LOGGING_MODE)
-		ERROR_HANDLER.setFormatter(formatter)
-		ERROR_HANDLER.setLevel(LOGGING_MODE)
-		#Establecemos las propiedades de los loggers.
-		self.__Logger.setLevel(LOGGING_MODE)
-		self.__Logger.addHandler(LOGGING_HANDLER)
 		
-		self.__ErrorLogger.setLevel(LOGGING_MODE)
-		self.__ErrorLogger.addHandler(ERROR_HANDLER)
+		#Establecemos las propiedades de los loggers.
+		self.__Logger.setLevel(logging_mode)
+		self.__Logger.addHandler(logging_handler)
+		
+		self.__ErrorLogger.setLevel(logging_mode)
+		self.__ErrorLogger.addHandler(error_handler)
 
 		self.info = self.__Logger.info
 		self.debug = self.__Logger.debug

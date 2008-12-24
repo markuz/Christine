@@ -73,7 +73,10 @@ class GtkMisc:
 		widget.set_icon_widget(image)
 
 	def strip_XML_entities(self,text):
-		entities = {"&":"&amp;",}
+		entities = {"&":"&amp;",
+				"<":"&lt;",
+				">":"&gt;",
+				}
 		for i in entities.keys():
 			text = text.replace(i,entities[i])
 		return text
@@ -86,6 +89,21 @@ class GtkMisc:
 			raise TypeError('width and height must be integers')
 		pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_BILINEAR)
 		return pixbuf
+	
+	def encode_text(self, text):
+		'''
+		Trata de encodificar el texto para ser usado por Gtk.
+		@param text:
+		'''
+		try:
+			for i in ('latin-1','iso8859-1', 'utf8'):
+				text =  u'%s'%text.decode(i)
+				text =  u'%s'%text.encode(i)
+		except Exception, e:
+			return text
+		return text
+
+
 
 
 class CairoMisc:

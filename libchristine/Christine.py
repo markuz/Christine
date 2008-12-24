@@ -439,6 +439,10 @@ class Christine(GtkMisc):
 
 			self.__HPanedListsBox.show()
 			self.HBoxSearch.show()
+			if w < 1:
+				w = 100
+			if h < 1:
+				h =  100
 			self.coreWindow.resize(w, h)
 			self.coreWindow.set_resizable(True)
 
@@ -638,8 +642,11 @@ class Christine(GtkMisc):
 			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(
 										self.christineConf.getString('backend/last_played'), PATH)
 			if self.__LibraryCurrentIter != None:
+				if not self.__LibraryModel.iter_is_valid(self.__LibraryCurrentIter):
+					return False
 				path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
-
+				if path == None:
+					return False
 				if (path > 0):
 					path = (path[0] -1,)
 				elif (path[0] > -1):
@@ -713,7 +720,7 @@ class Christine(GtkMisc):
 			self.setLocation(filename)
 		else:
 			self.__LibraryCurrentIter = None
-			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(path, PATH)
+			self.mainLibrary.model.getModel().foreach(self.__SearchByPath, path)
 			if (self.__LibraryCurrentIter != None):
 				iter = self.mainLibrary.iter_next(self.__LibraryCurrentIter)
 			else:
@@ -736,7 +743,7 @@ class Christine(GtkMisc):
 		"""
 		mlocation = model[path][PATH]
 		if (mlocation == location):
-			self.__LibraryCurrentIter = path
+			self.__LibraryCurrentIter = model.get_iter(path)
 			return True
 
 	def onScaleChanged(self, scale, a, value = None):
@@ -908,15 +915,20 @@ class Christine(GtkMisc):
 		if (response == gtk.RESPONSE_OK):
 			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
-			for i in filenames:
-				if (walk.get_active()):
-					self.addDirectories(i)
-				else:
-					files = [os.path.join(i, k) \
-					for k in os.listdir(i) if os.path.isfile(os.path.join(i, k))]
-					if (len(files) > 0):
-						self.addFiles(files = files)
-			#self.mainLibrary.save()
+			iterator = iter(filenames)
+			while True:
+				try:
+					i = iterator.next()
+					if walk.get_active():
+						self.addDirectories(i)
+					else:
+						files = [os.path.join(i, k) \
+							for k in os.listdir(i) \
+							if os.path.isfile(os.path.join(i, k))]
+						if files:
+							self.addFiles(files = files)
+				except StopIteration:
+					break
 			return True
 		ds.destroy()
 
@@ -928,10 +940,16 @@ class Christine(GtkMisc):
 		files = os.listdir(dir)
 		f     = []
 		self.f = []
-		for i in files:
-			ext = i.split('.').pop()
-			if (ext in self.christineConf.getString('backend/allowed_files').split(',')):
-				f.append(i)
+		iterator = iter(files)
+		extensions = self.christineConf.getString('backend/allowed_files').split(',')
+		while True:
+			try:
+				i = iterator.next()
+				ext = i.split('.').pop()
+				if ext in extensions:
+					f.append(i)
+			except StopIteration:
+				break
 		files = f
 		self.addFiles(files)
 
@@ -977,14 +995,19 @@ class Christine(GtkMisc):
 			label.set_text(translate('Exploring') + '%s'%npath)
 			allowdexts = self.christineConf.getString('backend/allowed_files')
 			allowdexts = allowdexts.split(',')
-			for path in filenames[-1][1]:
-				ext    = path.split('.').pop().lower()
-				exists = os.path.join(filenames[-1][0], path) in self.f
-				if ext in allowdexts and not exists:
-					f.append(os.path.join(filenames[-1][0],path))
+			iterator = iter(filenames[-1][1])
+			while True:
+				try:
+					path = iterator.next()
+					ext    = path.split('.').pop().lower()
+					exists = os.path.join(filenames[-1][0], path) in self.f
+					if ext in allowdexts and not exists:
+						f.append(os.path.join(filenames[-1][0],path))
+				except StopIteration:
+					break
 		except StopIteration:
 			dialog.destroy()
-			if (len(f) > 0):
+			if f:
 				self.addFiles(files = f)
 			return False
 		return True
@@ -1002,8 +1025,8 @@ class Christine(GtkMisc):
 		gobject.idle_add(self.__addFileCycle, library)
 
 	def __addFileCycle(self, library):
-		if len(self.__FilesToAdd) > 0:
-			d,m = divmod(len(library.model.basemodel), 500)
+		if self.__FilesToAdd:
+			m = divmod(len(library.model.basemodel), 500)[1]
 			new_file = self.__FilesToAdd.pop()
 			library.add(new_file)
 			if m == 0:
@@ -1018,18 +1041,18 @@ class Christine(GtkMisc):
 
 	def __updateAddProgressBar(self, file):
 		length = len(self.__FilesToAdd)
-		if (length > 0):
+		self.__Percentage = 1
+		if length:
 			self.__Percentage = (1 - (length / float(self.__TimeTotalNFiles)))
-		else:
-			self.__Percentage = 1
-		if (self.__Percentage > 1.0):
+		if self.__Percentage > 1.0:
 			self.__Percentage = 1.0
 		# Setting the value and text in the progressbar
 		self.__AddProgress.set_fraction(self.__Percentage)
 		rest = (self.__TimeTotalNFiles - length)
-		text = "%02d/%02d" % (rest, self.__TimeTotalNFiles)
+		text = "%d/%d" % (rest, self.__TimeTotalNFiles)
 		self.__AddProgress.set_text(text)
-		self.__AddFileLabel.set_text(os.path.split(file)[1])
+		filename = self.encode_text(os.path.split(file)[1])
+		self.__AddFileLabel.set_text(filename)
 		return length
 
 	def addFiles(self, widget = None, files = None, queue = False):
@@ -1056,11 +1079,18 @@ class Christine(GtkMisc):
 		self.__FilesToAdd = []
 		self.__Paths      = []
 		self.mainLibrary.model.basemodel.foreach(self.getPaths)
-		for i in files:
-			ext    = i.split('.').pop().lower()
-			if (not i in self.__Paths) and \
-					(ext in self.christineConf.getString('backend/allowed_files').split(',')):
-				self.__FilesToAdd.append(i)
+		extensions = self.christineConf.getString('backend/allowed_files')
+		extensions = extensions.split(',')
+		iterator = iter(files)
+		while True:
+			try:
+				i = iterator.next()
+				ext = i.split('.').pop().lower()
+				if (not i in self.__Paths) and \
+						(ext in extensions):
+					self.__FilesToAdd.append(i)
+			except StopIteration:
+				break
 		self.__Percentage      = 0
 		self.__TimeTotalNFiles = len(self.__FilesToAdd)
 		self.__addFile(queue=queue)

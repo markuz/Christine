@@ -26,7 +26,8 @@ SourcesList.glade \
 TreeViewReorderable.glade \
 TreeViewSources.glade \
 walkdirectories.glade \
-WindowCore.glade
+WindowCore.glade \
+twitter.glade
 
 DISTFILES= Makefile.in $(scripts_DATA)
 

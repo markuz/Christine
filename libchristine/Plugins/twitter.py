@@ -37,6 +37,7 @@ import os
 from libchristine.ui import interface
 from libchristine.christineConf import christineConf
 from libchristine.Tagger import Tagger
+from libchristine.Share import Share
 from libchristine.Plugins.plugin_base import plugin_base
 import urllib2
 from urllib import urlencode
@@ -53,6 +54,7 @@ class twitter(plugin_base):
 		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
 		self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
 		self.tagger = Tagger()
+		self.Share = Share()
 		self.interface = interface()
 		self.logger = self.interface.LoggerManager.getLogger('PluginTwitter')
 
@@ -101,6 +103,40 @@ class twitter(plugin_base):
 
 	def set_active(self, value):
 		return self.christineConf.setValue('twitter/enabled', value)
+	
+	def configure(self):
+		'''
+		Configure twitter plugin 
+		'''
+		xml = self.Share.getTemplate('twitter')
+		dialog = xml['dialog']
+		username = xml['username']
+		password = xml['password']
+		message = xml['message']
+		username.set_text(self.christineConf.getString('twitter/username'))
+		password.set_text(self.christineConf.getString('twitter/password'))
+		password.set_visibility(False)
+		message.set_text(self.christineConf.getString('twitter/message'))
+		username.connect('changed', self.__change_value, 'username')
+		password.connect('changed', self.__change_value, 'password')
+		password.connect('focus-in-event', lambda widget, event: widget.set_visibility(True))
+		password.connect('focus-out-event', lambda widget, event: widget.set_visibility(False))
+		message.connect('changed', self.__change_value, 'message')
+		dialog.run()
+		dialog.destroy()
+	
+	def __change_value(self, entry, key):
+		'''
+		Change a value in the twitter section
+		@param entry: gtk.Entry that emits "changed" signal
+		@param key: key of the section (username, password, message)
+		'''
+		nkey = 'twitter/%s'%key
+		self.christineConf.setValue(nkey, entry.get_text())
+		
+		
+		
+		
 
 	active = property(get_active, set_active, None,
 					'Determine if the plugin is active or inactive')

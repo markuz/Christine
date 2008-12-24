@@ -48,8 +48,7 @@ if not '--devel' in sys.argv: \n\
 			a.play()\n\
 	except:\n\
 	   BugReport()\n\
-	finally:\n\
-		gtk.main()\n\
+	gtk.main()\n\
 else:\n\
 	a = Christine()\n\
 	if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\

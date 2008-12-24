@@ -14,7 +14,7 @@ DIST_FILES = config.rpath \
 	   	   	christine.desktop.in \
 	   	   	christine.c 
 	   	   	
-EXTRA_DIST = createDeb.sh.in \
+EXTRA_DIST = config.rpath  config.rpath  createDeb.sh.in \
 			 $(DIST_FILES)
 
 program_name = @program_name@

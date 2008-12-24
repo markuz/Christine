@@ -104,6 +104,9 @@ class lib_library(object):
 	def save(self):
 		return 1
 		self.__db.save(self.__files)
+	
+	def clean_playlist(self):
+		self.__db.deleteFromPlaylist(self.idlist)
 
 	def clear(self):
 		self.__files.clear()

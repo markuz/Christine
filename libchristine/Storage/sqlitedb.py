@@ -260,6 +260,17 @@ class sqlite3db(Singleton):
 					playlistid=%d'%(itemid, playlistid)
 		self.execute(strSQL)
 		self.commit()
+	
+	def deleteFromPlaylist(self, playlistid):
+		'''
+		Delete all items from a playlist
+		@param plaulistid:
+		'''
+		strSQL = 'DELETE FROM playlist_relation WHERE \
+					playlistid=%d'%(playlistid)
+		self.execute(strSQL)
+		self.commit()
+		
 
 	def getItemsForPlaylist(self, playlistid):
 		'''
