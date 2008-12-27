@@ -122,7 +122,7 @@ class libraryBase(GtkMisc):
 					else:
 						metatags = self.library_lib.get_by_path(filepath)
 					try:
-						tn = int(metatags['track'])
+						tn = int(metatags['track_number'])
 					except:
 						tn = 0
 					if not metatags['title']:

@@ -160,7 +160,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 	def __do_expose(self,widget,event):
 		if getattr(self,'window', None) == None:
 			return False
-		x, y, w, h   = event.area
 		x,y,w,h = self.allocation
 		x,y = (0,0)
 		context = self.window.cairo_create()
@@ -168,16 +167,12 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		style = self.get_style()
 		tcolor = style.fg[0]
 		wcolor = style.bg[0]
-		basec = style.base[1]
+		#basec = style.base[1]
 		fontdesc = style.font_desc
 
 		br,bg,bb = (self.getCairoColor(wcolor.red),
 				self.getCairoColor(wcolor.green),
 				self.getCairoColor(wcolor.blue))
-
-		bar,bag,bab = (self.getCairoColor(basec.red),
-				self.getCairoColor(basec.green),
-				self.getCairoColor(basec.blue))
 
 		fr,fg,fb = (self.getCairoColor(tcolor.red),
 				self.getCairoColor(tcolor.green),
@@ -228,8 +223,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 
 		width = (self.__Value * width)
 
-		context.rectangle(fh,
-				((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
+		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
 		context.fill()
 
 		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
@@ -241,7 +235,5 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 2, 0, 2 * math.pi)
 		context.set_source_rgb(1,1,1)
 		context.fill()
-
-		#self.set_size_request(w,((BORDER_WIDTH * 2) + fh*2) +1)
 
 	value = property(getValue, setScale)

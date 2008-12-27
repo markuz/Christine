@@ -1025,18 +1025,19 @@ class Christine(GtkMisc):
 		gobject.idle_add(self.__addFileCycle, library)
 
 	def __addFileCycle(self, library):
-		if self.__FilesToAdd:
-			m = divmod(len(library.model.basemodel), 500)[1]
-			new_file = self.__FilesToAdd.pop()
-			library.add(new_file)
-			if m == 0:
+		for i in  xrange(1,5):
+			if self.__FilesToAdd:
+				m = divmod(len(library.model.basemodel), 500)[1]
+				new_file = self.__FilesToAdd.pop()
+				library.add(new_file)
+				if not m:
+					library.save()
+				self.__updateAddProgressBar(new_file)
+			else:
 				library.save()
-			self.__updateAddProgressBar(new_file)
-		else:
-			library.save()
-			self.__AddWindow.destroy()
-			self.__walking = False
-			return False
+				self.__AddWindow.destroy()
+				self.__walking = False
+				return False
 		return True
 
 	def __updateAddProgressBar(self, file):
