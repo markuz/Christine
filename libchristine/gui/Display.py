@@ -188,7 +188,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		context.set_source_rgb(br,bg,bb)
 		context.fill()
 
-
 		# Write text
 		self.__Layout  = self.create_pango_layout(self.__Song + ' -- ' + self.__Text)
 

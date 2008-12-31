@@ -22,20 +22,20 @@ import time
 import gobject
 from libchristine.ui import interface
 (PATH,
-		NAME,
-		TYPE,
-		PIX,
-		ALBUM,
-		ARTIST,
-		TN,
-		SEARCH,
-		PLAY_COUNT,
-		TIME,
-		GENRE)=xrange(11)
+NAME,
+TYPE,
+PIX,
+ALBUM,
+ARTIST,
+TN,
+SEARCH,
+PLAY_COUNT,
+TIME,
+GENRE)=xrange(11)
 
 (VPATH,
-		VNAME,
-		VPIX) = xrange(3)
+VNAME,
+VPIX) = xrange(3)
 
 QUEUE_TARGETS = [
 		('MY_TREE_MODEL_ROW',gtk.TARGET_SAME_WIDGET,0),
@@ -292,12 +292,22 @@ class LibraryModel:
 	def get_value(self, iter, column):
 		'''
 		Wrapper for the get_value method.
-		@param iter:
-		@param column:
+		@param iter: gtk.TreeIter to get values
+		@param column: Column number
 		'''
 		iter = self.getNaturalIter(iter)
 		if iter != None:
 			return self.basemodel.get_value(iter, column)
+
+	def get(self, iter, *columns):
+		'''
+		Wrapper for the get_value method.
+		@param iter: gtk.TreeIter to get values
+		@param columns: Column numbers
+		'''
+		iter = self.getNaturalIter(iter)
+		if iter != None:
+			return self.basemodel.get(iter, *columns)
 
 	def get_iter_first(self):
 		return self.basemodel.get_iter_first()

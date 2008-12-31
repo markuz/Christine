@@ -42,7 +42,9 @@ TN,
 SEARCH,
 PLAY_COUNT,
 TIME,
-GENRE) = range(11)
+GENRE,
+HAVE_TAGS
+) = range(12)
 
 (VPATH,
 VNAME,
@@ -77,9 +79,6 @@ class libraryBase(GtkMisc):
 		self.tagger = Tagger()
 		self.Events = christineEvents()
 		self.last_scroll_time = 0
-		#self.__row_changed_id = 0
-		#self.__appending = False
-		#self.__setting = False
 		self.__xml = self.share.getTemplate("TreeViewSources","scrolledwindow")
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
@@ -112,36 +111,36 @@ class libraryBase(GtkMisc):
 				model = self.model.getModel()
 				for i in range(startpath, endpath +1):
 					siter = model.get_iter(i)
-					#niter = self.model.getNaturalIter(siter)
-					filepath  = self.model.get_value(siter, PATH)
-					title  = self.model.get_value(siter, NAME)
-					album  = self.model.get_value(siter, ALBUM)
-					artist  = self.model.get_value(siter, ARTIST)
-					if not title or not album or not artist:
+					filepath, havetags  = self.model.get(siter, PATH,HAVE_TAGS)
+					if not havetags: 
 						metatags = self.tagger.readTags(filepath)
+						track_key = 'track'
 					else:
 						metatags = self.library_lib.get_by_path(filepath)
+						track_key = 'track_number'
 					try:
-						tn = int(metatags['track_number'])
+						tn = int(metatags[track_key])
 					except:
 						tn = 0
 					if not metatags['title']:
 						filenamesplit = os.path.split(filepath)[1]
-						metatags['title'] = filenamesplit.split('.')[0]
+						metatags['title'] = '.'.join(filenamesplit.split('.')[:-1])
 					kwargs = {"title":metatags['title'],
 							"artist":metatags['artist'],
 							"album":metatags['album'],
 							"track_number": tn, 
 							"play_count":0,
 							"time":'0:00',
-							"genre":metatags['genre'],}
+							"genre":metatags['genre'],
+							'have_tags':True
+							}
 						#self.library_lib.updateItem(filepath, **kwargs)
 					self.updateData(filepath,**kwargs)
+					while gtk.events_pending():
+							gtk.main_iteration_do()
 		if diff > 1.5:
 			return False
 		return True
-			
-		return False
 
 	def loadLibrary(self, library):
 		#if self.__row_changed_id:
@@ -208,7 +207,9 @@ class libraryBase(GtkMisc):
 					str, #search
 					int, #play count
 					str, #time
-					str) #Genre
+					str, #Genre
+					bool, # Have tags
+					) 
 		else:
 			self.model.clear()
 
@@ -463,6 +464,7 @@ class libraryBase(GtkMisc):
 			 	'play_count':PLAY_COUNT,
 			 	'genre':GENRE,
 			 	'time':TIME,
+			 	'have_tags': HAVE_TAGS,
 			 	}
 		for key in kwargs:
 			value = keys[key]
@@ -472,14 +474,16 @@ class libraryBase(GtkMisc):
 			self.model.basemodel.set(iter, value, kwargs[key])
 		iter = self.model.basemodel.search_iter_on_column(path, PATH)
 		(path, title, artist, album, type,
-		track_number, playcount,time, genre) = self.model.basemodel.get(iter,
+		track_number, playcount,time, genre,
+		have_tags) = self.model.basemodel.get(iter,
 												PATH,
 												NAME, ARTIST,ALBUM, TYPE,
-												TN,PLAY_COUNT, TIME, GENRE)
+												TN,PLAY_COUNT, TIME, GENRE,
+												HAVE_TAGS)
 		self.library_lib.updateItem(path, title=title, artist=artist,
 								album=album, type=type, track_number=track_number,
 								playcount=playcount,time=time,
-								genre=genre)
+								genre=genre,have_tags = have_tags)
 
 	def key_press_handler(self,treeview,event):
 		if event.keyval == gtk.gdk.keyval_from_name('Delete'):

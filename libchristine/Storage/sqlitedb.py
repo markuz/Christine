@@ -126,7 +126,8 @@ class sqlite3db(Singleton):
 						rate INTEGER, \
 						type VARCHAR(30), \
 						track_number INTEGER NOT NULL, \
-						genre varchar(30) \
+						genre varchar(30), \
+						have_tags bool \
 						)',
 		'CREATE TABLE playlists (id INTEGER PRIMARY KEY, name VARCHAR(255))',
 		'CREATE TABLE playlist_relation (id INTEGER PRIMARY KEY, \
@@ -167,7 +168,7 @@ class sqlite3db(Singleton):
 			self.__logger.info('file with path %s already exists in the db',
 							kwargs['path'])
 			return values['id'];
-		strSQL = 'INSERT INTO items VALUES(null,?,?,?,?,?,0,1,?,?,?)'
+		strSQL = 'INSERT INTO items VALUES(null,?,?,?,?,?,0,1,?,?,?,?)'
 		self.execute(strSQL,
 					kwargs['path'],
 					kwargs['title'],
@@ -176,7 +177,9 @@ class sqlite3db(Singleton):
 					kwargs['time'],
 					kwargs['type'],
 					kwargs['track_number'],
-					kwargs['genre'])
+					kwargs['genre'],
+					kwargs.get('have_tags', False),
+					)
 		return self.cursor.lastrowid
 
 	def updateItemValues(self, path, **kwargs):

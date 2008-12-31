@@ -969,8 +969,8 @@ class Christine(GtkMisc):
 		label = xml['label1']
 		self.__walking = True
 		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
-		#gobject.timeout_add(100, self.__walkProgressPulse,progress)
-		gobject.idle_add(self.__walkProgressPulse, progress)
+		gobject.timeout_add(100, self.__walkProgressPulse,progress)
+		#gobject.idle_add(self.__walkProgressPulse, progress)
 		response = dialog.run()
 		if response:
 			self.__walking = False
