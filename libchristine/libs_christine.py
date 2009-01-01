@@ -59,9 +59,14 @@ class lib_library(object):
 		self.__logger = LoggerManager().getLogger('liblibrary')
 		self.__db = sqlite3db()
 		self.idlist = self.__db.PlaylistIDFromName(list)
-		if self.idlist == None:
+		if self.idlist == None and list == 'music':
 			self.__db.execute('INSERT INTO playlists VALUES (null, ?)',"music")
 			self.idlist = self.__db.PlaylistIDFromName('music')
+		if not self.idlist:
+			self.idlist = self.__db.PlaylistIDFromName('music')
+			if not self.idlist:
+				self.__db.execute('INSERT INTO playlists VALUES (null, ?)',"music")
+				self.idlist = self.__db.PlaylistIDFromName('music')
 		self.idlist = self.idlist['id']
 		self.list = list
 		self.__files = self.__db.getItemsForPlaylist(self.idlist)

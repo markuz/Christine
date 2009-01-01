@@ -111,48 +111,50 @@ class libraryBase(GtkMisc):
 				model = self.model.getModel()
 				for i in range(startpath, endpath +1):
 					siter = model.get_iter(i)
-					filepath, havetags  = self.model.get(siter, PATH,HAVE_TAGS)
-					if not havetags: 
-						metatags = self.tagger.readTags(filepath)
-						track_key = 'track'
-					else:
-						metatags = self.library_lib.get_by_path(filepath)
-						track_key = 'track_number'
-					try:
-						tn = int(metatags[track_key])
-					except:
-						tn = 0
-					if not metatags['title']:
-						filenamesplit = os.path.split(filepath)[1]
-						metatags['title'] = '.'.join(filenamesplit.split('.')[:-1])
-					kwargs = {"title":metatags['title'],
-							"artist":metatags['artist'],
-							"album":metatags['album'],
-							"track_number": tn, 
-							"play_count":0,
-							"time":'0:00',
-							"genre":metatags['genre'],
-							'have_tags':True
-							}
-						#self.library_lib.updateItem(filepath, **kwargs)
-					self.updateData(filepath,**kwargs)
+					filepath  = self.model.get_value(siter, PATH)
+					self.check_single_file_data(filepath)
 					while gtk.events_pending():
 							gtk.main_iteration_do()
 		if diff > 1.5:
 			return False
 		return True
+	
+	def check_single_file_data(self, filepath):
+		metatags = self.library_lib.get_by_path(filepath)
+		if not metatags:
+			return False
+		if not metatags['have_tags']: 
+			metatags = self.tagger.readTags(filepath)
+			track_key = 'track'
+		else:
+			track_key = 'track_number'
+		try:
+			tn = int(metatags[track_key])
+		except:
+			tn = 0
+		if not metatags['title']:
+			filenamesplit = os.path.split(filepath)[1]
+			metatags['title'] = '.'.join(filenamesplit.split('.')[:-1])
+		kwargs = {"title":metatags['title'],
+				"artist":metatags['artist'],
+				"album":metatags['album'],
+				"track_number": tn, 
+				"play_count":0,
+				"time":'0:00',
+				"genre":metatags['genre'],
+				'have_tags':True
+				}
+		self.updateData(filepath,**kwargs)
 
 	def loadLibrary(self, library):
-		#if self.__row_changed_id:
-		#	self.model.disconnect(self.__row_changed_id)
+		'''
+		This method loads a library according to its name.
+		@param library: name of the library to be loaded.
+		'''
 		self.tv.set_model(None)
-		#self.__appending = False
-		#self.__setting = False
 		self.library_lib = lib_library(library)
 		self.__music = self.library_lib.get_all()
 		self.__iterator = self.__music
-		#self.__iterator = self.__music.keys()
-		#self.__iterator.sort()
 		self.gen_model()
 		self.model.createSubmodels()
 		self.fillModel()
@@ -163,15 +165,11 @@ class libraryBase(GtkMisc):
 		'''
 		Handle the row changed stuff
 		'''
-		#The filename is the key in the self.library dictionary
-		a = [filename, name,artist,
-		album,track_number,path,
-		tipo,pc,duration,
-		genre] = model.get(iter,PATH,
+		a = model.get(iter,PATH,
 				    NAME,ARTIST,ALBUM,
 					TN,PATH, TYPE,
 					PLAY_COUNT,TIME,GENRE)
-		if filename == None:
+		if a[0] == None:
 			return False
 		a = [k for k in a]
 		for i in range(len(a)):
@@ -180,14 +178,11 @@ class libraryBase(GtkMisc):
 					a[i] = 0
 				else:
 					a[i] = ""
-		self.library_lib[a[0]] = {"title":a[1],
-				"type":a[6],"artist":a[2],
-				"album":a[3],"track_number":a[4],
-				"playcount":a[7],
-				"time":a[8],
-				"genre":a[9]}
-		for i in self.library_lib[filename].keys():
-			if self.library_lib[filename][i] == None:
+		self.library_lib[a[0]] = {"title":a[1],	"type":a[6],"artist":a[2],
+				"album":a[3],"track_number":a[4],"playcount":a[7],
+				"time":a[8],"genre":a[9]}
+		for i in self.library_lib[a[0]].keys():
+			if self.library_lib[a[0]][i] == None:
 				sys.exit(-1)
 
 	def gen_model(self):
@@ -223,12 +218,12 @@ class libraryBase(GtkMisc):
 			values = sounds[path]
 			for key in values.keys():
 				if isinstance(values[key],str):
-					#values[key] = self.strip_XML_entities(self.encode_text(values[key]))
 					values[key] = self.encode_text(values[key])
+			searchstring = ''.join((values['title'], values['artist'],
+								values['album'],	values['type']))
 			iter = self.model.append(PATH,path,
 					NAME, values['title'],
-					SEARCH,
-					''.join((values['title'], values['artist'],values['album'],	values['type'])),
+					SEARCH,searchstring,
 					PIX,pix,
 					TYPE,values['type'],
 					ARTIST,values['artist'],
@@ -240,8 +235,6 @@ class libraryBase(GtkMisc):
 			self.iters[path] = iter
 
 	def __set(self):
-		#if not self.__setting:
-		#	return False
 		for i in range(20):
 			if len(self.__iterator):
 				key = self.__iterator.pop()

@@ -311,6 +311,16 @@ class Christine(GtkMisc):
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(path = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
+		gobject.timeout_add(500, self.__check_items_on_media)
+		#gobject.idle_add(self.__check_items_on_media)
+	
+	def __check_items_on_media(self):
+		size = len(self.mainLibrary.model.basemodel)
+		randompath = ((int(size * random.random())),)
+		if randompath[0]:
+			filepath = self.mainLibrary.model.basemodel[randompath][PATH]
+			self.mainLibrary.check_single_file_data(filepath)
+		return True
 
 	def __srcListRowActivated(self, treeview, path, column):
 		model = treeview.get_model()
@@ -326,7 +336,6 @@ class Christine(GtkMisc):
 		width,height = window.get_size()
 		self.christineConf.setValue('ui/width',width)
 		self.christineConf.setValue('ui/height',height)
-
 
 	def deleteFileFromDisk(self, widget):
 		"""
