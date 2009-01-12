@@ -114,7 +114,7 @@ class Christine(GtkMisc):
 				lambda cl,cnx,entry,widget: \
 				self.interface.TrayIcon.TrayIcon.set_visible(entry.get_value().get_bool()))
 
-		gobject.timeout_add(500, self.checkTimeOnMedia)
+		gobject.timeout_add(1000, self.checkTimeOnMedia)
 		# Creating the player and build the GUI interface
 		self.__Player = Player()
 		self.__buildInterface()
@@ -167,11 +167,11 @@ class Christine(GtkMisc):
 		self.EntrySearch.connect('changed',self.search)
 		self.EntrySearch.connect('focus-out-event', self.__EntrySearchFocusHandler)
 		self.VBoxList       = xml['VBoxList']
+		
 		#Private widgets
 		self.__HPanedListsBox = xml['HPanedListsBox']
 		self.__VBoxTemporal   = xml['VBoxTemporal']
 		#self.__ScrolledMusic  = xml["ScrolledMusic"]
-		self.__VBoxList       = xml["VBoxList"]
 		# Ends the call to widgets descriptors not connected by hadn
 
 		# Gets window widget from glade template
@@ -244,7 +244,7 @@ class Christine(GtkMisc):
 		self.Queue.tv.connect('row-activated',   self.Queue.itemActivated)
 
 		sourcesList = sources_list()
-		self.__VBoxList.pack_start(sourcesList.vbox)
+		self.VBoxList.pack_start(sourcesList.vbox)
 		sourcesList.treeview.connect('row-activated',
 				self.__srcListRowActivated)
 		sourcesList.vbox.show_all()
@@ -272,6 +272,8 @@ class Christine(GtkMisc):
 		self.christineConf.notifyAdd('control/repeat',
 			self.christineConf.toggleWidget,
 			self.__ControlRepeat)
+		
+		
 
 		self.__BothSr = xml['both_sr']
 		self.__NoneSr = xml['none_sr']
@@ -283,6 +285,14 @@ class Christine(GtkMisc):
 
 		self.__MenuItemSmallView.set_active(self.christineConf.getBool('ui/small_view'))
 		self.toggleViewSmall(self.__MenuItemSmallView)
+		
+		self.MenuItemSidePane = xml ['sidepanel']
+		self.MenuItemSidePane.connect('toggled', self.ShowHideSidePanel)
+		self.MenuItemSidePane.set_active(self.christineConf.getBool('ui/sidepanel'))
+		self.christineConf.notifyAdd('ui/sidepanel',
+									self.christineConf.toggleWidget,
+									self.MenuItemSidePane)
+		
 
 		translateMenuItem = xml['translateThisApp']
 		URL = 'https://translations.launchpad.net/christine/0.1/'
@@ -341,10 +351,8 @@ class Christine(GtkMisc):
 		"""
 		Delete file from disk
 		"""
-		selection     = self.mainLibrary.tv.get_selection()
-		(model, iter) = selection.get_selected()
-		iter          = iter
-
+		selection = self.mainLibrary.tv.get_selection()
+		iter = selection.get_selected()[1]
 		self.mainLibrary.delete_from_disk(iter)
 
 	def removeFromLibrary(self, widget = None):
@@ -1279,6 +1287,14 @@ class Christine(GtkMisc):
 		Show the preferences dialog
 		"""
 		guiPreferences()
+
+	def ShowHideSidePanel(self, widget):
+		'''
+		Show or hide the side Panel 
+		@param widget:
+		'''
+		self.VBoxList.set_property('visible', widget.get_active())
+		self.christineConf.setValue('ui/sidepanel', widget.get_active())
 
 	def quitGtk(self, widget = None):
 		self.__Player.stop()

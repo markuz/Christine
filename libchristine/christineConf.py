@@ -79,6 +79,7 @@ class christineConf(Singleton):
 		self.configParser.set('ui','show_type',"true")
 		self.configParser.set('ui','small_view',"false")
 		self.configParser.set('ui','visualization',"false")
+		self.configParser.set('ui','sidepanel',"true")
 		self.configParser.set('ui','LastFolder',os.environ['HOME'])
 		if not self.configParser.has_section('control'):
 			self.configParser.add_section('control')

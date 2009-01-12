@@ -131,6 +131,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 			self.__Song = u'%s'%song.encode('latin-1')
 		except:
 			self.__Song = song
+		self.__emit()
 
 	def getValue(self):
 		"""
@@ -145,6 +146,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		"""
 		Sets scale value
 		"""
+		if value == self.value:
+			return False
 		try:
 			value = float(value)
 		except ValueError, a:
@@ -156,83 +159,80 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 
 	def __on_size_allocate(self, widget,event):
 		self.__HPos = event.x
-
+	
 	def __do_expose(self,widget,event):
 		if getattr(self,'window', None) == None:
 			return False
 		x,y,w,h = self.allocation
 		x,y = (0,0)
-		context = self.window.cairo_create()
-		#clear the bitmap
-		style = self.get_style()
-		tcolor = style.fg[0]
-		wcolor = style.bg[0]
-		#basec = style.base[1]
-		fontdesc = style.font_desc
-
-		br,bg,bb = (self.getCairoColor(wcolor.red),
+		self.context = self.window.cairo_create()
+		#self.style = self.get_style()
+		self.fontdesc = self.style.font_desc
+		tcolor = self.style.fg[0]
+		wcolor = self.style.bg[0]
+		self.br, self.bg, self.bb = (self.getCairoColor(wcolor.red),
 				self.getCairoColor(wcolor.green),
 				self.getCairoColor(wcolor.blue))
-
-		fr,fg,fb = (self.getCairoColor(tcolor.red),
+		self.fr , self.fg, self.fb = (self.getCairoColor(tcolor.red),
 				self.getCairoColor(tcolor.green),
 				self.getCairoColor(tcolor.blue))
 
-		context.move_to( x, y )
-		context.set_operator(cairo.OPERATOR_OVER)
+		#clear the bitmap
+		self.context.move_to( x, y )
+		#self.context.set_operator(cairo.OPERATOR_OVER)
+		self.context.set_line_width( 1 )
+		self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		self.context.rectangle(x,y,w,h)
+		self.context.set_source_rgb(self.br,self.bg,self.bb)
+		self.context.fill()
+		self.draw_text(x,y,w,h)
+		self.draw_progress_bar(x,y,w,h)
+	
+	def draw_progress_bar(self, x, y, w, h):
+		fh = self.__Layout.get_pixel_size()[1]
+		width    = ((w - fh) - (BORDER_WIDTH * 3))
 
-		context.set_line_width( 1 )
-		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		# Drawing the progress bar
+		self.context.set_antialias(cairo.ANTIALIAS_NONE)
+		self.context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,
+						width, BORDER_WIDTH)
+		self.context.set_line_width(1)
+		self.context.set_line_cap(cairo.LINE_CAP_BUTT)
+		self.context.set_source_rgb(1,1,1)
+		self.context.fill_preserve()
+		self.context.set_source_rgb(self.fr,self.fg,self.fb)
+		self.context.stroke()
 
-		context.rectangle(x,y,w,h)
-		context.set_source_rgb(br,bg,bb)
-		context.fill()
+		width = (self.__Value * width)
 
+		self.context.rectangle(fh, ((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
+		self.context.fill()
+
+		self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		self.context.arc(int (fh + width),
+				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 4, 0, 2 * math.pi)
+		self.context.fill()
+
+		self.context.arc(int (fh + width),
+				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 2, 0, 2 * math.pi)
+		self.context.set_source_rgb(1,1,1)
+		self.context.fill()
+	
+	def draw_text(self, x, y, w , h):
 		# Write text
 		self.__Layout  = self.create_pango_layout(self.__Song + ' -- ' + self.__Text)
-
-		self.__Layout.set_font_description(fontdesc)
-
+		self.__Layout.set_font_description(self.fontdesc)
 		(fontw, fonth) = self.__Layout.get_pixel_size()
-
 		if self.__HPos == x or fontw < w:
 			self.__HPos = (w - fontw) / 2
 		elif self.__HPos > (fontw-(fontw*2)):
 			self.__HPos = self.__HPos - 3
 		else:
 			self.__HPos = w + 1
-		context.move_to(self.__HPos, (fonth)/2)
-		context.set_source_rgb(fr,fg,fb)
-		context.update_layout(self.__Layout)
-		context.show_layout(self.__Layout)
-
-		fh = self.__Layout.get_pixel_size()[1]
-		width    = ((w - fh) - (BORDER_WIDTH * 3))
-
-		# Drawing the progress bar
-		context.set_antialias(cairo.ANTIALIAS_NONE)
-		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,
-						width, BORDER_WIDTH)
-		context.set_line_width(1)
-		context.set_line_cap(cairo.LINE_CAP_BUTT)
-		context.set_source_rgb(1,1,1)
-		context.fill_preserve()
-		context.set_source_rgb(fr,fg,fb)
-		context.stroke()
-
-		width = (self.__Value * width)
-
-		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
-		context.fill()
-
-		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
-		context.arc(int (fh + width),
-				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 4, 0, 2 * math.pi)
-		context.fill()
-
-		context.arc(int (fh + width),
-				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 2, 0, 2 * math.pi)
-		context.set_source_rgb(1,1,1)
-		context.fill()
+		self.context.move_to(self.__HPos, (fonth)/2)
+		self.context.set_source_rgb(self.fr,self.fg,self.fb)
+		self.context.update_layout(self.__Layout)
+		self.context.show_layout(self.__Layout)
+		
 
 	value = property(getValue, setScale)
