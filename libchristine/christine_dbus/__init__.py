@@ -74,6 +74,30 @@ class christineDBus(dbus.service.Object):
 	def go_next(self):
 		iface.coreClass.goNext()
 		return True
+	# Library stuff
+	@dbus.service.method(DBUS_NAME)
+	def current_location(self):
+		location = iface.Player.getLocation()
+		if not location:
+			result = ''
+		else:
+			result = location
+		return result
+	
+	@dbus.service.method(DBUS_NAME)
+	def now_playing(self):
+		location = iface.Player.getLocation()
+		if not location:
+			result = ''
+		else:
+			result = location
+		return result
+	
+	@dbus.service.method(DBUS_NAME)
+	def get_tags(self, path):
+		#TODO: have to return a coma separated tags.
+		return ''
+	
 	
 a = christineDBus()
 print a, dir(a)
