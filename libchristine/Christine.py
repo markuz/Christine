@@ -54,6 +54,7 @@ from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME
 from libchristine.Logger import LoggerManager
 from libchristine.Events import christineEvents
+from libchristine.christine_dbus import *
 import logging
 import webbrowser
 import gc
