@@ -35,6 +35,8 @@ import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 import gobject
+import os
+import re
 
 main_loop = DBusGMainLoop()
 
@@ -45,6 +47,17 @@ iface.DBus_Session = DBUS_SESSION
 
 DBUS_NAME = 'org.christine'
 DBUS_PATH = '/org/christine'
+
+#determine gnome version  
+#thanks to jean-luc coulon for his multilocale fix  
+major = 2  
+minor = 18 #default to 2.18 if there are problems in the following code  
+output = os.popen("LANG=C gnome-about --gnome-version")  
+pattern = re.compile(r'^Version: ([0-9]+)\.([0-9]+)\..*')  
+for line in output.readlines():
+	if pattern.match(line):
+		major = pattern.search(line).group(1)
+		minor = pattern.search(line).group(2)
 
 class christineDBus(dbus.service.Object):
 	'''
@@ -97,7 +110,40 @@ class christineDBus(dbus.service.Object):
 	def get_tags(self, path):
 		#TODO: have to return a coma separated tags.
 		return ''
-	
+
+class mediaKeys:
+	def __init__(self):
+		'''
+		Constructor
+		'''
+		if (int(major) == 2) & (int(minor) > 20):
+			self.obj = DBUS_SESSION.get_object('org.gnome.SettingsDaemon',
+											'/org/gnome/SettingsDaemon/MediaKeys') 
+			self.obj.connect_to_signal("MediaPlayerKeyPressed", self.mediak_press, 
+						dbus_interface='org.gnome.SettingsDaemon.MediaKeys')
+		else:
+			self.obj = DBUS_SESSION.get_object('org.gnome.SettingsDaemon',
+											'/org/gnome/SettingsDaemon') 
+			self.obj.connect_to_signal("MediaPlayerKeyPressed", self.mediak_press, 
+						dbus_interface='org.gnome.SettingsDaemon')
+
+	def mediak_press(self, *keys):
+		'''
+		This method is called everytime the MediaPlayerKeyPressed signal
+		is emited by the org.gnome.SetingsDaemon object.
+		'''
+		for key in keys:
+			if key == 'Play':
+				state =  not iface.coreClass.PlayButton.get_active()
+				iface.coreClass.PlayButton.set_active( state)
+			elif key in ('Pause', 'Stop'):
+				iface.coreClass.pause()
+			elif key == 'Next':
+				iface.coreClass.goNext()
+			elif key == 'Previous':
+				iface.coreClass.goPrev()
+			
+		print locals()
 	
 a = christineDBus()
-print a, dir(a)
+b = mediaKeys()
