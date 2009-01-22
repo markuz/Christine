@@ -2,6 +2,7 @@
 
 from libchristine.pattern.Singleton import Singleton
 from libchristine.globalvars import PLUGINSDIR
+from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
 import os
 
@@ -12,6 +13,7 @@ class Manager(Singleton):
 	'''
 	def __init__(self):
 		self.interface = interface()
+		self.logger = LoggerManager().getLogger('PluginsManager')
 		self.interface.plugins = self
 		self.plugins = {}
 		self.load_plugins()
