@@ -26,13 +26,14 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 #
-# This package includes all dbus related stuff for Christine Media Player.
+# This module includes GNOME Media keys integration
 #
 
 from libchristine.christine_dbus import DBUS_SESSION
 from libchristine.pattern.Singleton import Singleton
 from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.gui.christineNotify import notifyWindow
 
 import gobject
 import os
@@ -84,4 +85,6 @@ class gnomeDBus(plugin_base):
 				self.iface.coreClass.goNext()
 			elif key == 'Previous':
 				self.iface.coreClass.goPrev()
+		a = notifyWindow()
+		a.set_text(key)
 			
