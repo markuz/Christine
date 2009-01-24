@@ -32,12 +32,15 @@ API_SUBDIR = '/2.0/'
 import md5
 import httplib
 import urllib
+import urllib2
 import threading
 import thread
+import os
 from xml.dom import minidom
 from libchristine.Plugins.plugin_base import plugin_base
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
+from libchristine.globalvars import USERDIR
 import gtk
 import webbrowser
 
@@ -100,8 +103,8 @@ class lastfm(plugin_base):
 		self.Share = Share()
 		if not self.christineConf.configParser.has_section('lastfm'):
 			self.christineConf.configParser.add_section('lastfm')
-
 		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
+		self.christineConf.notifyAdd('backend/last_played', self.getImage)
 
 	def configure(self):
 		'''
@@ -142,7 +145,7 @@ class lastfm(plugin_base):
 			self.christineConf.setValue('lastfm/key',data['key'])
 			self.christineConf.setValue('lastfm/subscriber',data['subscriber'])
 	
-	def postMessage(self, *arsg):
+	def postMessage(self, *args):
 		'''
 		Agrega la cancion que se esta tocando al playlist por defecto
 		'''
@@ -152,8 +155,7 @@ class lastfm(plugin_base):
 		tags =  self.tagger.readTags(file)
 		for key in ('artist','title'):
 			if not tags[key]:
-				#TODO: Usar christine Logger
-				print 'La etitqueta %s no es valida'%key
+				pass
 		apikey = '0da3b11c97759f044bd4223dda212daa'
 		secret = 'b8c00f5548c053033b89633d1004d059'
 		sessionkey = self.christineConf.getString('lastfm/key')
@@ -167,6 +169,42 @@ class lastfm(plugin_base):
 			thread.start_new(track.addToPlaylist, (playlists[0]['id'], ))
 
 		username = self.christineConf.getString('twitter/username')
+	
+	def getImage(self, *args):
+		if getattr(self, 'lastfmimage', False):
+			self.lastfmimage.destroy()
+		if not self.active:
+			return
+		file = self.christineConf.getString('backend/last_played')
+		tags =  self.tagger.readTags(file)
+		for key in ('artist','title', 'album'):
+			if not tags[key]:
+				pass
+		thread.start_new(self.__getImage, (tags, ))
+			
+	def __getImage(self, tags):
+		apikey = '0da3b11c97759f044bd4223dda212daa'
+		secret = 'b8c00f5548c053033b89633d1004d059'
+		sessionkey = self.christineConf.getString('lastfm/key')
+		username = self.christineConf.getString('lastfm/name')
+		user = User(username, apikey, secret, sessionkey)
+		album = Album(tags['artist'], tags['album'], apikey, secret, sessionkey)
+		image = album.getImage(IMAGE_LARGE)
+		print 'imagen >>', image
+		if image:
+			name = os.path.split(image)[-1]
+			if not os.path.exists(os.path.join(USERDIR, name)):
+				f = urllib2.urlopen(image)
+				name = os.path.split(image)[-1]
+				g = open(os.path.join(USERDIR, name),"w")
+				for line in f:
+					g.write(line)
+				g.close()
+			self.lastfmimage = gtk.Image()
+			self.lastfmimage.set_from_file(os.path.join(USERDIR, name))
+			self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
+														False, False, 0)
+			self.lastfmimage.show()
 
 
 	active = property(get_active, set_active, None,

@@ -48,6 +48,10 @@ class notifyWindow(gtk.Window, GtkMisc, CairoMisc):
 		self.set_app_paintable(True)
 		self.set_decorated(False)
 		self.set_position(gtk.WIN_POS_CENTER)
+		self.set_skip_pager_hint(True)
+		self.set_skip_taskbar_hint(True)
+		self.set_resizable(False)
+		self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
 		self.do_screen_changed()
 		self.connect( 'expose-event', self.__doExpose )
 		self.label = gtk.Label()
@@ -67,7 +71,6 @@ class notifyWindow(gtk.Window, GtkMisc, CairoMisc):
 	def do_screen_changed(self, old_screen=None):
 		screen = self.get_screen()
 		if self.is_composited():
-			print 'Your schema support alpha channel!'
 			colormap = screen.get_rgba_colormap()
 			self.supports_alpha = True
 		else:
@@ -96,38 +99,36 @@ class notifyWindow(gtk.Window, GtkMisc, CairoMisc):
 
 		cr.set_operator(cairo.OPERATOR_OVER)
 
-		pat = cairo.LinearGradient(0.0, 0.0, 0.0, height)
-
-		ex_list = [0xA1, 0xA8, 0xBB, 0xEC]
-		col = self.hex2float(ex_list)
-		pat.add_color_stop_rgba(0.0, col[0], col[1], col[2], col[3])
-
-		ex_list = [0x14, 0x1E, 0x3C, 0xF3]
-		col = self.hex2float(ex_list)
-		pat.add_color_stop_rgba(1.0, col[0], col[1], col[2], col[3])
-
+		#pat = cairo.LinearGradient(0.0, 0.0, 0.0, height)
+		
+		style = self.get_style()
+		bg1 = style.fg[1]
+		bg1 = (self.getCairoColor(bg1.red), self.getCairoColor(bg1.green),
+							self.getCairoColor(bg1.blue))
+		bg2 = style.bg[3]
+		bg2 = (self.getCairoColor(bg2.red), self.getCairoColor(bg2.green),
+							self.getCairoColor(bg2.blue))
+		gray = style.bg[1]
+		gray = (self.getCairoColor(gray.red), self.getCairoColor(gray.green),
+							self.getCairoColor(gray.blue))
+		
+		textcolors = style.text[0]
+		textcolors =  (self.getCairoColor(textcolors.red), 
+					self.getCairoColor(textcolors.green),
+					self.getCairoColor(textcolors.blue))
+		cr.set_source_rgba(bg2[0],bg2[1],bg2[2], 0.5)
 		self.render_rect(cr, 0, 0, width, height, 5)
-		cr.set_source(pat)
 		cr.fill()
-
-		ex_list = [0xFF, 0xFF, 0xFF, 0x4e]
-		col = self.hex2float(ex_list)
-		cr.set_source_rgba(col[0], col[1], col[2], col[3])
+		cr.set_source_rgba(bg1[0],bg1[1],bg1[2],0.5)
 		self.render_rect(cr, 1.5, 1.5, width - 3 , height - 3, 5)
 		cr.stroke()
-
-		ex_list = [0x00, 0x15, 0x1F, 0xe0]
-		col = self.hex2float(ex_list)
-		cr.set_source_rgba(col[0], col[1], col[2], col[3])
+		cr.set_source_rgba(bg2[0],bg2[1],bg2[2], 0.5)
 		self.render_rect(cr, 0.5, 0.5, width - 1 , height - 1, 5)
 		cr.stroke()
-
-		ex_list = [0xFF, 0xFF, 0xFF, 0xFF]
-		col = self.hex2float(ex_list)
-		cr.set_source_rgba(col[0], col[1], col[2], col[3])
+		cr.set_source_rgba(gray[0],gray[1],gray[2], 0.5)
 		self.render_rect(cr, 0, 0, width , height, 5)
 		cr.stroke()
-		
+		cr.set_source_rgba(textcolors[0],textcolors[1],textcolors[2], 1.0)
 		fd = self.get_style().font_desc
 		fd.set_size(16 * pango.SCALE)
 		layout = self.create_pango_layout('')
@@ -135,15 +136,12 @@ class notifyWindow(gtk.Window, GtkMisc, CairoMisc):
 		layout.set_font_description(fd)
 		w, h = layout.get_pixel_size()
 		cr.move_to(width/2-w/2, height/2-h/2)
-		
 		cr.update_layout(layout)
 		cr.show_layout(layout)
-		
 		cr.set_source_pixbuf(self.pixbuf, 3, 3 )
 		cr.paint()
 
-		children = self.get_children()
-		for c in children:
+		for c in self.get_children():
 			 self.propagate_expose(c, event)
 			
 			

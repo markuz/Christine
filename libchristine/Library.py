@@ -336,7 +336,7 @@ class libraryBase(GtkMisc):
 		self.gconf.notifyAdd("ui/show_artist",self.gconf.toggleVisible,artist)
 		self.gconf.notifyAdd("ui/show_album",self.gconf.toggleVisible,album)
 		self.gconf.notifyAdd("ui/show_type",self.gconf.toggleVisible,type)
-		#self.gconf.notifyAdd("ui/show_tn",self.gconf.toggleVisible,tn)
+		self.gconf.notifyAdd("ui/show_tn",self.gconf.toggleVisible,tn)
 		self.gconf.notifyAdd("ui/show_play_count",self.gconf.toggleVisible,play)
 		self.gconf.notifyAdd("ui/show_length",self.gconf.toggleVisible,length)
 		self.gconf.notifyAdd("ui/show_genre",self.gconf.toggleVisible,genre)
