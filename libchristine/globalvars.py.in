@@ -37,6 +37,7 @@ DATADIR = '@datadir@'
 PREFIX = '@prefix@'
 SYSCONFDIR = '@sysconfdir@'
 USERDIR  = os.path.join(os.environ["HOME"],".christine")
+IMAGEDIR = os.path.join(USERDIR,'cache_images')
 
 
 DBFILE = os.path.join(USERDIR,'christine.db')

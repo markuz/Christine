@@ -34,7 +34,7 @@ from libchristine.Plugins.lastfm import *
 from libchristine.ui import interface
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
-from libchristine.globalvars import USERDIR
+from libchristine.globalvars import IMAGEDIR
 import urllib2
 import thread
 import os
@@ -69,9 +69,10 @@ class getImage(plugin_base):
 		filename = '_'.join((tags['artist'].replace(' ','_'),
 							tags['album'].replace(' ','_')))
 		filename += '.jpg'
-		if os.path.exists(os.path.join(USERDIR,'cache_images', filename)):
+		#TODO: Search for the cover in the file directory.
+		print os.path.join(IMAGEDIR, filename)
+		if os.path.exists(os.path.join(IMAGEDIR, filename)):
 			have_image = True
-			print 'La tenemos!'
 		else:
 			sessionkey = self.christineConf.getString('lastfm/key')
 			username = self.christineConf.getString('lastfm/name')
@@ -82,14 +83,15 @@ class getImage(plugin_base):
 				name = os.path.split(image)[-1]
 				f = urllib2.urlopen(image)
 				name = os.path.split(image)[-1]
-				g = open(os.path.join(USERDIR,'cache_images', filename),"w")
+				g = open(os.path.join(IMAGEDIR, filename),"w")
 				for line in f:
 					g.write(line)
 				g.close()
 				have_image = True
+		print os.path.join(IMAGEDIR, filename)
 		if have_image:
 			self.lastfmimage = gtk.Image()
-			self.lastfmimage.set_from_file(os.path.join(USERDIR,'cache_images', filename))
+			self.lastfmimage.set_from_file(os.path.join(IMAGEDIR, filename))
 			self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
 														False, False, 0)
 			self.lastfmimage.show()
