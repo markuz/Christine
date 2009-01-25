@@ -69,12 +69,16 @@ class gnomeDBus(plugin_base):
 											'/org/gnome/SettingsDaemon') 
 			self.obj.connect_to_signal("MediaPlayerKeyPressed", self.mediak_press, 
 						dbus_interface='org.gnome.SettingsDaemon')
+		if not self.christineConf.exists('dbus/gnome_media'):
+			self.christineConf.setValue('dbus/gnome_media', True)
 
 	def mediak_press(self, *keys):
 		'''
 		This method is called everytime the MediaPlayerKeyPressed signal
 		is emited by the org.gnome.SetingsDaemon object.
 		'''
+		if not self.active:
+			return False
 		for key in keys:
 			if key == 'Play':
 				state =  not self.iface.coreClass.PlayButton.get_active()
@@ -87,4 +91,13 @@ class gnomeDBus(plugin_base):
 				self.iface.coreClass.goPrev()
 		a = notifyWindow()
 		a.set_text(key)
+	
+	def get_active(self):
+		return self.christineConf.getBool('dbus/gnome_media')
+	
+	def set_active(self, value):
+		return self.christineConf.setValue('dbus/gnome_media', value)
+	
+	active = property(get_active, set_active, None,
+					'Determine if the plugin is active or inactive')
 			
