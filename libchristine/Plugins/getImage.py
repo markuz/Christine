@@ -65,22 +65,31 @@ class getImage(plugin_base):
 		thread.start_new(self.__getImage, (tags, ))
 			
 	def __getImage(self, tags):
-		sessionkey = self.christineConf.getString('lastfm/key')
-		username = self.christineConf.getString('lastfm/name')
-		user = User(username, APIKEY, SECRET, sessionkey)
-		album = Album(tags['artist'], tags['album'], APIKEY, SECRET, sessionkey)
-		image = album.getImage(IMAGE_LARGE)
-		if image:
-			name = os.path.split(image)[-1]
-			if not os.path.exists(os.path.join(USERDIR, name)):
+		have_image = False
+		filename = '_'.join((tags['artist'].replace(' ','_'),
+							tags['album'].replace(' ','_')))
+		filename += '.jpg'
+		if os.path.exists(os.path.join(USERDIR,'cache_images', filename)):
+			have_image = True
+			print 'La tenemos!'
+		else:
+			sessionkey = self.christineConf.getString('lastfm/key')
+			username = self.christineConf.getString('lastfm/name')
+			user = User(username, APIKEY, SECRET, sessionkey)
+			album = Album(tags['artist'], tags['album'], APIKEY, SECRET, sessionkey)
+			image = album.getImage(IMAGE_LARGE)
+			if image:
+				name = os.path.split(image)[-1]
 				f = urllib2.urlopen(image)
 				name = os.path.split(image)[-1]
-				g = open(os.path.join(USERDIR, name),"w")
+				g = open(os.path.join(USERDIR,'cache_images', filename),"w")
 				for line in f:
 					g.write(line)
 				g.close()
+				have_image = True
+		if have_image:
 			self.lastfmimage = gtk.Image()
-			self.lastfmimage.set_from_file(os.path.join(USERDIR, name))
+			self.lastfmimage.set_from_file(os.path.join(USERDIR,'cache_images', filename))
 			self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
 														False, False, 0)
 			self.lastfmimage.show()

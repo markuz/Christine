@@ -110,6 +110,9 @@ class lastfm(plugin_base):
 		user = User(username, APIKEY, SECRET, sessionkey)
 
 		track = Track(tags['artist'], tags['title'], APIKEY, SECRET, sessionkey)
+		thread.start_new(self.__postMessage, (user, track))
+		
+	def __postMessage(self, user, track):
 		playlists = user.getPlaylists()
 		if playlists:
 			thread.start_new(playlists[0].addTrack, (track,))
