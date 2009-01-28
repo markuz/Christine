@@ -1,13 +1,7 @@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine/gui/
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/c3rdparty/
 
 scripts_DATA=__init__.py \
-			About.py \
-			BugReport.py \
-			Display.py \
-			Preferences.py \
-			GtkMisc.py \
-			christineNotify.py \
-			openRemote.py
+			pylast.py
 
 DISTFILES=Makefile.in \
 			${scripts_DATA}

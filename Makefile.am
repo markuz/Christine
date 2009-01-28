@@ -1,10 +1,14 @@
-SUBDIRS = libchristine \
+SUBDIRS = \
 		  gui \
 		  po \
+		  libchristine \
+		  libchristine/christine_dbus/ \
 		  libchristine/pattern/ \
 		  libchristine/gui/ \
 		  libchristine/Storage/ \
-		  libchristine/Plugins/
+		  libchristine/Plugins/ \
+		  libchristine/c3rdparty/
+		  
 
 bin_SCRIPTS = christine
 

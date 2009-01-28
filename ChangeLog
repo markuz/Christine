@@ -1,3 +1,11 @@
+2009-01-28  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* configure.ac (AC_CONFIG_FILES): Add intl/Makefile.
+
+2009-01-28  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* configure.ac (AC_CONFIG_FILES): Add intl/Makefile.
+
 ------------------------------------------------------------------------
 r420 | thesystems | 2007-07-29 14:05:29 -0500 (Sun, 29 Jul 2007) | 1 line
 

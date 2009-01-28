@@ -5,6 +5,9 @@ scripts_DATA=__init__.py \
 			 pidgin.py \
 			 christinePyNotify.py \
 			 trayicon.py \
+			 albumCover.py \
+			 gnomeDBus.py \
+			 lastfm.py \
 			 plugin_base.py
 
 

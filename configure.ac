@@ -4,6 +4,7 @@ AM_INIT_AUTOMAKE('christine', '0.3.0')
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_SRCDIR(libchristine)
 AC_CONFIG_SRCDIR(gui)
 
@@ -135,6 +136,8 @@ libchristine/pattern/Makefile
 libchristine/gui/Makefile
 libchristine/Storage/Makefile
 libchristine/Plugins/Makefile
+libchristine/christine_dbus/Makefile
+libchristine/c3rdparty/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
 po/Makefile

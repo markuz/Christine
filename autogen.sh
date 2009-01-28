@@ -49,7 +49,7 @@ grep "^AM_GNOME_GETTEXT" $srcdir/configure.ac >/dev/null && {
 (automake --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: You must have \`automake' installed."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.9.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
   NO_AUTOMAKE=yes
@@ -62,7 +62,7 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 ||
   echo
   echo "**Error**: Missing \`aclocal'.  The version of \`automake'"
   echo "installed doesn't appear recent enough."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.9.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
 }
@@ -75,7 +75,7 @@ case $CC in
 xlc )
   am_opt=--include-deps;;
 esac
-	 echo "gettextize -f --copy"
+	 echo "gettextize -f --copy --intl"
 	 gettextize -f --copy --no-changelog
       if grep "^AM_PROG_LIBTOOL" configure.ac >/dev/null; then
         echo "Running libtoolize..."
@@ -87,7 +87,7 @@ esac
 	  if ! [ -d m4 ]; then
 		  mkdir m4
 	  fi
-      aclocal -I m4 --install
+      aclocal -I m4 
       if grep "^AM_CONFIG_HEADER" configure.ac >/dev/null; then
         echo "Running autoheader..."
         autoheader
