@@ -39,7 +39,7 @@ import urllib2
 import thread
 import os
 
-class getImage(plugin_base):
+class albumCover(plugin_base):
 	def __init__(self):
 		plugin_base.__init__(self)
 		self.name = 'Album Cover'
@@ -54,6 +54,7 @@ class getImage(plugin_base):
 		if not self.active:
 			return False
 		if getattr(self, 'lastfmimage', False):
+			self.lastfmimage.hide()
 			self.lastfmimage.destroy()
 		if not self.active:
 			return
@@ -70,7 +71,6 @@ class getImage(plugin_base):
 							tags['album'].replace(' ','_')))
 		filename += '.jpg'
 		#TODO: Search for the cover in the file directory.
-		print os.path.join(IMAGEDIR, filename)
 		if os.path.exists(os.path.join(IMAGEDIR, filename)):
 			have_image = True
 		else:
@@ -88,10 +88,11 @@ class getImage(plugin_base):
 					g.write(line)
 				g.close()
 				have_image = True
-		print os.path.join(IMAGEDIR, filename)
 		if have_image:
 			self.lastfmimage = gtk.Image()
-			self.lastfmimage.set_from_file(os.path.join(IMAGEDIR, filename))
+			pixbuf = self.gen_pixbuf_from_file(os.path.join(IMAGEDIR, filename))
+			pixbuf = self.scalePixbuf(pixbuf, 150, 150)
+			self.lastfmimage.set_from_pixbuf(pixbuf)
 			self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
 														False, False, 0)
 			self.lastfmimage.show()

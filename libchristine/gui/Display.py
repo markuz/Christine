@@ -119,7 +119,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		"""
 		Sets text
 		"""
-		self.__Text = text.encode('latin-1')
+		self.__Text = self.encode_text(text)
 
 	def setSong(self, song):
 		"""
@@ -127,10 +127,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		"""
 		if (not isString(song)):
 			raise TypeError('Paramether must be text')
-		try:
-			self.__Song = u'%s'%song.encode('latin-1')
-		except:
-			self.__Song = song
+		self.__Song = u'%s'%self.encode_text(song)
 		self.__emit()
 
 	def getValue(self):

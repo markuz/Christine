@@ -135,6 +135,9 @@ class libraryBase(GtkMisc):
 		if not metatags['title']:
 			filenamesplit = os.path.split(filepath)[1]
 			metatags['title'] = '.'.join(filenamesplit.split('.')[:-1])
+		for k,v in metatags.iteritems():
+			if isinstance(v, str):
+				metatags[k] = self.encode_text(v)
 		kwargs = {"title":metatags['title'],
 				"artist":metatags['artist'],
 				"album":metatags['album'],

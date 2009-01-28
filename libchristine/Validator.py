@@ -83,7 +83,7 @@ def isString(value):
 	"""
 	Compare if it is string or not
 	"""
-	return isinstance(value, str)
+	return isinstance(value, str) or isinstance(value, unicode)
 
 #
 # Compare string if it is empty or not

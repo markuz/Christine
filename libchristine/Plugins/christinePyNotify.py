@@ -59,6 +59,9 @@ class christinePyNotify(plugin_base):
 	
 	def gotTags(self, tags):
 		if PYNOTIFY and self.active:
+			for k,v in tags.iteritems():
+				if isinstance(v, str):
+					tags[k] = self.encode_text(v)
 			notify_text = "<big>%s</big>\n" % tags['title']
 			if tags['artist']:
 				notify_text += " by <big>%s</big>\n" % tags['artist']

@@ -54,13 +54,18 @@ class GtkMisc:
 
 	def gen_pixbuf(self,imagefile):
 		'''Create a pixbuf from  a file'''
-		pixbuf = gtk.gdk.pixbuf_new_from_file(os.path.join(self.wdir,imagefile))
+		pixbuf = self.gen_pixbuf_from_file(os.path.join(self.wdir,imagefile))
 		return pixbuf
-
+	
+	def gen_pixbuf_from_file(self, filename):
+		pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
+		return pixbuf
+	
 	def set_image(self,widget,filename):
 		image = gtk.Image()
 		image.set_from_pixbuf(self.gen_pixbuf(filename))
 		widget.set_image(image)
+	
 
 	def image(self,filename):
 		image = gtk.Image()
