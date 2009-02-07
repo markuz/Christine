@@ -35,6 +35,7 @@ from libchristine.ui import interface
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.globalvars import IMAGEDIR
+import gtk
 import urllib2
 import thread
 import os
@@ -89,6 +90,9 @@ class albumCover(plugin_base):
 				g.close()
 				have_image = True
 		if have_image:
+			if getattr(self, 'lastfmimage', False):
+				self.lastfmimage.hide()
+				self.lastfmimage.destroy()
 			self.lastfmimage = gtk.Image()
 			pixbuf = self.gen_pixbuf_from_file(os.path.join(IMAGEDIR, filename))
 			pixbuf = self.scalePixbuf(pixbuf, 150, 150)
