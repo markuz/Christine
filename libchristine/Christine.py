@@ -153,9 +153,8 @@ class Christine(GtkMisc):
 		self.__VBoxCore.set_property('events',gtk.gdk.ENTER_NOTIFY|
 									gtk.gdk.SCROLL_MASK)
 		self.__VBoxCore.connect('scroll-event',self.__printEvent)
-		self.__HBoxPlayer = xml['HBoxPlayer']
-		self.__HBoxPlayer.connect('event',self.__printEvent)
-		self.__HBoxPlayer.pack_start(self.__Player, True, True, 0)
+		self.HBoxPlayer = xml['HBoxPlayer']
+		self.HBoxPlayer.connect('event',self.__printEvent)
 		self.__Player.bus.add_watch(self.__handlerMessage)
 
 		# Calling some widget descriptors with no callback connected "by hand"
@@ -241,7 +240,7 @@ class Christine(GtkMisc):
 
 		self.Queue = queue()
 
-		self.VBoxList.pack_start(self.Queue.scroll, False, False, 2)
+		self.VBoxList.pack_start(self.Queue.scroll, False, False, 0)
 		self.Queue.tv.connect('row-activated',   self.Queue.itemActivated)
 
 		sourcesList = sources_list()
@@ -322,6 +321,8 @@ class Christine(GtkMisc):
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(path = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
+		self.HBoxPlayer.pack_start(self.__Player)
+		self.HBoxPlayer.show_all()
 		gobject.timeout_add(500, self.__check_items_on_media)
 		#gobject.idle_add(self.__check_items_on_media)
 	
@@ -1262,10 +1263,10 @@ class Christine(GtkMisc):
 			isPlaying = True
 
 		if (self.__Player.isVideo()):
-			self.__HBoxPlayer.show_all()
+			self.HBoxPlayer.show_all()
 		else:
 			visible = self.christineConf.getBool('ui/visualization') and isPlaying
-			self.__HBoxPlayer.set_property('visible', visible) 
+			self.HBoxPlayer.set_property('visible', visible) 
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")

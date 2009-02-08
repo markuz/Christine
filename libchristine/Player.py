@@ -53,25 +53,25 @@ class Player(gtk.DrawingArea, object):
 		"""
 		 Constructor
 		"""
+		gtk.DrawingArea.__init__(self)
+		self.set_events(gtk.gdk.POINTER_MOTION_MASK |
+        gtk.gdk.POINTER_MOTION_HINT_MASK |
+        gtk.gdk.EXPOSURE_MASK |
+        gtk.gdk.KEY_PRESS_MASK |
+        gtk.gdk.KEY_RELEASE_MASK) 
+		self.unset_flags(gtk.DOUBLE_BUFFERED)
+		self.set_flags(gtk.APP_PAINTABLE)
 		self.interface = interface()
 		self.interface.Player = self
 		self.__Logger = LoggerManager().getLogger('Player')
 		self.__Logger.info('Starting player')
-		gtk.DrawingArea.__init__(self)
 		self.config = christineConf(self)
 		self.events = christineEvents()
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
-		self.set_property('events',
-				gtk.gdk.ENTER_NOTIFY_MASK|
-				gtk.gdk.LEAVE_NOTIFY_MASK|
-				gtk.gdk.KEY_PRESS_MASK|
-				gtk.gdk.KEY_RELEASE_MASK)
-		self.connect('destroy',
-				lambda x: self.VideoSink.set_xwindow_id(0L))
-		self.connect('expose-event', self.exposeCallback)
 		self.__createPlaybin()
-
+		self.connect('expose-event', self.exposeCallback)
+		
 	def __createPlaybin(self):
 		"""
 		Create the playbin
@@ -172,21 +172,26 @@ class Player(gtk.DrawingArea, object):
 		element.set_property(property,value)
 
 	def emitExpose(self):
-		self.exposeCallback()
+		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
 		return False
 
-	def exposeCallback(self, window = None, event = None):
+	def exposeCallback(self, window, event):
 		"""
 		Draw the visualization widget.
 		"""
 		# Drawing a black background because some
 		# GTK themes (clearlooks) don't draw it
-
 		w, h = (self.allocation.width, self.allocation.height)
+		print self
 		try:
+			#print dir(self), self.window
+			print self.get_parent()
+			self.VideoSink.set_xwindow_id(self.window.xid)
 			self.__Context = self.window.cairo_create()
-		except:
-			return False
+		except Exception, e:
+			print e
+			print 'No hay window para el videoplayer'
+			return True
 
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
 		                         w - 2 * BORDER_WIDTH,
@@ -201,11 +206,9 @@ class Player(gtk.DrawingArea, object):
 		self.__Context.fill_preserve()
 		self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
-		self.VideoSink.set_xwindow_id(self.window.xid)
 		if self.__ShouldShow:
 			self.show()
-		return True
-
+	
 	def setLocation(self, file):
 		self.__Tags = {}
 		self.Tags = self.__Tags
@@ -225,7 +228,7 @@ class Player(gtk.DrawingArea, object):
 				else:
 					self.__elementSetProperty(self.__PlayBin,'uri', file)
 		self.getType()
-		self.exposeCallback()
+		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
 
 	def getLocation(self):
 		"""
@@ -281,7 +284,8 @@ class Player(gtk.DrawingArea, object):
 			self.__visualizationPlugin = self.__elementFactoryMake(self.config.getString('backend/vis-plugin'))
 			self.VideoSink.set_property('force-aspect-ratio', self.isVideo())
 			self.__ShouldShow = True
-			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
+			self.__elementSetProperty(self.__PlayBin,'vis-plugin', 
+									self.__visualizationPlugin)
 		else:
 			self.__visualizationPlugin = None
 			self.VideoSink.set_property('force-aspect-ratio', True)

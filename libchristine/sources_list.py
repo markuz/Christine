@@ -42,13 +42,22 @@ class sources_list (GtkMisc):
 		self.treeview = self.xml["treeview"]
 		self.treeview.set_headers_visible(True)
 		self.treeview.set_model(self.model)
+		self.treeview.connect('button-press-event', self.treeview_bpe)
 		self.vbox = self.xml['vbox']
-		addButton = self.xml['addSource']
-		delButton = self.xml['delSource']
-
-		addButton.connect('clicked', self.__addSource)
-		delButton.connect('clicked', self.__delSource)
+		self.vbox.set_size_request(75,75)
+		
 		self.__append_columns()
+	
+	def treeview_bpe(self, treeview, event):
+		if event.button == 3:
+			xml = self.__Share.getTemplate('SourcesList','menu')
+			menu = xml['menu']
+			addButton = xml['addSource']
+			delButton = xml['delSource']
+			addButton.connect('activate', self.__addSource)
+			delButton.connect('activate', self.__delSource)
+			menu.popup(None, None, None, 3, event.time)
+			
 
 	def __gen_model(self):
 		if not getattr(self,'model',False):
