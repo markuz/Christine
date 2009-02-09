@@ -61,12 +61,14 @@ class Player(gtk.DrawingArea, object):
         gtk.gdk.KEY_RELEASE_MASK) 
 		self.unset_flags(gtk.DOUBLE_BUFFERED)
 		self.set_flags(gtk.APP_PAINTABLE)
+		self.set_size_request(100,100)
 		self.interface = interface()
 		self.interface.Player = self
 		self.__Logger = LoggerManager().getLogger('Player')
 		self.__Logger.info('Starting player')
 		self.config = christineConf(self)
 		self.events = christineEvents()
+		self.set_size_request(100,100)
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
 		self.__createPlaybin()
