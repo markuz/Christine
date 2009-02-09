@@ -155,6 +155,7 @@ class Christine(GtkMisc):
 		self.__VBoxCore.connect('scroll-event',self.__printEvent)
 		self.HBoxPlayer = xml['HBoxPlayer']
 		self.HBoxPlayer.connect('event',self.__printEvent)
+		self.HBoxPlayer.pack_start(self.__Player)
 		self.__Player.bus.add_watch(self.__handlerMessage)
 
 		# Calling some widget descriptors with no callback connected "by hand"
@@ -321,8 +322,6 @@ class Christine(GtkMisc):
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(path = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
-		self.HBoxPlayer.pack_start(self.__Player)
-		self.HBoxPlayer.show_all()
 		gobject.timeout_add(500, self.__check_items_on_media)
 		#gobject.idle_add(self.__check_items_on_media)
 	
