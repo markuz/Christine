@@ -75,6 +75,7 @@ class libraryBase(GtkMisc):
 		GtkMisc.__init__(self)
 		self.share = Share()
 		self.interface = interface()
+		self.christineConf   = christineConf()
 		self.db = sqlite3db()
 		self.tagger = Tagger()
 		self.Events = christineEvents()
@@ -680,6 +681,17 @@ class library(libraryBase):
 		file            = model.get_value(iter, PATH)
 
 		self.interface.Queue.add(file)
+	
+	def removeFromLibrary(self, widget = None):
+		"""
+		Remove file from library
+		"""
+		selection     = self.tv.get_selection()
+		(model, iter) = selection.get_selected()
+		name,path     = model.get(iter, NAME, PATH)
+		if self.christineConf.getString("backend/last_played") == path:
+			self.christineConf.setValue("backend/last_played","")
+		self.remove(iter)
 
 class queue (libraryBase):
 	def __init__(self):

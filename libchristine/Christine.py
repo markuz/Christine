@@ -356,17 +356,6 @@ class Christine(GtkMisc):
 		iter = selection.get_selected()[1]
 		self.mainLibrary.delete_from_disk(iter)
 
-	def removeFromLibrary(self, widget = None):
-		"""
-		Remove file from library
-		"""
-		selection     = self.mainLibrary.tv.get_selection()
-		(model, iter) = selection.get_selected()
-		name,path     = model.get(iter, NAME, PATH)
-		if self.christineConf.getString("backend/last_played") == path:
-			self.christineConf.setValue("backend/last_played","")
-		self.mainLibrary.remove(iter)
-
 	def setLocation(self, filename):
 		"""
 		Set the location in the player and
@@ -403,7 +392,7 @@ class Christine(GtkMisc):
 		self.__Display.setSong(name)
 		# enable the stream-length for the current song.
 		# this will be stopped when we get the length
-		gobject.idle_add(self.__streamLength)
+		gobject.timeout_add(100, self.__streamLength)
 		# if we can't get the length, in more than 20
 		# times in the same song, then, jump to the
 		# next song
@@ -1205,7 +1194,8 @@ class Christine(GtkMisc):
 								time=text)
 			self.__LocationCount = 0
 			return False
-		except gst.QueryError:
+		except gst.QueryError, e:
+			print e
 			self.__ErrorStreamCount += 1
 			if (self.__ErrorStreamCount > 10):
 				self.setLocation(self.__Player.getLocation())

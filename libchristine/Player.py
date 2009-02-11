@@ -66,6 +66,7 @@ class Player(gtk.DrawingArea, object):
 		self.interface.Player = self
 		self.__Logger = LoggerManager().getLogger('Player')
 		self.__Logger.info('Starting player')
+		self.__Text = ''
 		self.config = christineConf(self)
 		self.events = christineEvents()
 		self.set_size_request(100,100)
@@ -73,6 +74,11 @@ class Player(gtk.DrawingArea, object):
 		self.__Type       = 'sound'
 		self.__createPlaybin()
 		self.connect('expose-event', self.exposeCallback)
+		self.connect('key-press-event', self.__set_text)
+	
+	def __set_text(self, widget, event):
+		name = gtk.gdk.keyval_name()
+		self.__Text(name)
 		
 	def __createPlaybin(self):
 		"""
@@ -184,16 +190,12 @@ class Player(gtk.DrawingArea, object):
 		# Drawing a black background because some
 		# GTK themes (clearlooks) don't draw it
 		w, h = (self.allocation.width, self.allocation.height)
-		print self
 		try:
-			#print dir(self), self.window
-			print self.get_parent()
 			self.VideoSink.set_xwindow_id(self.window.xid)
 			self.__Context = self.window.cairo_create()
 		except Exception, e:
-			print e
 			print 'No hay window para el videoplayer'
-			return True
+			return False
 
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
 		                         w - 2 * BORDER_WIDTH,
@@ -208,7 +210,19 @@ class Player(gtk.DrawingArea, object):
 		self.__Context.fill_preserve()
 		self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
+		self.__Layout  = self.create_pango_layout(self.__Text)
+		(fontw, fonth) = self.__Layout.get_pixel_size()
+		self.__Context.move_to(w, (fonth)/2)
+		self.__Context.set_source_rgb(1,1,1)
+		self.__Layout.set_font_description(self.style.font_desc)
+		self.__Context.update_layout(self.__Layout)
+		self.__Context.show_layout(self.__Layout)
 		if self.__ShouldShow:
+			width = self.getTag('width')
+			height = self.getTag('height')
+			if not width or not height:
+				width, height = 200,200
+			self.set_size_request(width, height)
 			self.show()
 	
 	def setLocation(self, file):
@@ -220,15 +234,26 @@ class Player(gtk.DrawingArea, object):
 			self.__setState(gst.STATE_READY)
 			nfile = 'file://' + file
 			self.__elementSetProperty(self.__PlayBin,'uri', nfile)
+			self.__elementSetProperty(self.__PlayBin, 'suburi', None)
+			self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', None)
+			self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', None)
 			if self.isVideo():
 				self.VideoSink.set_property('force-aspect-ratio', True)
+				subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
+				print subtitle
+				if os.path.exists(subtitle):
+					print 'It does exists!'
+					self.__elementSetProperty(self.__PlayBin, 'suburi', 'file://'+subtitle)
+					self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', 'Lucida Grande 24')
+					self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', 'ISO-8859-1')
+					
 		else:
 			file = file.replace( "\\'", r"'\''" ) + "'"
 			if file:
-				if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
-					self.__elementSetProperty(self.__PlayBin,'uri', file)
-				else:
-					self.__elementSetProperty(self.__PlayBin,'uri', file)
+				#if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
+				self.__elementSetProperty(self.__PlayBin,'uri', file)
+				#else:
+				#	self.__elementSetProperty(self.__PlayBin,'uri', file)
 		self.getType()
 		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
 
