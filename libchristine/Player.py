@@ -69,7 +69,6 @@ class Player(gtk.DrawingArea, object):
 		self.__Text = ''
 		self.config = christineConf(self)
 		self.events = christineEvents()
-		self.set_size_request(100,100)
 		self.__ShouldShow = False
 		self.__Type       = 'sound'
 		self.__createPlaybin()
@@ -221,15 +220,14 @@ class Player(gtk.DrawingArea, object):
 			width = self.getTag('width')
 			height = self.getTag('height')
 			if not width or not height:
-				width, height = 200,200
+				width, height = 400,200
 			self.set_size_request(width, height)
 			self.show()
 	
 	def setLocation(self, file):
-		self.__Tags = {}
-		self.Tags = self.__Tags
-		if self.__visualizationPlugin is not None:
-			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.__visualizationPlugin)
+		self.Tags = {}
+		if getattr(self, 'visualizationPlugin', None) is not None:
+			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.visualizationPlugin)
 		if (isFile(file)):
 			self.__setState(gst.STATE_READY)
 			nfile = 'file://' + file
@@ -240,7 +238,6 @@ class Player(gtk.DrawingArea, object):
 			if self.isVideo():
 				self.VideoSink.set_property('force-aspect-ratio', True)
 				subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
-				print subtitle
 				if os.path.exists(subtitle):
 					print 'It does exists!'
 					self.__elementSetProperty(self.__PlayBin, 'suburi', 'file://'+subtitle)
@@ -254,6 +251,7 @@ class Player(gtk.DrawingArea, object):
 				self.__elementSetProperty(self.__PlayBin,'uri', file)
 				#else:
 				#	self.__elementSetProperty(self.__PlayBin,'uri', file)
+		self.show()
 		self.getType()
 		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
 
@@ -274,6 +272,7 @@ class Player(gtk.DrawingArea, object):
 
 	def playIt(self):
 		"""
+		Seek to secs
 		Play the current song
 		"""
 		self.__setState(gst.STATE_PLAYING)
@@ -308,16 +307,18 @@ class Player(gtk.DrawingArea, object):
 		"""
 		self.__Logger.info("Setting visualization to %s"%repr(active))
 		if active:
-			self.__visualizationPlugin = self.__elementFactoryMake(self.config.getString('backend/vis-plugin'))
+			self.visualizationPlugin = self.__elementFactoryMake(self.config.getString('backend/vis-plugin'))
 			self.VideoSink.set_property('force-aspect-ratio', self.isVideo())
 			self.__ShouldShow = True
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', 
-									self.__visualizationPlugin)
+									self.visualizationPlugin)
+			self.show()
 		else:
-			self.__visualizationPlugin = None
+			self.visualizationPlugin = None
 			self.VideoSink.set_property('force-aspect-ratio', True)
 			self.__ShouldShow = False
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
+			del self.visualizationPlugin
 		return True
 
 	def setVolume(self, volume):
@@ -332,7 +333,7 @@ class Player(gtk.DrawingArea, object):
 		Gets a specific tag
 		"""
 		try:
-			return self.__Tags[key]
+			return self.Tags[key]
 		except:
 			return ""
 
@@ -342,7 +343,8 @@ class Player(gtk.DrawingArea, object):
 		"""
 		if (len(tags.keys()) > 0):
 			for i in tags.keys():
-				self.__Tags[i] = tags[i]
+				self.Tags[i] = tags[i]
+		self.getType()
 
 	def getState(self):
 		"""
@@ -388,7 +390,7 @@ class Player(gtk.DrawingArea, object):
 
 		ext = self.getLocation().split('.').pop().lower()
 
-		if (('video-codec' in self.__Tags.keys()) or (ext in CHRISTINE_VIDEO_EXT)):
+		if (('video-codec' in self.Tags.keys()) or (ext in CHRISTINE_VIDEO_EXT)):
 			self.__ShouldShow = True
 			return True
 		else:
@@ -403,7 +405,7 @@ class Player(gtk.DrawingArea, object):
 
 		ext = self.getLocation().split('.').pop().lower()
 
-		if (('audio-codec' in self.__Tags.keys()) or
+		if (('audio-codec' in self.Tags.keys()) or
 		  	  (ext in self.config.get('backend/allowed_files'))):
 			return True
 		else:

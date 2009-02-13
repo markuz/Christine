@@ -65,17 +65,13 @@ class pidgin(plugin_base):
 		vbox = xml['vbox']
 		self.entry = xml['pidgin_message']
 		self.entry.set_text(self.christineConf.configParser.get('pidgin','message'))
-		acceptbutton = xml['accept']
-		acceptbutton.connect('clicked', self.save_prefs)
+		self.entry.connect('changed', lambda widget: self.save_prefs())
 		response = self.dialog.run()
-		if response:
-			pass
 		self.dialog.destroy()
 
-	def save_prefs(self, button):
+	def save_prefs(self):
 		message = self.entry.get_text()
-		self.christineConf.configParser.set('pidgin','message',message)
-		self.dialog.destroy()
+		self.christineConf.setValue('pidgin/message',message)
 
 	def window_destroy(self, button):
 		self.dialog.destroy()

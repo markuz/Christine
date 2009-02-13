@@ -37,6 +37,7 @@ from dbus.mainloop.glib import DBusGMainLoop
 import gobject
 import os
 import re
+from libchristine.christineConf import christineConf
 
 main_loop = DBusGMainLoop()
 
@@ -53,9 +54,11 @@ class christineDBus(dbus.service.Object):
 	Class that serves as interface between christine stuff and dbus.
 	'''
 	def __init__(self):
+		self.christineConf = christineConf()
 		global DBUS_SESSION
 		bus_name = dbus.service.BusName(DBUS_NAME, bus=DBUS_SESSION)
 		dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
+		self.christineConf.notifyAdd('backend/last_played', self.emit_last_played)
 	
 	@dbus.service.method(DBUS_NAME)
 	def play(self):
@@ -99,5 +102,15 @@ class christineDBus(dbus.service.Object):
 	def get_tags(self, path):
 		#TODO: have to return a coma separated tags.
 		return ''
+
+	def emit_last_played(self, *args):
+		file = self.christineConf.getString('backend/last_played')
+		self.NewLocation(file)
+	
+	@dbus.service.signal(dbus_interface='orc.christine', signature='s')
+	def NewLocation(self, location):
+		print location
+
+
 	
 a = christineDBus()

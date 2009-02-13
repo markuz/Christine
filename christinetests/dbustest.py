@@ -29,6 +29,7 @@
 # This module is for testing christine debus functions.
 #
 
+import gtk
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 import curses
@@ -48,26 +49,31 @@ main_loop = DBusGMainLoop()
 
 
 
-DBUS_SESSION = dbus.SessionBus()
+DBUS_SESSION = dbus.SessionBus(mainloop = main_loop)
 
 obj = DBUS_SESSION.get_object('org.christine',
 							'/org/christine',)
 
+def printLocation(newlocation):
+	print newlocation
+obj.connect_to_signal('NewLocation', printLocation)
 options = {
 		'Play': obj.play,
 		'Pause': obj.pause,
 		'Go prev': obj.go_prev,
 		'Go next': obj.go_next,
 		}
-
+gtk.main()
 keys = ('Play', 'Pause', 'Go prev','Go next')
-while True:
-	for num, key in enumerate(keys):
-		print '%d - %s'%(num, key)
-	value = raw_input()
-	try: 
-		method = options[keys[int(value)]]
-		method()
-		sys.stdout.write(clear)
-	except Exception, e:
-		pass
+#while True:
+#	time.sleep(a
+	
+####for num, key in enumerate(keys):
+####	print '%d - %s'%(num, key)
+####value = raw_input()
+####try: 
+####	method = options[keys[int(value)]]
+####	method()
+####	sys.stdout.write(clear)
+####except Exception, e:
+####	pass
