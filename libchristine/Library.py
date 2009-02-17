@@ -614,9 +614,15 @@ class libraryBase(GtkMisc):
 	def iter_is_valid(self, iter):
 		return self.model.iter_is_valid(iter)
 		
-class library(libraryBase):
+class library(gtk.Widget,libraryBase):
+	__gsignals__= {
+				'popping_menu' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								(gobject.TYPE_PYOBJECT,))
+				}
 	def __init__(self):
+		gobject.GObject.__init__(self)
 		libraryBase.__init__(self)
+		self.interface.mainLibrary = self 
 		self.__logger = LoggerManager().getLogger('Library')
 		self.tv.connect('button-press-event', self.popupMenuHandlerEvent)
 		self.tv.connect('key-press-event',    self.handlerKeyPress)
@@ -670,8 +676,11 @@ class library(libraryBase):
 
 			popup = XML['menu']
 			popup.popup(None, None, None, 3, gtk.get_current_event_time())
+			self.emit('popping_menu', popup)
+			self.interface.library_popup = popup
+			self.Events.executeEvent('main-library-pupup-menu')
 			popup.show_all()
-
+			
 	def popupAddToQueue(self, widget):
 		"""
 		Add the selected item to the queue
@@ -679,7 +688,6 @@ class library(libraryBase):
 		selection       = self.tv.get_selection()
 		(model, iter,)  = selection.get_selected()
 		file            = model.get_value(iter, PATH)
-
 		self.interface.Queue.add(file)
 	
 	def removeFromLibrary(self, widget = None):

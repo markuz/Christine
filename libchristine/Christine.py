@@ -62,7 +62,7 @@ import gc
 
 gc.enable()
 
-plugins_manager = Manager()
+
 
 def close(*args):
 	pidfile = 	os.path.join(os.environ['HOME'],'.christine','christine.pid')
@@ -121,6 +121,7 @@ class Christine(GtkMisc):
 		self.__buildInterface()
 		self.coreWindow.show()
 		self.HBoxSearch.hide()
+		plugins_manager = Manager()
 
 	def __printEvent(self,widget,event):
 		if event.type == gtk.gdk.SCROLL:

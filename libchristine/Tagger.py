@@ -44,7 +44,6 @@ class MP3Track(Singleton,Track):
 	def __init__(self, *args):
 		Track.__init__(self, *args)
 	
-
 	def getTag(self, id3, t):
 		if not id3.has_key(t): return ""
 		text = str(id3[t])
@@ -149,6 +148,7 @@ class Tagger(Singleton):
 		else:
 			self.Rola = FakeTrack()
 		return self.Rola.readTags(self.Song)
+	
 	def taggify(self, file, msg):
 		tags = self.readTags(file)
 		for i in tags.keys():
