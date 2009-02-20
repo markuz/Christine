@@ -26,12 +26,14 @@
 # @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
-import dbus, gobject
-from dbus.mainloop.glib import DBusGMainLoop
+import  gobject
+import dbus
 from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base
 from libchristine.Tagger import Tagger
 from libchristine.Share import Share
+from libchristine.christine_dbus import DBUS_SESSION
+from libchristine.Translator import translate 
 
 class pidgin(plugin_base):
 	"""
@@ -79,7 +81,7 @@ class pidgin(plugin_base):
 		file = self.christineConf.getString('backend/last_played')
 		message = self.christineConf.getString('pidgin/message')
 		if (not message):
-			message = "Escuchando: _artist_ - _title_ - en Christine"
+			message = translate("Listening to: _title_ by _artist_ on Chrsitine")
 			self.christineConf.setValue('pidgin/message', message)
 		message = self.tagger.taggify(file, message)
 		if ( self.obj is not None ):
@@ -93,8 +95,7 @@ class pidgin(plugin_base):
 				self.obj = None
 
 	def SessionStart(self):
-		dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-		session_bus = dbus.SessionBus()
+		session_bus = DBUS_SESSION
 		try:
 			self.obj = session_bus.get_object("im.pidgin.purple.PurpleService",
 											"/im/pidgin/purple/PurpleObject")

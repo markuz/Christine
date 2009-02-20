@@ -64,7 +64,6 @@ class sqlite3db(Singleton):
 		'''
 		tup = (strSQL, args)
 		self.__logger.debug('Executing : %s',repr(tup))
-		self.__logger.debug('type args: %s', type(args))
 		self.cursor.execute(strSQL,args)
 
 	def fetchone(self):
@@ -281,7 +280,8 @@ class sqlite3db(Singleton):
 		@param playlistid: id of the playlist
 		'''
 		strSQL = 'SELECT a.path, a.title, a.album, a.artist, a.time, \
-					\na.playcount, a.rate, a.type, a.track_number, a.genre \
+					\na.playcount, a.rate, a.type, a.track_number, a.genre, \
+					\na.have_tags \
 					\nFROM items as a \
 					\nINNER JOIN playlist_relation as b  \
 					\nON a.id = b.itemid \

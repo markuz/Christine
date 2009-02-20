@@ -46,7 +46,7 @@ from libchristine.gui.Display import Display
 from libchristine.globalvars import PROGRAMNAME, BUGURL
 from libchristine.ui import interface
 from libchristine.gui.openRemote import openRemote
-from libchristine.Library import library, queue,PATH
+from libchristine.Library import library, queue,PATH, HAVE_TAGS
 from libchristine.Library import NAME,PIX,PLAY_COUNT,TIME
 from libchristine.Player import Player
 from libchristine.Share import Share
@@ -331,8 +331,11 @@ class Christine(GtkMisc):
 		size = len(self.mainLibrary.model.basemodel)
 		randompath = ((int(size * random.random())),)
 		if randompath[0]:
-			filepath = self.mainLibrary.model.basemodel[randompath][PATH]
-			self.mainLibrary.check_single_file_data(filepath)
+			filepath, tags = self.mainLibrary.model.basemodel.get(
+							self.mainLibrary.model.basemodel.get_iter(randompath),
+							PATH,HAVE_TAGS)
+			if not tags:
+				self.mainLibrary.check_single_file_data(filepath)
 		return True
 
 	def __srcListRowActivated(self, treeview, path, column):

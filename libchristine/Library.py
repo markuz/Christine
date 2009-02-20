@@ -31,6 +31,7 @@ from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
 from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Events import christineEvents
+from libchristine.Logger import LoggerManager
 
 (PATH,
 NAME,
@@ -73,6 +74,7 @@ class libraryBase(GtkMisc):
 		'''
 		self.iters = {}
 		GtkMisc.__init__(self)
+		self.logger = LoggerManager().getLogger('sqldb')
 		self.share = Share()
 		self.interface = interface()
 		self.christineConf   = christineConf()
@@ -122,8 +124,10 @@ class libraryBase(GtkMisc):
 	
 	def check_single_file_data(self, filepath):
 		metatags = self.library_lib.get_by_path(filepath)
-		if not metatags:
+		if metatags['have_tags'] == 1:
 			return False
+		self.logger.info('I didn\'t find the title tag for %s', filepath)
+		self.logger.debug('metatags: %s',repr(metatags))
 		if not metatags['have_tags']: 
 			metatags = self.tagger.readTags(filepath)
 			track_key = 'track'
@@ -235,7 +239,8 @@ class libraryBase(GtkMisc):
 					TN,values['track_number'],
 					PLAY_COUNT ,values['playcount'],
 					TIME ,values['time'],
-					GENRE ,values['genre'])
+					GENRE ,values['genre'],
+					HAVE_TAGS, [False, True][values['have_tags'] == 1 ])
 			self.iters[path] = iter
 
 	def __set(self):
@@ -647,7 +652,11 @@ class library(gtk.Widget,libraryBase):
 								track_number=track_number,
 								search=search,
 								genre=genre)
-		gobject.timeout_add(100,self.check_file_data,True)
+		gobject.timeout_add(100,self.do_check_file_data)
+	
+	def do_check_file_data(self):
+		self.check_file_data(True)
+		return False
 
 	def handlerKeyPress(self, treeview, event):
 		"""
