@@ -22,7 +22,6 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-from libchristine.gui.GtkMisc import error
 from libchristine.Validator import isNull
 from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
@@ -30,9 +29,9 @@ from libchristine.Validator import isFile
 from globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
-import gobject
 import gst
 import gtk
+import gobject
 import os
 import pygst; pygst.require('0.10')
 
@@ -46,6 +45,14 @@ class Player(gtk.DrawingArea, object):
 	"""
 	Player for manage play files
 	"""
+	__gsignals__= {
+				'player-play' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple()),
+				'player-pause' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple()),
+				'player-stop' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple())
+				}
 	#
 	# Constructor
 	#
@@ -67,6 +74,7 @@ class Player(gtk.DrawingArea, object):
 		self.__Logger = LoggerManager().getLogger('Player')
 		self.__Logger.info('Starting player')
 		self.__Text = ''
+		self.location = None
 		self.config = christineConf(self)
 		self.events = christineEvents()
 		self.__ShouldShow = False
@@ -178,9 +186,11 @@ class Player(gtk.DrawingArea, object):
 						property,str(value))
 		element.set_property(property,value)
 
-	def emitExpose(self):
-		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
-		return False
+#===============================================================================
+#	def emitExpose(self):
+#		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
+#		return False
+#===============================================================================
 
 	def exposeCallback(self, window, event):
 		"""
@@ -193,7 +203,6 @@ class Player(gtk.DrawingArea, object):
 			self.VideoSink.set_xwindow_id(self.window.xid)
 			self.__Context = self.window.cairo_create()
 		except Exception, e:
-			print 'No hay window para el videoplayer'
 			return False
 
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
@@ -226,6 +235,7 @@ class Player(gtk.DrawingArea, object):
 	
 	def setLocation(self, file):
 		self.Tags = {}
+		self.location = file
 		if getattr(self, 'visualizationPlugin', None) is not None:
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.visualizationPlugin)
 		if (isFile(file)):
@@ -239,7 +249,6 @@ class Player(gtk.DrawingArea, object):
 				self.VideoSink.set_property('force-aspect-ratio', True)
 				subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
 				if os.path.exists(subtitle):
-					print 'It does exists!'
 					self.__elementSetProperty(self.__PlayBin, 'suburi', 'file://'+subtitle)
 					self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', 'Lucida Grande 24')
 					self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', 'ISO-8859-1')
@@ -259,16 +268,7 @@ class Player(gtk.DrawingArea, object):
 		"""
 		Gets location
 		"""
-		path = self.__PlayBin.get_property('uri')
-
-		if (not isNull(path)):
-			if (path.split(':')[0] == 'file'):
-				path = path[7:]
-			else:
-				return path
-		else:
-			path = None
-		return path
+		return self.location		
 
 	def playIt(self):
 		"""
@@ -276,6 +276,7 @@ class Player(gtk.DrawingArea, object):
 		Play the current song
 		"""
 		self.__setState(gst.STATE_PLAYING)
+		self.emit('player-play')
 		self.events.executeEvent('onPlay')
 
 	def pause(self):
@@ -283,12 +284,14 @@ class Player(gtk.DrawingArea, object):
 		Pause the current song
 		"""
 		self.__setState(gst.STATE_PAUSED)
+		self.emit('player-pause')
 
 	def stop(self):
 		"""
 		Stop the current song
 		"""
 		self.__setState(gst.STATE_NULL)
+		self.emit('player-stop')
 
 	def __setState(self,state):
 		'''

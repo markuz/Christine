@@ -68,6 +68,7 @@ def close(*args):
 	pidfile = 	os.path.join(os.environ['HOME'],'.christine','christine.pid')
 	if os.path.exists(pidfile):
 		os.unlink(pidfile)
+	sys.exit()
 	gtk.main_quit()
 
 
@@ -550,14 +551,16 @@ class Christine(GtkMisc):
 		Perform the actions to make a search
 		"""
 		text = self.EntrySearch.get_text()
-		if not text:
-			self.mainLibrary.model.TextToSearch = ''
-			self.mainLibrary.model.refilter()
-			self.jumpToPlaying()
-			return True
-		else:
-			self.__lastTypeTime = time.time()
-			gobject.timeout_add(1000,self.__searchTimer)
+#===============================================================================
+#		if not text:
+#			self.mainLibrary.model.TextToSearch = ''
+#			self.mainLibrary.model.refilter()
+#			self.jumpToPlaying()
+#			return True
+#		else:
+#===============================================================================
+		self.__lastTypeTime = time.time()
+		gobject.timeout_add(1000,self.__searchTimer)
 
 	def __searchTimer(self):
 		diff = time.time() - self.__lastTypeTime
@@ -1150,8 +1153,6 @@ class Christine(GtkMisc):
 			percent = b.structure['buffer-percent']
 			self.__Display.setText("%d" % percent)
 			self.__Display.setScale((percent / 100))
-		elif (type_file == gst.MESSAGE_ELEMENT):
-			self.__Player.emitExpose()
 			return True
 		return True
 
@@ -1196,7 +1197,6 @@ class Christine(GtkMisc):
 			self.__LocationCount = 0
 			return False
 		except gst.QueryError, e:
-			print e
 			self.__ErrorStreamCount += 1
 			if (self.__ErrorStreamCount > 10):
 				self.setLocation(self.__Player.getLocation())

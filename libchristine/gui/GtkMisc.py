@@ -113,16 +113,23 @@ class GtkMisc:
 
 class CairoMisc:
 	def __init__(self):
-		pass
+		self.colors = {}
 
 	def getCairoColor(self, color):
-		return color/65535.0
+		if color in self.colors.keys():
+			return color
+		ncolor = color/65535.0
+		self.colors[ncolor] = ncolor
+		return ncolor
 
 	def hex2float(self, hex):
+		if hex in self.hex.keys():
+			return self.hex[hex]
 		ret = []
 		for i in range(4):
 			ic = int(hex[i])
 			ret.append(ic / 255.0)
+		self.hex[hex] = ret
 		return ret
 
 	def render_rect(self, cr, x, y, w, h, o):

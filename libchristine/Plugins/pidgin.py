@@ -44,7 +44,7 @@ class pidgin(plugin_base):
 		self.description = 'This plugin set the song you are playing on pidgin'
 		self.obj = None
 		self.interface = interface()
-		self.events.addToEvent('onPlay', self.set_message)
+		self.interface.Player.connect('player-play',self.set_message)
 		self.Share = Share()
 		self.SessionStart()
 		self.tagger = Tagger()
@@ -62,11 +62,10 @@ class pidgin(plugin_base):
 		'''
 		xml = self.Share.getTemplate('plugin_pidgin_main')
 		self.dialog = xml['dialog']
-		vbox = xml['vbox']
 		self.entry = xml['pidgin_message']
 		self.entry.set_text(self.christineConf.configParser.get('pidgin','message'))
 		self.entry.connect('changed', lambda widget: self.save_prefs())
-		response = self.dialog.run()
+		self.dialog.run()
 		self.dialog.destroy()
 
 	def save_prefs(self):

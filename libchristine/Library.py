@@ -647,7 +647,7 @@ class library(gtk.Widget,libraryBase):
 								track_number=track_number,
 								search=search,
 								genre=genre)
-		self.check_file_data(True)
+		gobject.timeout_add(100,self.check_file_data,True)
 
 	def handlerKeyPress(self, treeview, event):
 		"""
