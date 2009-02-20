@@ -811,8 +811,8 @@ class queue (libraryBase):
 			artist	= self.strip_XML_entities(self.encode_text(values["artist"]))
 			tn		= values["track_number"]
 			genre	= self.strip_XML_entities(self.encode_text(values["genre"]))
-			if name == "":
-				n = os.path.split(file)[1].split(".")
+			if name :
+				n = os.path.split(path)[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			name = "<b><i>%s</i></b>"%name
 			if album !="":
