@@ -53,9 +53,9 @@ VPIX) = range(3)
 
 QUEUE_TARGETS = [
 		('MY_TREE_MODEL_ROW',gtk.TARGET_SAME_WIDGET,0),
-		('text/plain',0,0),
-		('TEXT',0,0),
-		('STRING',0,0)
+		('text/plain',0,1),
+		('TEXT',0,2),
+		('STRING',0,3)
 		]
 
 
@@ -509,76 +509,52 @@ class libraryBase(GtkMisc):
 	# They need to be retouched to work fine.
 
 	def set_drag_n_drop(self):
-		self.tv.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
-				QUEUE_TARGETS,
-				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_MOVE)
-		self.tv.connect("drag_data_received",self.add_it)
-		self.tv.connect("drag_motion",self.check_contexts)
+		#self.tv.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
+		#		QUEUE_TARGETS,
+		#		gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_MOVE)
 		self.tv.enable_model_drag_dest(QUEUE_TARGETS,
-				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_COPY)
-		self.tv.connect("drag-data-get",self.drag_data_get)
+				gtk.gdk.ACTION_DEFAULT)
+		#self.tv.connect("drag_motion",self.check_contexts)
+		#self.tv.connect("drag-data-get",self.drag_data_get)
+		self.tv.connect("drag_data_received",self.add_it)
+		#self.tv.connect("drag_drop", self.dnd_handler)
 
-		self.tv.connect("drag_drop", self.dnd_handler)
 
-	def drag_data_get(self,
-			treeview,
-			context,
-			selection,
-			info,
-			timestamp):
-		tsel = treeview.get_selection()
-		model,iter = tsel.get_selected()
-		text = model.get_value(iter,PATH)
-		text = "file://"+text
-		selection.set(selection.target,8,text)
-		return
+	#def check_contexts(self,*args):
+	#	print args
+	#	return True
 
-	def check_contexts(self,
-			treeview,
-			context,
-			selection,
-			info,
-			timestamp):
-		return True
-
-	def dnd_handler(self,
-			treeview,
-			context,
-			selection,
-			info,
-			timestamp,
-			b=None,
-			c=None):
-		treeview.emit_stop_by_name("drag_drop")
-		tgt = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
-		text = treeview.drag_get_data(context,tgt)
-		return True
+#===============================================================================
+#	def dnd_handler(self,treeview, context, x, y, selection,info, timestamp):
+#		model = treeview.get_model()
+#		data = selection.data
+#		drop_info = treeview.get_dest_row_at_pos(x, y)
+#		if drop_info:
+#			path, position = drop_info
+#			iter  = model.get_iter(path)
+#			if (position == gtk.TREE_VIEW_DROP_BEFORE
+#				or position == gtk.TREE_VIEW_DROP_INTO_OR_BEFORE):
+#				model.insert_before(iter, [data])
+#			else:
+#				model.insert_after(iter, [data])
+#		else:
+#			model.append([data])
+#		if context.action == gtk.gdk.ACTION_MOVE:
+#			context.finish(True, True, timestamp)				
+#		return
+#===============================================================================
 	
 	def drag_data_received(self, *args):
-		print args
+		return True
 
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
 		treeview.emit_stop_by_name("drag_data_received")
 		drop_info = treeview.get_dest_row_at_pos(x, y)
 		if drop_info:
-			model = treeview.get_model()
-			path, position = drop_info
 			data = selection.data
 			if data.startswith('file://'):
 				data = data.replace('file://','')
 			self.add(data)
-			print data
-		return
-
-		treeview.emit_stop_by_name("drag_data_received")
-		target = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
-		if timestamp != 0:
-			text = self.parse_received_data(selection.get_text())
-			while len(text) > 0:
-				file = text.pop()
-				if file[:7] == "file://":
-					file = file[7:].replace("%20"," ")
-				self.add(file)
 		return True
 
 	def delete_from_disk(self,iter):
