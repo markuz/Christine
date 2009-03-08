@@ -81,7 +81,6 @@ class albumCover(plugin_base):
 			album = Album(tags['artist'], tags['album'], APIKEY, SECRET, sessionkey)
 			image = album.getImage(IMAGE_LARGE)
 			if image:
-				name = os.path.split(image)[-1]
 				f = urllib2.urlopen(image)
 				name = os.path.split(image)[-1]
 				g = open(os.path.join(IMAGEDIR, filename),"w")

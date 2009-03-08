@@ -167,13 +167,20 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.fontdesc = self.style.font_desc
 		tcolor = self.style.fg[0]
 		wcolor = self.style.bg[0]
+		bcolor = self.style.bg[3]
+		b1color = self.style.bg[2]
 		self.br, self.bg, self.bb = (self.getCairoColor(wcolor.red),
 				self.getCairoColor(wcolor.green),
 				self.getCairoColor(wcolor.blue))
 		self.fr , self.fg, self.fb = (self.getCairoColor(tcolor.red),
 				self.getCairoColor(tcolor.green),
 				self.getCairoColor(tcolor.blue))
-
+		self.bar , self.bag, self.bab = (self.getCairoColor(bcolor.red),
+				self.getCairoColor(bcolor.green),
+				self.getCairoColor(bcolor.blue))
+		self.bar1 , self.bag1, self.bab1 = (self.getCairoColor(b1color.red),
+				self.getCairoColor(b1color.green),
+				self.getCairoColor(b1color.blue))
 		#clear the bitmap
 		self.context.move_to( x, y )
 		#self.context.set_operator(cairo.OPERATOR_OVER)
@@ -197,14 +204,25 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.context.set_line_cap(cairo.LINE_CAP_BUTT)
 		self.context.set_source_rgb(1,1,1)
 		self.context.fill_preserve()
-		self.context.set_source_rgb(self.fr,self.fg,self.fb)
+		self.context.set_source_rgb(self.bar,self.bag,self.bab)
 		self.context.stroke()
 
 		width = (self.__Value * width)
 
 		self.context.rectangle(fh, ((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
+		pat = cairo.LinearGradient(fh, ((BORDER_WIDTH * 2) + fh)+1, fh, 
+								((BORDER_WIDTH * 2) + fh)+1 + BORDER_WIDTH)
+		pat.add_color_stop_rgb(
+							0.0,
+							self.bar1,self.bag1,self.bab1
+							)
+		pat.add_color_stop_rgb(
+							0.5,
+							self.bar,self.bag,self.bab
+							)
+		self.context.set_source(pat)
 		self.context.fill()
-
+		self.context.set_source_rgb(self.bar,self.bag,self.bab)
 		self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
 		self.context.arc(int (fh + width),
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 4, 0, 2 * math.pi)

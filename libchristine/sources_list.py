@@ -19,7 +19,6 @@
 from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.Share import Share
 from libchristine.Translator import  translate
-from libchristine.libs_christine import lib_library
 from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Logger import LoggerManager
 import gtk
@@ -37,71 +36,71 @@ class sources_list (GtkMisc):
 		if idlist != None:
 			idlist = idlist['id']
 		self.__Share = Share()
-		self.xml = self.__Share.getTemplate('SourcesList','vbox')
+		self.xml = self.__Share.getTemplate('SourcesList', 'vbox')
 		self.__gen_model()
 		self.treeview = self.xml["treeview"]
 		self.treeview.set_headers_visible(True)
 		self.treeview.set_model(self.model)
 		self.treeview.connect('button-press-event', self.treeview_bpe)
 		self.vbox = self.xml['vbox']
-		self.vbox.set_size_request(75,75)
-		
+		self.vbox.set_size_request(75, 75)
 		self.__append_columns()
+	
+	def __del__(self, *args):
+		print "Puta madre me estan borrando!!!"
+		return True
 	
 	def treeview_bpe(self, treeview, event):
 		if event.button == 3:
-			xml = self.__Share.getTemplate('SourcesList','menu')
+			self.__Share = Share()
+			xml = self.__Share.getTemplate('SourcesList', 'menu')
 			menu = xml['menu']
 			addButton = xml['addSource']
 			delButton = xml['delSource']
-			addButton.connect('activate', self.__addSource)
-			delButton.connect('activate', self.__delSource)
+			addButton.connect('activate', self.addSource)
+			delButton.connect('activate', self.delSource)
 			menu.popup(None, None, None, 3, event.time)
 			
 
 	def __gen_model(self):
-		if not getattr(self,'model',False):
-			self.model = gtk.ListStore(str,str,gtk.gdk.Pixbuf)
+		if not getattr(self, 'model', False):
+			self.model = gtk.ListStore(str, str, gtk.gdk.Pixbuf)
 		else:
 			self.model.clear()
 		sources = self.__db.getPlaylists()
-		#p = os.path.join(os.environ["HOME"],".christine","sources")
-		#files = os.listdir(p)
 		for source in sources:
-			#file = os.path.join(os.environ["HOME"],".christine","sources",fname)
-			#if os.path.isfile(os.path.join(file)):
-			#fname = os.path.split(file)[-1]
 			ltype = '1'
 			iter = self.model.append()
-			self.model.set(iter,
-					LIST_NAME,source['name'],
-					LIST_TYPE,ltype)
+			self.model.set(iter, LIST_NAME, source['name'], LIST_TYPE, ltype)
 
 	def __append_columns(self):
 		column = gtk.TreeViewColumn("Source")
 		text = gtk.CellRendererText()
-		pix= gtk.CellRendererPixbuf()
-		column.pack_start(pix,False)
-		column.pack_start(text,True)
-		column.add_attribute(text,"text",LIST_NAME)
-		column.add_attribute(pix,"pixbuf",LIST_PIXBUF)
+		pix = gtk.CellRendererPixbuf()
+		column.pack_start(pix, False)
+		column.pack_start(text, True)
+		column.add_attribute(text, "text", LIST_NAME)
+		column.add_attribute(pix, "pixbuf", LIST_PIXBUF)
 		self.treeview.append_column(column)
 
-	def __addSource(self,button):
+	def addSource(self, button):
 		xml = self.__Share.getTemplate('NewSourceDialog')
 		dialog = xml['dialog']
 		entry = xml['entry']
 		response = dialog.run()
 		if response == 1:
+			exists = False
 			for row in self.model:
 				name = row[LIST_NAME]
-				if entry.get_text() != name:
-					self.__db.addPlaylist(entry.get_text())
-					self.__gen_model()
+				if entry.get_text() == name:
+					exists = True
+			if not exists:
+				self.__db.addPlaylist(entry.get_text())
+		self.__gen_model()
 		dialog.destroy()
 
 
-	def __delSource(self,button):
+	def delSource(self, button):
 		xml = self.__Share.getTemplate('genericQuestion')
 		dialog = xml['dialog']
 		label = xml['label']
@@ -114,7 +113,6 @@ class sources_list (GtkMisc):
 				fname = model.get_value(iter, LIST_NAME)
 				self.__db.removePlayList(fname)
 			self.__gen_model()
-
 		dialog.destroy()
 
 

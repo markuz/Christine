@@ -485,6 +485,7 @@
                         <child>
                           <widget class="GtkHScale" id="HScaleVolume">
                             <property name="width_request">100</property>
+                            <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="adjustment">0 0 1 0 0 0</property>
                             <property name="draw_value">False</property>
@@ -552,6 +553,7 @@
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkVBox" id="VBoxList">
+                    <property name="width_request">150</property>
                     <property name="visible">True</property>
                     <child>
                       <placeholder/>

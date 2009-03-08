@@ -60,7 +60,7 @@ import webbrowser
 import gc
 
 
-gc.enable()
+#gc.enable()
 
 
 
@@ -1039,13 +1039,13 @@ class Christine(GtkMisc):
 		gobject.idle_add(self.__addFileCycle, library)
 
 	def __addFileCycle(self, library):
-		for i in  xrange(1,5):
+		for i in  xrange(1,10):
 			if self.__FilesToAdd:
 				m = divmod(len(library.model.basemodel), 500)[1]
 				new_file = self.__FilesToAdd.pop()
 				library.add(new_file)
-				if not m:
-					library.save()
+				#if not m:
+				#	library.save()
 				self.__updateAddProgressBar(new_file)
 			else:
 				library.save()

@@ -142,38 +142,4 @@ class notifyWindow(gtk.Window, GtkMisc, CairoMisc):
 		cr.paint()
 
 		for c in self.get_children():
-			 self.propagate_expose(c, event)
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			self.propagate_expose(c, event)

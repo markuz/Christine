@@ -95,6 +95,7 @@ class libraryBase(GtkMisc):
 		#self.scroll.connect('scroll-event', self.__check_file_data)
 		self.scroll.connect('scroll-event', self.__scroll_child)
 		self.tv.connect('scroll-event', self.__scroll_child)
+
 	
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
@@ -508,12 +509,11 @@ class libraryBase(GtkMisc):
 	# They need to be retouched to work fine.
 
 	def set_drag_n_drop(self):
-		self.tv.connect("drag_motion",self.check_contexts)
 		self.tv.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
 				QUEUE_TARGETS,
 				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_MOVE)
-
 		self.tv.connect("drag_data_received",self.add_it)
+		self.tv.connect("drag_motion",self.check_contexts)
 		self.tv.enable_model_drag_dest(QUEUE_TARGETS,
 				gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_COPY)
 		self.tv.connect("drag-data-get",self.drag_data_get)
@@ -553,9 +553,23 @@ class libraryBase(GtkMisc):
 		tgt = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
 		text = treeview.drag_get_data(context,tgt)
 		return True
+	
+	def drag_data_received(self, *args):
+		print args
 
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
-		#treeview.emit_stop_by_name("drag_drop")
+		treeview.emit_stop_by_name("drag_data_received")
+		drop_info = treeview.get_dest_row_at_pos(x, y)
+		if drop_info:
+			model = treeview.get_model()
+			path, position = drop_info
+			data = selection.data
+			if data.startswith('file://'):
+				data = data.replace('file://','')
+			self.add(data)
+			print data
+		return
+
 		treeview.emit_stop_by_name("drag_data_received")
 		target = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
 		if timestamp != 0:
