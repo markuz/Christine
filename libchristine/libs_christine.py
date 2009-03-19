@@ -130,14 +130,6 @@ class lib_library(object):
 			return True
 		return False
 
-	def get_type(self,file):
-		#TODO: Fixme, wher the hell is sound or video defined??
-		ext = file.split(".").pop()
-		if ext in sound:
-			return "sound"
-		if ext in video:
-			return "video"
-
 	def get_all(self):
 		return self.__files
 

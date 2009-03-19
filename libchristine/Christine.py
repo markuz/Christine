@@ -340,8 +340,7 @@ class Christine(GtkMisc):
 
 	def __srcListRowActivated(self, treeview, path, column):
 		model = treeview.get_model()
-		fname = model.get_value(model.get_iter(path),
-				LIST_NAME)
+		fname = model.get_value(model.get_iter(path), LIST_NAME)
 		self.mainLibrary.loadLibrary(fname)
 		self.christineConf.setValue('backend/last_source', fname)
 	
@@ -553,7 +552,7 @@ class Christine(GtkMisc):
 		"""
 		Perform the actions to make a search
 		"""
-		text = self.EntrySearch.get_text()
+		#text = self.EntrySearch.get_text()
 #===============================================================================
 #		if not text:
 #			self.mainLibrary.model.TextToSearch = ''
@@ -567,9 +566,11 @@ class Christine(GtkMisc):
 
 	def __searchTimer(self):
 		diff = time.time() - self.__lastTypeTime
-		if diff > 0.5 and diff < 1:
-			self.mainLibrary.model.TextToSearch = self.EntrySearch.get_text().lower()
-			self.mainLibrary.model.refilter()
+		text = self.EntrySearch.get_text().lower()
+		if diff > 0.5 and diff < 1 or not text:
+			self.mainLibrary.model.TextToSearch = text
+			self.mainLibrary.filter(text) 
+			#self.mainLibrary.model.refilter()
 			self.jumpToPlaying()
 			return False
 		if diff > 1.5:
@@ -794,7 +795,6 @@ class Christine(GtkMisc):
 		else:
 			location = path
 		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
-
 		if self.__LibraryCurrentIter != None:
 			if self.__StatePlaying:
 				iter = self.__LibraryCurrentIter
@@ -803,13 +803,13 @@ class Christine(GtkMisc):
 						gtk.gdk.INTERP_BILINEAR)
 				self.mainLibrary.set(iter, PIX, pix)
 		iter = self.mainLibrary.search(location, PATH)
-		#iter = self.mainLibrary.model.convert_natural_iter_to_iter(self.__LibraryCurrentIter)
 		if iter != None:
 			self.IterCurrentPlaying = iter
 			npath = self.mainLibrary.model.sorted_path(iter)
 			if (npath != None):
-				self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
-				self.mainLibrary.tv.set_cursor(npath)
+				if npath[0]:
+					self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
+					self.mainLibrary.tv.set_cursor(npath)
 
 	def jumpTo(self, widget):
 		"""
@@ -922,7 +922,7 @@ class Christine(GtkMisc):
 		walk = XML['walk']
 		uri = self.christineConf.getString("ui/LastFolder")
 		if uri:
-			ds.set_uri(uri)
+			ds.set_uri('file://'+uri)
 		ds.set_icon(self.share.getImageFromPix('logo'))
 		response  = ds.run()
 		filenames = ds.get_filenames()
@@ -983,8 +983,8 @@ class Christine(GtkMisc):
 		label = xml['label1']
 		self.__walking = True
 		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
-		gobject.timeout_add(100, self.__walkProgressPulse,progress)
-		#gobject.idle_add(self.__walkProgressPulse, progress)
+		gobject.timeout_add(200, self.__walkProgressPulse,progress)
+		dialog.set_modal(False)
 		response = dialog.run()
 		if response:
 			self.__walking = False
@@ -1001,11 +1001,7 @@ class Christine(GtkMisc):
 			(dirpath, dirnames, files) = a.next()
 			del dirnames
 			filenames.append([dirpath, files])
-			try:
-				npath = u'%s'%dirpath.decode('latin-1')
-				npath = u'%s'%npath.encode('latin-1')
-			except:
-				return True
+			npath = self.encode_text(dirpath)
 			label.set_text(translate('Exploring') + '%s'%npath)
 			allowdexts = self.christineConf.getString('backend/allowed_files')
 			allowdexts = allowdexts.split(',')
@@ -1077,13 +1073,15 @@ class Christine(GtkMisc):
 		XML = self.share.getTemplate('addFiles')
 		XML.signal_autoconnect(self)
 
-		self.__AddWindow       = XML['dialog']
+		self.__AddWindow       = XML['window']
 		self.__AddWindow.set_transient_for(self.coreWindow)
 		self.__AddProgress     = XML['progressbar']
 		self.__AddCloseButton  = XML['close']
+		self.__AddCloseButton.connect('clicked',lambda *args: self.importCancel())
 		self.__AddFileLabel    = XML['file_label']
 		self.__AddFileLabel.set_text('None')
-		self.__AddWindow.connect('response', self.importCancel)
+		self.__AddWindow.connect('destroy', lambda *args: self.importCancel())
+		self.__AddWindow.show_all()
 
 		self.__AddCloseButton.grab_add()
 		# Be sure that we are working with a list of files
@@ -1116,7 +1114,7 @@ class Christine(GtkMisc):
 		"""
 		self.__Paths.append(model.get_value(iter, PATH))
 
-	def importCancel(self, dialog, response):
+	def importCancel(self):
 		"""
 		Cancel de import stuff
 		"""

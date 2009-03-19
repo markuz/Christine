@@ -73,6 +73,7 @@ class libraryBase(GtkMisc):
 		and set some class variables
 		'''
 		self.iters = {}
+		self.filter_text = ''
 		GtkMisc.__init__(self)
 		self.logger = LoggerManager().getLogger('sqldb')
 		self.share = Share()
@@ -92,11 +93,9 @@ class libraryBase(GtkMisc):
 		self.add_columns()
 		self.scroll = self.__xml['scrolledwindow']
 		self.scroll.add_events(gtk.gdk.SCROLL_MASK)
-		#self.scroll.connect('scroll-event', self.__check_file_data)
 		self.scroll.connect('scroll-event', self.__scroll_child)
 		self.tv.connect('scroll-event', self.__scroll_child)
 
-	
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
 			self.last_scroll_time = time.time()
@@ -114,6 +113,8 @@ class libraryBase(GtkMisc):
 				endpath = paths[1][0]
 				model = self.model.getModel()
 				for i in range(startpath, endpath +1):
+					if not self.model.iter_is_valid(i):
+						continue
 					siter = model.get_iter(i)
 					filepath  = self.model.get_value(siter, PATH)
 					self.check_single_file_data(filepath)
@@ -125,6 +126,8 @@ class libraryBase(GtkMisc):
 	
 	def check_single_file_data(self, filepath):
 		metatags = self.library_lib.get_by_path(filepath)
+		if metatags == None:
+			return False
 		if metatags['have_tags'] == 1:
 			return False
 		self.logger.info('I didn\'t find the title tag for %s', filepath)
@@ -161,9 +164,8 @@ class libraryBase(GtkMisc):
 		@param library: name of the library to be loaded.
 		'''
 		self.tv.set_model(None)
+		self.library_name = library
 		self.library_lib = lib_library(library)
-		self.__music = self.library_lib.get_all()
-		self.__iterator = self.__music
 		self.gen_model()
 		self.model.createSubmodels()
 		self.fillModel()
@@ -199,7 +201,6 @@ class libraryBase(GtkMisc):
 		Generates the model
 		'''
 		if not getattr(self, 'model', False):
-			i = gobject.TYPE_INT
 			self.model = LibraryModel(
 					str, #path
 					str, #name
@@ -219,6 +220,8 @@ class libraryBase(GtkMisc):
 
 	def fillModel(self):
 		sounds = self.library_lib.get_all()
+		self.__music = sounds
+		self.__iterator = self.__music
 		pix = self.share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		keys = sounds.keys()
@@ -230,7 +233,9 @@ class libraryBase(GtkMisc):
 					values[key] = self.encode_text(values[key])
 			searchstring = ''.join((values['title'], values['artist'],
 								values['album'],	values['type']))
-			iter = self.model.append(PATH,path,
+			if searchstring.lower().find(self.filter_text) > -1 or \
+			    self.filter_text == '':
+				iter = self.model.append(PATH,path,
 					NAME, values['title'],
 					SEARCH,searchstring,
 					PIX,pix,
@@ -242,7 +247,7 @@ class libraryBase(GtkMisc):
 					TIME ,values['time'],
 					GENRE ,values['genre'],
 					HAVE_TAGS, [False, True][values['have_tags'] == 1 ])
-			self.iters[path] = iter
+				self.iters[path] = iter
 
 	def __set(self):
 		for i in range(20):
@@ -525,27 +530,22 @@ class libraryBase(GtkMisc):
 	#	return True
 
 #===============================================================================
-#	def dnd_handler(self,treeview, context, x, y, selection,info, timestamp):
-#		model = treeview.get_model()
-#		data = selection.data
-#		drop_info = treeview.get_dest_row_at_pos(x, y)
-#		if drop_info:
-#			path, position = drop_info
-#			iter  = model.get_iter(path)
-#			if (position == gtk.TREE_VIEW_DROP_BEFORE
-#				or position == gtk.TREE_VIEW_DROP_INTO_OR_BEFORE):
-#				model.insert_before(iter, [data])
-#			else:
-#				model.insert_after(iter, [data])
-#		else:
-#			model.append([data])
-#		if context.action == gtk.gdk.ACTION_MOVE:
-#			context.finish(True, True, timestamp)				
-#		return
+#	def dnd_handler(self,
+#			treeview,
+#			context,
+#			selection,
+#			info,
+#			timestamp,
+#			b=None,
+#			c=None):
+#		treeview.emit_stop_by_name("drag_drop")
+#		tgt = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
+#		text = treeview.drag_get_data(context,tgt)
+#		return True
+#	
+#	def drag_data_received(self, *args):
+#		return True
 #===============================================================================
-	
-	def drag_data_received(self, *args):
-		return True
 
 	def add_it(self,treeview,context,x,y,selection,target,timestamp):
 		treeview.emit_stop_by_name("drag_data_received")
@@ -553,7 +553,8 @@ class libraryBase(GtkMisc):
 		if drop_info:
 			data = selection.data
 			if data.startswith('file://'):
-				data = data.replace('file://','')
+				data = data.replace('file://','').replace('%20',' ')
+				data = data.replace('\n','').replace('\r','')
 			self.add(data)
 		return True
 
@@ -596,6 +597,11 @@ class libraryBase(GtkMisc):
 		wrapper for the self.model.search
 		'''
 		return self.model.search(*args)
+	
+	def filter(self, text):
+		self.filter_text = text
+		self.loadLibrary(self.library_name)
+		self.tv.realize()
 	
 	def get_path(self, *args):
 		'''
@@ -727,6 +733,7 @@ class queue (libraryBase):
 		if isinstance(file, tuple):
 			file = file[0]
 		if not os.path.isfile(file):
+			print ("No encontre el archivo",file)
 			return False
 		name = os.path.split(file)[1]
 		if isinstance(name,()):
@@ -792,8 +799,6 @@ class queue (libraryBase):
 				"genre":tags['genre']}
 		self.save()
 
-		
-	
 	def fillModel(self):
 		sounds = self.library_lib.get_all()
 		pix = self.share.getImageFromPix('blank')

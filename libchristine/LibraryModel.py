@@ -81,13 +81,15 @@ class christineModel(gtk.GenericTreeModel):
 
 	def append(self, *args):
 		self.__data.append(self.__emptyData[:])
-		iter = len(self.__data) -1
+		path = len(self.__data) -1
 		if args:
-			return self.set_value(iter, *args)
-		path = (iter,)
-		niter = self.get_iter((iter,))
-		self.row_inserted(path, niter)
+			self.emit_inserted = True
+			return self.set_value(path, *args)
+		path = (path,)
+		iter = self.get_iter(path)
+		self.row_inserted(path, iter)
 		self.invalidate_iters()
+		
 		return iter
 
 	def prepend(self, *args):
@@ -104,28 +106,32 @@ class christineModel(gtk.GenericTreeModel):
 	def set(self, iter, *args):
 		return self.set_value(iter, *args)
 
-	def set_value(self, iter, *args):
-		if isinstance(iter, tuple):
-			iter = iter[0]
-		elif isinstance(iter, gtk.TreeIter):
-			path = self.get_path(iter)
+	def set_value(self, path, *args):
+		if isinstance(path, tuple):
+			path = path[0]
+		elif isinstance(path, gtk.TreeIter):
+			path = self.get_path(path)
 			if path:
-				iter = path[0]
+				path = path[0]
 			else:
 				return False
-		list = self.__data[iter]
+		list = self.__data[path]
 		size = len(args)
 		for c in xrange(0,size,2):
 			list[args[c]] = args[c+1]
-		niter = self.get_iter((iter,))
-		self.row_changed(iter, niter)
+		iter = self.get_iter((path,))
+		if self.emit_inserted:
+			self.row_inserted(path, iter)
+			self.emit_inserted = False
+		self.row_changed(path, iter)
 		return iter
 
 	def on_get_iter(self, rowref):
 		try:
-			return self.__data[rowref[0]]
+			result = self.__data[rowref[0]]
 		except:
-			return None
+			result = None
+		return result
 
 	def on_get_path(self, rowref):
 		return (self.__data.index(rowref), rowref[0])[isinstance(rowref, tuple)]
@@ -231,24 +237,10 @@ class LibraryModel:
 		return self.basemodel.prepend(*args)
 
 	def createSubmodels(self):
-		self.__filter = self.basemodel.filter_new()
-		self.__sorted = gtk.TreeModelSort(self.__filter)
-		self.__filter.set_visible_func(self.filter)
-
-	def filter(self, model, iter):
-		if not self.TextToSearch:
-			return True
-		value = model.get_value(iter, SEARCH)
-		return value.lower().find(self.TextToSearch) >= 0 
+		self.__sorted = gtk.TreeModelSort(self.basemodel)
 
 	def getModel(self):
 		return self.__sorted
-
-	def set_visible_func(self,obj):
-		self.__filter.set_visible_func(obj)
-
-	def refilter(self):
-		self.__filter.refilter()
 
 	def remove(self,iter):
 		iter = self.getNaturalIter(iter)
@@ -313,13 +305,13 @@ class LibraryModel:
 		return self.basemodel.get_iter_first()
 
 	def clear(self, *args):
-		return self.basemodel.clear()
+		result = self.basemodel.clear()
+		return result
 
 	def convert_natural_iter_to_iter(self, iter):
 		if not self.basemodel.iter_is_valid(iter):
 			return None
 		try:
-			iter = self.__filter.convert_child_iter_to_iter(iter)
 			iter = self.__sorted.convert_child_iter_to_iter(None, iter)
 			return iter	
 		except:
@@ -337,9 +329,6 @@ class LibraryModel:
 		iter = self.__sorted.convert_iter_to_child_iter(None, iter)
 		if self.basemodel.iter_is_valid(iter):
 			return iter
-		iter = self.__filter.convert_iter_to_child_iter(iter)
-		if self.basemodel.iter_is_valid(iter):
-			return iter
 		return None
 
 	def getIterValid(self,iter):
@@ -350,13 +339,9 @@ class LibraryModel:
 	def search(self, search_string, column):
 		iter = self.basemodel.search_iter_on_column(search_string, column)
 		if iter:
-			try:
-				fiter = self.__filter.convert_child_iter_to_iter(iter)
-				niter = self.__sorted.convert_child_iter_to_iter(None, fiter)
-				if niter:
-					return niter
-			except:
-				return None
+			niter = self.__sorted.convert_child_iter_to_iter(None, iter)
+			if niter:
+				return niter
 		return None
 	
 	def __search(self, model, path, iter, userdata):
@@ -388,8 +373,9 @@ class LibraryModel:
 		if isinstance(iter, gtk.TreeIter):
 			if self.__sorted.iter_is_valid(iter):
 				return self.__sorted.iter_next(iter)
-		print iter
 	
 	def iter_is_valid(self, iter):
-		return self.__sorted.iter_is_valid(iter)
+		if isinstance(iter,gtk.TreeIter):
+			return self.__sorted.iter_is_valid(iter)
+		return False
 	
