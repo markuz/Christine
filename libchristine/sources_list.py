@@ -21,15 +21,18 @@ from libchristine.Share import Share
 from libchristine.Translator import  translate
 from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Logger import LoggerManager
+import gobject
 import gtk
 
 (LIST_NAME,
 LIST_TYPE,
-LIST_PIXBUF) = xrange(3)
+LIST_PIXBUF,
+LIST_EXTRA) = xrange(4)
 
 class sources_list (GtkMisc):
 	def __init__(self):
 		GtkMisc.__init__(self)
+		self.music_iter = None
 		self.__logger = LoggerManager().getLogger('sources_list')
 		self.__db = sqlite3db()
 		idlist = self.__db.PlaylistIDFromName(list)
@@ -45,6 +48,7 @@ class sources_list (GtkMisc):
 		self.vbox = self.xml['vbox']
 		self.vbox.set_size_request(75, 75)
 		self.__append_columns()
+		
 	
 	def __del__(self, *args):
 		print "Puta madre me estan borrando!!!"
@@ -64,14 +68,26 @@ class sources_list (GtkMisc):
 
 	def __gen_model(self):
 		if not getattr(self, 'model', False):
-			self.model = gtk.ListStore(str, str, gtk.gdk.Pixbuf)
+			self.model = gtk.TreeStore(str, str, gtk.gdk.Pixbuf,gobject.TYPE_PYOBJECT)
 		else:
 			self.model.clear()
 		sources = self.__db.getPlaylists()
 		for source in sources:
-			ltype = '1'
-			iter = self.model.append()
+			ltype = 'source'
+			iter = self.model.append(self.music_iter)
+			if source['name'] == 'music':
+				self.music_iter = iter
 			self.model.set(iter, LIST_NAME, source['name'], LIST_TYPE, ltype)
+		
+		#Add the albums node:
+		ltype = 'radio'
+		self.radioiter = self.model.append(None)
+		self.model.set(self.radioiter, LIST_NAME, "Radio", LIST_TYPE, ltype)
+		radios = self.__db.getRadio()
+		for radio in radios:
+			iter = self.model.append(self.radioiter)
+			self.model.set(iter, LIST_NAME, radio['title'], LIST_TYPE, ltype,
+						   LIST_EXTRA, radio)
 
 	def __append_columns(self):
 		column = gtk.TreeViewColumn("Source")
@@ -84,21 +100,49 @@ class sources_list (GtkMisc):
 		self.treeview.append_column(column)
 
 	def addSource(self, button):
-		xml = self.__Share.getTemplate('NewSourceDialog')
-		dialog = xml['dialog']
-		entry = xml['entry']
-		response = dialog.run()
-		if response == 1:
-			exists = False
-			for row in self.model:
-				name = row[LIST_NAME]
-				if entry.get_text() == name:
-					exists = True
-			if not exists:
-				self.__db.addPlaylist(entry.get_text())
-		self.__gen_model()
-		dialog.destroy()
-
+		model, iter = self.treeview.get_selection().get_selected()
+		type = 'music'
+		if iter:
+			name, type, extra = model.get(iter,LIST_NAME,LIST_TYPE, LIST_EXTRA)
+		if type == 'music':
+			xml = self.__Share.getTemplate('NewSourceDialog')
+			dialog = xml['dialog']
+			entry = xml['entry']
+			response = dialog.run()
+			if response == 1:
+				exists = False
+				for row in self.model:
+					name = row[LIST_NAME]
+					if entry.get_text() == name:
+						exists = True
+				if not exists:
+					self.__db.addPlaylist(entry.get_text())
+			self.__gen_model()
+			dialog.destroy()
+		elif type == 'radio':
+			xml = self.__Share.getTemplate('NewRadioDialog')
+			dialog = xml['dialog']
+			entry = xml['entry']
+			title_entry = xml['title_entry']
+			response = dialog.run()
+			dialog.destroy()
+			if response == 1:
+				title = title_entry.get_text()
+				if not title:
+					return True
+				url = entry.get_text()
+				exists = self.__db.get_radio_by_url(url)
+				if exists:
+					return True
+				self.__db.add_radio(title, url)
+				radio = self.__db.get_radio_by_url(url)
+				if radio:
+					radio = radio[0]
+					iter = self.model.append(self.radioiter)
+					print radio
+					self.model.set(iter, LIST_NAME, radio['title'], LIST_TYPE, 'radio',
+						   LIST_EXTRA, radio)
+			
 
 	def delSource(self, button):
 		xml = self.__Share.getTemplate('genericQuestion')

@@ -254,12 +254,15 @@ class Player(gtk.DrawingArea, object):
 					self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', 'ISO-8859-1')
 					
 		else:
-			file = file.replace( "\\'", r"'\''" ) + "'"
+			print 2
+			file = file.replace( "\\'", r"'\''" )
 			if file:
 				#if (file.split(':')[0] in ['http', 'dvd', 'vcd']):
+				print file
 				self.__elementSetProperty(self.__PlayBin,'uri', file)
 				#else:
 				#	self.__elementSetProperty(self.__PlayBin,'uri', file)
+		print file
 		self.show()
 		self.getType()
 		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))

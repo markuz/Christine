@@ -332,5 +332,50 @@ class sqlite3db(Singleton):
 		self.execute(strSQL)
 		return self.fetchall()		
 
-
+	def getAlbums(self):
+		'''
+		Returns a list with all albums in the item list
+		'''
+		strSQL = 'SELECT artist as album FROM items WHERE album <> "" GROUP BY album'
+		self.execute(strSQL)
+		result = self.fetchall()
+		tmplist = []
+		for value in result:
+			if value['album'].strip():
+				tmplist.append(value['album'])
+		tmplist.sort()
+		return tmplist
+	
+	def getRadio(self):
+		'''
+		Return a list of radio stations
+		'''
+		strSQL = 'SELECT * FROM radio'
+		self.execute(strSQL)
+		result = self.fetchall()
+		return result
+	
+	def get_radio_by_url(self, url):
+		'''
+	 	Look a radio station for its url
+	 	@param url:
+	 	'''
+		strSQL = 'SELECT * FROM radio WHERE url = ?'
+		self.execute(strSQL, url)
+		result = self.fetchall()
+		return result
+	
+	def add_radio(self, name, url):
+		'''
+		Add a radio station by its url
+		@param url:
+		'''
+		strSQL = '''
+		INSERT INTO radio values(0,?,?,'')
+		'''
+		self.execute(strSQL,name, url)
+		result = self.fetchall()
+		self.commit()
+		return result
+		
 

@@ -51,7 +51,7 @@ from libchristine.Library import NAME,PIX,PLAY_COUNT,TIME
 from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
-from libchristine.sources_list import sources_list, LIST_NAME
+from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_EXTRA
 from libchristine.Logger import LoggerManager
 from libchristine.Events import christineEvents
 from libchristine.christine_dbus import *
@@ -246,11 +246,11 @@ class Christine(GtkMisc):
 		self.VBoxList.pack_start(self.Queue.scroll, False, False, 0)
 		self.Queue.tv.connect('row-activated',   self.Queue.itemActivated)
 
-		sourcesList = sources_list()
-		self.VBoxList.pack_start(sourcesList.vbox)
-		sourcesList.treeview.connect('row-activated',
+		self.sourcesList = sources_list()
+		self.VBoxList.pack_start(self.sourcesList.vbox)
+		self.sourcesList.treeview.connect('row-activated',
 				self.__srcListRowActivated)
-		sourcesList.vbox.show_all()
+		self.sourcesList.vbox.show_all()
 
 		self.__ControlButton = xml['control_button']
 
@@ -340,9 +340,39 @@ class Christine(GtkMisc):
 
 	def __srcListRowActivated(self, treeview, path, column):
 		model = treeview.get_model()
-		fname = model.get_value(model.get_iter(path), LIST_NAME)
-		self.mainLibrary.loadLibrary(fname)
-		self.christineConf.setValue('backend/last_source', fname)
+		fname, ftype, fextra = model.get(model.get_iter(path), LIST_NAME, LIST_TYPE, LIST_EXTRA)
+		if ftype == 'source':
+			self.mainLibrary.loadLibrary(fname)
+			self.christineConf.setValue('backend/last_source', fname)
+		elif ftype == "radio":
+			if fname == 'Radio':
+				return True
+			location = fextra['url']
+			extension = location.split(".").pop()
+			if location.split(":")[0] == "file" or \
+				location[0] == '/':
+				if location.split(":")[0] == "file":
+					file = ":".join(location.split(":")[1:])[2:]
+				else:
+					file = location
+				try:
+					urldesc = open(file)
+				except IOError:
+					error(translate('%s does not exists'%file))
+					return False
+			else:
+				import urllib
+				gate = urllib.FancyURLopener()
+				urldesc = gate.open(location)
+
+			if extension == "pls":
+				for i in urldesc.readlines():
+					print i
+					if i.lower().find("file") >= 0:
+						location = i.split("=").pop().strip()
+						break
+			self.setLocation(location.strip().strip("'"))
+			self.simplePlay()
 	
 	def __on_corewindow_resized(self, window, event):
 		'''
@@ -899,7 +929,7 @@ class Christine(GtkMisc):
 		fs  = XML['fs']
 		uri = self.christineConf.getString("ui/LastFolder")
 		if uri:
-			fs.set_uri(uri)
+			fs.set_uri('file://'+uri)
 		fs.set_icon(self.share.getImageFromPix('logo'))
 		response = fs.run()
 		files    = fs.get_filenames()
@@ -1138,6 +1168,7 @@ class Christine(GtkMisc):
 		"""
 		type_file = b.type
 		if (type_file == gst.MESSAGE_ERROR):
+			print a,b,c,d
 			if not os.path.isfile(self.__Player.getLocation()):
 				if os.path.split(self.__Player.getLocation())[0] == '/':
 					error(translate('File was not found, going to next file'))
@@ -1154,6 +1185,8 @@ class Christine(GtkMisc):
 			percent = b.structure['buffer-percent']
 			self.__Display.setText("%d" % percent)
 			self.__Display.setScale((percent / 100))
+			if percent == 100:
+				self.__Display.setText("")
 			return True
 		return True
 

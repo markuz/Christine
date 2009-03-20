@@ -88,6 +88,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		if (tags['album'] != ''):
 			tooltext    +=  " from %s" % tags['album']
 		if tooltext:
+			self.tooltext = tooltext
 			self.setSong(tooltext)
 			
 	def __emit(self):
@@ -235,7 +236,12 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 	
 	def draw_text(self, x, y, w , h):
 		# Write text
-		self.__Layout  = self.create_pango_layout(self.__Song + ' -- ' + self.__Text)
+		msg = ''
+		if self.__Song:
+			msg += self.__Song
+		if self.__Text:
+			msg += '--' + self.__Text
+		self.__Layout  = self.create_pango_layout(msg)
 		self.__Layout.set_font_description(self.fontdesc)
 		(fontw, fonth) = self.__Layout.get_pixel_size()
 		if self.__HPos == x or fontw < w:

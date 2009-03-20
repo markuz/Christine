@@ -38,7 +38,6 @@ class openRemote(GtkMisc):
 		'''
 		Shows a dialog that let the user open a remote location.
 		'''
-		print 'Holy Shit!'
 		self.__Share = Share()
 		self.__christineConf = christineConf()
 		self.interface = interface()
