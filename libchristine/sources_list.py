@@ -44,6 +44,7 @@ class sources_list (GtkMisc):
 		self.treeview = self.xml["treeview"]
 		self.treeview.set_headers_visible(True)
 		self.treeview.set_model(self.model)
+		self.treeview.expand_all()
 		self.treeview.connect('button-press-event', self.treeview_bpe)
 		self.vbox = self.xml['vbox']
 		self.vbox.set_size_request(75, 75)
@@ -72,11 +73,12 @@ class sources_list (GtkMisc):
 		else:
 			self.model.clear()
 		sources = self.__db.getPlaylists()
+		iter = self.model.append(None)
+		ltype = 'source'
+		self.model.set(iter, LIST_NAME, 'Sources', LIST_TYPE, ltype)
+		self.music_iter = iter
 		for source in sources:
-			ltype = 'source'
 			iter = self.model.append(self.music_iter)
-			if source['name'] == 'music':
-				self.music_iter = iter
 			self.model.set(iter, LIST_NAME, source['name'], LIST_TYPE, ltype)
 		
 		#Add the albums node:
@@ -88,6 +90,8 @@ class sources_list (GtkMisc):
 			iter = self.model.append(self.radioiter)
 			self.model.set(iter, LIST_NAME, radio['title'], LIST_TYPE, ltype,
 						   LIST_EXTRA, radio)
+		if getattr(self, 'treeview', False):
+			self.treeview.expand_all()
 
 	def __append_columns(self):
 		column = gtk.TreeViewColumn("Source")
@@ -101,10 +105,10 @@ class sources_list (GtkMisc):
 
 	def addSource(self, button):
 		model, iter = self.treeview.get_selection().get_selected()
-		type = 'music'
+		type = 'source'
 		if iter:
 			name, type, extra = model.get(iter,LIST_NAME,LIST_TYPE, LIST_EXTRA)
-		if type == 'music':
+		if type == 'source':
 			xml = self.__Share.getTemplate('NewSourceDialog')
 			dialog = xml['dialog']
 			entry = xml['entry']
@@ -154,8 +158,11 @@ class sources_list (GtkMisc):
 			selection = self.treeview.get_selection()
 			model, iter = selection.get_selected()
 			if iter != None:
-				fname = model.get_value(iter, LIST_NAME)
-				self.__db.removePlayList(fname)
+				fname, ftype = model.get(iter, LIST_NAME, LIST_TYPE)
+				if ftype == 'source':
+					self.__db.removePlayList(fname)
+				elif ftype == 'radio':
+					self.__db.removeRadio(fname)
 			self.__gen_model()
 		dialog.destroy()
 

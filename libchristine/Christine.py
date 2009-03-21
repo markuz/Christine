@@ -342,6 +342,8 @@ class Christine(GtkMisc):
 		model = treeview.get_model()
 		fname, ftype, fextra = model.get(model.get_iter(path), LIST_NAME, LIST_TYPE, LIST_EXTRA)
 		if ftype == 'source':
+			if fname == 'Sources':
+				return True
 			self.mainLibrary.loadLibrary(fname)
 			self.christineConf.setValue('backend/last_source', fname)
 		elif ftype == "radio":

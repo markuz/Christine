@@ -377,5 +377,16 @@ class sqlite3db(Singleton):
 		result = self.fetchall()
 		self.commit()
 		return result
-		
+	
+	def removeRadio(self, title):
+		'''
+		Deletes a radio station by it's title
+		@param title:
+		'''
+		strSQL = '''
+		DELETE FROM radio WHERE title = ?
+		'''
+		self.execute(strSQL, title)
+		self.commit()
+		return True
 
