@@ -1197,6 +1197,7 @@ class Christine(GtkMisc):
 		Update the time showed in the player
 		"""
 		try:
+			self.__streamLength()
 			nanos      = self.__Player.query_position(gst.FORMAT_TIME)[0]
 			ts         = (nanos / gst.SECOND)
 			time       = "%02d:%02d" % divmod(ts, 60)
@@ -1217,7 +1218,10 @@ class Christine(GtkMisc):
 		Catches the lenght of the media and update it in the
 		player
 		"""
+		if not self.__Player.getLocation():
+			return True
 		if (self.__Player.getLocation().split(':')[0] == 'http'):
+			self.__TimeTotal = 0
 			return True
 		try:
 			self.__TimeTotal = self.__Player.query_duration(gst.FORMAT_TIME)[0]

@@ -135,6 +135,8 @@ class sources_list (GtkMisc):
 				if not title:
 					return True
 				url = entry.get_text()
+				if not url[-3:].lower() == 'pls':
+					return True
 				exists = self.__db.get_radio_by_url(url)
 				if exists:
 					return True
@@ -143,7 +145,6 @@ class sources_list (GtkMisc):
 				if radio:
 					radio = radio[0]
 					iter = self.model.append(self.radioiter)
-					print radio
 					self.model.set(iter, LIST_NAME, radio['title'], LIST_TYPE, 'radio',
 						   LIST_EXTRA, radio)
 			
