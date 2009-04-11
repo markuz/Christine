@@ -13,6 +13,8 @@ Changes since 0.2.1
 	* New Plugins
 		* Gnome Media Keys support
 		* Album Cover
+		* Early acces to getInfo
+		* GnomeDBus
 	* Improved pidgin configuration dialog
 
 * Player

@@ -80,6 +80,7 @@ class christineDBus(dbus.service.Object):
 		iface.coreClass.goNext()
 		return True
 	# Library stuff
+	
 	@dbus.service.method(DBUS_NAME)
 	def current_location(self):
 		location = iface.Player.getLocation()
@@ -103,6 +104,39 @@ class christineDBus(dbus.service.Object):
 		#TODO: have to return a coma separated tags.
 		return ''
 
+	@dbus.service.method(DBUS_NAME)
+	def exit(self):
+		iface.coreClass.quitGtk()
+	
+	@dbus.setvice.method(DBUS_NAME)
+	def put_in_queue(self, uri):
+		iface.coreClass.Queue.add(uri)
+		return True
+
+	@dbus.setvice.method(DBUS_NAME)
+	def decreaseVolume(self):
+		"""
+		Decrease the volume
+		"""
+		iface.coreClass.decreaseVolume()
+	
+	@dbus.setvice.method(DBUS_NAME)
+	def increaseVolume(self):
+		"""
+		Increase the volume
+		"""
+		iface.coreClass.increaseVolume()
+
+	@dbus.setvice.method(DBUS_NAME)
+	def mute(self):
+		"""
+		Set mute
+		"""
+		iface.coreClass.mute()
+		
+
+	#Signals
+
 	def emit_last_played(self, *args):
 		file = self.christineConf.getString('backend/last_played')
 		self.NewLocation(file)
@@ -111,6 +145,7 @@ class christineDBus(dbus.service.Object):
 	def NewLocation(self, location):
 		print location
 
+	
 
 	
 a = christineDBus()
