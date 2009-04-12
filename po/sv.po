@@ -1,264 +1,37 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Swedish translation for christine.
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the christine package.
+# Daniel Nylander <po@danielnylander.se>, 2007.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-21 01:03-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2009-03-26 09:21+0000\n"
+"Last-Translator: Mattias Ohlsson <mattias_oh@hotmail.com>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../gui/Error.glade.h:1 gui/Error.glade:8
-msgid "Error"
-msgstr "Fel"
-
-#: ../gui/Error.glade.h:2 gui/Error.glade:82
-msgid "Error text"
-msgstr "Feltext"
-
-#: ../gui/FileSelector.glade.h:1 gui/FileSelector.glade:13
-msgid "Select your files"
-msgstr "Välj dina filer"
-
-#: ../gui/JumpTo.glade.h:1 gui/JumpTo.glade:98
-msgid ":"
-msgstr ":"
-
-#: ../gui/JumpTo.glade.h:2 gui/JumpTo.glade:8
-msgid "Jump to time"
-msgstr "Hoppa till tid"
-
-#: ../gui/Preferences.glade.h:1 gui/Preferences.glade:371
-msgid "<b>Allowed Files</b>"
-msgstr "<b>Tillåtna filer</b>"
-
-#: ../gui/Preferences.glade.h:2 gui/Preferences.glade:218
-msgid "<b>Audiosink</b>"
-msgstr "<b>Ljudsink</b>"
-
-#: ../gui/Preferences.glade.h:3 gui/Preferences.glade:145
-msgid "<b>Library columns</b>"
-msgstr "<b>Bibliotekskolumner</b>"
-
-#: ../gui/Preferences.glade.h:4
-msgid "<b>Notification</b>"
-msgstr "<b>Notifiering</b>"
-
-#: ../gui/Preferences.glade.h:5 gui/Preferences.glade:265
-msgid "<b>Videosink</b>"
-msgstr "<b>Videosink</b>"
-
-#: ../gui/Preferences.glade.h:6 ../gui/Properties.glade.h:1
-#: gui/Preferences.glade:62 gui/Properties.glade:528
-msgid "Album"
-msgstr "Album"
-
-#: ../gui/Preferences.glade.h:7 ../gui/Properties.glade.h:2
-#: gui/Preferences.glade:48 gui/Properties.glade:500
-msgid "Artist"
-msgstr "Artist"
-
-#: ../gui/Preferences.glade.h:8 gui/Preferences.glade:287
-msgid "Backend"
-msgstr "Bakände"
-
-#: ../gui/Preferences.glade.h:9 gui/Preferences.glade:386
-msgid "Importing"
-msgstr "Importering"
-
-#: ../gui/Preferences.glade.h:10 gui/Preferences.glade:91
-msgid "Length"
-msgstr "Längd"
-
-#: ../gui/Preferences.glade.h:11 gui/Preferences.glade:115
-msgid "Play count"
-msgstr "Spelningar"
-
-#: ../gui/Preferences.glade.h:12
-msgid "Show in notification area"
-msgstr "Visa i notifieringsyta"
-
-#: ../gui/Preferences.glade.h:13 ../gui/Properties.glade.h:12
-#: gui/Preferences.glade:102 gui/Properties.glade:584
-msgid "Track number"
-msgstr "Spårnummer"
-
-#: ../gui/Preferences.glade.h:14 gui/Preferences.glade:77
-msgid "Type"
-msgstr "Typ"
-
-#: ../gui/Preferences.glade.h:15
-msgid "Use notification windows"
-msgstr "Använd notifieringsfönster"
-
-#: ../gui/Preferences.glade.h:16 gui/Preferences.glade:169
-msgid "View"
-msgstr "Visa"
-
-#: ../gui/Preferences.glade.h:17 gui/Preferences.glade:198
-msgid ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-msgstr ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-
-#: ../gui/Preferences.glade.h:21
-msgid "genre"
-msgstr "genre"
-
-#: ../gui/Preferences.glade.h:22 gui/Preferences.glade:333
-msgid "gtk-add"
-msgstr "Lägg till"
-
-#: ../gui/Preferences.glade.h:23 gui/Preferences.glade:346
-msgid "gtk-delete"
-msgstr "Ta bort"
-
-#: ../gui/Preferences.glade.h:24 gui/Preferences.glade:247
-msgid ""
-"ximagesink\n"
-"xvimagesink"
-msgstr ""
-"ximagesink\n"
-"xvimagesink"
-
-#: ../gui/Properties.glade.h:3 gui/Properties.glade:108
-msgid "Audio codec"
-msgstr "Ljudkodek"
-
-#: ../gui/Properties.glade.h:4 gui/Properties.glade:164
-msgid "Bitrate"
-msgstr "Bitfrekvens"
-
-#: ../gui/Properties.glade.h:5 gui/Properties.glade:444
-msgid "Date"
-msgstr "Datum"
-
-#: ../gui/Properties.glade.h:6 gui/Properties.glade:69
-msgid "File"
-msgstr "Fil"
-
-#: ../gui/Properties.glade.h:7 gui/Preferences.glade:128
-#: gui/Properties.glade:472
-msgid "Genre"
-msgstr "Genre"
-
-#: ../gui/Properties.glade.h:8 gui/Properties.glade:136
-msgid "Mode"
-msgstr "Läge"
-
-#: ../gui/Properties.glade.h:9 gui/Properties.glade:192
-#: gui/Properties.glade:220 gui/Properties.glade:248 gui/Properties.glade:276
-#: gui/Properties.glade:304 gui/Properties.glade:332 gui/Properties.glade:360
-#: gui/Properties.glade:388 gui/Properties.glade:416 gui/Properties.glade:640
-msgid "None"
-msgstr "Ingen"
-
-#: ../gui/Properties.glade.h:10 gui/Properties.glade:9
-msgid "Properties"
-msgstr "Egenskaper"
-
-#: ../gui/Properties.glade.h:11 gui/Properties.glade:556
-msgid "Title"
-msgstr "Titel"
-
-#: ../gui/Properties.glade.h:13 gui/Properties.glade:612
-msgid "Video codec"
-msgstr "Videokodek"
-
-#: ../gui/WindowCore.glade.h:1 gui/WindowCore.glade:118
-msgid "Clean main List"
-msgstr "Töm huvudlista"
-
-#: ../gui/WindowCore.glade.h:2 gui/WindowCore.glade:513
-msgid "Find"
-msgstr "Sök"
-
-#: ../gui/addFiles.glade.h:1 gui/addFiles.glade:103
-msgid "<b>Importing files</b>"
-msgstr "<b>Importerar filer</b>"
-
-#: ../gui/addFiles.glade.h:2 gui/addFiles.glade:59
-msgid "Importing:"
-msgstr "Importerar:"
-
-#: ../gui/deleteFileFromDisk.glade.h:1 gui/deleteFileFromDisk.glade:35
-msgid ""
-"Are you sure?\n"
-"This cannot be undone"
-msgstr ""
-"Är du säker?\n"
-"Det här kan inte ångras"
-
-#: ../gui/deleteFileFromDisk.glade.h:3 ../gui/deleteQuestion.glade.h:3
-#: gui/deleteFileFromDisk.glade:55 gui/deleteQuestion.glade:49
-#: gui/genericQuestion.glade:49 gui/NewSourceDialog.glade:81
-#: gui/walkdirectories.glade:85
-msgid "gtk-cancel"
-msgstr "Avbryt"
-
-#: ../gui/deleteFileFromDisk.glade.h:4 ../gui/deleteQuestion.glade.h:4
-#: gui/deleteFileFromDisk.glade:63 gui/deleteQuestion.glade:56
-#: gui/genericQuestion.glade:57
-msgid "gtk-ok"
-msgstr "OK"
-
-#: ../gui/deleteQuestion.glade.h:1 gui/deleteQuestion.glade:29
-msgid ""
-"You are about to remove all your files in the Library. \n"
-"Note that this cannot be undone!"
-msgstr ""
-"Du är på väg att ta bort alla dina filer i biblioteket.\n"
-"Observera att det här kan inte ångras!"
-
-#: ../gui/directorySelector.glade.h:1 gui/directorySelector.glade:19
-msgid "Include subfolders"
-msgstr "Inkludera undermappar"
-
-#: ../gui/directorySelector.glade.h:2 gui/directorySelector.glade:9
-msgid "Select a folder"
-msgstr "Välj en mapp"
-
-#: ../gui/miniViewer.glade.h:1 gui/miniViewer.glade:10
-msgid "video player"
-msgstr "videospelare"
-
-#: ../gui/openRemote.glade.h:1 gui/openRemote.glade:20
-msgid "Location"
-msgstr "Plats"
-
-#: ../gui/openRemote.glade.h:2 gui/openRemote.glade:8
-msgid "Open Remote"
-msgstr "Öppna fjärr"
+"X-Launchpad-Export-Date: 2009-04-12 19:52+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: libchristine/Plugins/twitter.py:89
 msgid "not authorized"
-msgstr ""
+msgstr "saknar behörighet"
 
 #: libchristine/Plugins/twitter.py:91
 msgid "not found"
-msgstr ""
+msgstr "hittades inte"
 
 #: libchristine/Plugins/twitter.py:93
 msgid "service not available"
-msgstr ""
+msgstr "servicen finns inte tillgänglig"
 
 #: libchristine/Plugins/twitter.py:95
 msgid "unknown error"
-msgstr ""
+msgstr "okänt fel"
 
 #: libchristine/Plugins/twitter.py:97
 #, python-format
@@ -268,10 +41,66 @@ msgstr ""
 #: gui/About.glade:61
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Daniel Nylander https://launchpad.net/~yeager\n"
+"  Mattias Ohlsson https://launchpad.net/~mattias-oh\n"
+"  Nille https://launchpad.net/~nille-kungen\n"
+"  Tobias Samuelsson https://launchpad.net/~tms-aol"
+
+#: gui/addFiles.glade:59
+msgid "Importing:"
+msgstr "Importerar:"
 
 #: gui/addFiles.glade:69
 msgid "label2"
+msgstr "etikett2"
+
+#: gui/addFiles.glade:103
+msgid "<b>Importing files</b>"
+msgstr "<b>Importerar filer</b>"
+
+#: gui/deleteFileFromDisk.glade:35
+msgid ""
+"Are you sure?\n"
+"This cannot be undone"
 msgstr ""
+"Är du säker?\n"
+"Det här kan inte ångras"
+
+#: gui/deleteFileFromDisk.glade:55 gui/deleteQuestion.glade:49
+#: gui/genericQuestion.glade:49 gui/NewSourceDialog.glade:81
+#: gui/walkdirectories.glade:85
+msgid "gtk-cancel"
+msgstr "Avbryt"
+
+#: gui/deleteFileFromDisk.glade:63 gui/deleteQuestion.glade:56
+#: gui/genericQuestion.glade:57
+msgid "gtk-ok"
+msgstr "OK"
+
+#: gui/deleteQuestion.glade:29
+msgid ""
+"You are about to remove all your files in the Library. \n"
+"Note that this cannot be undone!"
+msgstr ""
+"Du är på väg att ta bort alla dina filer i biblioteket.\n"
+"Observera att det här kan inte ångras!"
+
+#: gui/directorySelector.glade:9
+msgid "Select a folder"
+msgstr "Välj en mapp"
+
+#: gui/directorySelector.glade:19
+msgid "Include subfolders"
+msgstr "Inkludera undermappar"
+
+#: gui/Error.glade:8
+msgid "Error"
+msgstr "Fel"
+
+#: gui/Error.glade:82
+msgid "Error text"
+msgstr "Feltext"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -286,31 +115,55 @@ msgstr ""
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
-msgstr ""
+msgstr "Rapportera ett fel"
+
+#: gui/FileSelector.glade:13
+msgid "Select your files"
+msgstr "Välj dina filer"
 
 #: gui/genericQuestion.glade:30
 msgid "Label"
-msgstr ""
+msgstr "Etikett"
 
 #: gui/iconView.glade:8 gui/TreeViewReorderable.glade:7
 msgid "window1"
-msgstr ""
+msgstr "fönster1"
+
+#: gui/JumpTo.glade:8
+msgid "Jump to time"
+msgstr "Hoppa till tid"
+
+#: gui/JumpTo.glade:98
+msgid ":"
+msgstr ":"
+
+#: gui/miniViewer.glade:10
+msgid "video player"
+msgstr "videospelare"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
-msgstr ""
+msgstr "Källnamn"
 
 #: gui/NewSourceDialog.glade:92
 msgid "gtk-save"
-msgstr ""
+msgstr "Spara"
+
+#: gui/openRemote.glade:8
+msgid "Open Remote"
+msgstr "Öppna fjärr"
+
+#: gui/openRemote.glade:20
+msgid "Location"
+msgstr "Plats"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr ""
+msgstr "Begär behörighet"
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
-msgstr ""
+msgstr "Hämta sessionsdata"
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
@@ -318,11 +171,11 @@ msgstr ""
 
 #: gui/plugin_lastfm_main.glade:113
 msgid "Password"
-msgstr ""
+msgstr "Lösenord"
 
 #: gui/plugin_lastfm_main.glade:125
 msgid "Username"
-msgstr ""
+msgstr "Användarnamn"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
@@ -337,140 +190,283 @@ msgstr ""
 
 #: gui/plugin_pidgin_main.glade:71
 msgid "<b>Message Format</b>"
-msgstr ""
+msgstr "<b>Meddelandeformat</b>"
 
 #: gui/plugin_pidgin_main.glade:85
 msgid "<b>Pidgin</b>"
-msgstr ""
+msgstr "<b>Pidgin</b>"
 
 #: gui/plugin_pidgin_main.glade:108
 msgid "Accept"
+msgstr "Acceptera"
+
+#: gui/Preferences.glade:48 gui/Properties.glade:500
+msgid "Artist"
+msgstr "Artist"
+
+#: gui/Preferences.glade:62 gui/Properties.glade:528
+msgid "Album"
+msgstr "Album"
+
+#: gui/Preferences.glade:77
+msgid "Type"
+msgstr "Typ"
+
+#: gui/Preferences.glade:91
+msgid "Length"
+msgstr "Längd"
+
+#: gui/Preferences.glade:102 gui/Properties.glade:584
+msgid "Track number"
+msgstr "Spårnummer"
+
+#: gui/Preferences.glade:115
+msgid "Play count"
+msgstr "Spelningar"
+
+#: gui/Preferences.glade:128 gui/Properties.glade:472
+msgid "Genre"
+msgstr "Genre"
+
+#: gui/Preferences.glade:145
+msgid "<b>Library columns</b>"
+msgstr "<b>Bibliotekskolumner</b>"
+
+#: gui/Preferences.glade:169
+msgid "View"
+msgstr "Visa"
+
+#: gui/Preferences.glade:198
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+
+#: gui/Preferences.glade:218
+msgid "<b>Audiosink</b>"
+msgstr "<b>Ljudsink</b>"
+
+#: gui/Preferences.glade:247
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+"ximagesink\n"
+"xvimagesink"
+
+#: gui/Preferences.glade:265
+msgid "<b>Videosink</b>"
+msgstr "<b>Videosink</b>"
+
+#: gui/Preferences.glade:287
+msgid "Backend"
+msgstr "Bakände"
+
+#: gui/Preferences.glade:333
+msgid "gtk-add"
+msgstr "Lägg till"
+
+#: gui/Preferences.glade:346
+msgid "gtk-delete"
+msgstr "Ta bort"
+
+#: gui/Preferences.glade:371
+msgid "<b>Allowed Files</b>"
+msgstr "<b>Tillåtna filer</b>"
+
+#: gui/Preferences.glade:386
+msgid "Importing"
+msgstr "Importering"
 
 #: gui/Preferences.glade:426
 msgid "Configure _Plugin"
-msgstr ""
+msgstr "Ställ in _insticksprogram"
 
 #: gui/Preferences.glade:449
 msgid "Plugins"
-msgstr ""
+msgstr "Insticksprogram"
+
+#: gui/Properties.glade:9
+msgid "Properties"
+msgstr "Egenskaper"
+
+#: gui/Properties.glade:69
+msgid "File"
+msgstr "Fil"
+
+#: gui/Properties.glade:108
+msgid "Audio codec"
+msgstr "Ljudkodek"
+
+#: gui/Properties.glade:136
+msgid "Mode"
+msgstr "Läge"
+
+#: gui/Properties.glade:164
+msgid "Bitrate"
+msgstr "Bitfrekvens"
+
+#: gui/Properties.glade:192 gui/Properties.glade:220 gui/Properties.glade:248
+#: gui/Properties.glade:276 gui/Properties.glade:304 gui/Properties.glade:332
+#: gui/Properties.glade:360 gui/Properties.glade:388 gui/Properties.glade:416
+#: gui/Properties.glade:640
+msgid "None"
+msgstr "Ingen"
+
+#: gui/Properties.glade:444
+msgid "Date"
+msgstr "Datum"
+
+#: gui/Properties.glade:556
+msgid "Title"
+msgstr "Titel"
+
+#: gui/Properties.glade:612
+msgid "Video codec"
+msgstr "Videokodek"
 
 #: gui/walkdirectories.glade:44
 msgid "Exploring"
-msgstr ""
+msgstr "Utforskar"
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
-msgstr ""
+msgstr "_Media"
 
 #: gui/WindowCore.glade:28
 msgid "Import File"
-msgstr ""
+msgstr "Importera fil"
 
 #: gui/WindowCore.glade:45
 msgid "Import Folder"
-msgstr ""
+msgstr "Importera mapp"
 
 #: gui/WindowCore.glade:67
 msgid "Import to queue"
-msgstr ""
+msgstr "Importera till kö"
 
 #: gui/WindowCore.glade:81
 msgid "Open remote"
-msgstr ""
+msgstr "Öppna fjärrmapp"
 
 #: gui/WindowCore.glade:95
 msgid "Jump _to"
-msgstr ""
+msgstr "Hoppa _till"
 
 #: gui/WindowCore.glade:104
 msgid "_Jump to playing"
-msgstr ""
+msgstr "_Hoppa till aktiv mediafil"
+
+#: gui/WindowCore.glade:118
+msgid "Clean main List"
+msgstr "Töm huvudlista"
 
 #: gui/WindowCore.glade:131
 msgid "gtk-quit"
-msgstr ""
+msgstr "Avsluta"
 
 #: gui/WindowCore.glade:144
 msgid "_Edit"
-msgstr ""
+msgstr "_Redigera"
 
 #: gui/WindowCore.glade:151
 msgid "gtk-find"
-msgstr ""
+msgstr "Sök"
 
 #: gui/WindowCore.glade:165
 msgid "gtk-preferences"
-msgstr ""
+msgstr "Inställningar"
 
 #: gui/WindowCore.glade:183
 msgid "_Control"
-msgstr ""
+msgstr "_Kontrollera"
 
 #: gui/WindowCore.glade:191
 msgid "Play"
-msgstr ""
+msgstr "Spela"
 
 #: gui/WindowCore.glade:205
 msgid "Prev"
-msgstr ""
+msgstr "Föregående"
 
 #: gui/WindowCore.glade:221
 msgid "_Next"
-msgstr ""
+msgstr "_Nästa"
 
 #: gui/WindowCore.glade:242
 msgid "Shuffle"
-msgstr ""
+msgstr "Blanda"
 
 #: gui/WindowCore.glade:250
 msgid "Repeat"
-msgstr ""
+msgstr "Upprepa"
 
 #: gui/WindowCore.glade:263
 msgid "Less volume"
-msgstr ""
+msgstr "Minska volymen"
 
 #: gui/WindowCore.glade:272
 msgid "More volume"
-msgstr ""
+msgstr "Häj volymen"
 
 #: gui/WindowCore.glade:281
 msgid "Mute"
-msgstr ""
+msgstr "Tyst"
 
 #: gui/WindowCore.glade:294
 msgid "_View"
-msgstr ""
+msgstr "_Visa"
 
 #: gui/WindowCore.glade:302
 msgid "_Small view"
-msgstr ""
+msgstr "_Liten visning"
 
 #: gui/WindowCore.glade:310
 msgid "Browser"
-msgstr ""
+msgstr "Filväljare"
 
 #: gui/WindowCore.glade:319
 msgid "Full Screen"
-msgstr ""
+msgstr "Helskärm"
 
 #: gui/WindowCore.glade:333
 msgid "Visualization"
-msgstr ""
+msgstr "Visualisering"
 
 #: gui/WindowCore.glade:346
 msgid "_Help"
-msgstr ""
+msgstr "_Hjälp"
 
 #: gui/WindowCore.glade:354
 msgid "Translate Christine"
-msgstr ""
+msgstr "Översätt Christine"
 
 #: gui/WindowCore.glade:370
 msgid "Report a Bug"
-msgstr ""
+msgstr "Rapportera ett fel"
 
 #: gui/WindowCore.glade:385
 msgid "gtk-about"
-msgstr ""
+msgstr "Om"
+
+#: gui/WindowCore.glade:513
+msgid "Find"
+msgstr "Sök"
+
+#~ msgid "<b>Notification</b>"
+#~ msgstr "<b>Notifiering</b>"
+
+#~ msgid "Show in notification area"
+#~ msgstr "Visa i notifieringsyta"
+
+#~ msgid "Use notification windows"
+#~ msgstr "Använd notifieringsfönster"
+
+#~ msgid "genre"
+#~ msgstr "genre"

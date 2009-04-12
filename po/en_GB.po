@@ -1,52 +1,63 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# English (United Kingdom) translation for christine
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the christine package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: christine\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-11-21 01:03-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2009-01-25 11:05+0000\n"
+"Last-Translator: Jen Ockwell <jenfraggleubuntu@googlemail.com>\n"
+"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-04-12 19:52+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
-#: gui/about.glade:9
-msgid "Christine"
-msgstr "Christine"
+#: libchristine/Plugins/twitter.py:89
+msgid "not authorized"
+msgstr "not authorised"
 
-#: gui/about.glade:10
-msgid "2006 (c) Marco Antonio Islas Cruz"
-msgstr "2006 (c) Marco Antonio Islas Cruz"
+#: libchristine/Plugins/twitter.py:91
+msgid "not found"
+msgstr "not found"
 
-#: gui/about.glade:11
-msgid "A small and cute media player for GNOME"
-msgstr "A small and cute media player for GNOME"
+#: libchristine/Plugins/twitter.py:93
+msgid "service not available"
+msgstr "service not available"
 
-#: gui/about.glade:45 gui/About.glade:61
+#: libchristine/Plugins/twitter.py:95
+msgid "unknown error"
+msgstr "unknown error"
+
+#: libchristine/Plugins/twitter.py:97
+#, python-format
+msgid "twitt -> %s"
+msgstr "twitt -> %s"
+
+#: gui/About.glade:61
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Andrew Barber https://launchpad.net/~andrew-alex-barber"
+"  Andrew Barber https://launchpad.net/~andrew-alex-barber\n"
+"  Jen Ockwell https://launchpad.net/~rj-ockwell"
 
-#: gui/add_files.glade:55 gui/addFiles.glade:59
+#: gui/addFiles.glade:59
 msgid "Importing:"
 msgstr "Importing:"
 
-#: gui/add_files.glade:65 gui/addFiles.glade:69
+#: gui/addFiles.glade:69
 msgid "label2"
 msgstr "label2"
 
-#: gui/add_files.glade:102 gui/addFiles.glade:103
+#: gui/addFiles.glade:103
 msgid "<b>Importing files</b>"
 msgstr "<b>Importing files</b>"
 
-#: gui/delete_file_from_disk_dialog.glade:35 gui/deleteFileFromDisk.glade:35
+#: gui/deleteFileFromDisk.glade:35
 msgid ""
 "Are you sure?\n"
 "This cannot be undone"
@@ -54,233 +65,40 @@ msgstr ""
 "Are you sure?\n"
 "This cannot be un-done"
 
-#: gui/delete_file_from_disk_dialog.glade:55 gui/deleteFileFromDisk.glade:55
-#: gui/deleteQuestion.glade:49 gui/genericQuestion.glade:49
-#: gui/NewSourceDialog.glade:81 gui/walkdirectories.glade:85
+#: gui/deleteFileFromDisk.glade:55 gui/deleteQuestion.glade:49
+#: gui/genericQuestion.glade:49 gui/NewSourceDialog.glade:81
+#: gui/walkdirectories.glade:85
 msgid "gtk-cancel"
 msgstr "gtk-cancel"
 
-#: gui/delete_file_from_disk_dialog.glade:63 gui/deleteFileFromDisk.glade:63
-#: gui/deleteQuestion.glade:56 gui/genericQuestion.glade:57
+#: gui/deleteFileFromDisk.glade:63 gui/deleteQuestion.glade:56
+#: gui/genericQuestion.glade:57
 msgid "gtk-ok"
 msgstr "gtk-ok"
-
-#: gui/dir_selector.glade:13 gui/directorySelector.glade:9
-msgid "Select a folder"
-msgstr "Select a folder"
-
-#: gui/dir_selector.glade:77 gui/directorySelector.glade:19
-msgid "Include subfolders"
-msgstr "Include subfolders"
-
-#: gui/error.glade:8 gui/Error.glade:8
-msgid "Error"
-msgstr "Error"
-
-#: gui/error.glade:82 gui/Error.glade:82
-msgid "Error text"
-msgstr "Error text"
-
-#: gui/file_selector.glade:13 gui/FileSelector.glade:13
-msgid "Select your files"
-msgstr "Select your files"
-
-#: gui/icon_view.glade:8 gui/treeview_reorderable.glade:8 gui/iconView.glade:8
-#: gui/TreeViewReorderable.glade:7
-msgid "window1"
-msgstr "window1"
-
-#: gui/jump_to.glade:8 gui/JumpTo.glade:8
-msgid "Jump to time"
-msgstr "Jump to time"
-
-#: gui/jump_to.glade:98 gui/JumpTo.glade:98
-msgid ":"
-msgstr ":"
-
-#: gui/main_window.glade:387 gui/WindowCore.glade:513
-msgid "Find"
-msgstr "Find"
-
-#: gui/main_window.glade:528
-msgid "<b>Artists</b>"
-msgstr "<b>Artists</b>"
-
-#: gui/main_window.glade:557
-msgid "<b>Albums</b>"
-msgstr "<b>Albums</b>"
-
-#: gui/main_window.glade:630 gui/main_window.glade:655
-msgid "00:00"
-msgstr "00:00"
-
-#: gui/miniviewer.glade:10 gui/miniViewer.glade:10
-msgid "video player"
-msgstr "video player"
-
-#: gui/open_remote.glade:8 gui/openRemote.glade:8
-msgid "Open Remote"
-msgstr "Open Remote"
-
-#: gui/open_remote.glade:77 gui/openRemote.glade:20
-msgid "Location"
-msgstr "Location"
-
-#: gui/preferences.glade:41 gui/properties.glade:500 gui/Preferences.glade:48
-#: gui/Properties.glade:500
-msgid "Artist"
-msgstr "Artist"
-
-#: gui/preferences.glade:54 gui/properties.glade:528 gui/Preferences.glade:62
-#: gui/Properties.glade:528
-msgid "Album"
-msgstr "Album"
-
-#: gui/preferences.glade:68 gui/Preferences.glade:77
-msgid "Type"
-msgstr "Type"
-
-#: gui/preferences.glade:81 gui/Preferences.glade:91
-msgid "Length"
-msgstr "Length"
-
-#: gui/preferences.glade:91 gui/properties.glade:584 gui/Preferences.glade:102
-#: gui/Properties.glade:584
-msgid "Track number"
-msgstr "Track number"
-
-#: gui/preferences.glade:101 gui/Preferences.glade:115
-msgid "Play count"
-msgstr "Play count"
-
-#: gui/preferences.glade:115
-msgid "<b>View</b>"
-msgstr "<b>View</b>"
-
-#: gui/preferences.glade:138
-msgid "Library"
-msgstr "Library"
-
-#: gui/preferences.glade:164 gui/Preferences.glade:198
-msgid ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-msgstr ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-
-#: gui/preferences.glade:184 gui/Preferences.glade:218
-msgid "<b>Audiosink</b>"
-msgstr "<b>Audiosink</b>"
-
-#: gui/preferences.glade:208 gui/Preferences.glade:247
-msgid ""
-"ximagesink\n"
-"xvimagesink"
-msgstr ""
-"ximagesink\n"
-"xvimagesink"
-
-#: gui/preferences.glade:226 gui/Preferences.glade:265
-msgid "<b>Videosink</b>"
-msgstr "<b>Videosink</b>"
-
-#: gui/preferences.glade:247 gui/Preferences.glade:287
-msgid "Backend"
-msgstr "Backend"
-
-#: gui/properties.glade:9 gui/Properties.glade:9
-msgid "Properties"
-msgstr "Properties"
-
-#: gui/properties.glade:69 gui/Properties.glade:69
-msgid "File"
-msgstr "File"
-
-#: gui/properties.glade:108 gui/Properties.glade:108
-msgid "Audio codec"
-msgstr "Audio codec"
-
-#: gui/properties.glade:136 gui/Properties.glade:136
-msgid "Mode"
-msgstr "Mode"
-
-#: gui/properties.glade:164 gui/Properties.glade:164
-msgid "Bitrate"
-msgstr "Bitrate"
-
-#: gui/properties.glade:192 gui/properties.glade:220 gui/properties.glade:248
-#: gui/properties.glade:276 gui/properties.glade:304 gui/properties.glade:332
-#: gui/properties.glade:360 gui/properties.glade:388 gui/properties.glade:416
-#: gui/properties.glade:640 gui/Properties.glade:192 gui/Properties.glade:220
-#: gui/Properties.glade:248 gui/Properties.glade:276 gui/Properties.glade:304
-#: gui/Properties.glade:332 gui/Properties.glade:360 gui/Properties.glade:388
-#: gui/Properties.glade:416 gui/Properties.glade:640
-msgid "None"
-msgstr "None"
-
-#: gui/properties.glade:444 gui/Properties.glade:444
-msgid "Date"
-msgstr "Date"
-
-#: gui/properties.glade:472 gui/Preferences.glade:128 gui/Properties.glade:472
-msgid "Genre"
-msgstr "Genre"
-
-#: gui/properties.glade:556 gui/Properties.glade:556
-msgid "Title"
-msgstr "Title"
-
-#: gui/properties.glade:612 gui/Properties.glade:612
-msgid "Video codec"
-msgstr "Video codec"
-
-#: gui/tray_menu.glade:11
-msgid "Play or pause the player"
-msgstr "Play or pause the player"
-
-#: gui/tray_menu.glade:12
-msgid "Play/Pause"
-msgstr "Play/Pause"
-
-#: gui/tray_menu.glade:33
-msgid "Next"
-msgstr "Next"
-
-#: gui/tray_menu.glade:54
-msgid "Previous"
-msgstr "Previous"
-
-#: libchristine/Plugins/twitter.py:89
-msgid "not authorized"
-msgstr ""
-
-#: libchristine/Plugins/twitter.py:91
-msgid "not found"
-msgstr ""
-
-#: libchristine/Plugins/twitter.py:93
-msgid "service not available"
-msgstr ""
-
-#: libchristine/Plugins/twitter.py:95
-msgid "unknown error"
-msgstr ""
-
-#: libchristine/Plugins/twitter.py:97
-#, python-format
-msgid "twitt -> %s"
-msgstr ""
 
 #: gui/deleteQuestion.glade:29
 msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
+"You are about to remove all your files in the Library. \n"
+"Note that this cannot be undone!"
+
+#: gui/directorySelector.glade:9
+msgid "Select a folder"
+msgstr "Select a folder"
+
+#: gui/directorySelector.glade:19
+msgid "Include subfolders"
+msgstr "Include subfolders"
+
+#: gui/Error.glade:8
+msgid "Error"
+msgstr "Error"
+
+#: gui/Error.glade:82
+msgid "Error text"
+msgstr "Error text"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -292,46 +110,81 @@ msgid ""
 "\n"
 "Thank you for taking the time to improve christine."
 msgstr ""
+"A bug has been found, please submit it.\n"
+"\n"
+"When submitting a bug, please copy the next info in order to try to "
+"reproduce \n"
+"the bug and fix it. You should also say what was you doing.\n"
+"\n"
+"Thank you for taking the time to improve christine."
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
-msgstr ""
+msgstr "Report the bug"
+
+#: gui/FileSelector.glade:13
+msgid "Select your files"
+msgstr "Select your files"
 
 #: gui/genericQuestion.glade:30
 msgid "Label"
-msgstr ""
+msgstr "Label"
+
+#: gui/iconView.glade:8 gui/TreeViewReorderable.glade:7
+msgid "window1"
+msgstr "window1"
+
+#: gui/JumpTo.glade:8
+msgid "Jump to time"
+msgstr "Jump to time"
+
+#: gui/JumpTo.glade:98
+msgid ":"
+msgstr ":"
+
+#: gui/miniViewer.glade:10
+msgid "video player"
+msgstr "video player"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
-msgstr ""
+msgstr "Source Name"
 
 #: gui/NewSourceDialog.glade:92
 msgid "gtk-save"
-msgstr ""
+msgstr "gtk-save"
+
+#: gui/openRemote.glade:8
+msgid "Open Remote"
+msgstr "Open Remote"
+
+#: gui/openRemote.glade:20
+msgid "Location"
+msgstr "Location"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr ""
+msgstr "Request authorisation"
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
-msgstr ""
+msgstr "Fetch session data"
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr ""
+msgstr "<b>Authorisation</b>"
 
 #: gui/plugin_lastfm_main.glade:113
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: gui/plugin_lastfm_main.glade:125
 msgid "Username"
-msgstr ""
+msgstr "Username"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
-msgstr ""
+msgstr "<b>Authentication</b>"
 
 #: gui/plugin_pidgin_main.glade:55
 msgid ""
@@ -339,171 +192,277 @@ msgid ""
 "will be translated according to the \n"
 "current track"
 msgstr ""
+"Usage: Tags like \"_artist_\" or \"_title_\" \n"
+"will be translated according to the \n"
+"current track"
 
 #: gui/plugin_pidgin_main.glade:71
 msgid "<b>Message Format</b>"
-msgstr ""
+msgstr "<b>Message Format</b>"
 
 #: gui/plugin_pidgin_main.glade:85
 msgid "<b>Pidgin</b>"
-msgstr ""
+msgstr "<b>Pidgin</b>"
 
 #: gui/plugin_pidgin_main.glade:108
 msgid "Accept"
-msgstr ""
+msgstr "Accept"
+
+#: gui/Preferences.glade:48 gui/Properties.glade:500
+msgid "Artist"
+msgstr "Artist"
+
+#: gui/Preferences.glade:62 gui/Properties.glade:528
+msgid "Album"
+msgstr "Album"
+
+#: gui/Preferences.glade:77
+msgid "Type"
+msgstr "Type"
+
+#: gui/Preferences.glade:91
+msgid "Length"
+msgstr "Length"
+
+#: gui/Preferences.glade:102 gui/Properties.glade:584
+msgid "Track number"
+msgstr "Track number"
+
+#: gui/Preferences.glade:115
+msgid "Play count"
+msgstr "Play count"
+
+#: gui/Preferences.glade:128 gui/Properties.glade:472
+msgid "Genre"
+msgstr "Genre"
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
-msgstr ""
+msgstr "<b>Library columns</b>"
 
 #: gui/Preferences.glade:169
 msgid "View"
+msgstr "View"
+
+#: gui/Preferences.glade:198
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+
+#: gui/Preferences.glade:218
+msgid "<b>Audiosink</b>"
+msgstr "<b>Audiosink</b>"
+
+#: gui/Preferences.glade:247
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+"ximagesink\n"
+"xvimagesink"
+
+#: gui/Preferences.glade:265
+msgid "<b>Videosink</b>"
+msgstr "<b>Videosink</b>"
+
+#: gui/Preferences.glade:287
+msgid "Backend"
+msgstr "Backend"
 
 #: gui/Preferences.glade:333
 msgid "gtk-add"
-msgstr ""
+msgstr "gtk-add"
 
 #: gui/Preferences.glade:346
 msgid "gtk-delete"
-msgstr ""
+msgstr "gtk-delete"
 
 #: gui/Preferences.glade:371
 msgid "<b>Allowed Files</b>"
-msgstr ""
+msgstr "<b>Allowed Files</b>"
 
 #: gui/Preferences.glade:386
 msgid "Importing"
-msgstr ""
+msgstr "Importing"
 
 #: gui/Preferences.glade:426
 msgid "Configure _Plugin"
-msgstr ""
+msgstr "Configure _Plugin"
 
 #: gui/Preferences.glade:449
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
+
+#: gui/Properties.glade:9
+msgid "Properties"
+msgstr "Properties"
+
+#: gui/Properties.glade:69
+msgid "File"
+msgstr "File"
+
+#: gui/Properties.glade:108
+msgid "Audio codec"
+msgstr "Audio codec"
+
+#: gui/Properties.glade:136
+msgid "Mode"
+msgstr "Mode"
+
+#: gui/Properties.glade:164
+msgid "Bitrate"
+msgstr "Bitrate"
+
+#: gui/Properties.glade:192 gui/Properties.glade:220 gui/Properties.glade:248
+#: gui/Properties.glade:276 gui/Properties.glade:304 gui/Properties.glade:332
+#: gui/Properties.glade:360 gui/Properties.glade:388 gui/Properties.glade:416
+#: gui/Properties.glade:640
+msgid "None"
+msgstr "None"
+
+#: gui/Properties.glade:444
+msgid "Date"
+msgstr "Date"
+
+#: gui/Properties.glade:556
+msgid "Title"
+msgstr "Title"
+
+#: gui/Properties.glade:612
+msgid "Video codec"
+msgstr "Video codec"
 
 #: gui/walkdirectories.glade:44
 msgid "Exploring"
-msgstr ""
+msgstr "Exploring"
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
-msgstr ""
+msgstr "_Media"
 
 #: gui/WindowCore.glade:28
 msgid "Import File"
-msgstr ""
+msgstr "Import File"
 
 #: gui/WindowCore.glade:45
 msgid "Import Folder"
-msgstr ""
+msgstr "Import Folder"
 
 #: gui/WindowCore.glade:67
 msgid "Import to queue"
-msgstr ""
+msgstr "Import to queue"
 
 #: gui/WindowCore.glade:81
 msgid "Open remote"
-msgstr ""
+msgstr "Open remote"
 
 #: gui/WindowCore.glade:95
 msgid "Jump _to"
-msgstr ""
+msgstr "Jump _to"
 
 #: gui/WindowCore.glade:104
 msgid "_Jump to playing"
-msgstr ""
+msgstr "_Jump to playing"
 
 #: gui/WindowCore.glade:118
 msgid "Clean main List"
-msgstr ""
+msgstr "Clean main List"
 
 #: gui/WindowCore.glade:131
 msgid "gtk-quit"
-msgstr ""
+msgstr "gtk-quit"
 
 #: gui/WindowCore.glade:144
 msgid "_Edit"
-msgstr ""
+msgstr "_Edit"
 
 #: gui/WindowCore.glade:151
 msgid "gtk-find"
-msgstr ""
+msgstr "gtk-find"
 
 #: gui/WindowCore.glade:165
 msgid "gtk-preferences"
-msgstr ""
+msgstr "gtk-preferences"
 
 #: gui/WindowCore.glade:183
 msgid "_Control"
-msgstr ""
+msgstr "_Control"
 
 #: gui/WindowCore.glade:191
 msgid "Play"
-msgstr ""
+msgstr "Play"
 
 #: gui/WindowCore.glade:205
 msgid "Prev"
-msgstr ""
+msgstr "Prev"
 
 #: gui/WindowCore.glade:221
 msgid "_Next"
-msgstr ""
+msgstr "_Next"
 
 #: gui/WindowCore.glade:242
 msgid "Shuffle"
-msgstr ""
+msgstr "Shuffle"
 
 #: gui/WindowCore.glade:250
 msgid "Repeat"
-msgstr ""
+msgstr "Repeat"
 
 #: gui/WindowCore.glade:263
 msgid "Less volume"
-msgstr ""
+msgstr "Decrease volume"
 
 #: gui/WindowCore.glade:272
 msgid "More volume"
-msgstr ""
+msgstr "Increase volume"
 
 #: gui/WindowCore.glade:281
 msgid "Mute"
-msgstr ""
+msgstr "Mute"
 
 #: gui/WindowCore.glade:294
 msgid "_View"
-msgstr ""
+msgstr "_View"
 
 #: gui/WindowCore.glade:302
 msgid "_Small view"
-msgstr ""
+msgstr "_Small view"
 
 #: gui/WindowCore.glade:310
 msgid "Browser"
-msgstr ""
+msgstr "Browser"
 
 #: gui/WindowCore.glade:319
 msgid "Full Screen"
-msgstr ""
+msgstr "Full Screen"
 
 #: gui/WindowCore.glade:333
 msgid "Visualization"
-msgstr ""
+msgstr "Visualisation"
 
 #: gui/WindowCore.glade:346
 msgid "_Help"
-msgstr ""
+msgstr "_Help"
 
 #: gui/WindowCore.glade:354
 msgid "Translate Christine"
-msgstr ""
+msgstr "Translate Christine"
 
 #: gui/WindowCore.glade:370
 msgid "Report a Bug"
-msgstr ""
+msgstr "Report a Bug"
 
 #: gui/WindowCore.glade:385
 msgid "gtk-about"
-msgstr ""
+msgstr "gtk-about"
+
+#: gui/WindowCore.glade:513
+msgid "Find"
+msgstr "Find"

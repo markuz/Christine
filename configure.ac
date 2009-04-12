@@ -1,5 +1,5 @@
-AC_INIT('christine', '0.3.0', 'markuz@islascruz.org')
-AM_INIT_AUTOMAKE('christine', '0.3.0')
+AC_INIT('christine', '0.3.1', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.3.1')
 
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -38,7 +38,7 @@ done
 
 
 PROGRAM_NAME="christine"
-VERSION="0.3.0"
+VERSION="0.3.1"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib(plat_specific=True)"`
 
@@ -123,6 +123,8 @@ AC_SUBST(PYTHON_LIB_DIR)
 GETTEXT_PACKAGE=christine
 AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS="es_ES sv sv_FI ca cs da de el en_GB eu fr hu it nl pt sv_FI sv"
+ALL_LINGUAS="ar  bg cs de en_GB es fi ga hu it mk nb oc pt_BR ro sk sv zh_CN be ca da el\
+			es_ES eu fr he id lv ml nl pl pt ru sv_FI tr"
 AC_SUBST(ALL_LINGUAS)
 USE_NLS=yes
 AC_SUBST(USE_NLS)

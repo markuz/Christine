@@ -1,4 +1,4 @@
-# Dutch translation for christine
+# Arabic translation for christine
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the christine package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-11-21 01:03-0600\n"
-"PO-Revision-Date: 2009-03-07 16:39+0000\n"
-"Last-Translator: S_joerdd <sjoerd@chilplaza.nl>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2008-07-17 06:24+0000\n"
+"Last-Translator: صقر بن عبدالله <Unknown>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,51 +19,50 @@ msgstr ""
 
 #: libchristine/Plugins/twitter.py:89
 msgid "not authorized"
-msgstr "Uw heeft geen toegang"
+msgstr ""
 
 #: libchristine/Plugins/twitter.py:91
 msgid "not found"
-msgstr "niet gevonden"
+msgstr ""
 
 #: libchristine/Plugins/twitter.py:93
 msgid "service not available"
-msgstr "Service niet beschikbaar"
+msgstr ""
 
 #: libchristine/Plugins/twitter.py:95
 msgid "unknown error"
-msgstr "Onbekende fout"
+msgstr ""
 
 #: libchristine/Plugins/twitter.py:97
 #, python-format
 msgid "twitt -> %s"
-msgstr "twitt -> %s"
+msgstr ""
 
 #: gui/About.glade:61
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Robert Wubs https://launchpad.net/~wubsieonline\n"
-"  S_joerdd https://launchpad.net/~sjoerdddd"
+"  صقر بن عبدالله https://launchpad.net/~agari"
 
 #: gui/addFiles.glade:59
 msgid "Importing:"
-msgstr "Importeren van:"
+msgstr ""
 
 #: gui/addFiles.glade:69
 msgid "label2"
-msgstr "label2"
+msgstr ""
 
 #: gui/addFiles.glade:103
 msgid "<b>Importing files</b>"
-msgstr "<b>Importeren van bestanden</b>"
+msgstr ""
 
 #: gui/deleteFileFromDisk.glade:35
 msgid ""
 "Are you sure?\n"
 "This cannot be undone"
 msgstr ""
-"Weet je het zeker?\n"
-"Dit kan niet teruggedraaid worden"
+"هل أنت متأكّد؟\n"
+"لا يمكنك التراجع من هذا"
 
 #: gui/deleteFileFromDisk.glade:55 gui/deleteQuestion.glade:49
 #: gui/genericQuestion.glade:49 gui/NewSourceDialog.glade:81
@@ -81,24 +80,22 @@ msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
-"Uw bent van plan om alle bestanden uit de bibliotheek te verwijderen.\n"
-"Dit is niet te herstellen."
 
 #: gui/directorySelector.glade:9
 msgid "Select a folder"
-msgstr "Selecteer een map"
+msgstr "انتقاء مجلّداً"
 
 #: gui/directorySelector.glade:19
 msgid "Include subfolders"
-msgstr "Inclusief submappen"
+msgstr ""
 
 #: gui/Error.glade:8
 msgid "Error"
-msgstr "Fout"
+msgstr "خطأ"
 
 #: gui/Error.glade:82
 msgid "Error text"
-msgstr "Error tekst"
+msgstr "نص الخطأ"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -110,33 +107,26 @@ msgid ""
 "\n"
 "Thank you for taking the time to improve christine."
 msgstr ""
-"We vonden een Fout, alstublieft, meld hem.\n"
-"\n"
-"Waneer uw een fout meldt, kopieer dan de volgende de tekst en stuur het naar "
-"ons.\n"
-"Je kunt er ook bij zetten wat je dan toen aan het doen was.\n"
-"\n"
-"Bedankt voor je tijd,"
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
-msgstr "Raporteer de Bug"
+msgstr ""
 
 #: gui/FileSelector.glade:13
 msgid "Select your files"
-msgstr "Selecteer jouw bestanden"
+msgstr "انتقاء ملفّاتك"
 
 #: gui/genericQuestion.glade:30
 msgid "Label"
-msgstr "Label"
+msgstr ""
 
 #: gui/iconView.glade:8 gui/TreeViewReorderable.glade:7
 msgid "window1"
-msgstr "scherm1"
+msgstr "نافذة1"
 
 #: gui/JumpTo.glade:8
 msgid "Jump to time"
-msgstr "Naar tijd springen"
+msgstr ""
 
 #: gui/JumpTo.glade:98
 msgid ":"
@@ -144,47 +134,47 @@ msgstr ":"
 
 #: gui/miniViewer.glade:10
 msgid "video player"
-msgstr "videospeler"
+msgstr "مشغّل المرئيّات"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
-msgstr "Bron Name"
+msgstr ""
 
 #: gui/NewSourceDialog.glade:92
 msgid "gtk-save"
-msgstr "gtk-save"
+msgstr ""
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
-msgstr "Open op afstand"
+msgstr ""
 
 #: gui/openRemote.glade:20
 msgid "Location"
-msgstr "Locatie"
+msgstr "الموقع"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr "Toegang aanvragen"
+msgstr ""
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
-msgstr "Fetch Sessie data"
+msgstr ""
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr "<b>Toegang</b>"
+msgstr ""
 
 #: gui/plugin_lastfm_main.glade:113
 msgid "Password"
-msgstr "Wachtwoord"
+msgstr ""
 
 #: gui/plugin_lastfm_main.glade:125
 msgid "Username"
-msgstr "Gebruikersnaam"
+msgstr ""
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
-msgstr "<b>Toegang</b>"
+msgstr ""
 
 #: gui/plugin_pidgin_main.glade:55
 msgid ""
@@ -192,57 +182,54 @@ msgid ""
 "will be translated according to the \n"
 "current track"
 msgstr ""
-"Gebruik: Tags zoals \"_artist_\" or \"_title_\" \n"
-"zullen worden veranderd in de informatie van het bestand dat je aan het "
-"afspelen bent."
 
 #: gui/plugin_pidgin_main.glade:71
 msgid "<b>Message Format</b>"
-msgstr "<b>Bericht Formaat</b>"
+msgstr ""
 
 #: gui/plugin_pidgin_main.glade:85
 msgid "<b>Pidgin</b>"
-msgstr "<b>Pidgin</b>"
+msgstr ""
 
 #: gui/plugin_pidgin_main.glade:108
 msgid "Accept"
-msgstr "Accepteren"
+msgstr ""
 
 #: gui/Preferences.glade:48 gui/Properties.glade:500
 msgid "Artist"
-msgstr "Artiest"
+msgstr "الفنّان"
 
 #: gui/Preferences.glade:62 gui/Properties.glade:528
 msgid "Album"
-msgstr "Album"
+msgstr "الألبوم"
 
 #: gui/Preferences.glade:77
 msgid "Type"
-msgstr "Type"
+msgstr "نوع"
 
 #: gui/Preferences.glade:91
 msgid "Length"
-msgstr "Duur"
+msgstr "المدّة"
 
 #: gui/Preferences.glade:102 gui/Properties.glade:584
 msgid "Track number"
-msgstr "Tracknummer"
+msgstr "رقم المقطوعة"
 
 #: gui/Preferences.glade:115
 msgid "Play count"
-msgstr "Aantal keren afgespeeld"
+msgstr "عدد مرّات التّشغيل"
 
 #: gui/Preferences.glade:128 gui/Properties.glade:472
 msgid "Genre"
-msgstr "Genre"
+msgstr ""
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
-msgstr "<b>Bibliotheek Kolommen</b>"
+msgstr ""
 
 #: gui/Preferences.glade:169
 msgid "View"
-msgstr "Bekijken"
+msgstr ""
 
 #: gui/Preferences.glade:198
 msgid ""
@@ -251,218 +238,212 @@ msgid ""
 "esdsink\n"
 "autoaudiosink"
 msgstr ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
 
 #: gui/Preferences.glade:218
 msgid "<b>Audiosink</b>"
-msgstr "<b>Audiosink</b>"
+msgstr ""
 
 #: gui/Preferences.glade:247
 msgid ""
 "ximagesink\n"
 "xvimagesink"
 msgstr ""
-"ximagesink\n"
-"xvimagesink"
 
 #: gui/Preferences.glade:265
 msgid "<b>Videosink</b>"
-msgstr "<b>Videosink</b>"
+msgstr ""
 
 #: gui/Preferences.glade:287
 msgid "Backend"
-msgstr "Backend"
+msgstr "منتهى خلفيّ"
 
 #: gui/Preferences.glade:333
 msgid "gtk-add"
-msgstr "gtk-toevoegen"
+msgstr ""
 
 #: gui/Preferences.glade:346
 msgid "gtk-delete"
-msgstr "gtk-verwijder"
+msgstr ""
 
 #: gui/Preferences.glade:371
 msgid "<b>Allowed Files</b>"
-msgstr "<b>Toegestaande bestanden</b>"
+msgstr ""
 
 #: gui/Preferences.glade:386
 msgid "Importing"
-msgstr "Importeren"
+msgstr ""
 
 #: gui/Preferences.glade:426
 msgid "Configure _Plugin"
-msgstr "Instellen _Plugin"
+msgstr ""
 
 #: gui/Preferences.glade:449
 msgid "Plugins"
-msgstr "Invoegtoepassingen"
+msgstr ""
 
 #: gui/Properties.glade:9
 msgid "Properties"
-msgstr "Eigenschappen"
+msgstr "الخصائص"
 
 #: gui/Properties.glade:69
 msgid "File"
-msgstr "Bestand"
+msgstr "الملفّ"
 
 #: gui/Properties.glade:108
 msgid "Audio codec"
-msgstr "Audio codec"
+msgstr "مرماز سمعيّ"
 
 #: gui/Properties.glade:136
 msgid "Mode"
-msgstr "Modus"
+msgstr "وضع"
 
 #: gui/Properties.glade:164
 msgid "Bitrate"
-msgstr "Bitsnelheid"
+msgstr ""
 
 #: gui/Properties.glade:192 gui/Properties.glade:220 gui/Properties.glade:248
 #: gui/Properties.glade:276 gui/Properties.glade:304 gui/Properties.glade:332
 #: gui/Properties.glade:360 gui/Properties.glade:388 gui/Properties.glade:416
 #: gui/Properties.glade:640
 msgid "None"
-msgstr "Geen"
+msgstr "لا شيء"
 
 #: gui/Properties.glade:444
 msgid "Date"
-msgstr "Datum"
+msgstr "تاريخ"
 
 #: gui/Properties.glade:556
 msgid "Title"
-msgstr "Titel"
+msgstr "العنوان"
 
 #: gui/Properties.glade:612
 msgid "Video codec"
-msgstr "Video codec"
+msgstr "مرماز مرئيّ"
 
 #: gui/walkdirectories.glade:44
 msgid "Exploring"
-msgstr "Verkennen"
+msgstr ""
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
-msgstr "_Media"
+msgstr ""
 
 #: gui/WindowCore.glade:28
 msgid "Import File"
-msgstr "Bestand importeren"
+msgstr ""
 
 #: gui/WindowCore.glade:45
 msgid "Import Folder"
-msgstr "Map Impoteren"
+msgstr ""
 
 #: gui/WindowCore.glade:67
 msgid "Import to queue"
-msgstr "Importeer naar queue"
+msgstr ""
 
 #: gui/WindowCore.glade:81
 msgid "Open remote"
-msgstr "Open remote"
+msgstr ""
 
 #: gui/WindowCore.glade:95
 msgid "Jump _to"
-msgstr "Ga naar _to"
+msgstr ""
 
 #: gui/WindowCore.glade:104
 msgid "_Jump to playing"
-msgstr "_Jump naar speler"
+msgstr ""
 
 #: gui/WindowCore.glade:118
 msgid "Clean main List"
-msgstr "Algemene lijst schoonmaken"
+msgstr ""
 
 #: gui/WindowCore.glade:131
 msgid "gtk-quit"
-msgstr "gtk-afsluiten"
+msgstr ""
 
 #: gui/WindowCore.glade:144
 msgid "_Edit"
-msgstr "_Edit"
+msgstr ""
 
 #: gui/WindowCore.glade:151
 msgid "gtk-find"
-msgstr "gtk-vindt"
+msgstr ""
 
 #: gui/WindowCore.glade:165
 msgid "gtk-preferences"
-msgstr "gtk-voorkeuren"
+msgstr ""
 
 #: gui/WindowCore.glade:183
 msgid "_Control"
-msgstr "_Control"
+msgstr ""
 
 #: gui/WindowCore.glade:191
 msgid "Play"
-msgstr "Afspelen"
+msgstr ""
 
 #: gui/WindowCore.glade:205
 msgid "Prev"
-msgstr "Vorige"
+msgstr ""
 
 #: gui/WindowCore.glade:221
 msgid "_Next"
-msgstr "_Volgende"
+msgstr ""
 
 #: gui/WindowCore.glade:242
 msgid "Shuffle"
-msgstr "Willekeurig afspelen"
+msgstr ""
 
 #: gui/WindowCore.glade:250
 msgid "Repeat"
-msgstr "Herhalen"
+msgstr ""
 
 #: gui/WindowCore.glade:263
 msgid "Less volume"
-msgstr "Zachter"
+msgstr ""
 
 #: gui/WindowCore.glade:272
 msgid "More volume"
-msgstr "Hoger"
+msgstr ""
 
 #: gui/WindowCore.glade:281
 msgid "Mute"
-msgstr "Dempen"
+msgstr ""
 
 #: gui/WindowCore.glade:294
 msgid "_View"
-msgstr "_Weergave"
+msgstr ""
 
 #: gui/WindowCore.glade:302
 msgid "_Small view"
-msgstr "_Klein venster"
+msgstr ""
 
 #: gui/WindowCore.glade:310
 msgid "Browser"
-msgstr "Browser"
+msgstr ""
 
 #: gui/WindowCore.glade:319
 msgid "Full Screen"
-msgstr "Volledig scherm"
+msgstr ""
 
 #: gui/WindowCore.glade:333
 msgid "Visualization"
-msgstr "Visualisatie"
+msgstr ""
 
 #: gui/WindowCore.glade:346
 msgid "_Help"
-msgstr "_Help"
+msgstr ""
 
 #: gui/WindowCore.glade:354
 msgid "Translate Christine"
-msgstr "Vertalen"
+msgstr ""
 
 #: gui/WindowCore.glade:370
 msgid "Report a Bug"
-msgstr "Meldt een Bug"
+msgstr ""
 
 #: gui/WindowCore.glade:385
 msgid "gtk-about"
-msgstr "gtk-over"
+msgstr ""
 
 #: gui/WindowCore.glade:513
 msgid "Find"
-msgstr "Zoek"
+msgstr "بحث"

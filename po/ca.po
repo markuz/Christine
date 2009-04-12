@@ -1,259 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Catalan translation for christine
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the christine package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: christine\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-11-21 01:03-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-03-01 14:33+0000\n"
+"Last-Translator: el_libre XDDDDDDDDDDDDDDDDDDDDDDDDDDD <el.libre@gmail.com>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: gui/about.glade:9
-msgid "Christine"
-msgstr "Christine"
-
-#: gui/about.glade:10
-msgid "2006 (c) Marco Antonio Islas Cruz"
-msgstr "2006 (c) Marco Antonio Islas Cruz"
-
-#: gui/about.glade:11
-msgid "A small and cute media player for GNOME"
-msgstr "Un petit i maco reproductor de mitjans per a GNOME"
-
-#: gui/about.glade:45 gui/About.glade:61
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  el_libre https://launchpad.net/~el-libre"
-
-#: gui/add_files.glade:55 gui/addFiles.glade:59
-msgid "Importing:"
-msgstr "Important:"
-
-#: gui/add_files.glade:65 gui/addFiles.glade:69
-msgid "label2"
-msgstr "label2"
-
-#: gui/add_files.glade:102 gui/addFiles.glade:103
-msgid "<b>Importing files</b>"
-msgstr "<b>Important arxius</b>"
-
-#: gui/delete_file_from_disk_dialog.glade:35 gui/deleteFileFromDisk.glade:35
-msgid ""
-"Are you sure?\n"
-"This cannot be undone"
-msgstr ""
-"Estàs segur/a?\n"
-"Això no es pot desfer"
-
-#: gui/delete_file_from_disk_dialog.glade:55 gui/deleteFileFromDisk.glade:55
-#: gui/deleteQuestion.glade:49 gui/genericQuestion.glade:49
-#: gui/NewSourceDialog.glade:81 gui/walkdirectories.glade:85
-msgid "gtk-cancel"
-msgstr "gtk-cancel"
-
-#: gui/delete_file_from_disk_dialog.glade:63 gui/deleteFileFromDisk.glade:63
-#: gui/deleteQuestion.glade:56 gui/genericQuestion.glade:57
-msgid "gtk-ok"
-msgstr "gtk-ok"
-
-#: gui/dir_selector.glade:13 gui/directorySelector.glade:9
-msgid "Select a folder"
-msgstr "Selecciona un directori"
-
-#: gui/dir_selector.glade:77 gui/directorySelector.glade:19
-msgid "Include subfolders"
-msgstr "Inclou els subdirectoris"
-
-#: gui/error.glade:8 gui/Error.glade:8
-msgid "Error"
-msgstr "Error"
-
-#: gui/error.glade:82 gui/Error.glade:82
-msgid "Error text"
-msgstr "Text d'error"
-
-#: gui/file_selector.glade:13 gui/FileSelector.glade:13
-msgid "Select your files"
-msgstr "Selecciona els teus arxius"
-
-#: gui/icon_view.glade:8 gui/treeview_reorderable.glade:8 gui/iconView.glade:8
-#: gui/TreeViewReorderable.glade:7
-msgid "window1"
-msgstr "finestra1"
-
-#: gui/jump_to.glade:8 gui/JumpTo.glade:8
-msgid "Jump to time"
-msgstr "Salta al punt"
-
-#: gui/jump_to.glade:98 gui/JumpTo.glade:98
-msgid ":"
-msgstr ":"
-
-#: gui/main_window.glade:387 gui/WindowCore.glade:513
-msgid "Find"
-msgstr "Cerca"
-
-#: gui/main_window.glade:528
-msgid "<b>Artists</b>"
-msgstr "<b>Artistes</b>"
-
-#: gui/main_window.glade:557
-msgid "<b>Albums</b>"
-msgstr "<b>Àlbums</b>"
-
-#: gui/main_window.glade:630 gui/main_window.glade:655
-msgid "00:00"
-msgstr "00:00"
-
-#: gui/miniviewer.glade:10 gui/miniViewer.glade:10
-msgid "video player"
-msgstr "reproductor de vídeo"
-
-#: gui/open_remote.glade:8 gui/openRemote.glade:8
-msgid "Open Remote"
-msgstr "Obre Remot"
-
-#: gui/open_remote.glade:77 gui/openRemote.glade:20
-msgid "Location"
-msgstr "Ubicació"
-
-#: gui/preferences.glade:41 gui/properties.glade:500 gui/Preferences.glade:48
-#: gui/Properties.glade:500
-msgid "Artist"
-msgstr "Artista"
-
-#: gui/preferences.glade:54 gui/properties.glade:528 gui/Preferences.glade:62
-#: gui/Properties.glade:528
-msgid "Album"
-msgstr "Àlbum"
-
-#: gui/preferences.glade:68 gui/Preferences.glade:77
-msgid "Type"
-msgstr "Tipus"
-
-#: gui/preferences.glade:81 gui/Preferences.glade:91
-msgid "Length"
-msgstr "Durada"
-
-#: gui/preferences.glade:91 gui/properties.glade:584 gui/Preferences.glade:102
-#: gui/Properties.glade:584
-msgid "Track number"
-msgstr "Número de pista"
-
-#: gui/preferences.glade:101 gui/Preferences.glade:115
-msgid "Play count"
-msgstr "Comptador de reproduccions"
-
-#: gui/preferences.glade:115
-msgid "<b>View</b>"
-msgstr "<b>Visualitza</b>"
-
-#: gui/preferences.glade:138
-msgid "Library"
-msgstr "Biblioteca"
-
-#: gui/preferences.glade:164 gui/Preferences.glade:198
-msgid ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-msgstr ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-
-#: gui/preferences.glade:184 gui/Preferences.glade:218
-msgid "<b>Audiosink</b>"
-msgstr "<b>Sincronització d`Àudio</b>"
-
-#: gui/preferences.glade:208 gui/Preferences.glade:247
-msgid ""
-"ximagesink\n"
-"xvimagesink"
-msgstr ""
-"ximagesink\n"
-"xvimagesink"
-
-#: gui/preferences.glade:226 gui/Preferences.glade:265
-msgid "<b>Videosink</b>"
-msgstr "<b>Sincronització de vídeo</b>"
-
-#: gui/preferences.glade:247 gui/Preferences.glade:287
-msgid "Backend"
-msgstr "Fons"
-
-#: gui/properties.glade:9 gui/Properties.glade:9
-msgid "Properties"
-msgstr "Propietats"
-
-#: gui/properties.glade:69 gui/Properties.glade:69
-msgid "File"
-msgstr "Arxiu"
-
-#: gui/properties.glade:108 gui/Properties.glade:108
-msgid "Audio codec"
-msgstr "Còdec d'Àudio"
-
-#: gui/properties.glade:136 gui/Properties.glade:136
-msgid "Mode"
-msgstr "Mode"
-
-#: gui/properties.glade:164 gui/Properties.glade:164
-msgid "Bitrate"
-msgstr "Taxa de bits"
-
-#: gui/properties.glade:192 gui/properties.glade:220 gui/properties.glade:248
-#: gui/properties.glade:276 gui/properties.glade:304 gui/properties.glade:332
-#: gui/properties.glade:360 gui/properties.glade:388 gui/properties.glade:416
-#: gui/properties.glade:640 gui/Properties.glade:192 gui/Properties.glade:220
-#: gui/Properties.glade:248 gui/Properties.glade:276 gui/Properties.glade:304
-#: gui/Properties.glade:332 gui/Properties.glade:360 gui/Properties.glade:388
-#: gui/Properties.glade:416 gui/Properties.glade:640
-msgid "None"
-msgstr "Cap"
-
-#: gui/properties.glade:444 gui/Properties.glade:444
-msgid "Date"
-msgstr "Data"
-
-#: gui/properties.glade:472 gui/Preferences.glade:128 gui/Properties.glade:472
-msgid "Genre"
-msgstr "Gènere"
-
-#: gui/properties.glade:556 gui/Properties.glade:556
-msgid "Title"
-msgstr "Títol"
-
-#: gui/properties.glade:612 gui/Properties.glade:612
-msgid "Video codec"
-msgstr "Còdec de vídeo"
-
-#: gui/tray_menu.glade:11
-msgid "Play or pause the player"
-msgstr "Reprodueix o pausa la reproducció"
-
-#: gui/tray_menu.glade:12
-msgid "Play/Pause"
-msgstr "Reprodueix/Pausa"
-
-#: gui/tray_menu.glade:33
-msgid "Next"
-msgstr "Següent"
-
-#: gui/tray_menu.glade:54
-msgid "Previous"
-msgstr "Anterior"
+"X-Launchpad-Export-Date: 2009-04-12 19:52+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: libchristine/Plugins/twitter.py:89
 msgid "not authorized"
@@ -276,11 +38,64 @@ msgstr ""
 msgid "twitt -> %s"
 msgstr ""
 
+#: gui/About.glade:61
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  el_libre XDDDDDDDDDDDDDDDDDDDDDDDDDDD https://launchpad.net/~el-libre"
+
+#: gui/addFiles.glade:59
+msgid "Importing:"
+msgstr "Important:"
+
+#: gui/addFiles.glade:69
+msgid "label2"
+msgstr "label2"
+
+#: gui/addFiles.glade:103
+msgid "<b>Importing files</b>"
+msgstr "<b>Important arxius</b>"
+
+#: gui/deleteFileFromDisk.glade:35
+msgid ""
+"Are you sure?\n"
+"This cannot be undone"
+msgstr ""
+"Estàs segur/a?\n"
+"Això no es pot desfer"
+
+#: gui/deleteFileFromDisk.glade:55 gui/deleteQuestion.glade:49
+#: gui/genericQuestion.glade:49 gui/NewSourceDialog.glade:81
+#: gui/walkdirectories.glade:85
+msgid "gtk-cancel"
+msgstr "gtk-cancel"
+
+#: gui/deleteFileFromDisk.glade:63 gui/deleteQuestion.glade:56
+#: gui/genericQuestion.glade:57
+msgid "gtk-ok"
+msgstr "gtk-ok"
+
 #: gui/deleteQuestion.glade:29
 msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
+
+#: gui/directorySelector.glade:9
+msgid "Select a folder"
+msgstr "Selecciona un directori"
+
+#: gui/directorySelector.glade:19
+msgid "Include subfolders"
+msgstr "Inclou els subdirectoris"
+
+#: gui/Error.glade:8
+msgid "Error"
+msgstr "Error"
+
+#: gui/Error.glade:82
+msgid "Error text"
+msgstr "Text d'error"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -297,9 +112,29 @@ msgstr ""
 msgid "Report the bug"
 msgstr ""
 
+#: gui/FileSelector.glade:13
+msgid "Select your files"
+msgstr "Selecciona els teus arxius"
+
 #: gui/genericQuestion.glade:30
 msgid "Label"
 msgstr ""
+
+#: gui/iconView.glade:8 gui/TreeViewReorderable.glade:7
+msgid "window1"
+msgstr "finestra1"
+
+#: gui/JumpTo.glade:8
+msgid "Jump to time"
+msgstr "Salta al punt"
+
+#: gui/JumpTo.glade:98
+msgid ":"
+msgstr ":"
+
+#: gui/miniViewer.glade:10
+msgid "video player"
+msgstr "reproductor de vídeo"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -308,6 +143,14 @@ msgstr ""
 #: gui/NewSourceDialog.glade:92
 msgid "gtk-save"
 msgstr ""
+
+#: gui/openRemote.glade:8
+msgid "Open Remote"
+msgstr "Obre Remot"
+
+#: gui/openRemote.glade:20
+msgid "Location"
+msgstr "Ubicació"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
@@ -352,6 +195,34 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
+#: gui/Preferences.glade:48 gui/Properties.glade:500
+msgid "Artist"
+msgstr "Artista"
+
+#: gui/Preferences.glade:62 gui/Properties.glade:528
+msgid "Album"
+msgstr "Àlbum"
+
+#: gui/Preferences.glade:77
+msgid "Type"
+msgstr "Tipus"
+
+#: gui/Preferences.glade:91
+msgid "Length"
+msgstr "Durada"
+
+#: gui/Preferences.glade:102 gui/Properties.glade:584
+msgid "Track number"
+msgstr "Número de pista"
+
+#: gui/Preferences.glade:115
+msgid "Play count"
+msgstr "Comptador de reproduccions"
+
+#: gui/Preferences.glade:128 gui/Properties.glade:472
+msgid "Genre"
+msgstr "Gènere"
+
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
 msgstr ""
@@ -359,6 +230,38 @@ msgstr ""
 #: gui/Preferences.glade:169
 msgid "View"
 msgstr ""
+
+#: gui/Preferences.glade:198
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink"
+
+#: gui/Preferences.glade:218
+msgid "<b>Audiosink</b>"
+msgstr "<b>Sincronització d`Àudio</b>"
+
+#: gui/Preferences.glade:247
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+"ximagesink\n"
+"xvimagesink"
+
+#: gui/Preferences.glade:265
+msgid "<b>Videosink</b>"
+msgstr "<b>Sincronització de vídeo</b>"
+
+#: gui/Preferences.glade:287
+msgid "Backend"
+msgstr "Fons"
 
 #: gui/Preferences.glade:333
 msgid "gtk-add"
@@ -383,6 +286,45 @@ msgstr ""
 #: gui/Preferences.glade:449
 msgid "Plugins"
 msgstr ""
+
+#: gui/Properties.glade:9
+msgid "Properties"
+msgstr "Propietats"
+
+#: gui/Properties.glade:69
+msgid "File"
+msgstr "Arxiu"
+
+#: gui/Properties.glade:108
+msgid "Audio codec"
+msgstr "Còdec d'Àudio"
+
+#: gui/Properties.glade:136
+msgid "Mode"
+msgstr "Mode"
+
+#: gui/Properties.glade:164
+msgid "Bitrate"
+msgstr "Taxa de bits"
+
+#: gui/Properties.glade:192 gui/Properties.glade:220 gui/Properties.glade:248
+#: gui/Properties.glade:276 gui/Properties.glade:304 gui/Properties.glade:332
+#: gui/Properties.glade:360 gui/Properties.glade:388 gui/Properties.glade:416
+#: gui/Properties.glade:640
+msgid "None"
+msgstr "Cap"
+
+#: gui/Properties.glade:444
+msgid "Date"
+msgstr "Data"
+
+#: gui/Properties.glade:556
+msgid "Title"
+msgstr "Títol"
+
+#: gui/Properties.glade:612
+msgid "Video codec"
+msgstr "Còdec de vídeo"
 
 #: gui/walkdirectories.glade:44
 msgid "Exploring"
@@ -507,3 +449,7 @@ msgstr ""
 #: gui/WindowCore.glade:385
 msgid "gtk-about"
 msgstr ""
+
+#: gui/WindowCore.glade:513
+msgid "Find"
+msgstr "Cerca"
