@@ -38,6 +38,8 @@ import gobject
 import os
 import re
 from libchristine.christineConf import christineConf
+from libchristine.Events import christineEvents
+from libchristine.gui.GtkMisc import GtkMisc
 
 main_loop = DBusGMainLoop()
 
@@ -49,12 +51,14 @@ iface.DBus_Session = DBUS_SESSION
 DBUS_NAME = 'org.christine'
 DBUS_PATH = '/org/christine'
 
-class christineDBus(dbus.service.Object):
+class christineDBus(dbus.service.Object,GtkMisc):
 	'''
 	Class that serves as interface between christine stuff and dbus.
 	'''
 	def __init__(self):
+		GtkMisc.__init__(self)
 		self.christineConf = christineConf()
+		self.Events = christineEvents()
 		global DBUS_SESSION
 		bus_name = dbus.service.BusName(DBUS_NAME, bus=DBUS_SESSION)
 		dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
@@ -92,18 +96,12 @@ class christineDBus(dbus.service.Object):
 	
 	@dbus.service.method(DBUS_NAME)
 	def now_playing(self):
-		location = iface.Player.getLocation()
-		if not location:
-			result = ''
-		else:
-			result = location
-		return result
+		result = getattr(iface.Player, 'Tags', {})
+		ndict = {}
+		for key, value in result.iteritems():
+			ndict[u'%s'%key] = u'%s'%self.encode_text(str(value))
+		return dbus.Dictionary(ndict, signature=dbus.Signature('sv'))
 	
-	@dbus.service.method(DBUS_NAME)
-	def get_tags(self, path):
-		#TODO: have to return a coma separated tags.
-		return ''
-
 	@dbus.service.method(DBUS_NAME)
 	def exit(self):
 		iface.coreClass.quitGtk()
@@ -141,11 +139,10 @@ class christineDBus(dbus.service.Object):
 		file = self.christineConf.getString('backend/last_played')
 		self.NewLocation(file)
 	
-	@dbus.service.signal(dbus_interface='orc.christine', signature='s')
+	
+	
+	@dbus.service.signal(dbus_interface='org.christine', signature='s')
 	def NewLocation(self, location):
 		print location
-
-	
-
 	
 a = christineDBus()
