@@ -1,33 +1,11 @@
-Changes since 0.2.1
+Changes since 0.3.1
 
-* DBus support.
-	* Functions:
-		* Play
-		* Pause
-		* Prev
-		* Next
-	* Signals
-		* NewLocation 
-
-* Plugins
-	* New Plugins
-		* Gnome Media Keys support
-		* Album Cover
-		* Early acces to getInfo
-		* GnomeDBus
-	* Improved pidgin configuration dialog
-
-* Player
-	* Support for subtitles
-	* Better handle of xvimagesink
-
-* Misc
-	* Faster import
-	* 3rd party module that contains libraries developed by others
-	* Improved sources UI
-
-* Bugfixes:
-	* Visualization doesn't work with xvimagesink
-	* Cannot delete a file from the main library
-
+* Plugins as packages
+* Font selector for subtitles
+* Encoding selector for subtitles
+* Dbus methods:
+  * get_playlists
+  * get_radio
+  * get_tags
+  * get_tracks_for_playlist
 
