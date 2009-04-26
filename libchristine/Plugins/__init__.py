@@ -24,15 +24,15 @@ class Manager(Singleton):
 		Search for the files and then use the __importByName to load them
 		'''
 		files = os.listdir(PLUGINSDIR)
-		filteredf = [k for k in files if k.endswith('py') \
-					and not k.endswith('plugin_base.py') \
-					and not k.endswith('__init__.py')]
-		for i in filteredf:
-			pluginname = os.path.split(i)[-1].split('.')[0]
-			plugin = self.__importByName('libchristine.Plugins.'+pluginname, pluginname)
-			if plugin:
-				instance = plugin()
-				self.plugins[instance.name] = instance
+		filteredf = [k for k in files if os.path.isdir(os.path.join(PLUGINSDIR, k))]
+		for pluginname in filteredf:
+			plugin = self.__importByName('libchristine.Plugins', pluginname)
+			if not plugin:
+				continue
+			if not getattr(plugin, '__enabled__', False):
+				continue
+			instance = getattr(plugin,pluginname)()
+			self.plugins[instance.name] = instance
 
 
 	def __importByName(self,modulename,name):
