@@ -29,11 +29,18 @@
 import  gobject
 import dbus
 from libchristine.ui import interface
-from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Plugins.plugin_base import plugin_base,christineConf
 from libchristine.Tagger import Tagger
 from libchristine.Share import Share
 from libchristine.christine_dbus import DBUS_SESSION
 from libchristine.Translator import translate 
+
+
+__name__ = _('Pidgin')
+__description__  = _('This plugin set the song you are playing on pidgin')
+__author__  = ['Maximiliano Valdez Gonzalez <garaged@gmail.com>',
+			'Marco Antonio Islas Cruz <markuz@islascruz.org>']
+__enabled__ = christineConf.getBool('pidgin/enabled')
 
 class pidgin(plugin_base):
 	"""
@@ -42,8 +49,8 @@ class pidgin(plugin_base):
 	"""
 	def __init__(self):
 		plugin_base.__init__(self)
-		self.name = 'Pidgin'
-		self.description = 'This plugin set the song you are playing on pidgin'
+		self.name = __name__
+		self.description =  __description__
 		self.obj = None
 		self.interface = interface()
 		self.interface.Player.connect('player-play',self.set_message)
@@ -119,6 +126,7 @@ class pidgin(plugin_base):
 		return self.christineConf.getBool('pidgin/enabled')
 
 	def set_active(self, value):
+		__enabled__ = value
 		return self.christineConf.setValue('pidgin/enabled', value)
 
 	active = property(get_active, set_active, None,

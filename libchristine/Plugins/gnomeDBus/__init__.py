@@ -32,7 +32,7 @@
 from libchristine.christine_dbus import DBUS_SESSION
 from libchristine.pattern.Singleton import Singleton
 from libchristine.ui import interface
-from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.gui.christineNotify import notifyWindow
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Share import Share
@@ -64,6 +64,11 @@ for line in output.readlines():
 	if pattern.match(line):
 		major = pattern.search(line).group(1)
 		minor = pattern.search(line).group(2)
+		
+__name__ = _('GNOME Media Keys')
+__description__  = _('Allows christine to react to GNOME media key press events')
+__author__  = 'Marco Antonio Islas Cruz <markuz@islascruz.org>'
+__enabled__ = christineConf.getBool('dbus/gnome_media')
 
 class gnomeDBus(plugin_base):
 	def __init__(self):
@@ -71,8 +76,8 @@ class gnomeDBus(plugin_base):
 		Constructor
 		'''
 		plugin_base.__init__(self)
-		self.name = 'GNOME Media Keys'
-		self.description = 'Allows christine to react to GNOME media key press events'
+		self.name = __name__
+		self.description = __description__
 		self.iface = interface()
 		self.__Share   = Share()
 		if (int(major) == 2) & (int(minor) > 20):
@@ -120,6 +125,7 @@ class gnomeDBus(plugin_base):
 		return self.christineConf.getBool('dbus/gnome_media')
 	
 	def set_active(self, value):
+		__enabled__ = value
 		return self.christineConf.setValue('dbus/gnome_media', value)
 	
 	active = property(get_active, set_active, None,

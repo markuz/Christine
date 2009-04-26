@@ -17,12 +17,18 @@
 
 import gtk
 
-from libchristine.christineConf import christineConf
 from libchristine.Logger import LoggerManager
 from libchristine.Share import Share
 from libchristine.ui import interface
-from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.Events import christineEvents
+
+print christineConf
+
+__name__ = _('TrayIcon')
+__description__  = _('This plugins shows a Try Icon on the notification area')
+__author__  = ['Marco Antonio Islas Cruz <markuz@islascruz.org>']
+__enabled__ = christineConf.getBool('trayicon/enabled')
 
 class trayicon(plugin_base):
 	'''
@@ -30,9 +36,8 @@ class trayicon(plugin_base):
 	'''
 	def __init__(self):
 		plugin_base.__init__(self)
-		self.name = 'TryIcon'
-		self.description = 'This plugins shows a Try Icon on the notification area'
-		self.christineConf   = christineConf()
+		self.name = __name__
+		self.description = __description__
 		self.Events = christineEvents()
 		if not self.christineConf.exists('trayicon/enabled'):
 			self.christineConf.setValue('trayicon/enabled', True)
@@ -118,6 +123,7 @@ class trayicon(plugin_base):
 		return self.christineConf.getBool('trayicon/enabled')
 	
 	def set_active(self, value):
+		__enabled__ = value
 		return self.christineConf.setValue('trayicon/enabled', value)
 
 	active = property(get_active, set_active, None,

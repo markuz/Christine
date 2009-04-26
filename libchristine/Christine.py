@@ -43,11 +43,11 @@ from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.gui.Preferences import guiPreferences
 from libchristine.gui.About import guiAbout
 from libchristine.gui.Display import Display
-from libchristine.globalvars import PROGRAMNAME, BUGURL
+from libchristine.globalvars import  BUGURL
 from libchristine.ui import interface
 from libchristine.gui.openRemote import openRemote
 from libchristine.Library import library, queue,PATH, HAVE_TAGS
-from libchristine.Library import NAME,PIX,PLAY_COUNT,TIME
+from libchristine.Library import PIX,PLAY_COUNT,TIME
 from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.christineConf import christineConf
@@ -55,13 +55,11 @@ from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_E
 from libchristine.Logger import LoggerManager
 from libchristine.Events import christineEvents
 from libchristine.christine_dbus import *
-import logging
 import webbrowser
 import gc
 
 
 #gc.enable()
-
 
 
 def close(*args):

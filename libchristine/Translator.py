@@ -37,6 +37,8 @@ gettext.textdomain('@programname@')
 def translate(text):
 	return gettext.gettext(text)
 
+__builtins__["_"] = translate
+
 class Translator(Singleton):
 	"""
 	Translator manager

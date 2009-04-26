@@ -96,6 +96,15 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	
 	@dbus.service.method(DBUS_NAME)
 	def now_playing(self):
+		return iface.Player.get_location()
+
+	def get_tags(self, uri):
+		'''
+		Devuelve un diccionario con los tags del elemento definido por 
+		uri
+		@param uri:
+		'''
+		result = iface.db.getItemByPath()
 		result = getattr(iface.Player, 'Tags', {})
 		ndict = {}
 		for key, value in result.iteritems():

@@ -32,6 +32,7 @@ import sqlite3
 from libchristine.globalvars import DBFILE
 from libchristine.pattern.Singleton import Singleton
 from libchristine.Logger import LoggerManager
+from libchristine.ui import interface
 
 class sqlite3db(Singleton):
 	def __init__(self):
@@ -50,6 +51,8 @@ class sqlite3db(Singleton):
 			self.__logger.debug(self.get_db_version())
 			self.createSchema()
 			self.fillRegistry()
+		self.iface = interface()
+		self.iface.db = self
 
 	def dict_factory(self, cursor, row):
 		d = {}

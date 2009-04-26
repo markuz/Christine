@@ -27,7 +27,7 @@ import md5
 import urllib2
 import thread
 import os
-from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Plugins.plugin_base import plugin_base,christineConf
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.globalvars import USERDIR
@@ -39,13 +39,17 @@ import webbrowser
 APIKEY = '0da3b11c97759f044bd4223dda212daa'
 SECRET = 'b8c00f5548c053033b89633d1004d059'
 
+__name__ = _('Lastfm')
+__description__  = _('Enables the last.fm interaction')
+__author__  = 'Marco Antonio Islas Cruz <markuz@islascruz.org>'
+__enabled__ = christineConf.getBool('lastfm/enabled')
 
 class lastfm(plugin_base):
 	def __init__(self):
 		plugin_base.__init__(self)
 		self.tagger = Tagger()
-		self.name = 'Lastfm'
-		self.description = 'Enables the last.fm interaction'
+		self.name = __name__
+		self.description =  __description__
 		self.configurable = True #If christine should ask for the config dialog
 		self.Share = Share()
 		if not self.christineConf.configParser.has_section('lastfm'):
@@ -73,6 +77,7 @@ class lastfm(plugin_base):
 		return self.christineConf.getBool('lastfm/enabled')
 
 	def set_active(self, value):
+		__enabled__ = value
 		return self.christineConf.setValue('lastfm/enabled', value)
 
 

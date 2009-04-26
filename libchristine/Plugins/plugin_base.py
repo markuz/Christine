@@ -34,6 +34,8 @@ from libchristine.Events import christineEvents
 
 import gtk
 
+christineConf = christineConf()
+
 class plugin_base(object, GtkMisc):
 	'''
 	This is the base for the plugins for christine.
@@ -45,7 +47,7 @@ class plugin_base(object, GtkMisc):
 		self.configurable = False #If christine should ask for the config dialog
 		self.__active =  True
 		self.interface = interface()
-		self.christineConf = christineConf()
+		self.christineConf = christineConf
 		self.events = christineEvents()
 
 	def configure(self):

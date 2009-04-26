@@ -29,7 +29,7 @@
 # This module try to get the album cover and shows on the gui if it is found.
 #
 
-from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.Plugins.lastfm import *
 from libchristine.ui import interface
 from libchristine.Share import Share
@@ -41,14 +41,20 @@ import urllib2
 import thread
 import os
 
+__name__ = _('getInfo')
+__description__  = _('Shows/Update the info on the tags of the given file.')
+__author__  = 'Marco Antonio Islas Cruz <markuz@islascruz.org>'
+__enabled__ = christineConf.getBool('lastfm/getinfo')
+
+
 class getInfo(plugin_base):
 	def __init__(self):
 		'''
 		Constructor
 		'''
 		plugin_base.__init__(self)
-		self.name = 'getInfo'
-		self.description = 'Shows/Update the info on the tags of the given file.'
+		self.name = __name__
+		self.description =  __description__
 		self.iface = interface()
 		self.Share = Share()
 		self.tagger = Tagger()
@@ -94,6 +100,7 @@ class getInfo(plugin_base):
 		return self.christineConf.getBool('lastfm/getinfo')
 	
 	def set_active(self, value):
+		__enabled__ = value
 		return self.christineConf.setValue('lastfm/getinfo', value)
 
 	active = property(get_active, set_active, None,

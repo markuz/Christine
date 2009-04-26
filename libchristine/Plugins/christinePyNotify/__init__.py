@@ -17,11 +17,10 @@
 
 import gtk
 
-from libchristine.christineConf import christineConf
 from libchristine.Logger import LoggerManager
 from libchristine.Share import Share
 from libchristine.ui import interface
-from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Events import christineEvents
 
@@ -38,15 +37,19 @@ except ImportError:
 	print 'no pynotify available'
 	PYNOTIFY = False
 
+__name__ = _('PyNotify')
+__description__  = _('Shows notify bubbles')
+__author__  = 'Marco Antonio Islas Cruz <markuz@islascruz.org>'
+__enabled__ = christineConf.getBool('pynotify/enabled')
+
 class christinePyNotify(plugin_base):
 	'''
 	This plugins shows notify bubbles using python-notify
 	'''
 	def __init__(self):
 		plugin_base.__init__(self)
-		self.name = 'PyNotify'
-		self.description = 'Shows notify bubbles'
-		self.christineConf   = christineConf()
+		self.name = __name__ 
+		self.description = __description__
 		self.Events = christineEvents()
 		if not self.christineConf.exists('pynotify/enabled'):
 			self.christineConf.setValue('pynotify/enabled', True)
@@ -81,6 +84,7 @@ class christinePyNotify(plugin_base):
 		return self.christineConf.getBool('pynotify/enabled')
 	
 	def set_active(self, value):
+		__enabled__ = value 
 		return self.christineConf.setValue('pynotify/enabled', value)
 
 	active = property(get_active, set_active, None,

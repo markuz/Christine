@@ -35,12 +35,16 @@ import thread
 
 import os
 from libchristine.ui import interface
-from libchristine.christineConf import christineConf
 from libchristine.Tagger import Tagger
 from libchristine.Share import Share
-from libchristine.Plugins.plugin_base import plugin_base
+from libchristine.Plugins.plugin_base import plugin_base, christineConf
 import urllib2
 from urllib import urlencode
+
+__name__ = _('Twitter')
+__description__  = _('This plugins send and update to your twitter account')
+__author__  = ['Marco Antonio Islas Cruz <markuz@islascruz.org>']
+__enabled__ = christineConf.getBool('twitter/enabled')
 
 
 class twitter(plugin_base):
@@ -49,8 +53,8 @@ class twitter(plugin_base):
 	"""
 	def __init__(self):
 		plugin_base.__init__(self)
-		self.name = 'Twitter'
-		self.description = 'This plugins send and update to your twitter account'
+		self.name = __name__
+		self.description = __description__
 		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
 		self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
 		self.tagger = Tagger()
@@ -102,6 +106,7 @@ class twitter(plugin_base):
 		return self.christineConf.getBool('twitter/enabled')
 
 	def set_active(self, value):
+		__enabled__ = value
 		return self.christineConf.setValue('twitter/enabled', value)
 	
 	def configure(self):
