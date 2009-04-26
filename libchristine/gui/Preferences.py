@@ -65,6 +65,23 @@ class guiPreferences(GtkMisc):
 
 		self.__VideoSink = self.XML['videosink']
 		self.__VideoSink.connect('changed', self.updateSink, 'videosink')
+		
+		self.__font_desc = self.XML['font_desc']
+		font_desc = self.__GConf.getString('backend/subtitle_font_desc')
+		if not font_desc:
+			font_desc = "Sans 18"
+			self.__GConf.setValue('backend/subtitle_font_desc', font_desc)
+		self.__font_desc.set_property('font-name', font_desc)
+		self.__font_desc.connect('font-set', self.__change_subtitle_font)
+		
+		self.__font_encoding = self.XML['font_encoding']
+		encoding = self.__GConf.getString('backend/subtitle_font_encoding')
+		if not encoding:
+			encoding = "latin-1"
+			self.__GConf.setValue('backend/subtitle_font_encoding', encoding)
+		self.__font_encoding.set_text(encoding)
+		
+		self.__font_encoding.connect('changed', lambda x: self.__GConf.setValue('backend/subtitle_font_encoding', x.get_text()))
 
 		self.__FModel    = gtk.ListStore(str)
 		self.__FTreeView = self.XML['ftreeview']
@@ -290,7 +307,10 @@ class guiPreferences(GtkMisc):
 		model[path][self.PLUGIN_ACTIVE] = not model[path][self.PLUGIN_ACTIVE]
 		model[path][self.PLUGIN_INSTANCE].active = model[path][self.PLUGIN_ACTIVE]
 
-
+	
+	def __change_subtitle_font(self,font_button):
+		self.__GConf.setValue('backend/subtitle_font_desc', 
+											font_button.get_font_name())
 
 
 

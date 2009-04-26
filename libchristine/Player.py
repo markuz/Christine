@@ -250,8 +250,8 @@ class Player(gtk.DrawingArea, object):
 				subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
 				if os.path.exists(subtitle):
 					self.__elementSetProperty(self.__PlayBin, 'suburi', 'file://'+subtitle)
-					self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', 'Lucida Grande 24')
-					self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', 'ISO-8859-1')
+					self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', self.config.getString('backend/subtitle_font_desc'))
+					self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', self.config.getString('backend/subtitle_encoding'))
 					
 		else:
 			file = file.replace( "\\'", r"'\''" )

@@ -104,12 +104,44 @@ class christineDBus(dbus.service.Object,GtkMisc):
 		uri
 		@param uri:
 		'''
-		result = iface.db.getItemByPath()
-		result = getattr(iface.Player, 'Tags', {})
+		result = iface.db.getItemByPath(uri)
+		return self.return_dict(result)
+	
+	def return_dict(self, result):
 		ndict = {}
 		for key, value in result.iteritems():
 			ndict[u'%s'%key] = u'%s'%self.encode_text(str(value))
 		return dbus.Dictionary(ndict, signature=dbus.Signature('sv'))
+	
+	@dbus.service.method(DBUS_NAME)
+	def add_to_queue(self, uri):
+		iface.Queue.add(uri)
+	
+	@dbus.service.method(DBUS_NAME)
+	def get_playlists(self):
+		'''
+		Return the playlists in the database
+		'''
+		result = iface.db.getPlaylists()
+		return dbus.Array(result)
+	
+	def get_tracks_on_playlist(self, playlistname):
+		'''
+		Returns the tracks in the playlist
+		@param playlistname:
+		'''
+		idlist = iface.db.PlaylistIDFromName(list)
+		result = iface.db.getItemsForPlaylist(idlist)
+		return self.return_dict(result)
+		
+	
+	@dbus.service.method(DBUS_NAME)
+	def get_radios(self):
+		'''
+		Return the radios in the database
+		'''
+		result = iface.db.getRadio()
+		return dbus.Array(result)
 	
 	@dbus.service.method(DBUS_NAME)
 	def exit(self):
@@ -143,7 +175,6 @@ class christineDBus(dbus.service.Object,GtkMisc):
 		
 
 	#Signals
-
 	def emit_last_played(self, *args):
 		file = self.christineConf.getString('backend/last_played')
 		self.NewLocation(file)
