@@ -4,6 +4,7 @@ from libchristine.pattern.Singleton import Singleton
 from libchristine.globalvars import PLUGINSDIR
 from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
+import sys
 import os
 
 class Manager(Singleton):
@@ -24,28 +25,33 @@ class Manager(Singleton):
 		Search for the files and then use the __importByName to load them
 		'''
 		files = os.listdir(PLUGINSDIR)
-		filteredf = [k for k in files if os.path.isdir(os.path.join(PLUGINSDIR, k))]
+		filteredf = [k for k in files if os.path.isdir(os.path.join(PLUGINSDIR, k)) and k not in ('.svn',)]
 		for pluginname in filteredf:
-			plugin = self.__importByName('libchristine.Plugins', pluginname)
+			plugin = self.__importByName('libchristine.Plugins.%s'%pluginname,pluginname)
 			if not plugin:
 				continue
-			if not getattr(plugin, '__enabled__', False):
-				continue
-			instance = getattr(plugin,pluginname)()
-			self.plugins[instance.name] = instance
+			func = getattr(plugin,pluginname, False)
+			if func:
+				instance = func()
+				self.plugins[instance.name] = instance
 
 
-	def __importByName(self,modulename,name):
+	def __importByName(self,modulename,name = None):
 		'''
 		Import a module by its name
 
 		@param modulename: name of the package to import
 		@param name: name of the module to import
 		'''
+		if name == None:
+			lname = []
+		else:
+			lname = [name]
 		try:
 			module = __import__(modulename,
-						globals(), locals(), [name])
+						globals(), locals(), lname)
 		except ImportError, e:
+			print e
 			self.logger.exception(e)
 			return None
-		return vars(module)[name]
+		return module
