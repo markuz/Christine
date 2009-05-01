@@ -1,8 +1,6 @@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/getinfo
 
-scripts_DATA=__init__.py \
-			 plugin_base.py
-
+scripts_DATA=__init__.py
 
 DISTFILES= Makefile.in \
 		   $(scripts_DATA) 

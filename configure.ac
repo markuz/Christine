@@ -1,10 +1,10 @@
-AC_INIT('christine', '0.3.1', 'markuz@islascruz.org')
-AM_INIT_AUTOMAKE('christine', '0.3.1')
+AC_INIT('christine', '0.4.0-devel', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.4.0-devel')
 
-AC_CONFIG_MACRO_DIR([m4])
 
-AC_GNU_SOURCE
+#AC_GNU_SOURCE
 AC_USE_SYSTEM_EXTENSIONS
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR(libchristine)
 AC_CONFIG_SRCDIR(gui)
 
@@ -38,9 +38,10 @@ done
 
 
 PROGRAM_NAME="christine"
-VERSION="0.3.1"
+VERSION="0.4.0-devel"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib(plat_specific=True)"`
+PYTHON_LFS=`python -c "from distutils import sysconfig; print sysconfig.get_config_var('LINKFORSHARED')"`
 
 # gross readline autconf kludge courtesy of samba -- thanks tpot!
 # Samba original version is in 1.10; I've improved it a bit to work with
@@ -119,6 +120,7 @@ AC_SUBST(VERSION)
 AC_SUBST(PREFIX)
 AC_SUBST(PYTHON_INCLUDE_DIR)
 AC_SUBST(PYTHON_LIB_DIR)
+AC_SUBST(PYTHON_LFS)
 
 GETTEXT_PACKAGE=christine
 AC_SUBST(GETTEXT_PACKAGE)
@@ -138,6 +140,14 @@ libchristine/pattern/Makefile
 libchristine/gui/Makefile
 libchristine/Storage/Makefile
 libchristine/Plugins/Makefile
+libchristine/Plugins/albumCover/Makefile
+libchristine/Plugins/christinePyNotify/Makefile
+libchristine/Plugins/getInfo/Makefile
+libchristine/Plugins/gnomeDBus/Makefile
+libchristine/Plugins/lastfm/Makefile
+libchristine/Plugins/pidgin/Makefile
+libchristine/Plugins/trayicon/Makefile
+libchristine/Plugins/twitter/Makefile
 libchristine/christine_dbus/Makefile
 libchristine/c3rdparty/Makefile
 gui/Makefile

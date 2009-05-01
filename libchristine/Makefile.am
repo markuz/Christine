@@ -49,3 +49,4 @@ all: globalvars.py
 
 clean:
 	rm $(srcdir)/*.pyc
+	rm globalvars.py

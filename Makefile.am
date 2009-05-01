@@ -7,6 +7,14 @@ SUBDIRS = \
 		  libchristine/gui/ \
 		  libchristine/Storage/ \
 		  libchristine/Plugins/ \
+		  libchristine/Plugins/albumCover/ \
+		  libchristine/Plugins/christinePyNotify/ \
+		  libchristine/Plugins/getInfo/ \
+		  libchristine/Plugins/gnomeDBus/ \
+		  libchristine/Plugins/lastfm/ \
+		  libchristine/Plugins/pidgin/ \
+		  libchristine/Plugins/trayicon/ \
+		  libchristine/Plugins/twitter/ \
 		  libchristine/c3rdparty/
 		  
 
@@ -18,10 +26,10 @@ DIST_FILES = config.rpath \
 	   	   	christine.desktop.in \
 	   	   	christine.c 
 	   	   	
-EXTRA_DIST = config.rpath  config.rpath  createDeb.sh.in \
+EXTRA_DIST = config.rpath  createDeb.sh.in \
 			 $(DIST_FILES)
 
-program_name = @program_name@
+program_name = @PROGRAM_NAME@
 PROGRAM_NAME = @PROGRAM_NAME@
 desktopdir =  $(datadir)/applications
 pkgdatadir = $(datadir)
@@ -31,6 +39,7 @@ prefix = @prefix@
 sysconfdir = @sysconfdir@
 pythonincludedir = @PYTHON_INCLUDE_DIR@
 pythonlibdir = @PYTHON_LIB_DIR@/../config
+pythonlfs = @PYTHON_LFS@
 usr_libdir = @includedir@
 pythonversion = @PYTHON_VERSION@
 
@@ -59,10 +68,8 @@ run:
 	./christine --devel $*
 
 christine: Makefile $(srcdir)/christine.c
-	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir} -c christine.c -o christine.o
-	gcc -Xlinker -export-dynamic christine.o ${pythonlibdir}/libpython${pythonversion}.a -lnsl -ldl -lieee -lpthread -lutil -lm -o christine
+	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -c christine.c -o christine.o
+	gcc ${pythonlfs} christine.o -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion} ${pythonlibdir}/libpython${pythonversion}.a -o christine
 	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'),force=True, maxlevels=11)"
-
-
 
 ACLOCAL_AMFLAGS = -I m4
