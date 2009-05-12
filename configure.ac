@@ -1,5 +1,5 @@
-AC_INIT('christine', '0.4.0-devel', 'markuz@islascruz.org')
-AM_INIT_AUTOMAKE('christine', '0.4.0-devel')
+AC_INIT('christine', '0.4.0', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.4.0')
 
 
 #AC_GNU_SOURCE
@@ -38,7 +38,7 @@ done
 
 
 PROGRAM_NAME="christine"
-VERSION="0.4.0-devel"
+VERSION="0.4.0"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib(plat_specific=True)"`
 PYTHON_LFS=`python -c "from distutils import sysconfig; print sysconfig.get_config_var('LINKFORSHARED')"`

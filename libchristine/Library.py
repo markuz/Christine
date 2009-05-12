@@ -851,6 +851,7 @@ class queue (libraryBase):
 				self.remove(iter)
 				
 	def	checkQueue(self):
+		return True
 		model = self.tv.get_model()
 		if (model != None):
 			b = model.get_iter_first()

@@ -238,14 +238,24 @@ class Christine(GtkMisc):
 		self.__VBoxVideo = xml['VBoxVideo']
 
 		#self.mainLibray.scroll.add(self.mainLibrary.tv)
+		self.sideNotebook = xml['sideNotebook']
 
 		self.Queue = queue()
-
-		self.VBoxList.pack_start(self.Queue.scroll, False, False, 0)
+		label = gtk.Label(_('Queue'))
+		label.set_angle(90)
+		self.sideNotebook.append_page(self.Queue.scroll, label)
+		#self.VBoxList.pack_start(self.Queue.scroll, False, False, 0)
+		self.queue_mi = xml['Queue']
+		self.queue_mi.connect('activate', lambda x: self.sideNotebook.set_current_page(0))
 		self.Queue.tv.connect('row-activated',   self.Queue.itemActivated)
 
 		self.sourcesList = sources_list()
-		self.VBoxList.pack_start(self.sourcesList.vbox)
+		label = gtk.Label(_('Sources List'))
+		label.set_angle(90)
+		self.sources_mi = xml['SourcesList']
+		self.sources_mi.connect('activate', lambda x: self.sideNotebook.set_current_page(1))
+		self.sideNotebook.append_page(self.sourcesList.vbox, label)
+		#self.VBoxList.pack_start(self.sourcesList.vbox)
 		self.sourcesList.treeview.connect('row-activated',
 				self.__srcListRowActivated)
 		self.sourcesList.vbox.show_all()
@@ -720,7 +730,7 @@ class Christine(GtkMisc):
 		iter  = model.get_iter_first()
 
 		if isinstance(iter,gtk.TreeIter):
-			self.Queue.scroll.show()
+			#self.Queue.scroll.show()
 			location = self.Queue.model.get_value(iter,PATH)
 			self.setLocation(location)
 			self.__LibraryCurrentIter = None
@@ -730,7 +740,7 @@ class Christine(GtkMisc):
 			self.PlayButton.set_active(False)
 			self.PlayButton.set_active(True)
 		else:
-			self.interface.Queue.scroll.hide()
+			#self.interface.Queue.scroll.hide()
 			if (self.__MenuItemShuffle.get_active()):
 				Elements = len (self.__LibraryModel) - 1
 				if Elements < 0:
