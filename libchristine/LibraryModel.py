@@ -89,7 +89,7 @@ class christineModel(gtk.GenericTreeModel):
 		iter = self.get_iter(path)
 		self.row_inserted(path, iter)
 		self.invalidate_iters()
-		
+		self.__data_tuple = tuple(self.__data)
 		return iter
 
 	def prepend(self, *args):
@@ -101,6 +101,7 @@ class christineModel(gtk.GenericTreeModel):
 		niter = self.get_iter((iter,))
 		self.row_inserted(path, niter)
 		self.invalidate_iters()
+		self.__data_tuple = tuple(self.__data)
 		return iter
 
 	def set(self, iter, *args):
@@ -124,6 +125,7 @@ class christineModel(gtk.GenericTreeModel):
 			self.row_inserted(path, iter)
 			self.emit_inserted = False
 		self.row_changed(path, iter)
+		self.__data_tuple = tuple(self.__data)
 		return iter
 
 	def on_get_iter(self, rowref):
@@ -134,22 +136,66 @@ class christineModel(gtk.GenericTreeModel):
 		return result
 
 	def on_get_path(self, rowref):
-		return (self.__data.index(rowref), rowref[0])[isinstance(rowref, tuple)]
+		if not isinstance(rowref, tuple):
+			return self.get_index(rowref)
+		else:
+			return rowref[0]
+			
 
 	def on_get_column_type(self, n):
 		return self.column_types[n]
 
+	def get_index(self, ref):
+		return self.__data.index(ref)
+#===============================================================================
+#		t = self.__data_tuple
+#		size = len(t)
+#		middle = int(size)/2
+#		quarter = int(size)/4
+#		quarter3 = quarter * 3 
+#		for i in xrange(size):
+#			if t[i] == ref:
+#				rowref = i
+#				return rowref
+#			elif t[i * -1 ] == ref:
+#				rowref = size - i
+#				return rowref
+#			elif t[middle - i] == ref:
+#				rowref = middle - i
+#				return rowref
+#			elif t[middle + i] == ref:
+#				rowref = middle + i
+#				return rowref
+#			elif t[quarter - i] == ref:
+#				rowref = quarter - i
+#				return rowref
+#			elif t[quarter + i] == ref:
+#				rowref = quarter + i
+#				return rowref
+#			elif t[quarter3 - i] == ref:
+#				rowref = quarter3 - i
+#				return rowref
+#			elif t[quarter3 + i] == ref:
+#				rowref = quarter3 + i
+#				return rowref
+#===============================================================================
+		
+
 	def on_get_value(self, rowref, column):
-		if isinstance(rowref,list):
-			return self.__data[self.__data.index(rowref)][column]
-		elif isinstance(rowref, tuple):
-			return self.__data[rowref[0]][column]
+		#c = time.time()
+		rowref = self.get_index(rowref)
+				
+		#rowref = self.__data.index(rowref)
+		#if isinstance(rowref,list):
+		#	rowref = self.__data.index(rowref)
+		#elif isinstance(rowref, tuple):
+		#	rowref = rowref[0]
+		#print time.time() -c 
+		return self.__data[rowref][column]
 
 	def on_iter_next(self, rowref):
-		try:
-			return self.__data[ self.__data.index(rowref) + 1 ]
-		except:
-			return None
+		index = self.get_index(rowref)
+		return self.__data[ index + 1 ]
 
 	def on_get_n_columns(self):
 		return self.column_size
@@ -216,6 +262,7 @@ class christineModel(gtk.GenericTreeModel):
 			if not self.__removeLast20():
 				break
 		self.invalidate_iters()
+		self.__data_tuple = tuple(self.__data)
 		gc.collect()
 	
 		

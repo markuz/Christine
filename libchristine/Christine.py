@@ -177,6 +177,13 @@ class Christine(GtkMisc):
 
 		# Gets window widget from glade template
 		self.coreWindow = xml['WindowCore']
+		# Uncoment next lines if you want to use RGBA in your theme
+#===============================================================================
+#		if self.coreWindow.is_composited():
+#			screen = self.coreWindow.get_screen()
+#			colormap = screen.get_rgba_colormap()
+#			self.coreWindow.set_colormap(colormap)
+#===============================================================================
 		width = self.christineConf.getInt('ui/width')
 		height = self.christineConf.getInt('ui/height')
 		if width and height:

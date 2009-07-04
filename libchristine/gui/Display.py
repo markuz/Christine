@@ -80,6 +80,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.setText(text)
 		self.set_size_request(150, 2)
 		self.Events.addWatcher('gotTags', self.gotTags)
+		self.do_screen_changed()
 	
 	def gotTags(self, tags):
 		tooltext = tags['title']
@@ -158,12 +159,37 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 	def __on_size_allocate(self, widget,event):
 		self.__HPos = event.x
 	
+	
+	def do_screen_changed(self, old_screen=None):
+		screen = self.get_screen()
+		if self.is_composited():
+			colormap = screen.get_rgba_colormap()
+			self.supports_alpha = True
+		else:
+			#print 'Your schema doesn\'t support alpha channel'
+			colormap = screen.get_rgb_colormap()
+			self.supports_alpha = False
+		self.set_colormap(colormap)
+		
 	def __do_expose(self,widget,event):
 		if getattr(self,'window', None) == None:
 			return False
 		x,y,w,h = self.allocation
 		x,y = (0,0)
 		self.context = self.window.cairo_create()
+		
+		#if self.supports_alpha:
+		#	self.context.set_source_rgba(1.0, 1.0, 1.0, 1.0)
+		#else:
+		#	self.context.set_source_rgb(1.0, 1.0, 1.0)
+			
+		self.context.set_operator(cairo.OPERATOR_SOURCE)
+		self.context.paint()
+		self.context.move_to(0, 0)
+		self.context.set_line_width(1.0)
+		#self.context.set_operator(cairo.OPERATOR_OVER)
+		
+		
 		#self.style = self.get_style()
 		self.fontdesc = self.style.font_desc
 		tcolor = self.style.fg[0]
