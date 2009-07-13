@@ -62,6 +62,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		#@self.set_property('leak-references',True)
 		self.interface = interface()
 		#self.on_get_iter = CLibraryModel.on_get_iter
+		self.set = self.set_value
 		
 
 	def destroy(self):
@@ -108,18 +109,14 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.__data_tuple = tuple(self.data)
 		return iter
 
-	def set(self, iter, *args):
-		return self.set_value(iter, *args)
-
 	def set_value(self, path, *args):
 		if isinstance(path, tuple):
 			path = path[0]
 		elif isinstance(path, gtk.TreeIter):
 			path = self.get_path(path)
-			if path:
-				path = path[0]
-			else:
+			if not path:
 				return False
+			path = path[0]
 		list = self.data[path]
 		size = len(args)
 		for c in xrange(0,size,2):
@@ -203,25 +200,17 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		@param value: Value to compare
 		@param column: Column number.
 		'''
-		enum = enumerate(self.data)
-		while 1:
-			try:
-				c,data = enum.next()
-				if data[column] == value:
-					return self.get_iter((c,))
-			except StopIteration:
-				break
+		for c, data in enumerate(self.data):
+			if data[column] == value:
+				return self.get_iter((c,)) 
 
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):
 			path = self.get_path(path)[0]
-		try:
+		if len(self.data):
 			self.data.pop(path)
 			self.row_deleted((path,))
-
 			return True
-		except:
-			return False
 
 	def __removeLast20(self,):
 		for i in xrange(20):

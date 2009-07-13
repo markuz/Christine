@@ -1,8 +1,8 @@
-#include <stdio.h>
+//#include <stdio.h>
 #include <Python.h>
 #include <import.h>
-#include <graminit.h>
-#include "structmember.h"
+//#include <graminit.h>
+//#include "structmember.h"
 
 
 static PyObject*
@@ -18,32 +18,31 @@ on_get_iter(PyObject *self, PyObject *args)
 	static PyObject *result;
 	static PyObject *selfobj;
 	static PyObject *data;
-	//static PyObject *index;
 	int index;
 
     if (!PyArg_ParseTuple(args, "OO", &selfobj, &rowref))
         return NULL;
     data = PyObject_GetAttrString(selfobj, "data");
     if (!data)
+    	Py_INCREF(Py_None);
     	return Py_None;
     PyArg_ParseTuple(rowref, "i", &index);
     if (index <= PyList_Size(data) -1){
     	result = PyList_GetItem(data, index);
     }
     else{
+    	Py_INCREF(Py_None);
     	return Py_None;
     }
 	if (!result)
-    	return Py_None;
-	//PyObject_Print(	result, stderr, Py_PRINT_RAW);
+		Py_INCREF(Py_None);
+		return Py_None;
     return Py_BuildValue("O", result);
 }
 
 static PyMethodDef CLibraryModelMethods[] = {
-	{"__init__", init, METH_VARARGS,
-			 "doc string"},
-    {"on_get_iter",  on_get_iter, METH_VARARGS,
-     "Extend.. something."},
+	{"__init__", init, METH_VARARGS,"doc string"},
+    {"on_get_iter",  on_get_iter, METH_VARARGS,"Extend.. something."},
     {NULL, NULL, 0, NULL}
 };
 
@@ -81,7 +80,6 @@ initCLibraryModel(void)
      }
 
 }
-
 
 int
 main(int argc, char *argv[])
