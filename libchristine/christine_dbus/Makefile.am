@@ -22,4 +22,4 @@ edit = sed \
 	   -e 's,@version\@,$(version),g'
 
 clean:
-	rm -v $(srcdir)/*.pyc 
+	rm -v $(srcdir)/*.pyc &

@@ -18,7 +18,8 @@ scripts_DATA=christineConf.py \
 			Tagger.py \
 			Translator.py \
 			ui.py \
-			Validator.py
+			Validator.py \
+			CLibraryModel.so
 
 DISTFILES= Makefile.in \
 		   globalvars.py.in\
@@ -29,7 +30,9 @@ pkgdatadir=${datadir}
 pkgsysconfdir=${sysconfdir}
 pythonincludedir = @PYTHON_INCLUDE_DIR@
 pythonlibdir = @PYTHON_LIB_DIR@
+pythonlfs = @PYTHON_LFS@
 usr_libdir = @includedir@
+pythonversion = @PYTHON_VERSION@
 
 programname=@PROGRAM_NAME@
 version=@VERSION@
@@ -45,8 +48,15 @@ edit = sed \
 globalvars.py: Makefile $(srcdir)/globalvars.py.in
 	$(edit) $(srcdir)/globalvars.py.in > globalvars.py
 
+
+CLibraryModel.so:  Makefile $(srcdir)/CLibraryModel.so
+	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c CLibraryModel.c -o CLibraryModel.o
+	gcc -shared ${pythonlfs} CLibraryModel.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o CLibraryModel.so
+
 all: globalvars.py
 
 clean:
-	rm $(srcdir)/*.pyc
-	rm globalvars.py
+	rm $(srcdir)/*.pyc &
+	rm globalvars.py &
+	rm CLibraryModel.o &
+	rm CLibraryModel.so &

@@ -25,6 +25,7 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
+import pango
 
 #import os
 import sys
@@ -46,7 +47,7 @@ from libchristine.gui.Display import Display
 from libchristine.globalvars import  BUGURL
 from libchristine.ui import interface
 from libchristine.gui.openRemote import openRemote
-from libchristine.Library import library, queue,PATH, HAVE_TAGS
+from libchristine.Library import library, queue,PATH, HAVE_TAGS, NAME
 from libchristine.Library import PIX,PLAY_COUNT,TIME
 from libchristine.Player import Player
 from libchristine.Share import Share
@@ -55,9 +56,11 @@ from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_E
 from libchristine.Logger import LoggerManager
 from libchristine.Events import christineEvents
 from libchristine.christine_dbus import *
+from libchristine.options import options
 import webbrowser
 import gc
 
+opts = options()
 
 #gc.enable()
 
@@ -100,12 +103,12 @@ class Christine(GtkMisc):
 		self.__IterNatural      = None
 		self.IterCurrentPlaying = None # Temporal store for the current iter playing
 		self.__ScaleMoving      = False
-		self.__StatePlaying     = False
 		self.__IsFullScreen     = False
 		self.__ShowButtons      = False
 		self.__IsHidden         = False
 		self.__LastTags			= []
 		self.__lastTypeTime		= time.time()
+		self.__StatePlaying = False
 
 		# Create the try icon.
 		#tryIcon()
@@ -121,8 +124,10 @@ class Christine(GtkMisc):
 		self.coreWindow.show()
 		self.HBoxSearch.hide()
 		plugins_manager = Manager()
+		if opts.options.quit:
+			sys.exit(0)
 
-	def __printEvent(self,widget,event):
+	def changeVolumeWithScroll(self,widget,event):
 		if event.type == gtk.gdk.SCROLL:
 			value = self.__HScaleVolume.get_value()
 			diff = 0.05
@@ -152,10 +157,9 @@ class Christine(GtkMisc):
 		self.__VBoxCore          = xml['VBoxCore']
 		self.__VBoxCore.set_property('events',gtk.gdk.ENTER_NOTIFY|
 									gtk.gdk.SCROLL_MASK)
-		self.__VBoxCore.connect('scroll-event',self.__printEvent)
-		self.HBoxPlayer = xml['HBoxPlayer']
-		self.HBoxPlayer.connect('event',self.__printEvent)
-		self.HBoxPlayer.pack_start(self.__Player)
+		self.__VBoxCore.connect('scroll-event',self.changeVolumeWithScroll)
+		self.mainSpace = xml['mainSpace']
+		self.mainSpace.append_page(self.__Player,None)
 		self.__Player.bus.add_watch(self.__handlerMessage)
 
 		# Calling some widget descriptors with no callback connected "by hand"
@@ -168,56 +172,34 @@ class Christine(GtkMisc):
 		self.EntrySearch.connect('changed',self.search)
 		self.EntrySearch.connect('focus-out-event', self.__EntrySearchFocusHandler)
 		self.VBoxList       = xml['VBoxList']
-		
-		#Private widgets
-		self.__HPanedListsBox = xml['HPanedListsBox']
-		self.__VBoxTemporal   = xml['VBoxTemporal']
-		#self.__ScrolledMusic  = xml["ScrolledMusic"]
-		# Ends the call to widgets descriptors not connected by hadn
+		self.HPanedListsBox = xml['HPanedListsBox']
 
 		# Gets window widget from glade template
 		self.coreWindow = xml['WindowCore']
+		self.coreWindow.set_icon(self.share.getImageFromPix('logo'))
 		# Uncoment next lines if you want to use RGBA in your theme
-#===============================================================================
-#		if self.coreWindow.is_composited():
-#			screen = self.coreWindow.get_screen()
-#			colormap = screen.get_rgba_colormap()
-#			self.coreWindow.set_colormap(colormap)
-#===============================================================================
 		width = self.christineConf.getInt('ui/width')
 		height = self.christineConf.getInt('ui/height')
-		if width and height:
-			self.coreWindow.set_default_size(width, height)
-		else:
-			self.coreWindow.set_default_size(800,600)
+		if not width or not  height:
+			width, height = (800,600)
+		self.coreWindow.set_default_size(width, height)
 		self.coreWindow.connect("destroy",lambda widget: widget.hide())
-		self.coreWindow.set_icon(self.share.getImageFromPix('logo'))
-		self.coreWindow.connect("scroll-event",self.__printEvent)
+		self.coreWindow.connect("scroll-event",self.changeVolumeWithScroll)
 		self.coreWindow.connect("key-press-event",self.onWindowkeyPressEvent)
 		self.coreWindow.connect('size-allocate', self.__on_corewindow_resized)
-
 		self.interface.coreWindow = self.coreWindow
 
-		# Gets play button and menu play item from glade template
 		self.PlayButton   = xml['ToggleButtonPlay']
 		self.interface.playButton =  self.PlayButton
 		self.menuItemPlay = xml['MenuItemPlay']
 
 		openremotemitem = xml['open_remote1']
 		openremotemitem.connect('activate', lambda widget: openRemote())
-
 		self.Menus = {}
-
 		for i in ('media', 'edit', 'control', 'help'):
 			self.Menus["%s" % i] = xml["%s_menu" % i].get_submenu()
 
-		# cdisplaybox is the display gtk-Box
 		self.__HBoxCairoDisplay = xml['HBoxCairoDisplay']
-
-		#self.__controlButtons = christineButtons()
-		#self.__HBoxCairoDisplay.pack_start(self.__controlButtons,
-		#								False, False, 0)
-		#self.__controlButtons.show()
 
 		# Create the display and attach it to the main window
 		self.__Display = Display()
@@ -231,20 +213,18 @@ class Christine(GtkMisc):
 		if not lastSourceUsed:
 			lastSourceUsed = 'music'
 		self.mainLibrary.loadLibrary(lastSourceUsed)
-		del lastSourceUsed
-
 		self.mainLibrary.tv.show()
 
 		# Models in the library are assigned to class variables
-		self.__LibraryModel       = self.mainLibrary.tv.get_model()
+		#self.__LibraryModel       = self.mainLibrary.tv.get_model()
 		self.__LibraryCurrentIter = self.mainLibrary.model.get_iter_first()
-
+		
 		self.mainLibrary.scroll
-		self.libraryVBox = xml['libraryVBox']
-		self.libraryVBox.pack_start(self.mainLibrary.scroll, True, True)
-		self.__VBoxVideo = xml['VBoxVideo']
-
-		#self.mainLibray.scroll.add(self.mainLibrary.tv)
+		#self.libraryVBox = xml['libraryVBox']
+		self.mainSpace.append_page(self.mainLibrary.scroll, None)
+		self.mainSpace.set_current_page(1)
+		self.mainSpace.show_all()
+		
 		self.sideNotebook = xml['sideNotebook']
 
 		self.Queue = queue()
@@ -266,12 +246,9 @@ class Christine(GtkMisc):
 		self.sourcesList.treeview.connect('row-activated',
 				self.__srcListRowActivated)
 		self.sourcesList.vbox.show_all()
-
 		self.__ControlButton = xml['control_button']
-
 		self.__MenuItemShuffle = xml['MenuItemShuffle']
 		self.__MenuItemShuffle.set_active(self.christineConf.getBool('control/shuffle'))
-
 		self.__MenuItemShuffle.connect('toggled',
 			lambda widget: self.christineConf.setValue('control/shuffle',
 			widget.get_active()))
@@ -321,14 +298,14 @@ class Christine(GtkMisc):
 
 		self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
 		self.__HBoxToolBoxContainer.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
-		self.__HBoxToolBoxContainer.connect("scroll-event",self.__printEvent)
+		self.__HBoxToolBoxContainer.connect("scroll-event",self.changeVolumeWithScroll)
 
 		self.__HBoxButtonBox		= xml['HBoxButtonBox']
 		self.__HBoxButtonBox.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
-		self.__HBoxButtonBox.connect('scroll-event',self.__printEvent)
+		self.__HBoxButtonBox.connect('scroll-event',self.changeVolumeWithScroll)
 
 		self.__HScaleVolume         = xml['HScaleVolume']
-		self.__HScaleVolume.connect("scroll-event",self.__printEvent)
+		self.__HScaleVolume.connect("scroll-event",self.changeVolumeWithScroll)
 
 		volume = self.christineConf.getFloat('control/volume')
 		if (volume):
@@ -480,7 +457,7 @@ class Christine(GtkMisc):
 		self.christineConf.setValue('ui/small_view', active)
 
 		if (active):
-			self.__HPanedListsBox.hide()
+			self.HPanedListsBox.hide()
 			self.HBoxSearch.hide()
 
 			self.coreWindowSize = self.coreWindow.get_size()
@@ -495,7 +472,7 @@ class Christine(GtkMisc):
 				h = self.christineConf.getInt('ui/height')
 
 
-			self.__HPanedListsBox.show()
+			self.HPanedListsBox.show()
 			self.HBoxSearch.show()
 			if w < 1:
 				w = 100
@@ -515,6 +492,8 @@ class Christine(GtkMisc):
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
 		self.__Player.setVisualization(widget.get_active())
+		page = [1,0][widget.get_active()]
+		self.mainSpace.set_current_page(page)
 
 	def toggleFullScreen(self, widget = None):
 		"""
@@ -704,15 +683,15 @@ class Christine(GtkMisc):
 			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(
 										self.christineConf.getString('backend/last_played'), PATH)
 			if self.__LibraryCurrentIter != None:
-				if not self.__LibraryModel.iter_is_valid(self.__LibraryCurrentIter):
+				if not self.mainLibrary.tv.get_model().iter_is_valid(self.__LibraryCurrentIter):
 					return False
-				path = self.__LibraryModel.get_path(self.__LibraryCurrentIter)
+				path = self.mainLibrary.tv.get_model().get_path(self.__LibraryCurrentIter)
 				if path == None:
 					return False
 				if (path > 0):
 					path = (path[0] -1,)
 				elif (path[0] > -1):
-					iter     = self.__LibraryModel.get_iter(path)
+					iter     = self.mainLibrary.tv.get_model().get_iter(path)
 					location = self.mainLibrary.model.getValue(iter, PATH)
 					self.setLocation(location)
 
@@ -749,11 +728,11 @@ class Christine(GtkMisc):
 		else:
 			#self.interface.Queue.scroll.hide()
 			if (self.__MenuItemShuffle.get_active()):
-				Elements = len (self.__LibraryModel) - 1
+				Elements = len (self.mainLibrary.tv.get_model()) - 1
 				if Elements < 0:
 					return True
 				randompath = ((int(Elements * random.random())),)
-				filename = self.__LibraryModel[randompath][PATH]
+				filename = self.mainLibrary.tv.get_model()[randompath][PATH]
 				if (not filename in self.__LastPlayed) or \
 						(self.christineConf.getBool('control/repeat')) and filename:
 						self.setLocation(filename)
@@ -775,7 +754,7 @@ class Christine(GtkMisc):
 			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
 			#self.__Player.getLocation()
 			if (self.__LibraryCurrentIter == None):
-				iter     = self.__LibraryModel.get_iter_first()
+				iter     = self.mainLibrary.tv.get_model().get_iter_first()
 				filename = self.mainLibrary.model.getValue(iter, PATH)
 				self.IterCurrentPlaying = iter
 
@@ -786,7 +765,7 @@ class Christine(GtkMisc):
 			if (self.__LibraryCurrentIter != None):
 				iter = self.mainLibrary.iter_next(self.__LibraryCurrentIter)
 			else:
-				iter = self.__LibraryModel.get_iter_first()
+				iter = self.mainLibrary.tv.get_model().get_iter_first()
 
 			self.IterCurrentPlaying = iter
 			try:
@@ -1306,12 +1285,12 @@ class Christine(GtkMisc):
 		state = self.__Player.getState()[1]
 		if gst.State(gst.STATE_PLAYING) is state:
 			isPlaying = True
-
 		if (self.__Player.isVideo()):
-			self.HBoxPlayer.show_all()
+			self.mainSpace.set_current_page(1)
 		else:
-			visible = self.christineConf.getBool('ui/visualization') and isPlaying
-			self.HBoxPlayer.set_property('visible', visible) 
+			page = [1,0][self.christineConf.getBool('ui/visualization') and isPlaying]
+			self.mainSpace.set_current_page(page)
+			#self.mainSpace.set_property('visible', visible) 
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")

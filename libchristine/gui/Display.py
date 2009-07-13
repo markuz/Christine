@@ -41,7 +41,13 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 	"""
 	Display the track progress in christine
 	"""
-
+	__gsignals__ = {
+				'value-changed':(
+						gobject.SIGNAL_RUN_LAST,
+						gobject.TYPE_NONE,
+						(gobject.TYPE_PYOBJECT,)),
+					}
+	
 
 	def __init__(self, text= ''):
 		"""
@@ -68,10 +74,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.connect('configure-event', self.__on_size_allocate)
 
 
-		gobject.signal_new('value-changed', self,
-				           gobject.SIGNAL_RUN_LAST,
-				           gobject.TYPE_NONE,
-				           (gobject.TYPE_PYOBJECT,))
+		
 
 		self.__Song           = ""
 		self.__Text           = ""
@@ -158,7 +161,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 
 	def __on_size_allocate(self, widget,event):
 		self.__HPos = event.x
-	
 	
 	def do_screen_changed(self, old_screen=None):
 		screen = self.get_screen()

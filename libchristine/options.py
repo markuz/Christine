@@ -51,6 +51,8 @@ class options(Singleton):
                   help=translate("If christine must run in devel mode"))
 		parser.add_option("-v","--verbose", dest="verbose",action='store_true',
                   help=translate("Force christine to dump the logs to the stdout"))
+		parser.add_option("-q","--quit", dest="quit",action='store_true',
+                 help=translate("Force christine to quit after startup"))
 		
 		self.options, self.args = parser.parse_args()
 		
