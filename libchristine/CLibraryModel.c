@@ -1,8 +1,5 @@
-//#include <stdio.h>
 #include <Python.h>
 #include <import.h>
-//#include <graminit.h>
-//#include "structmember.h"
 
 
 static PyObject*
@@ -19,7 +16,6 @@ on_get_iter(PyObject *self, PyObject *args)
 	static PyObject *selfobj;
 	static PyObject *data;
 	int index;
-
     if (!PyArg_ParseTuple(args, "OO", &selfobj, &rowref))
         return NULL;
     data = PyObject_GetAttrString(selfobj, "data");
@@ -58,7 +54,6 @@ initCLibraryModel(void)
 
 	PyMethodDef *def;
 	PyImport_AddModule("CLibraryModel");
-    //(void) Py_InitModule("CLibraryModel", CLibraryModelMethods);
     PyObject *module = Py_InitModule("CLibraryModel", ModuleMethods);
     PyObject *moduleDict = PyModule_GetDict(module);
     PyObject *classDict = PyDict_New();
