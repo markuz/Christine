@@ -737,7 +737,7 @@ class Christine(GtkMisc):
 				filename = self.mainLibrary.model.getValue(iter, PATH)
 			self.setLocation(filename)
 		else:
-			iter = self.mainLibrary.model.basemodel.search(path, PATH)
+			iter = self.mainLibrary.model.search(path, PATH)
 			if (iter != None):
 				iter = self.mainLibrary.iter_next(iter)
 			else:
