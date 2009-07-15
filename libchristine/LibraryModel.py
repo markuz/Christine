@@ -352,6 +352,10 @@ class LibraryModel:
 			if niter:
 				return niter
 		return None
+	def get_sorted_iter(self, iter):
+		niter = self.__sorted.convert_child_iter_to_iter(None, iter)
+		if niter:
+			return niter
 	
 	def __search(self, model, path, iter, userdata):
 		'''

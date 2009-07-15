@@ -87,7 +87,6 @@ class libraryBase(GtkMisc):
 		self.__xml.signal_autoconnect(self)
 		self.gconf = christineConf()
 		self.tv = self.__xml["treeview"]
-		self.set_drag_n_drop()
 		self.blank_pix = self.share.getImageFromPix("blank")
 		self.blank_pix = self.blank_pix.scale_simple(20,20,gtk.gdk.INTERP_BILINEAR)
 		self.add_columns()
@@ -274,6 +273,323 @@ class libraryBase(GtkMisc):
 					)
 		return True
 
+	def add(self,file,prepend=False):
+		if type(file) == type(()):
+			file = file[0]
+		if not os.path.isfile(file):
+			return False
+		name = os.path.split(file)[1]
+		if isinstance(name,()):
+			name = name[0]
+		################################
+		vals = self.db.getItemByPath(file)
+		if not vals:
+			#tags = self.tagger.readTags(file)
+			tags = {}
+			tags['title'] = os.path.split(file)[1].split('.')[0]
+			tags['album'] =  ''
+			tags['artist'] = ''
+			tags['track'] = ''
+			tags['genre'] = ''
+		else:
+			tags = {}
+			tags['title'] = self.encode_text(self.strip_XML_entities(vals['title']))
+			tags['album'] =  self.encode_text(self.strip_XML_entities(vals['album']))
+			tags['artist'] = self.encode_text(self.strip_XML_entities(vals['artist']))
+			tags['track'] = vals['track_number']
+			tags['genre'] = self.encode_text(self.strip_XML_entities(vals['genre']))
+
+		if tags["title"] == "":
+			n = os.path.split(file)[1].split(".")
+			tags["title"] = ".".join([k for k in n[:-1]])
+
+		if "video-codec" in tags.keys() or \
+				os.path.splitext(file)[1][1:] in CHRISTINE_VIDEO_EXT:
+			t = "video"
+		else:
+			t = "audio"
+		if type(tags["track"]) !=  type(1):
+			tags["track"] = 0
+		name	= tags["title"]
+		album	= tags["album"]
+		artist	= tags["artist"]
+		tn		= tags["track"]
+
+		if prepend:
+			func = self.model.prepend
+		else:
+			func = self.model.append
+		iter = func(NAME,name,
+				PATH,file,
+				PIX,self.blank_pix,
+				TYPE,t,
+				ALBUM,album,
+				ARTIST,artist,
+				TN,int(tn),
+				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
+				PLAY_COUNT,0,
+				GENRE,tags["genre"]
+				)
+
+		self.library_lib[file] = {"title":name,
+				"type":t,"artist":artist,
+				"album":album,
+				"track_number":int(tn),
+				"playcount":0,
+				"time":'0:00',
+				"genre":tags['genre'],}
+
+	
+	def remove(self,iter):
+		'''
+		Remove the selected iter from the library.
+		'''
+		key = self.model.getValue(iter,PATH)
+		value = self.library_lib.remove(key)
+		if value:
+			self.model.remove(iter)
+
+	def save(self):
+		'''
+		Save the current library
+		'''
+		self.library_lib.save()
+
+	def updateData(self, path, **kwargs):
+		'''
+		This method updates the data in the main library if it can. And
+		in the data base.
+
+		@param path:
+		@param title:
+		@param album:
+		@param artist:
+		@param track_number:
+		@param search:
+		@param genre:
+		@param play_count:
+		@param time:
+		'''
+		keys = {'title':NAME,
+			 	'album':ALBUM,
+			 	'artist':ARTIST,
+			 	'track_number':TN,
+			 	'search':SEARCH,
+			 	'play_count':PLAY_COUNT,
+			 	'genre':GENRE,
+			 	'time':TIME,
+			 	'have_tags': HAVE_TAGS,
+			 	}
+		for key in kwargs:
+			value = keys[key]
+			iter = self.model.basemodel.search_iter_on_column(path, PATH)
+			if not iter:
+				return None
+			self.model.basemodel.set(iter, value, kwargs[key])
+		iter = self.model.basemodel.search_iter_on_column(path, PATH)
+		(path, title, artist, album, type,
+		track_number, playcount,time, genre,
+		have_tags) = self.model.basemodel.get(iter,
+												PATH,
+												NAME, ARTIST,ALBUM, TYPE,
+												TN,PLAY_COUNT, TIME, GENRE,
+												HAVE_TAGS)
+		self.library_lib.updateItem(path, title=title, artist=artist,
+								album=album, type=type, track_number=track_number,
+								playcount=playcount,time=time,
+								genre=genre,have_tags = have_tags)
+
+	def key_press_handler(self,treeview,event):
+		if event.keyval == gtk.gdk.keyval_from_name('Delete'):
+			selection = treeview.get_selection()
+			model,iter = selection.get_selected()
+			name = model.get_value(iter,NAME)
+			model.remove(iter)
+			self.library_lib.remove(name)
+			self.save()
+
+	def Exists(self,filename):
+		'''
+		Checks if the filename exits in
+		the library
+		'''
+		result = filename in self.library_lib.keys()
+		return result
+
+	# Need some help in the next functions
+	# They need to be retouched to work fine.
+
+	def add_it(self,treeview,context,x,y,selection,target,timestamp):
+		treeview.emit_stop_by_name("drag_data_received")
+		drop_info = treeview.get_dest_row_at_pos(x, y)
+		if drop_info:
+			data = selection.data
+			if data.startswith('file://'):
+				data = data.replace('file://','').replace('%20',' ')
+				data = data.replace('\n','').replace('\r','')
+			self.add(data)
+		return True
+
+	def delete_from_disk(self,iter):
+		dialog = self.share.getTemplate("deleteFileFromDisk")["dialog"]
+		response = dialog.run()
+		path = self.model.getValue(iter,PATH)
+		if response == -5:
+			try:
+				os.unlink(path)
+				self.remove(iter)
+				self.save()
+			except IOError:
+				error("cannot delete file: %s"%path)
+		dialog.destroy()
+
+	def clear(self):
+		self.model.clear()
+		self.library_lib.clear()
+		self.library_lib.clean_playlist()
+
+	def itemActivated(self,widget, path, iter):
+		model    = widget.get_model()
+		iter     = model.get_iter(path)
+		filename = model.get_value(iter, PATH)
+		self.__FileName = filename
+		self.interface.coreClass.setLocation(filename)
+		self.IterCurrentPlaying = iter
+		self.interface.playButton.set_active(False)
+		self.interface.playButton.set_active(True)
+		
+	def set(self, *args):
+		'''
+		wraper for the self.model.set
+		'''
+		return self.model.set(*args)
+		
+	def search(self, *args):
+		'''
+		wrapper for the self.model.search
+		'''
+		return self.model.search(*args)
+	
+	def filter(self, text):
+		self.filter_text = text
+		self.loadLibrary(self.library_name)
+	
+	def get_path(self, *args):
+		'''
+		wrapper for the self.model.get_path
+		'''
+		return self.model.get_path(*args)
+	
+	def iter_next(self, iter):
+		return self.model.iter_next(iter)
+	
+	def iter_is_valid(self, iter):
+		return self.model.iter_is_valid(iter)
+		
+class library(gtk.Widget,libraryBase):
+	__gsignals__= {
+				'popping_menu' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								(gobject.TYPE_PYOBJECT,))
+				}
+	def __init__(self):
+		gobject.GObject.__init__(self)
+		libraryBase.__init__(self)
+		self.interface.mainLibrary = self 
+		self.__logger = LoggerManager().getLogger('Library')
+		self.tv.connect('button-press-event', self.popupMenuHandlerEvent)
+		self.tv.connect('key-press-event',    self.handlerKeyPress)
+		self.tv.connect('row-activated',      self.itemActivated)
+		self.scroll.show_all()
+		self.Events.addWatcher('gotTags', self.gotTags)
+		self.interface.Player.connect('set-location', self.change_last_played)
+	
+	def change_last_played(self, player, last_location, current_location):
+		iter = self.model.basemodel.search_iter_on_column(last_location, PATH)
+		if (iter != None):
+			pix = self.share.getImageFromPix('blank')
+			pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
+			path = self.model.basemodel.get_path(iter)
+			self.set(path, PIX, pix)
+		iter = self.model.basemodel.search_iter_on_column(current_location, PATH)
+		if iter != None:
+			count = self.model.getValue(iter, PLAY_COUNT)
+			self.model.setValues(iter, PLAY_COUNT, count + 1)
+	
+	def gotTags(self, tags):
+		title = tags['title']
+		artist = tags['artist']
+		album = tags['album']
+		genre = tags['genre']
+		track_number  = tags['track_number']
+		type_file = self.interface.Player.getType()
+		
+		search = '.'.join([title,artist, album, genre, type_file])
+
+		self.updateData(self.interface.Player.getLocation(),
+								title=title,
+								album= album,
+								artist=artist,
+								track_number=track_number,
+								search=search,
+								genre=genre)
+		gobject.timeout_add(100,self.do_check_file_data)
+	
+	def do_check_file_data(self):
+		self.check_file_data(True)
+		return False
+
+	def handlerKeyPress(self, treeview, event):
+		"""
+		Handle the key-press-event in the
+		library.
+		Current keys: Enter to activate the row
+		and 'q' to send the selected song to the
+		queue
+		"""
+
+		if (event.keyval == gtk.gdk.keyval_from_name('Delete')):
+			self.removeFromLibrary()
+		elif (event.keyval == gtk.gdk.keyval_from_name('q')):
+			selection     = treeview.get_selection()
+			iter = selection.get_selected()[1]
+			name          = self.model.getValue(iter, PATH)
+			self.interface.Queue.add(name)
+
+	def popupMenuHandlerEvent(self, widget, event):
+		"""
+		handle the button-press-event in the library
+		"""
+		if (event.button == 3):
+			XML = self.share.getTemplate('PopupMenu')
+			XML.signal_autoconnect(self)
+
+			popup = XML['menu']
+			popup.popup(None, None, None, 3, gtk.get_current_event_time())
+			self.emit('popping_menu', popup)
+			self.interface.library_popup = popup
+			self.Events.executeEvent('main-library-pupup-menu')
+			popup.show_all()
+			
+	def popupAddToQueue(self, widget):
+		"""
+		Add the selected item to the queue
+		"""
+		selection       = self.tv.get_selection()
+		(model, iter,)  = selection.get_selected()
+		file            = model.get_value(iter, PATH)
+		self.interface.Queue.add(file)
+	
+	def removeFromLibrary(self, widget = None):
+		"""
+		Remove file from library
+		"""
+		selection     = self.tv.get_selection()
+		(model, iter) = selection.get_selected()
+		name,path     = model.get(iter, NAME, PATH)
+		if self.christineConf.getString("backend/last_played") == path:
+			self.christineConf.setValue("backend/last_played","")
+		self.remove(iter)
+
 	def add_columns(self):
 		render = gtk.CellRendererText()
 		render.set_property("ellipsize",pango.ELLIPSIZE_END)
@@ -357,72 +673,6 @@ class libraryBase(GtkMisc):
 		self.gconf.notifyAdd("ui/show_genre",self.gconf.toggleVisible,genre)
 		self.tv.set_property('fixed-height-mode', True)
 
-	def add(self,file,prepend=False):
-		if type(file) == type(()):
-			file = file[0]
-		if not os.path.isfile(file):
-			return False
-		name = os.path.split(file)[1]
-		if isinstance(name,()):
-			name = name[0]
-		################################
-		vals = self.db.getItemByPath(file)
-		if not vals:
-			#tags = self.tagger.readTags(file)
-			tags = {}
-			tags['title'] = os.path.split(file)[1].split('.')[0]
-			tags['album'] =  ''
-			tags['artist'] = ''
-			tags['track'] = ''
-			tags['genre'] = ''
-		else:
-			tags = {}
-			tags['title'] = self.encode_text(self.strip_XML_entities(vals['title']))
-			tags['album'] =  self.encode_text(self.strip_XML_entities(vals['album']))
-			tags['artist'] = self.encode_text(self.strip_XML_entities(vals['artist']))
-			tags['track'] = vals['track_number']
-			tags['genre'] = self.encode_text(self.strip_XML_entities(vals['genre']))
-
-		if tags["title"] == "":
-			n = os.path.split(file)[1].split(".")
-			tags["title"] = ".".join([k for k in n[:-1]])
-
-		if "video-codec" in tags.keys() or \
-				os.path.splitext(file)[1][1:] in CHRISTINE_VIDEO_EXT:
-			t = "video"
-		else:
-			t = "audio"
-		if type(tags["track"]) !=  type(1):
-			tags["track"] = 0
-		name	= tags["title"]
-		album	= tags["album"]
-		artist	= tags["artist"]
-		tn		= tags["track"]
-
-		if prepend:
-			func = self.model.prepend
-		else:
-			func = self.model.append
-		iter = func(NAME,name,
-				PATH,file,
-				PIX,self.blank_pix,
-				TYPE,t,
-				ALBUM,album,
-				ARTIST,artist,
-				TN,int(tn),
-				SEARCH,",".join([tags["title"],tags["album"],tags["artist"]]),
-				PLAY_COUNT,0,
-				GENRE,tags["genre"]
-				)
-
-		self.library_lib[file] = {"title":name,
-				"type":t,"artist":artist,
-				"album":album,
-				"track_number":int(tn),
-				"playcount":0,
-				"time":'0:00',
-				"genre":tags['genre'],}
-
 	def stream_length(self,widget=None,n=1):
 		try:
 			total = self.interface.Player.query_duration(gst.FORMAT_TIME)[0]
@@ -433,278 +683,6 @@ class libraryBase(GtkMisc):
 		except gst.QueryError:
 			pass
 		return True
-
-	def remove(self,iter):
-		'''
-		Remove the selected iter from the library.
-		'''
-		key = self.model.getValue(iter,PATH)
-		value = self.library_lib.remove(key)
-		if value:
-			self.model.remove(iter)
-
-	def save(self):
-		'''
-		Save the current library
-		'''
-		self.library_lib.save()
-
-	def updateData(self, path, **kwargs):
-		'''
-		This method updates the data in the main library if it can. And
-		in the data base.
-
-		@param path:
-		@param title:
-		@param album:
-		@param artist:
-		@param track_number:
-		@param search:
-		@param genre:
-		@param play_count:
-		@param time:
-		'''
-		keys = {'title':NAME,
-			 	'album':ALBUM,
-			 	'artist':ARTIST,
-			 	'track_number':TN,
-			 	'search':SEARCH,
-			 	'play_count':PLAY_COUNT,
-			 	'genre':GENRE,
-			 	'time':TIME,
-			 	'have_tags': HAVE_TAGS,
-			 	}
-		for key in kwargs:
-			value = keys[key]
-			iter = self.model.basemodel.search_iter_on_column(path, PATH)
-			if not iter:
-				return None
-			self.model.basemodel.set(iter, value, kwargs[key])
-		iter = self.model.basemodel.search_iter_on_column(path, PATH)
-		(path, title, artist, album, type,
-		track_number, playcount,time, genre,
-		have_tags) = self.model.basemodel.get(iter,
-												PATH,
-												NAME, ARTIST,ALBUM, TYPE,
-												TN,PLAY_COUNT, TIME, GENRE,
-												HAVE_TAGS)
-		self.library_lib.updateItem(path, title=title, artist=artist,
-								album=album, type=type, track_number=track_number,
-								playcount=playcount,time=time,
-								genre=genre,have_tags = have_tags)
-
-	def key_press_handler(self,treeview,event):
-		if event.keyval == gtk.gdk.keyval_from_name('Delete'):
-			selection = treeview.get_selection()
-			model,iter = selection.get_selected()
-			name = model.get_value(iter,NAME)
-			model.remove(iter)
-			self.library_lib.remove(name)
-			self.save()
-
-	def Exists(self,filename):
-		'''
-		Checks if the filename exits in
-		the library
-		'''
-		result = filename in self.library_lib.keys()
-		return result
-
-	# Need some help in the next functions
-	# They need to be retouched to work fine.
-
-	def set_drag_n_drop(self):
-		#self.tv.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
-		#		QUEUE_TARGETS,
-		#		gtk.gdk.ACTION_DEFAULT|gtk.gdk.ACTION_MOVE)
-		self.tv.enable_model_drag_dest(QUEUE_TARGETS,
-				gtk.gdk.ACTION_DEFAULT)
-		#self.tv.connect("drag_motion",self.check_contexts)
-		#self.tv.connect("drag-data-get",self.drag_data_get)
-		self.tv.connect("drag_data_received",self.add_it)
-		#self.tv.connect("drag_drop", self.dnd_handler)
-
-
-	#def check_contexts(self,*args):
-	#	print args
-	#	return True
-
-#===============================================================================
-#	def dnd_handler(self,
-#			treeview,
-#			context,
-#			selection,
-#			info,
-#			timestamp,
-#			b=None,
-#			c=None):
-#		treeview.emit_stop_by_name("drag_drop")
-#		tgt = treeview.drag_dest_find_target(context,QUEUE_TARGETS)
-#		text = treeview.drag_get_data(context,tgt)
-#		return True
-#	
-#	def drag_data_received(self, *args):
-#		return True
-#===============================================================================
-
-	def add_it(self,treeview,context,x,y,selection,target,timestamp):
-		treeview.emit_stop_by_name("drag_data_received")
-		drop_info = treeview.get_dest_row_at_pos(x, y)
-		if drop_info:
-			data = selection.data
-			if data.startswith('file://'):
-				data = data.replace('file://','').replace('%20',' ')
-				data = data.replace('\n','').replace('\r','')
-			self.add(data)
-		return True
-
-	def delete_from_disk(self,iter):
-		dialog = self.share.getTemplate("deleteFileFromDisk")["dialog"]
-		response = dialog.run()
-		path = self.model.getValue(iter,PATH)
-		if response == -5:
-			try:
-				os.unlink(path)
-				self.remove(iter)
-				self.save()
-			except IOError:
-				error("cannot delete file: %s"%path)
-		dialog.destroy()
-
-	def clear(self):
-		self.model.clear()
-		self.library_lib.clear()
-		self.library_lib.clean_playlist()
-
-	def itemActivated(self,widget, path, iter):
-		model    = widget.get_model()
-		iter     = model.get_iter(path)
-		filename = model.get_value(iter, PATH)
-		self.__FileName = filename
-		self.interface.coreClass.setLocation(filename)
-		self.IterCurrentPlaying = iter
-		self.interface.playButton.set_active(False)
-		self.interface.playButton.set_active(True)
-		
-	def set(self, *args):
-		'''
-		wraper for the self.model.set
-		'''
-		return self.model.set(*args)
-		
-	def search(self, *args):
-		'''
-		wrapper for the self.model.search
-		'''
-		return self.model.search(*args)
-	
-	def filter(self, text):
-		self.filter_text = text
-		self.loadLibrary(self.library_name)
-		self.tv.realize()
-	
-	def get_path(self, *args):
-		'''
-		wrapper for the self.model.get_path
-		'''
-		return self.model.get_path(*args)
-	
-	def iter_next(self, iter):
-		return self.model.iter_next(iter)
-	
-	def iter_is_valid(self, iter):
-		return self.model.iter_is_valid(iter)
-		
-class library(gtk.Widget,libraryBase):
-	__gsignals__= {
-				'popping_menu' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-								(gobject.TYPE_PYOBJECT,))
-				}
-	def __init__(self):
-		gobject.GObject.__init__(self)
-		libraryBase.__init__(self)
-		self.interface.mainLibrary = self 
-		self.__logger = LoggerManager().getLogger('Library')
-		self.tv.connect('button-press-event', self.popupMenuHandlerEvent)
-		self.tv.connect('key-press-event',    self.handlerKeyPress)
-		self.tv.connect('row-activated',      self.itemActivated)
-		self.scroll.show_all()
-		self.Events.addWatcher('gotTags', self.gotTags)
-	
-	def gotTags(self, tags):
-		title = tags['title']
-		artist = tags['artist']
-		album = tags['album']
-		genre = tags['genre']
-		track_number  = tags['track_number']
-		type_file = self.interface.Player.getType()
-		
-		search = '.'.join([title,artist, album, genre, type_file])
-
-		self.updateData(self.interface.Player.getLocation(),
-								title=title,
-								album= album,
-								artist=artist,
-								track_number=track_number,
-								search=search,
-								genre=genre)
-		gobject.timeout_add(100,self.do_check_file_data)
-	
-	def do_check_file_data(self):
-		self.check_file_data(True)
-		return False
-
-	def handlerKeyPress(self, treeview, event):
-		"""
-		Handle the key-press-event in the
-		library.
-		Current keys: Enter to activate the row
-		and 'q' to send the selected song to the
-		queue
-		"""
-
-		if (event.keyval == gtk.gdk.keyval_from_name('Delete')):
-			self.removeFromLibrary()
-		elif (event.keyval == gtk.gdk.keyval_from_name('q')):
-			selection     = treeview.get_selection()
-			iter = selection.get_selected()[1]
-			name          = self.model.getValue(iter, PATH)
-			self.interface.Queue.add(name)
-
-	def popupMenuHandlerEvent(self, widget, event):
-		"""
-		handle the button-press-event in the library
-		"""
-		if (event.button == 3):
-			XML = self.share.getTemplate('PopupMenu')
-			XML.signal_autoconnect(self)
-
-			popup = XML['menu']
-			popup.popup(None, None, None, 3, gtk.get_current_event_time())
-			self.emit('popping_menu', popup)
-			self.interface.library_popup = popup
-			self.Events.executeEvent('main-library-pupup-menu')
-			popup.show_all()
-			
-	def popupAddToQueue(self, widget):
-		"""
-		Add the selected item to the queue
-		"""
-		selection       = self.tv.get_selection()
-		(model, iter,)  = selection.get_selected()
-		file            = model.get_value(iter, PATH)
-		self.interface.Queue.add(file)
-	
-	def removeFromLibrary(self, widget = None):
-		"""
-		Remove file from library
-		"""
-		selection     = self.tv.get_selection()
-		(model, iter) = selection.get_selected()
-		name,path     = model.get(iter, NAME, PATH)
-		if self.christineConf.getString("backend/last_played") == path:
-			self.christineConf.setValue("backend/last_played","")
-		self.remove(iter)
 
 class queue (libraryBase):
 	def __init__(self):

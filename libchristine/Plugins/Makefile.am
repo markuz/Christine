@@ -27,3 +27,6 @@ edit = sed \
 all: all-am
 
 all-am: 
+
+clean:
+	rm -rf *pyc &

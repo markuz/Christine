@@ -101,7 +101,6 @@ class Christine(GtkMisc):
 		self.__LocationCount    = 0     # Count ns and jump if the file is not good
 		self.__LastPlayed       = []
 		self.__IterNatural      = None
-		self.IterCurrentPlaying = None # Temporal store for the current iter playing
 		self.__ScaleMoving      = False
 		self.__IsFullScreen     = False
 		self.__ShowButtons      = False
@@ -215,10 +214,6 @@ class Christine(GtkMisc):
 		self.mainLibrary.loadLibrary(lastSourceUsed)
 		self.mainLibrary.tv.show()
 
-		# Models in the library are assigned to class variables
-		#self.__LibraryModel       = self.mainLibrary.tv.get_model()
-		self.__LibraryCurrentIter = self.mainLibrary.model.get_iter_first()
-		
 		self.mainLibrary.scroll
 		#self.libraryVBox = xml['libraryVBox']
 		self.mainSpace.append_page(self.mainLibrary.scroll, None)
@@ -395,29 +390,13 @@ class Christine(GtkMisc):
 		# that will hold a gtk.TreeIter
 		# should be setted to None
 		# before using it
-		self.__LibraryCurrentIter = None
 
 		self.__Player.stop()
 		basemodel = self.mainLibrary.model.basemodel
-		self.__LibraryCurrentIter = basemodel.search_iter_on_column(
-											self.__Player.getLocation(), PATH)
-		if (self.__LibraryCurrentIter != None):
-			pix = self.share.getImageFromPix('blank')
-			pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-			path = basemodel.get_path(self.__LibraryCurrentIter)
-			self.mainLibrary.set(path, PIX, pix)
-			self.__IterNatural = self.__LibraryCurrentIter
-		self.IterCurrentPlaying = self.mainLibrary.model.getIterValid(self.IterCurrentPlaying)
-		if (self.IterCurrentPlaying != None):
-			if (self.mainLibrary.Exists(filename)):
-				count = self.mainLibrary.model.getValue(self.IterCurrentPlaying, PLAY_COUNT)
-				self.mainLibrary.model.setValues(self.IterCurrentPlaying, PLAY_COUNT, count + 1)
-				self.__IterNatural = self.IterCurrentPlaying
-				self.__LastPlayed.append(filename)
-		self.christineConf.setValue('backend/last_played', filename)
 		self.__Player.setLocation(filename)
 		name = os.path.split(filename)[-1]
 		self.__Display.setSong(name)
+		self.__LastPlayed.append(filename)
 		# enable the stream-length for the current song.
 		# this will be stopped when we get the length
 		gobject.timeout_add(100, self.__streamLength)
@@ -680,26 +659,28 @@ class Christine(GtkMisc):
 			self.PlayButton.set_active(False)
 			self.PlayButton.set_active(True)
 		else:
-			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(
-										self.christineConf.getString('backend/last_played'), PATH)
-			if self.__LibraryCurrentIter != None:
-				if not self.mainLibrary.tv.get_model().iter_is_valid(self.__LibraryCurrentIter):
-					return False
-				path = self.mainLibrary.tv.get_model().get_path(self.__LibraryCurrentIter)
-				if path == None:
-					return False
-				if (path > 0):
-					path = (path[0] -1,)
-				elif (path[0] > -1):
-					iter     = self.mainLibrary.tv.get_model().get_iter(path)
-					location = self.mainLibrary.model.getValue(iter, PATH)
-					self.setLocation(location)
+			iter = self.mainLibrary.model.basemodel.search_iter_on_column(
+						self.christineConf.getString('backend/last_played'), 
+						PATH)
+			if iter == None:
+				return False
+			if not self.mainLibrary.tv.get_model().iter_is_valid(iter):
+				return False
+			path = self.mainLibrary.tv.get_model().get_path(iter)
+			if path == None:
+				return False
+			if (path > 0):
+				path = (path[0] -1,)
+			elif (path[0] > -1):
+				iter     = self.mainLibrary.tv.get_model().get_iter(path)
+				location = self.mainLibrary.model.getValue(iter, PATH)
+				self.setLocation(location)
 
-					# This avoid the return to the last played song
-					# wich is the next in the list.
-					self.__LastPlayed.pop()
-					self.PlayButton.set_active(False)
-					self.PlayButton.set_active(True)
+				# This avoid the return to the last played song
+				# wich is the next in the list.
+				self.__LastPlayed.pop()
+				self.PlayButton.set_active(False)
+				self.PlayButton.set_active(True)
 
 	def goNext(self, widget = None):
 		"""
@@ -719,7 +700,6 @@ class Christine(GtkMisc):
 			#self.Queue.scroll.show()
 			location = self.Queue.model.get_value(iter,PATH)
 			self.setLocation(location)
-			self.__LibraryCurrentIter = None
 			self.jumpToPlaying()
 			self.Queue.remove(iter)
 			self.Queue.save()
@@ -751,23 +731,17 @@ class Christine(GtkMisc):
 
 		if (path == None):
 			filename = self.christineConf.getString('backend/last_played')
-			self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
-			#self.__Player.getLocation()
-			if (self.__LibraryCurrentIter == None):
+			iter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
+			if (iter == None):
 				iter     = self.mainLibrary.tv.get_model().get_iter_first()
 				filename = self.mainLibrary.model.getValue(iter, PATH)
-				self.IterCurrentPlaying = iter
-
 			self.setLocation(filename)
 		else:
-			self.__LibraryCurrentIter = None
-			self.mainLibrary.model.getModel().foreach(self.__SearchByPath, path)
-			if (self.__LibraryCurrentIter != None):
-				iter = self.mainLibrary.iter_next(self.__LibraryCurrentIter)
+			iter = self.mainLibrary.model.basemodel.search(path, PATH)
+			if (iter != None):
+				iter = self.mainLibrary.iter_next(iter)
 			else:
 				iter = self.mainLibrary.tv.get_model().get_iter_first()
-
-			self.IterCurrentPlaying = iter
 			try:
 				self.setLocation(self.mainLibrary.model.getValue(iter, PATH))
 				#niter = iter
@@ -777,28 +751,15 @@ class Christine(GtkMisc):
 				self.setLocation(path)
 				self.PlayButton.set_active(False)
 
-	def __SearchByPath(self, model, path, iter, location):
-		"""
-		search location in the model, if it found it then it will
-		store the iter where it was found in self.__LibraryCurrentIter
-		"""
-		mlocation = model[path][PATH]
-		if (mlocation == location):
-			self.__LibraryCurrentIter = model.get_iter(path)
-			return True
-
 	def onScaleChanged(self, scale, a, value = None):
 		"""
 		Callback on the value changed signal on position scale
 		"""
 		value = (int(self.__Display.value * self.__TimeTotal) / gst.SECOND)
 		total = self.__TimeTotal*gst.SECOND
-
 		self.__ScaleMoving = False
-
 		if (value < 0):
 			value = 0
-
 		self.__Player.seekTo(value)
 
 	def setScale(self, scale, a, b):
@@ -816,21 +777,16 @@ class Christine(GtkMisc):
 		If path is not specified then try to
 		select the playing one
 		"""
+		location = path
 		if not isinstance(path, str) or not path:
 			location = self.__Player.getLocation()
-		else:
-			location = path
-		self.__LibraryCurrentIter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
-		if self.__LibraryCurrentIter != None:
-			if self.__StatePlaying:
-				iter = self.__LibraryCurrentIter
-				pix  = self.share.getImageFromPix('sound')
-				pix  = pix.scale_simple(20, 20,
-						gtk.gdk.INTERP_BILINEAR)
-				self.mainLibrary.set(iter, PIX, pix)
-		iter = self.mainLibrary.search(location, PATH)
+		iter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
 		if iter != None:
-			self.IterCurrentPlaying = iter
+			if self.__StatePlaying:
+				pix  = self.share.getImageFromPix('sound')
+				pix  = pix.scale_simple(20, 20,	gtk.gdk.INTERP_BILINEAR)
+				self.mainLibrary.set(iter, PIX, pix)
+			iter = self.mainLibrary.model.get_sorted_iter(iter)
 			npath = self.mainLibrary.model.sorted_path(iter)
 			if (npath != None):
 				if npath[0]:
@@ -1212,9 +1168,10 @@ class Christine(GtkMisc):
 		Catches the lenght of the media and update it in the
 		player
 		"""
-		if not self.__Player.getLocation():
+		location = self.__Player.getLocation()
+		if not location:
 			return True
-		if (self.__Player.getLocation().split(':')[0] == 'http'):
+		if (location.split(':')[0] == 'http'):
 			self.__TimeTotal = 0
 			return True
 		try:
@@ -1222,7 +1179,7 @@ class Christine(GtkMisc):
 			ts               = (self.__TimeTotal / gst.SECOND)
 			text             = "%02d:%02d" % divmod(ts, 60)
 			self.__ErrorStreamCount = 0
-			iter = self.__LibraryCurrentIter
+			iter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
 			if (iter is not None):
 				time= self.mainLibrary.model.get_value(iter, TIME)
 				if (time != text):

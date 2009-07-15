@@ -2,7 +2,6 @@ scriptsdir = @PYTHON_LIB_DIR@/libchristine/Storage
 
 scripts_DATA= __init__.py \
 			ChristineGConf.py \
-			LibraryToFile.py \
 			sqlitedb.py
 
 DISTFILES= Makefile.in \
@@ -29,3 +28,5 @@ all: all-am
 all-am: 
 
 
+clean:
+	rm -rf *pyc&

@@ -51,7 +51,10 @@ class Player(gtk.DrawingArea, object):
 				'player-pause' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
 								tuple()),
 				'player-stop' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-								tuple())
+								tuple()),
+				'set-location' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								(gobject.TYPE_PYOBJECT, 
+									gobject.TYPE_PYOBJECT))
 				}
 	#
 	# Constructor
@@ -61,6 +64,7 @@ class Player(gtk.DrawingArea, object):
 		 Constructor
 		"""
 		gtk.DrawingArea.__init__(self)
+		self.christineConf   = christineConf()
 		self.set_events(gtk.gdk.POINTER_MOTION_MASK |
         gtk.gdk.POINTER_MOTION_HINT_MASK |
         gtk.gdk.EXPOSURE_MASK |
@@ -235,6 +239,7 @@ class Player(gtk.DrawingArea, object):
 	
 	def setLocation(self, file):
 		self.Tags = {}
+		last_location = self.getLocation()
 		self.location = file
 		if getattr(self, 'visualizationPlugin', None) is not None:
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.visualizationPlugin)
@@ -257,6 +262,8 @@ class Player(gtk.DrawingArea, object):
 			file = file.replace( "\\'", r"'\''" )
 			if file:
 				self.__elementSetProperty(self.__PlayBin,'uri', file)
+		self.emit('set-location',last_location, self.location)
+		self.christineConf.setValue('backend/last_played', self.location)
 		self.show()
 		self.getType()
 		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
