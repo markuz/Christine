@@ -1,4 +1,5 @@
 #include <Python.h>
+#include <pythonrun.h>
 #include <import.h>
 
 
@@ -19,20 +20,34 @@ on_get_iter(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "OO", &selfobj, &rowref))
         return NULL;
     data = PyObject_GetAttrString(selfobj, "data");
-    if (!data)
+    if (!data){
+    	Py_DECREF(rowref);
+		//Py_DECREF(selfobj);
+		Py_DECREF(data);
     	Py_INCREF(Py_None);
     	return Py_None;
+    }
     PyArg_ParseTuple(rowref, "i", &index);
     if (index <= PyList_Size(data) -1){
     	result = PyList_GetItem(data, index);
     }
     else{
+    	Py_DECREF(rowref);
+		//Py_DECREF(selfobj);
+		Py_DECREF(data);
     	Py_INCREF(Py_None);
     	return Py_None;
     }
-	if (!result)
+	if (!result){
+		Py_DECREF(rowref);
+		//Py_DECREF(selfobj);
+		Py_DECREF(data);
 		Py_INCREF(Py_None);
 		return Py_None;
+	}
+	Py_XDECREF(rowref);
+	//Py_XDECREF(selfobj);
+	Py_XDECREF(data);
     return Py_BuildValue("O", result);
 }
 
