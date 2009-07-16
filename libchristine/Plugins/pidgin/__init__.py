@@ -120,7 +120,7 @@ class pidgin(plugin_base):
 		"""
 		if ( self.obj is None and self.active):
 			self.SessionStart()
-		self.SetMessage()
+			self.SetMessage()
 
 	def get_active(self):
 		return self.christineConf.getBool('pidgin/enabled')
