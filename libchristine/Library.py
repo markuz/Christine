@@ -74,6 +74,7 @@ class libraryBase(GtkMisc):
 		'''
 		self.iters = {}
 		self.filter_text = ''
+		self.do_save = False
 		GtkMisc.__init__(self)
 		self.logger = LoggerManager().getLogger('sqldb')
 		self.share = Share()
@@ -94,6 +95,7 @@ class libraryBase(GtkMisc):
 		self.scroll.add_events(gtk.gdk.SCROLL_MASK)
 		self.scroll.connect('scroll-event', self.__scroll_child)
 		self.tv.connect('scroll-event', self.__scroll_child)
+		gobject.timeout_add(500, self.save)
 
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
@@ -338,6 +340,7 @@ class libraryBase(GtkMisc):
 				"playcount":0,
 				"time":'0:00',
 				"genre":tags['genre'],}
+		self.do_save = True
 
 	
 	def remove(self,iter):
@@ -353,7 +356,10 @@ class libraryBase(GtkMisc):
 		'''
 		Save the current library
 		'''
-		self.library_lib.save()
+		if self.do_save:
+			self.library_lib.save()
+			self.do_save = False
+		return True
 
 	def updateData(self, path, **kwargs):
 		'''

@@ -79,8 +79,8 @@ class lib_library(object):
 		return self.__files[key]
 
 	def append(self,name,data):
-		if type(data) != type({}):
-			raise TypeError, "data must be a dict, got %s"%type(data)
+		if not isinstance(data, dict):
+			raise TypeError("data must be a dict, got %s"%type(data))
 		self.__files[name]=data
 		self.__logger.debug(data)
 		id = self.__db.additem(
@@ -123,9 +123,9 @@ class lib_library(object):
 		self.__db.removeItem(key,self.idlist)
 		c = {}
 		if key in self.keys():
-			for i in self.keys():
-				if i != key:
-					c[i]= self.__files[i]
+			keys = [k for k in self.keys() if k != key]
+			for i in keys:
+				c[i]= self.__files[i]
 			self.__files = c.copy()
 			return True
 		return False

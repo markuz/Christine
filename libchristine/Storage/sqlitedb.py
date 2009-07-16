@@ -23,6 +23,7 @@
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
+import gobject
 
 #
 # This module define the classes and procedures to use SQLite3 on christine
@@ -54,6 +55,7 @@ class sqlite3db(Singleton):
 			self.fillRegistry()
 		self.iface = interface()
 		self.iface.db = self
+		gobject.timeout_add(300, self.do_commit)
 
 	def dict_factory(self, cursor, row):
 		d = {}
