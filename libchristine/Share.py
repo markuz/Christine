@@ -25,14 +25,18 @@
 # @copyright 2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 #import gtk.glade
+# @author Miguel Vazquez Gocobachi <demrit@gnu.org>
+
 from libchristine.Validator import *
 from libchristine.pattern.Singleton import Singleton
 from libchristine.gui.GtkMisc import glade_xml
 from libchristine.globalvars import DATADIR
 from libchristine.Logger import LoggerManager
+import time
 import os
 import gtk
 import sys
+import gobject
 
 # global PATH to share files required
 if "--devel" in sys.argv:
@@ -45,7 +49,6 @@ else:
 # templates and more files
 #
 # @author Miguel Vazquez Gocobachi <demrit@gnu.org>
-# @since 0.4
 class Share(Singleton):
 	"""
 	Share class manager for images, glade
@@ -74,6 +77,7 @@ class Share(Singleton):
 		#self.__Pixmaps, used to store a pixmap. if it is here then reuse it
 		#instead of creating another one from the same faile
 		self.__Pixmaps = {}
+		gobject.timeout_add(1000, self.check_pixmap_time_access)
 
 	def getTemplate(self, file = None, root = None):
 		"""
@@ -95,24 +99,40 @@ class Share(Singleton):
 				return os.path.join(self.__PathPixmap, name+'.png')
 			elif (isFile(os.path.join(self.__PathPixmap, name+ '.svg'))):
 				return os.path.join(self.__PathPixmap, name+'.svg')
-
 		return None
 
 	def getImageFromPix(self, name):
 		"""
 		Gets image from pixbuf
 		"""
-		if ((not isNull(file)) or (isStringEmpty(name))):
+		if not isNull(file) or not isStringEmpty(name):
 			names = []
 			for i in ['.png','.svg']:
 				names.append(os.path.join(self.__PathPixmap, name + i))
 			for i in names:
 				if (isFile(i)):
 					if self.__Pixmaps.has_key(i):
-						return self.__Pixmaps[i]
+						self.__Pixmaps[i]['timestamp'] = time.time()
+						return self.__Pixmaps[i]['pixmap']
 					else:
 						pixmap = gtk.gdk.pixbuf_new_from_file(i)
-						self.__Pixmaps[i] = pixmap
+						self.__Pixmaps[i] = {'pixmap':pixmap,
+											'timestamp': time.time()}
 						return pixmap
 		self.__logger.warning('None of this files \n%s\n where found'%repr(names))
 		return None
+	
+	def check_pixmap_time_access(self):
+		'''
+		Check the last time access to a pixmap, if the diference between
+		the current time and the last access time is more than 600 senconds 
+		(10 minutes) then it will erase the pixmap.
+		'''
+		c ={}
+		ctime = time.time()
+		for key, value in self.__Pixmaps.iteritems():
+			if ctime - value['timestamp'] < 600:
+				c[key] = value
+		self.__Pixmaps = c.copy()
+		#del c
+		return True
