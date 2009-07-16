@@ -82,14 +82,15 @@ class Player(gtk.DrawingArea, object):
 		self.config = christineConf(self)
 		self.events = christineEvents()
 		self.__ShouldShow = False
-		self.__Type       = 'sound'
 		self.__createPlaybin()
 		self.connect('expose-event', self.exposeCallback)
-		self.connect('key-press-event', self.__set_text)
+		#self.connect('key-press-event', self.__set_text)
 	
-	def __set_text(self, widget, event):
-		name = gtk.gdk.keyval_name()
-		self.__Text(name)
+#===============================================================================
+#	def __set_text(self, widget, event):
+#		name = gtk.gdk.keyval_name()
+#		self.__Text = name
+#===============================================================================
 		
 	def __createPlaybin(self):
 		"""
@@ -132,16 +133,17 @@ class Player(gtk.DrawingArea, object):
 		self.__Logger.info("__updateAudioSink")
 		state = self.getState()[1]
 		self.__AudioSinkPack = self.__elementFactoryMake('bin')
-		if (not isNull(self.getLocation())): self.pause()
+		if not self.getLocation() == None:
+			self.pause()
 		asink = self.config.getString('backend/audiosink')
 		self.__AudioSink = self.__elementFactoryMake(asink)
 		self.__AudioSinkPack.add(self.__AudioSink)
 		self.audio_ghost = gst.GhostPad('sink', self.__AudioSink.get_pad('sink'))
 		self.__AudioSinkPack.add_pad(self.audio_ghost)
 		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
-		if (asink == 'alsasink'):
+		if asink == 'alsasink':
 			self.__AudioSink.set_property('device', 'default')
-		if (gst.State(gst.STATE_PLAYING) == state):
+		if gst.State(gst.STATE_PLAYING) == state:
 			self.playIt()
 
 	def __updateVideoSink(self, *args):
@@ -149,14 +151,14 @@ class Player(gtk.DrawingArea, object):
 		Updates video sink
 		"""
 		state = self.getState()[1]
-		if (not isNull(self.getLocation())):
+		if self.getLocation() != None:
 			self.pause()
 		vsink = self.config.getString('backend/videosink')
 		self.VideoSink = self.__elementFactoryMake(vsink)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
-		if (vsink in ['xvimagesink', 'ximagesink']):
+		if vsink in ['xvimagesink', 'ximagesink']:
 			self.VideoSink.set_property('force-aspect-ratio', True)
-		if (gst.State(gst.STATE_PLAYING) == state):
+		if gst.State(gst.STATE_PLAYING) == state:
 			self.playIt()
 
 	def __updateAspectRatio(self, client = '', cnx_id = '', entry = '', userdata = ''):
@@ -164,8 +166,7 @@ class Player(gtk.DrawingArea, object):
 		Updates aspect ratio
 		"""
 		aspect_ratio = self.config.getString('backend/aspect-ratio')
-
-		if (not isNull(aspect_ratio)):
+		if not aspect_ratio == None:
 			self.__elementSetProperty(self.VideoSink, 'pixel-aspect-ratio',
 									aspect_ratio)
 
@@ -190,12 +191,6 @@ class Player(gtk.DrawingArea, object):
 						property,str(value))
 		element.set_property(property,value)
 
-#===============================================================================
-#	def emitExpose(self):
-#		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
-#		return False
-#===============================================================================
-
 	def exposeCallback(self, window, event):
 		"""
 		Draw the visualization widget.
@@ -207,28 +202,30 @@ class Player(gtk.DrawingArea, object):
 			self.VideoSink.set_xwindow_id(self.window.xid)
 			self.__Context = self.window.cairo_create()
 		except Exception, e:
+			self.__Logger.exception(e)
 			return False
 
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
 		                         w - 2 * BORDER_WIDTH,
 		                         h - 2 * BORDER_WIDTH)
 		self.__Context.clip()
-
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
 		                         w - 2 * BORDER_WIDTH,
 		                         h - 2 * BORDER_WIDTH)
 
 		self.__Context.set_source_rgba(0,0,0)
 		self.__Context.fill_preserve()
-		self.__Context.set_source_rgb(0,0,0)
+		#self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
-		self.__Layout  = self.create_pango_layout(self.__Text)
-		(fontw, fonth) = self.__Layout.get_pixel_size()
-		self.__Context.move_to(w, (fonth)/2)
-		self.__Context.set_source_rgb(1,1,1)
-		self.__Layout.set_font_description(self.style.font_desc)
-		self.__Context.update_layout(self.__Layout)
-		self.__Context.show_layout(self.__Layout)
+#===============================================================================
+#		self.__Layout  = self.create_pango_layout(self.__Text)
+#		fonth = self.__Layout.get_pixel_size()[1]
+#		self.__Context.move_to(w, (fonth)/2)
+#		self.__Context.set_source_rgb(1,1,1)
+#		self.__Layout.set_font_description(self.style.font_desc)
+#		self.__Context.update_layout(self.__Layout)
+#		self.__Context.show_layout(self.__Layout)
+#===============================================================================
 		if self.__ShouldShow:
 			width = self.getTag('width')
 			height = self.getTag('height')
@@ -241,7 +238,7 @@ class Player(gtk.DrawingArea, object):
 		self.Tags = {}
 		last_location = self.getLocation()
 		self.location = file
-		if getattr(self, 'visualizationPlugin', None) is not None:
+		if getattr(self, 'visualizationPlugin', None) != None:
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.visualizationPlugin)
 		if (isFile(file)):
 			self.__setState(gst.STATE_READY)
@@ -348,9 +345,10 @@ class Player(gtk.DrawingArea, object):
 		"""
 		Callback to found tags
 		"""
-		if (len(tags.keys()) > 0):
+		if len(tags.keys()):
 			for i in tags.keys():
-				self.Tags[i] = tags[i]
+				if tags[i] != None:
+					self.Tags[i] = tags[i]
 		self.getType()
 
 	def getState(self):
@@ -363,20 +361,23 @@ class Player(gtk.DrawingArea, object):
 		"""
 		Sets file type
 		"""
-		if (self.isVideo()):
-			self.__Type = 'video'
-		elif (self.isSound()):
-			self.__Type = 'sound'
+		if self.isVideo():
+			return 'video'
+		elif self.isSound():
+			return 'sound'
 		else:
-			self.__Type = "Unknown"
-		return self.__Type
+			return 'Unknown'
+			
 
 	def nano2str(self,nanos):
 		"""
 		Returns a string like 00:00:00.000000
 		"""
 		ts = (nanos / gst.SECOND)
-		return '%02d:%02d:%02d.%06d' % ((ts / 3600), (ts / 60), (ts % 60), (nanos % gst.SECOND))
+		str = '%02d:%02d:%02d.%06d' % ((ts / 3600), 
+									(ts / 60), (ts % 60), 
+									(nanos % gst.SECOND))
+		return str
 
 	def seekTo(self, sec):
 		"""
@@ -392,12 +393,10 @@ class Player(gtk.DrawingArea, object):
 		"""
 		Check if it is video or not
 		"""
-		if (isNull(self.getLocation())):
+		if not self.getLocation():
 			return False
-
 		ext = self.getLocation().split('.').pop().lower()
-
-		if (('video-codec' in self.Tags.keys()) or (ext in CHRISTINE_VIDEO_EXT)):
+		if self.Tags.has_key('video-codec') or ext in CHRISTINE_VIDEO_EXT:
 			self.__ShouldShow = True
 			return True
 		else:
@@ -407,13 +406,11 @@ class Player(gtk.DrawingArea, object):
 		"""
 		Check if it is sound or not
 		"""
-		if (isNull(self.getLocation())):
+		if not self.getLocation():
 			return False
-
 		ext = self.getLocation().split('.').pop().lower()
-
-		if (('audio-codec' in self.Tags.keys()) or
-		  	  (ext in self.config.get('backend/allowed_files'))):
+		if self.Tags.has_key('audio-codec') or \
+			ext in self.config.get('backend/allowed_files'):
 			return True
 		else:
 			return False

@@ -1214,7 +1214,7 @@ class Christine(GtkMisc):
 		elif type(genre) != type(""):
 			genre = ""
 		track_number = self.__Player.getTag('track-number')
-		if type(track_number) == type(""):
+		if isinstance(track_number,str):
 			if track_number.isdigit():
 				track_number = int(track_number)
 			else:
@@ -1247,7 +1247,6 @@ class Christine(GtkMisc):
 		else:
 			page = [1,0][self.christineConf.getBool('ui/visualization') and isPlaying]
 			self.mainSpace.set_current_page(page)
-			#self.mainSpace.set_property('visible', visible) 
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")

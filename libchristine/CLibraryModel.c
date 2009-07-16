@@ -22,7 +22,6 @@ on_get_iter(PyObject *self, PyObject *args)
     data = PyObject_GetAttrString(selfobj, "data");
     if (!data){
     	Py_DECREF(rowref);
-		//Py_DECREF(selfobj);
 		Py_DECREF(data);
     	Py_INCREF(Py_None);
     	return Py_None;
@@ -33,20 +32,17 @@ on_get_iter(PyObject *self, PyObject *args)
     }
     else{
     	Py_DECREF(rowref);
-		//Py_DECREF(selfobj);
 		Py_DECREF(data);
     	Py_INCREF(Py_None);
     	return Py_None;
     }
 	if (!result){
 		Py_DECREF(rowref);
-		//Py_DECREF(selfobj);
 		Py_DECREF(data);
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
 	Py_XDECREF(rowref);
-	//Py_XDECREF(selfobj);
 	Py_XDECREF(data);
     return Py_BuildValue("O", result);
 }
