@@ -965,7 +965,7 @@ class Christine(GtkMisc):
 		label = xml['label1']
 		self.__walking = True
 		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
-		gobject.timeout_add(200, self.__walkProgressPulse,progress)
+		gobject.timeout_add(300, self.__walkProgressPulse,progress)
 		dialog.set_modal(False)
 		response = dialog.run()
 		if response:
@@ -1017,9 +1017,9 @@ class Christine(GtkMisc):
 		gobject.idle_add(self.__addFileCycle, library)
 
 	def __addFileCycle(self, library):
-		for i in  xrange(1,10):
+		for i in  xrange(1,2):
 			if self.__FilesToAdd:
-				m = divmod(len(library.model.basemodel), 500)[1]
+				#m = divmod(len(library.model.basemodel), 500)[1]
 				new_file = self.__FilesToAdd.pop()
 				library.add(new_file)
 				#if not m:

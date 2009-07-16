@@ -165,7 +165,8 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def on_iter_next(self, rowref):
 		index = self.data.index(rowref)
-		return self.data[ index + 1 ]
+		if len(self.data) > index + 1: 
+			return self.data[ index + 1 ]
 
 	def on_get_n_columns(self):
 		return self.column_size

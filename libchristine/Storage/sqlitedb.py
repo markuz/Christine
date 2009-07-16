@@ -43,6 +43,7 @@ class sqlite3db(Singleton):
 		self.connection = sqlite3.connect(DBFILE)
 		self.connection.row_factory = self.dict_factory
 		self.connection.text_factory = str
+		self.have_to_commit = False
 		self.cursor = self.connection.cursor()
 		self.cursor.row_factory = self.dict_factory
 		self.__logger = LoggerManager().getLogger('sqldb')
@@ -99,8 +100,14 @@ class sqlite3db(Singleton):
 		'''
 		Do a self.connection.commit storing the event in the log.
 		'''
-		self.__logger.info('Doing a commit')
-		self.connection.commit()
+		self.have_to_commit = True
+	
+	def do_commit(self):
+		if self.have_to_commit:
+			self.__logger.info('Doing a commit')
+			self.connection.commit()
+			self.have_to_commit = False
+		return True
 
 	def get_db_version(self):
 		'''
