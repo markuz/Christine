@@ -22,7 +22,7 @@
 # @package   Share
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
-# @copyright 2007 Christine Development Group
+# @copyright 2007-2009 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 #import gtk.glade
 # @author Miguel Vazquez Gocobachi <demrit@gnu.org>
@@ -110,7 +110,7 @@ class Share(Singleton):
 			for i in ['.png','.svg']:
 				names.append(os.path.join(self.__PathPixmap, name + i))
 			for i in names:
-				if (isFile(i)):
+				if isFile(i):
 					if self.__Pixmaps.has_key(i):
 						self.__Pixmaps[i]['timestamp'] = time.time()
 						return self.__Pixmaps[i]['pixmap']
@@ -131,7 +131,7 @@ class Share(Singleton):
 		c ={}
 		ctime = time.time()
 		for key, value in self.__Pixmaps.iteritems():
-			if ctime - value['timestamp'] < 600:
+			if ctime - value['timestamp'] < 60:
 				c[key] = value
 		self.__Pixmaps = c.copy()
 		#del c

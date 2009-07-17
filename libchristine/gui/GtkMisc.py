@@ -126,9 +126,8 @@ class CairoMisc:
 		if hex in self.hex.keys():
 			return self.hex[hex]
 		ret = []
-		for i in range(4):
-			ic = int(hex[i])
-			ret.append(ic / 255.0)
+		for i in xrange(4):
+			ret.append(int(hex[i]) / 255.0)
 		self.hex[hex] = ret
 		return ret
 

@@ -33,7 +33,6 @@ from libchristine.christine_dbus import DBUS_SESSION
 from libchristine.pattern.Singleton import Singleton
 from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base, christineConf
-from libchristine.gui.christineNotify import notifyWindow
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Share import Share
 

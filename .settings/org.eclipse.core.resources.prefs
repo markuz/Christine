@@ -1,6 +1,7 @@
-#Thu Jul 16 17:51:09 CDT 2009
+#Thu Jul 16 19:17:31 CDT 2009
 eclipse.preferences.version=1
 encoding//libchristine/Christine.py=utf-8
+encoding//libchristine/Events.py=utf-8
 encoding//libchristine/Library.py=latin1
 encoding//libchristine/LibraryModel.py=latin1
 encoding//libchristine/Logger.py=utf-8
@@ -9,6 +10,7 @@ encoding//libchristine/Plugins/christinePyNotify/__init__.py=latin1
 encoding//libchristine/Plugins/pidgin/__init__.py=utf-8
 encoding//libchristine/Share.py=utf-8
 encoding//libchristine/Storage/sqlitedb.py=utf-8
+encoding//libchristine/Validator.py=utf-8
 encoding//libchristine/christineConf.py=utf-8
 encoding//libchristine/christine_dbus/__init__.py=utf-8
 encoding//libchristine/gui/Display.py=utf-8

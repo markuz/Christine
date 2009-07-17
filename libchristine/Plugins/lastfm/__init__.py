@@ -20,9 +20,6 @@
 #
 # http://code.google.com/p/pylast/
 
-
-
-
 import md5
 import urllib2
 import thread
