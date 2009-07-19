@@ -306,7 +306,7 @@ class Christine(GtkMisc):
 			self.__HScaleVolume.set_value(0.8)
 
 		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
-		self.jumpToPlaying(path = self.christineConf.getString('backend/last_played'))
+		self.jumpToPlaying(location = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
 		gobject.timeout_add(500, self.__check_items_on_media)
 		#gobject.idle_add(self.__check_items_on_media)
@@ -545,15 +545,6 @@ class Christine(GtkMisc):
 		"""
 		Perform the actions to make a search
 		"""
-		#text = self.EntrySearch.get_text()
-#===============================================================================
-#		if not text:
-#			self.mainLibrary.model.TextToSearch = ''
-#			self.mainLibrary.model.refilter()
-#			self.jumpToPlaying()
-#			return True
-#		else:
-#===============================================================================
 		self.__lastTypeTime = time.time()
 		gobject.timeout_add(1000,self.__searchTimer)
 
@@ -562,8 +553,7 @@ class Christine(GtkMisc):
 		text = self.EntrySearch.get_text().lower()
 		if diff > 0.5 and diff < 1 or not text:
 			self.mainLibrary.model.TextToSearch = text
-			self.mainLibrary.filter(text) 
-			#self.mainLibrary.model.refilter()
+			self.mainLibrary.refilter() 
 			self.jumpToPlaying()
 			return False
 		if diff > 1.5:
@@ -676,16 +666,12 @@ class Christine(GtkMisc):
 		"""
 		# resetting the self.__LocationCount to 0 as we have a new file :-)
 		self.__LocationCount = 0
-
 		# Look for a file in the queue. Iter should not be None in the case
 		# there where something in the queue
 		model = self.Queue.tv.get_model()
-		#import pdb
-		#pdb.set_trace()
 		iter  = model.get_iter_first()
 
 		if isinstance(iter,gtk.TreeIter):
-			#self.Queue.scroll.show()
 			location = self.Queue.model.get_value(iter,PATH)
 			self.setLocation(location)
 			self.jumpToPlaying()
@@ -732,7 +718,6 @@ class Christine(GtkMisc):
 				iter = self.mainLibrary.tv.get_model().get_iter_first()
 			try:
 				self.setLocation(self.mainLibrary.model.getValue(iter, PATH))
-				#niter = iter
 				self.simplePlay()
 			except:
 				self.setScale('', '', b = 0)
@@ -744,7 +729,6 @@ class Christine(GtkMisc):
 		Callback on the value changed signal on position scale
 		"""
 		value = (int(self.__Display.value * self.__TimeTotal) / gst.SECOND)
-		total = self.__TimeTotal*gst.SECOND
 		self.__ScaleMoving = False
 		if (value < 0):
 			value = 0
@@ -758,28 +742,26 @@ class Christine(GtkMisc):
 		self.__ScaleValue  = b
 		self.__ScaleMoving = False
 
-	def jumpToPlaying(self, widget = None, path = None):
+	def jumpToPlaying(self, widget = None, location = None):
 		"""
 		This method jumps and select the file
 		specified in the path.
 		If path is not specified then try to
 		select the playing one
 		"""
-		location = path
-		if not isinstance(path, str) or not path:
+		if not location or not isinstance(location, str):
 			location = self.__Player.getLocation()
 		iter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
-		if iter != None:
+		if iter:
 			if self.__StatePlaying:
 				pix  = self.share.getImageFromPix('sound')
 				pix  = pix.scale_simple(20, 20,	gtk.gdk.INTERP_BILINEAR)
 				self.mainLibrary.set(iter, PIX, pix)
 			iter = self.mainLibrary.model.get_sorted_iter(iter)
 			npath = self.mainLibrary.model.sorted_path(iter)
-			if (npath != None):
-				if npath[0]:
-					self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
-					self.mainLibrary.tv.set_cursor(npath)
+			if npath and npath[0]:
+				self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
+				self.mainLibrary.tv.set_cursor(npath)
 
 	def jumpTo(self, widget):
 		"""
@@ -790,7 +772,7 @@ class Christine(GtkMisc):
 		# if self.__TimeTotal is not defined then
 		# there is no media in player, so
 		# there is no way to "jump to" any place.
-		if (self.__TimeTotal == 0):
+		if not self.__TimeTotal:
 			return False
 
 		XML    = self.share.getTemplate('JumpTo')
@@ -814,9 +796,9 @@ class Christine(GtkMisc):
 		secs_scale.set_value(cseconds)
 		response = dialog.run()
 		dialog.destroy()
-		if (response == gtk.RESPONSE_OK):
-			time = ((mins_scale.get_value() * 60) + secs_scale.get_value())
-			if (time > self.__TimeTotal):
+		if response == gtk.RESPONSE_OK:
+			time = (mins_scale.get_value() * 60) + secs_scale.get_value()
+			if time > self.__TimeTotal:
 				time = self.__TimeTotal
 			self.__Player.seekTo(time)
 
@@ -824,8 +806,8 @@ class Christine(GtkMisc):
 		"""
 		Jumpo to Accept button
 		"""
-		if (event.keyval in (gtk.gdk.keyval_from_name('Return'),
-					gtk.gdk.keyval_from_name('KP_Enter'))):
+		if event.keyval in (gtk.gdk.keyval_from_name('Return'),
+					gtk.gdk.keyval_from_name('KP_Enter')):
 			button.emit('clicked')
 
 	def decreaseVolume(self, widget = None):
@@ -874,7 +856,7 @@ class Christine(GtkMisc):
 		response = fs.run()
 		files    = fs.get_filenames()
 		fs.destroy()
-		if (response == gtk.RESPONSE_OK):
+		if response == gtk.RESPONSE_OK:
 			self.addFiles(files = files, queue = queue)
 			path = os.path.join(os.path.split(files[0])[:-1])[0]
 			self.christineConf.setValue("ui/LastFolder",path)
@@ -896,23 +878,18 @@ class Christine(GtkMisc):
 		ds.set_icon(self.share.getImageFromPix('logo'))
 		response  = ds.run()
 		filenames = ds.get_filenames()
-		if (response == gtk.RESPONSE_OK):
+		if response == gtk.RESPONSE_OK:
 			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
-			iterator = iter(filenames)
-			while True:
-				try:
-					i = iterator.next()
-					if walk.get_active():
-						self.addDirectories(i)
-					else:
-						files = [os.path.join(i, k) \
-							for k in os.listdir(i) \
-							if os.path.isfile(os.path.join(i, k))]
-						if files:
-							self.addFiles(files = files)
-				except StopIteration:
-					break
+			for i in filenames:
+				if walk.get_active():
+					self.addDirectories(i)
+				else:
+					files = [os.path.join(i, k) \
+						for k in os.listdir(i) \
+						if os.path.isfile(os.path.join(i, k))]
+					if files:
+						self.addFiles(files = files)
 			return True
 		ds.destroy()
 
@@ -924,16 +901,11 @@ class Christine(GtkMisc):
 		files = os.listdir(dir)
 		f     = []
 		self.f = []
-		iterator = iter(files)
 		extensions = self.christineConf.getString('backend/allowed_files').split(',')
-		while True:
-			try:
-				i = iterator.next()
-				ext = i.split('.').pop()
-				if ext in extensions:
-					f.append(i)
-			except StopIteration:
-				break
+		for i in files:
+			ext = i.split('.').pop()
+			if ext in extensions:
+				f.append(i)
 		files = f
 		self.addFiles(files)
 
@@ -953,7 +925,7 @@ class Christine(GtkMisc):
 		label = xml['label1']
 		self.__walking = True
 		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
-		gobject.timeout_add(300, self.__walkProgressPulse,progress)
+		self.__walkProgressPulse(progress)
 		dialog.set_modal(False)
 		response = dialog.run()
 		if response:
@@ -962,6 +934,8 @@ class Christine(GtkMisc):
 
 	def __walkProgressPulse(self, progress):
 		progress.pulse()
+		while gtk.events_pending():
+			gtk.main_iteration_do()
 		return not self.__walking
 
 	def __walkDirectories(self, a, f, filenames, label, dialog):
@@ -975,16 +949,11 @@ class Christine(GtkMisc):
 			label.set_text(translate('Exploring') + '%s'%npath)
 			allowdexts = self.christineConf.getString('backend/allowed_files')
 			allowdexts = allowdexts.split(',')
-			iterator = iter(filenames[-1][1])
-			while True:
-				try:
-					path = iterator.next()
-					ext    = path.split('.').pop().lower()
-					exists = os.path.join(filenames[-1][0], path) in self.f
-					if ext in allowdexts and not exists:
-						f.append(os.path.join(filenames[-1][0],path))
-				except StopIteration:
-					break
+			for path in filenames[-1][1]:
+				ext    = path.split('.').pop().lower()
+				exists = os.path.join(filenames[-1][0], path) in self.f
+				if ext in allowdexts and not exists:
+					f.append(os.path.join(filenames[-1][0],path))
 		except StopIteration:
 			dialog.destroy()
 			if f:
@@ -1007,11 +976,8 @@ class Christine(GtkMisc):
 	def __addFileCycle(self, library):
 		for i in  xrange(1,2):
 			if self.__FilesToAdd:
-				#m = divmod(len(library.model.basemodel), 500)[1]
 				new_file = self.__FilesToAdd.pop()
 				library.add(new_file)
-				#if not m:
-				#	library.save()
 				self.__updateAddProgressBar(new_file)
 			else:
 				library.save()
@@ -1108,7 +1074,6 @@ class Christine(GtkMisc):
 		"""
 		type_file = b.type
 		if (type_file == gst.MESSAGE_ERROR):
-			print a,b,c,d
 			if not os.path.isfile(self.__Player.getLocation()):
 				if os.path.split(self.__Player.getLocation())[0] == '/':
 					error(translate('File was not found, going to next file'))
@@ -1125,7 +1090,7 @@ class Christine(GtkMisc):
 			percent = b.structure['buffer-percent']
 			self.__Display.setText("%d" % percent)
 			self.__Display.setScale((percent / 100))
-			if percent == 100:
+			if percent in(0, 100):
 				self.__Display.setText("")
 			return True
 		return True

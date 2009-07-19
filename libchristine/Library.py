@@ -73,7 +73,6 @@ class libraryBase(GtkMisc):
 		and set some class variables
 		'''
 		self.iters = {}
-		self.filter_text = ''
 		self.do_save = False
 		GtkMisc.__init__(self)
 		self.logger = LoggerManager().getLogger('sqldb')
@@ -235,8 +234,8 @@ class libraryBase(GtkMisc):
 					values[key] = self.encode_text(value)
 			searchstring = ''.join((values['title'], values['artist'],
 								values['album'],	values['type']))
-			if searchstring.lower().find(self.filter_text) > -1 or \
-			   	 not self.filter_text:
+			if not self.model.TextToSearch or \
+				searchstring.lower().find(self.model.TextToSearch) > -1:
 				iter = self.model.append(PATH,path,
 					NAME, values['title'],
 					SEARCH,searchstring,
@@ -485,8 +484,7 @@ class libraryBase(GtkMisc):
 		'''
 		return self.model.search(*args)
 	
-	def filter(self, text):
-		self.filter_text = text
+	def refilter(self):
 		self.loadLibrary(self.library_name)
 	
 	def get_path(self, *args):
