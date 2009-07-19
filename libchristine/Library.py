@@ -171,31 +171,33 @@ class libraryBase(GtkMisc):
 		self.model.createSubmodels()
 		self.fillModel()
 		self.tv.set_model(self.model.getModel())
-		self.CURRENT_ITER = self.model.get_iter_first()
+		#self.CURRENT_ITER = self.model.get_iter_first()
 
-	def __rowChanged(self,model,path,iter):
-		'''
-		Handle the row changed stuff
-		'''
-		a = model.get(iter,PATH,
-				    NAME,ARTIST,ALBUM,
-					TN,PATH, TYPE,
-					PLAY_COUNT,TIME,GENRE)
-		if a[0] == None:
-			return False
-		a = [k for k in a]
-		for i in range(len(a)):
-			if a[i] == None:
-				if i in [4,8]:
-					a[i] = 0
-				else:
-					a[i] = ""
-		self.library_lib[a[0]] = {"title":a[1],	"type":a[6],"artist":a[2],
-				"album":a[3],"track_number":a[4],"playcount":a[7],
-				"time":a[8],"genre":a[9]}
-		for i in self.library_lib[a[0]].keys():
-			if self.library_lib[a[0]][i] == None:
-				sys.exit(-1)
+#===============================================================================
+#	def __rowChanged(self,model,path,iter):
+#		'''
+#		Handle the row changed stuff
+#		'''
+#		a = model.get(iter,PATH,
+#				    NAME,ARTIST,ALBUM,
+#					TN,PATH, TYPE,
+#					PLAY_COUNT,TIME,GENRE)
+#		if a[0] == None:
+#			return False
+#		a = [k for k in a]
+#		for i in range(len(a)):
+#			if a[i] == None:
+#				if i in [4,8]:
+#					a[i] = 0
+#				else:
+#					a[i] = ""
+#		self.library_lib[a[0]] = {"title":a[1],	"type":a[6],"artist":a[2],
+#				"album":a[3],"track_number":a[4],"playcount":a[7],
+#				"time":a[8],"genre":a[9]}
+#		for i in self.library_lib[a[0]].keys():
+#			if self.library_lib[a[0]][i] == None:
+#				sys.exit(-1)
+#===============================================================================
 
 	def gen_model(self):
 		'''
@@ -220,26 +222,25 @@ class libraryBase(GtkMisc):
 			self.model.clear()
 
 	def fillModel(self):
-		sounds = self.library_lib.get_all()
-		self.__music = sounds
-		self.__iterator = self.__music
 		pix = self.share.getImageFromPix('blank')
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-		keys = sounds.keys()
+		keys = self.library_lib.keys()
 		keys.sort()
+		print len(keys)
+		c = time.time()
 		for path in keys:
-			values = sounds[path]
-			for key in values.keys():
-				if isinstance(values[key],str):
-					values[key] = self.encode_text(values[key])
+			values = self.library_lib[path]
+			for key, value in values.iteritems():
+				if isinstance(value,str):
+					values[key] = self.encode_text(value)
 			searchstring = ''.join((values['title'], values['artist'],
 								values['album'],	values['type']))
 			if searchstring.lower().find(self.filter_text) > -1 or \
-			    self.filter_text == '':
+			   	 not self.filter_text:
 				iter = self.model.append(PATH,path,
 					NAME, values['title'],
 					SEARCH,searchstring,
-					PIX,pix,
+					PIX, pix,
 					TYPE,values['type'],
 					ARTIST,values['artist'],
 					ALBUM ,values['album'],
@@ -247,33 +248,36 @@ class libraryBase(GtkMisc):
 					PLAY_COUNT ,values['playcount'],
 					TIME ,values['time'],
 					GENRE ,values['genre'],
-					HAVE_TAGS, [False, True][values['have_tags'] == 1 ])
+					HAVE_TAGS, [False, True][values['have_tags']])
 				self.iters[path] = iter
+		print time.time() -c 
 
-	def __set(self):
-		for i in range(20):
-			if len(self.__iterator):
-				key = self.__iterator.pop()
-			else:
-				return False
-			data = self.__music[key]
-			iter = self.iters[key]
-			for i in data.keys():
-				try:
-					if isinstance(data[i], str):
-						data[i] = u'%s'%data[i].encode('latin-1')
-				except:
-					pass
-			self.model.set(iter,
-					TYPE,data['type'],
-					ARTIST,data['artist'],
-					ALBUM ,data['album'],
-					TN,data['track_number'],
-					PLAY_COUNT ,data['playcount'],
-					TIME ,data['time'],
-					GENRE ,data['genre'],
-					)
-		return True
+#===============================================================================
+#	def __set(self):
+#		for i in range(20):
+#			if len(self.library_lib):
+#				key = self.library_lib.pop()
+#			else:
+#				return False
+#			data = self.library_lib[key]
+#			iter = self.iters[key]
+#			for i in data.keys():
+#				try:
+#					if isinstance(data[i], str):
+#						data[i] = u'%s'%data[i].encode('latin-1')
+#				except:
+#					pass
+#			self.model.set(iter,
+#					TYPE,data['type'],
+#					ARTIST,data['artist'],
+#					ALBUM ,data['album'],
+#					TN,data['track_number'],
+#					PLAY_COUNT ,data['playcount'],
+#					TIME ,data['time'],
+#					GENRE ,data['genre'],
+#					)
+#		return True
+#===============================================================================
 
 	def add(self,file,prepend=False):
 		if type(file) == type(()):
@@ -342,7 +346,6 @@ class libraryBase(GtkMisc):
 				"genre":tags['genre'],}
 		self.do_save = True
 
-	
 	def remove(self,iter):
 		'''
 		Remove the selected iter from the library.
@@ -436,7 +439,13 @@ class libraryBase(GtkMisc):
 			self.add(data)
 		return True
 
-	def delete_from_disk(self,iter):
+	def delete_from_disk(self,*args):
+		'''
+		Takes the current selected item and delete it from the path
+		'''
+		iter = self.tv.get_selection().get_selected()[1]
+		if iter == None:
+			return
 		dialog = self.share.getTemplate("deleteFileFromDisk")["dialog"]
 		response = dialog.run()
 		path = self.model.getValue(iter,PATH)
@@ -568,7 +577,6 @@ class library(gtk.Widget,libraryBase):
 		if (event.button == 3):
 			XML = self.share.getTemplate('PopupMenu')
 			XML.signal_autoconnect(self)
-
 			popup = XML['menu']
 			popup.popup(None, None, None, 3, gtk.get_current_event_time())
 			self.emit('popping_menu', popup)
@@ -591,7 +599,7 @@ class library(gtk.Widget,libraryBase):
 		"""
 		selection     = self.tv.get_selection()
 		(model, iter) = selection.get_selected()
-		name,path     = model.get(iter, NAME, PATH)
+		path     = model.get_vaue(iter, PATH)
 		if self.christineConf.getString("backend/last_played") == path:
 			self.christineConf.setValue("backend/last_played","")
 		self.remove(iter)
@@ -622,7 +630,6 @@ class library(gtk.Widget,libraryBase):
 		name.add_attribute(pix,"pixbuf",PIX)
 		name.add_attribute(rtext,"text",NAME)
 		tv.append_column(name)
-
 
 		artist = tvc(translate("Artist"),render,text=ARTIST)
 		artist.set_sort_column_id(ARTIST)
@@ -835,7 +842,6 @@ class queue (libraryBase):
 				self.remove(iter)
 				
 	def	checkQueue(self):
-		return True
 		model = self.tv.get_model()
 		if (model != None):
 			b = model.get_iter_first()

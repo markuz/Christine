@@ -43,7 +43,6 @@ try:
 	version = pynotify.get_server_info()['version'].split('.')
 	if (version < [0, 3, 6]):
 		raise ImportError("server version is %d.%d.%d, 0.3.6 or major required" % version)
-
 	PYNOTIFY = True
 except ImportError:
 	print 'no pynotify available'

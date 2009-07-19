@@ -47,14 +47,14 @@ from libchristine.gui.Display import Display
 from libchristine.globalvars import  BUGURL
 from libchristine.ui import interface
 from libchristine.gui.openRemote import openRemote
-from libchristine.Library import library, queue,PATH, HAVE_TAGS, NAME
-from libchristine.Library import PIX,PLAY_COUNT,TIME
+from libchristine.Library import library, queue,PATH, HAVE_TAGS
+from libchristine.Library import PIX,TIME
 from libchristine.Player import Player
 from libchristine.Share import Share
-from libchristine.christineConf import christineConf
+#from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_EXTRA
 from libchristine.Logger import LoggerManager
-from libchristine.Events import christineEvents
+#from libchristine.Events import christineEvents
 from libchristine.christine_dbus import *
 from libchristine.options import options
 import webbrowser
@@ -263,10 +263,8 @@ class Christine(GtkMisc):
 			self.christineConf.toggleWidget,
 			self.__ControlRepeat)
 		
-		
-
-		self.__BothSr = xml['both_sr']
-		self.__NoneSr = xml['none_sr']
+		#self.__BothSr = xml['both_sr']
+		#self.__NoneSr = xml['none_sr']
 
 		self.__MenuItemVisualMode = xml['MenuItemVisualMode']
 		self.__MenuItemVisualMode.set_active(self.christineConf.getBool('ui/visualization'))
@@ -283,7 +281,6 @@ class Christine(GtkMisc):
 									self.christineConf.toggleWidget,
 									self.MenuItemSidePane)
 		
-
 		translateMenuItem = xml['translateThisApp']
 		URL = 'https://translations.launchpad.net/christine/0.1/'
 		translateMenuItem.connect('activate', lambda widget: webbrowser.open(URL))
@@ -371,14 +368,6 @@ class Christine(GtkMisc):
 		self.christineConf.setValue('ui/width',width)
 		self.christineConf.setValue('ui/height',height)
 
-	def deleteFileFromDisk(self, widget):
-		"""
-		Delete file from disk
-		"""
-		selection = self.mainLibrary.tv.get_selection()
-		iter = selection.get_selected()[1]
-		self.mainLibrary.delete_from_disk(iter)
-
 	def setLocation(self, filename):
 		"""
 		Set the location in the player and
@@ -392,7 +381,6 @@ class Christine(GtkMisc):
 		# before using it
 
 		self.__Player.stop()
-		basemodel = self.mainLibrary.model.basemodel
 		self.__Player.setLocation(filename)
 		name = os.path.split(filename)[-1]
 		self.__Display.setSong(name)

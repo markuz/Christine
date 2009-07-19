@@ -1,27 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.2.0 on Wed May 30 21:28:43 2007 by nibblesmx@Goliath
-	Version: 3.0.1
-	Date: Sun Feb  4 21:14:30 2007
-	User: markuz
-	Host: cucusa
--->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkMenu" id="menu">
     <child>
       <widget class="GtkImageMenuItem" id="add_to_queue1">
-        <property name="visible">True</property>
         <property name="label">Add to queue</property>
+        <property name="visible">True</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="popupAddToQueue"/>
-        <accelerator key="q" modifiers="" signal="activate"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="image7">
-            <property name="visible">True</property>
-            <property name="stock">gtk-add</property>
-            <property name="icon_size">1</property>
-          </widget>
-        </child>
+        <accelerator key="q" signal="activate"/>
       </widget>
     </child>
     <child>
@@ -31,17 +20,11 @@
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="remove1">
-        <property name="visible">True</property>
         <property name="label">Remove</property>
+        <property name="visible">True</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="removeFromLibrary"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="image8">
-            <property name="visible">True</property>
-            <property name="stock">gtk-delete</property>
-            <property name="icon_size">1</property>
-          </widget>
-        </child>
       </widget>
     </child>
     <child>
@@ -58,16 +41,11 @@
             <property name="visible">True</property>
             <child>
               <widget class="GtkImageMenuItem" id="imagemenuitem1">
-                <property name="visible">True</property>
                 <property name="label">Delete from disk</property>
-                <signal name="activate" handler="deleteFileFromDisk"/>
-                <child internal-child="image">
-                  <widget class="GtkImage" id="menu-item-image3">
-                    <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK</property>
-                    <property name="stock">gtk-delete</property>
-                  </widget>
-                </child>
+                <property name="visible">True</property>
+                <property name="use_underline">True</property>
+                <property name="use_stock">True</property>
+                <signal name="activate" handler="delete_from_disk"/>
               </widget>
             </child>
           </widget>

@@ -104,7 +104,7 @@ class lib_library(object):
 		self.__db.commit()
 
 	def keys(self):
-		return self.__files
+		return self.__files.keys()
 
 	def save(self):
 		return 1
