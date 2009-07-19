@@ -59,11 +59,8 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.column_types = args
 		self.data = []
 		self.__emptyData = map(lambda x: '', range(self.column_size))
-		#@self.set_property('leak-references',True)
 		self.interface = interface()
-		#self.on_get_iter = CLibraryModel.on_get_iter
 		self.set = self.set_value
-		
 
 	def destroy(self):
 		'''

@@ -94,7 +94,6 @@ class libraryBase(GtkMisc):
 		self.scroll.add_events(gtk.gdk.SCROLL_MASK)
 		self.scroll.connect('scroll-event', self.__scroll_child)
 		self.tv.connect('scroll-event', self.__scroll_child)
-		gobject.timeout_add(500, self.save)
 
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
@@ -354,15 +353,6 @@ class libraryBase(GtkMisc):
 		if value:
 			self.model.remove(iter)
 
-	def save(self):
-		'''
-		Save the current library
-		'''
-		if self.do_save:
-			self.library_lib.save()
-			self.do_save = False
-		return True
-
 	def updateData(self, path, **kwargs):
 		'''
 		This method updates the data in the main library if it can. And
@@ -414,7 +404,6 @@ class libraryBase(GtkMisc):
 			name = model.get_value(iter,NAME)
 			model.remove(iter)
 			self.library_lib.remove(name)
-			self.save()
 
 	def Exists(self,filename):
 		'''
@@ -452,7 +441,6 @@ class libraryBase(GtkMisc):
 			try:
 				os.unlink(path)
 				self.remove(iter)
-				self.save()
 			except IOError:
 				error("cannot delete file: %s"%path)
 		dialog.destroy()
@@ -786,7 +774,6 @@ class queue (libraryBase):
 				"playcount":0,
 				"time":'0:00',
 				"genre":tags['genre']}
-		self.save()
 
 	def fillModel(self):
 		sounds = self.library_lib.get_all()
@@ -840,6 +827,7 @@ class queue (libraryBase):
 				self.remove(iter)
 				
 	def	checkQueue(self):
+		return 1
 		model = self.tv.get_model()
 		if (model != None):
 			b = model.get_iter_first()

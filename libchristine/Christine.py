@@ -676,7 +676,6 @@ class Christine(GtkMisc):
 			self.setLocation(location)
 			self.jumpToPlaying()
 			self.Queue.remove(iter)
-			self.Queue.save()
 			self.PlayButton.set_active(False)
 			self.PlayButton.set_active(True)
 		else:
@@ -980,7 +979,6 @@ class Christine(GtkMisc):
 				library.add(new_file)
 				self.__updateAddProgressBar(new_file)
 			else:
-				library.save()
 				self.__AddWindow.destroy()
 				self.__walking = False
 				return False

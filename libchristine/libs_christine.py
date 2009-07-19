@@ -106,10 +106,6 @@ class lib_library(object):
 	def keys(self):
 		return self.__files.keys()
 
-	def save(self):
-		return 1
-		self.__db.save(self.__files)
-	
 	def clean_playlist(self):
 		self.__db.deleteFromPlaylist(self.idlist)
 
