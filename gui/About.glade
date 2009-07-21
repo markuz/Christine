@@ -1,17 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Oct 25 02:44:45 2008 
-	Version: 3.0.1
-	Date: Mon Feb  5 12:59:47 2007
-	User: markuz
-	Host: cucusa
--->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkAboutDialog" id="about">
     <property name="visible">True</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+    <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
     <property name="program_name">Christine Media Player</property>
@@ -53,7 +48,10 @@ proprietary programs.
 Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
 Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;
 Alejandro Ignacio Sanchez Verduzco &lt;alejandrosanchez@gmail.com&gt;
-GaRaGeD &lt;garaged@gmail.com&gt;</property>
+GaRaGeD &lt;garaged@gmail.com&gt;
+
+Help in this release:
+Samuli Suominen &lt;ssuominen@gentoo.org&gt;</property>
     <property name="documenters">Marco Antonio Islas Cruz &lt;markuz@islascruz.org&gt;
 Miguel Vazquez Gocobachi &lt;demrit@gnu.org&gt;
 Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;
@@ -72,7 +70,8 @@ Rodrigo Garcia &lt;nibblesmx@gmail.com&gt;
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>

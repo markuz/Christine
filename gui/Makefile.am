@@ -12,7 +12,6 @@ FileSelector.glade \
 genericQuestion.glade \
 iconView.glade \
 JumpTo.glade \
-mainWindow.glade \
 MenuTrayIcon.glade \
 miniViewer.glade \
 NewSourceDialog.glade \
