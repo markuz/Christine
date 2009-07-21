@@ -118,7 +118,7 @@ class pidgin(plugin_base):
 		Could be done inside the self.SetMessage() but I don't
 		like the idea, this is more flexible
 		"""
-		if ( self.obj is None and self.active):
+		if self.obj !=  None and self.active:
 			self.SessionStart()
 			self.SetMessage()
 
