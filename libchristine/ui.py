@@ -26,4 +26,10 @@ class interface(Singleton):
 	def __init__(self):
 		self.empty = ''
 		self.LoggerManager = LoggerManager()
+		#Some attributes added:
+		#coreClass, the main class (libchristine.Christine)
+		self.coreClass = None
+		#The player
+		self.Player = None
+		self.db = None
 	

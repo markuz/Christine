@@ -44,7 +44,7 @@ class openRemote(GtkMisc):
 		XML    = self.__Share.getTemplate('openRemote')
 		comboboxentry  = XML['comboboxentry']
 		entry = comboboxentry.get_child()
-		dialog = XML['dialog']
+		self.dialog = XML['dialog']
 		button  = XML['okbutton']
 		entry.connect("key-press-event", self.__oRButtonClick,button)
 		comboboxentry.connect("changed",self.__orChanged)
@@ -53,82 +53,73 @@ class openRemote(GtkMisc):
 		comboboxentry.set_model(model)
 		comboboxentry.set_text_column(0)
 		stream_history = self.__christineConf.getString('backend/last_stream_played')
-		if stream_history != "" and (type(stream_history) == str):
-			stream_history=stream_history.split(",")
-			if len(stream_history) > 0:
-				last_stream=stream_history[-1]
-		else:
-			stream_history = []
-			last_stream = ""
-
-		for stream in stream_history:
+		self.stream_history = []
+		if stream_history  and isinstance(stream_history,str):
+			self.stream_history = stream_history.split(",")
+			del stream_history
+		for stream in self.stream_history:
 			model.append([stream])
-		
-		if len(model)>0:
+		if len(model):
 			comboboxentry.set_active(0)
-		
-		response = dialog.run()
-
+		response = self.dialog.run()
 		if (response == gtk.RESPONSE_OK):
-			location = entry.get_text()
-			if location == "":
+			self.open_remote()
+		self.dialog.destroy()
+		
+	def open_remote(self, entry, location):
+		location = entry.get_text()
+		if not location:
+			return False
+		if location in self.stream_history:
+			del self.stream_history[self.stream_history.index(location)]
+			self.stream_history.append(location)
+		else:
+			if len(self.stream_history) < 10:
+				self.stream_history.append(location)
+			else:
+				del self.stream_history[0]
+				self.stream_history.append(location)
+		stream_history=",".join([stream for stream in self.stream_history])
+		self.__christineConf.setValue('backend/last_stream_played',stream_history)
+		extension = location.split(".").pop()
+		urldesc = None
+		if location.split(":")[0] == "file":
+			file = ":".join(location.split(":")[1:])[2:]
+		elif location[0] == '/':
+			file = location
+		if  file:
+			try:
+				urldesc = open(file)
+			except IOError:
+				error(translate('%s does not exists'%file))
+				self.dialog.destroy()
 				return False
-			if location in stream_history:
-				del stream_history[stream_history.index(location)]
-				stream_history.append(location)
-			else:
-				if len(stream_history) < 10:
-					stream_history.append(location)
-				else:
-					del stream_history[0]
-					stream_history.append(location)
-			stream_history=",".join(["%s" % stream for stream in stream_history])
-			self.__christineConf.setValue('backend/last_stream_played',stream_history)
-			extension = location.split(".").pop()
-			if location.split(":")[0] == "file" or \
-				location[0] == '/':
-				if location.split(":")[0] == "file":
-					file = ":".join(location.split(":")[1:])[2:]
-				else:
-					file = location
-				try:
-					urldesc = open(file)
-				except IOError:
-					error(translate('%s does not exists'%file))
-					dialog.destroy()
-					return False
-			else:
-				import urllib
-				gate = urllib.FancyURLopener()
-				urldesc = gate.open(location)
+		#Trye to get it on the net
+		if not urldesc:
+			import urllib
+			gate = urllib.FancyURLopener()
+			urldesc = gate.open(location)
 
-			if extension == "pls":
-				for i in urldesc.readlines():
-					print i
-					if i.lower().find("file") >= 0:
-						location = i.split("=").pop().strip()
-						break
-				self.interface.coreClass.setLocation(location)
-				self.interface.playButton.set_active(False)
-				self.interface.playButton.set_active(True)
-			elif extension == "m3u":
-				lines = urldesc.readlines()
-				if lines[0].lower() != "#extm3u":
-					self.goNext()
-				sites = []
-				for i in range(len(lines)):
-					if lines[i].split(":")[0].lower() == "#extinf":
-						sites.append(lines[i+1])
-					#else:
-					#	print lines[i].split(":")[0].lower()
-				for i in sites:
-					i = i.strip("\r")
-					i = i.strip("\n")
-					i = i.strip()
-					self.interface.Queue.add(i)
+		if extension == "pls":
+			for i in urldesc.readlines():
+				if i.lower().find("file") >= 0:
+					location = i.split("=").pop().strip()
+					break
+			self.interface.coreClass.setLocation(location)
+			self.interface.coreClass.simplePlay()
+		elif extension == "m3u":
+			lines = urldesc.readlines()
+			if lines[0].lower() != "#extm3u":
 				self.goNext()
-			urldesc.close()
-		dialog.destroy()
+			sites = []
+			for i in range(len(lines)):
+				if lines[i].split(":")[0].lower() == "#extinf":
+					sites.append(lines[i+1])
+			for i in sites:
+				i = i.strip("\r\n").strip()
+				self.interface.Queue.add(i)
+			self.goNext()
+		urldesc.close()
 
 	def __orChanged(self,widget):
 		'''

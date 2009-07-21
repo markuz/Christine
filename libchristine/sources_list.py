@@ -50,11 +50,6 @@ class sources_list (GtkMisc):
 		self.vbox.set_size_request(75, 75)
 		self.__append_columns()
 		
-	
-	def __del__(self, *args):
-		print "Puta madre me estan borrando!!!"
-		return True
-	
 	def treeview_bpe(self, treeview, event):
 		if event.button == 3:
 			self.__Share = Share()
@@ -65,7 +60,6 @@ class sources_list (GtkMisc):
 			addButton.connect('activate', self.addSource)
 			delButton.connect('activate', self.delSource)
 			menu.popup(None, None, None, 3, event.time)
-			
 
 	def __gen_model(self):
 		if not getattr(self, 'model', False):
@@ -107,46 +101,53 @@ class sources_list (GtkMisc):
 		model, iter = self.treeview.get_selection().get_selected()
 		type = 'source'
 		if iter:
-			name, type, extra = model.get(iter,LIST_NAME,LIST_TYPE, LIST_EXTRA)
+			name, type = model.get(iter,LIST_NAME,LIST_TYPE)
 		if type == 'source':
-			xml = self.__Share.getTemplate('NewSourceDialog')
-			dialog = xml['dialog']
-			entry = xml['entry']
-			response = dialog.run()
-			if response == 1:
-				exists = False
-				for row in self.model:
-					name = row[LIST_NAME]
-					if entry.get_text() == name:
-						exists = True
-				if not exists:
-					self.__db.addPlaylist(entry.get_text())
-			self.__gen_model()
-			dialog.destroy()
+			self.add_source()
 		elif type == 'radio':
-			xml = self.__Share.getTemplate('NewRadioDialog')
-			dialog = xml['dialog']
-			entry = xml['entry']
-			title_entry = xml['title_entry']
-			response = dialog.run()
-			dialog.destroy()
-			if response == 1:
-				title = title_entry.get_text()
-				if not title:
-					return True
-				url = entry.get_text()
-				if not url[-3:].lower() == 'pls':
-					return True
-				exists = self.__db.get_radio_by_url(url)
-				if exists:
-					return True
-				self.__db.add_radio(title, url)
-				radio = self.__db.get_radio_by_url(url)
-				if radio:
-					radio = radio[0]
-					iter = self.model.append(self.radioiter)
-					self.model.set(iter, LIST_NAME, radio['title'], LIST_TYPE, 'radio',
-						   LIST_EXTRA, radio)
+			self.add_radio()
+					
+	def add_source(self):
+		xml = self.__Share.getTemplate('NewSourceDialog')
+		dialog = xml['dialog']
+		entry = xml['entry']
+		response = dialog.run()
+		if response == 1:
+			exists = False
+			for row in self.model:
+				name = row[LIST_NAME]
+				if entry.get_text() == name:
+					exists = True
+					break
+			if not exists:
+				self.__db.addPlaylist(entry.get_text())
+		self.__gen_model()
+		dialog.destroy()
+	
+	def add_radio(self):
+		xml = self.__Share.getTemplate('NewRadioDialog')
+		dialog = xml['dialog']
+		entry = xml['entry']
+		title_entry = xml['title_entry']
+		response = dialog.run()
+		dialog.destroy()
+		if response == 1:
+			title = title_entry.get_text()
+			if not title:
+				return True
+			url = entry.get_text()
+			if not url[-3:].lower() == 'pls':
+				return True
+			exists = self.__db.get_radio_by_url(url)
+			if exists:
+				return True
+			self.__db.add_radio(title, url)
+			radio = self.__db.get_radio_by_url(url)
+			if radio:
+				radio = radio[0]
+				iter = self.model.append(self.radioiter)
+				self.model.set(iter, LIST_NAME, radio['title'], LIST_TYPE, 'radio',
+					   LIST_EXTRA, radio)
 			
 
 	def delSource(self, button):

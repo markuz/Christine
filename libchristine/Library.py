@@ -224,8 +224,6 @@ class libraryBase(GtkMisc):
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		keys = self.library_lib.keys()
 		keys.sort()
-		print len(keys)
-		c = time.time()
 		for path in keys:
 			values = self.library_lib[path]
 			for key, value in values.iteritems():
@@ -248,34 +246,7 @@ class libraryBase(GtkMisc):
 					GENRE ,values['genre'],
 					HAVE_TAGS, [False, True][values['have_tags']])
 				self.iters[path] = iter
-		print time.time() -c 
 
-#===============================================================================
-#	def __set(self):
-#		for i in range(20):
-#			if len(self.library_lib):
-#				key = self.library_lib.pop()
-#			else:
-#				return False
-#			data = self.library_lib[key]
-#			iter = self.iters[key]
-#			for i in data.keys():
-#				try:
-#					if isinstance(data[i], str):
-#						data[i] = u'%s'%data[i].encode('latin-1')
-#				except:
-#					pass
-#			self.model.set(iter,
-#					TYPE,data['type'],
-#					ARTIST,data['artist'],
-#					ALBUM ,data['album'],
-#					TN,data['track_number'],
-#					PLAY_COUNT ,data['playcount'],
-#					TIME ,data['time'],
-#					GENRE ,data['genre'],
-#					)
-#		return True
-#===============================================================================
 
 	def add(self,file,prepend=False):
 		if type(file) == type(()):
@@ -285,7 +256,6 @@ class libraryBase(GtkMisc):
 		name = os.path.split(file)[1]
 		if isinstance(name,()):
 			name = name[0]
-		################################
 		vals = self.db.getItemByPath(file)
 		if not vals:
 			#tags = self.tagger.readTags(file)
