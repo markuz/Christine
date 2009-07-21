@@ -630,7 +630,15 @@ class Christine(GtkMisc):
 		Go to play the previous song. If no previous song was played in the
 		current session, then plays the previous song in the library
 		"""
-		if (len(self.__LastPlayed) > 1):
+		if self.__Player.getLocation():
+			nanos = self.__Player.query_position(gst.FORMAT_TIME)[0]
+			ts = (nanos / gst.SECOND)
+			cmins, cseconds = map(int, divmod(ts, 60))
+			if cseconds > 5:
+				self.__LastPlayed.pop()
+				self.setLocation(self.__Player.getLocation())
+				return 
+		if len(self.__LastPlayed) > 1:
 			#remove the last played since it's the same that we are playing.
 			self.__LastPlayed.pop()
 			self.setLocation(self.__LastPlayed.pop())
