@@ -3,12 +3,17 @@
 # little script to update po files 
 #
 
-LOCATIONS=`ls -1 --color=none libchristine/*py` 
-LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/pattern/*py`"
-LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/Plugins/*py`"
-LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/gui/*py`"
-LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/Storage/*py`"
-LOCATIONS="$LOCATIONS `ls -1 --color=none gui/*glade`"
+####LOCATIONS=`ls -1 --color=none libchristine/*py` 
+####LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/pattern/*py`"
+####LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/Plugins/*py`"
+####for i in albumCover christinePyNotify getInfo gnomeDBus lastfm pidgin trayicon twitter; do
+####	LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/$i/*py`"
+####done
+
+####LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/gui/*py`"
+####LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/Storage/*py`"
+####LOCATIONS="$LOCATIONS `ls -1 --color=none gui/*glade`"
+LOCATIONS=`find -iname "*py"`;
 
 TRANSLATIONS="christine es_ES ca cs da de el en_GB  eu fr hu it nl pt sv_FI sv"
 

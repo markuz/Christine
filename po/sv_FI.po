@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-21 01:03-0600\n"
+"POT-Creation-Date: 2009-07-20 23:28-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -245,22 +245,32 @@ msgid "Open Remote"
 msgstr "Öppna fjärr"
 
 #: libchristine/Plugins/twitter.py:89
+#: libchristine/Plugins/twitter/__init__.py:95
+#: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
 msgstr ""
 
 #: libchristine/Plugins/twitter.py:91
+#: libchristine/Plugins/twitter/__init__.py:97
+#: libchristine/Plugins/twitter/__init__.py:97
 msgid "not found"
 msgstr ""
 
 #: libchristine/Plugins/twitter.py:93
+#: libchristine/Plugins/twitter/__init__.py:99
+#: libchristine/Plugins/twitter/__init__.py:99
 msgid "service not available"
 msgstr ""
 
 #: libchristine/Plugins/twitter.py:95
+#: libchristine/Plugins/twitter/__init__.py:101
+#: libchristine/Plugins/twitter/__init__.py:101
 msgid "unknown error"
 msgstr ""
 
 #: libchristine/Plugins/twitter.py:97
+#: libchristine/Plugins/twitter/__init__.py:103
+#: libchristine/Plugins/twitter/__init__.py:103
 #, python-format
 msgid "twitt -> %s"
 msgstr ""
@@ -473,4 +483,92 @@ msgstr ""
 
 #: gui/WindowCore.glade:385
 msgid "gtk-about"
+msgstr ""
+
+#: libchristine/Christine.py:226 libchristine/Christine.py:226
+msgid "Queue"
+msgstr ""
+
+#: libchristine/Christine.py:235 libchristine/Christine.py:235
+msgid "Sources List"
+msgstr ""
+
+#: libchristine/Plugins/trayicon/__init__.py:28
+#: libchristine/Plugins/trayicon/__init__.py:28
+msgid "TrayIcon"
+msgstr ""
+
+#: libchristine/Plugins/trayicon/__init__.py:29
+#: libchristine/Plugins/trayicon/__init__.py:29
+msgid "This plugins shows a Try Icon on the notification area"
+msgstr ""
+
+#: libchristine/Plugins/gnomeDBus/__init__.py:66
+#: libchristine/Plugins/gnomeDBus/__init__.py:66
+msgid "GNOME Media Keys"
+msgstr ""
+
+#: libchristine/Plugins/gnomeDBus/__init__.py:67
+#: libchristine/Plugins/gnomeDBus/__init__.py:67
+msgid "Allows christine to react to GNOME media key press events"
+msgstr ""
+
+#: libchristine/Plugins/albumCover/__init__.py:43
+#: libchristine/Plugins/albumCover/__init__.py:43
+msgid "Album Cover"
+msgstr ""
+
+#: libchristine/Plugins/albumCover/__init__.py:44
+#: libchristine/Plugins/albumCover/__init__.py:44
+msgid "Try to get the album cover and shows on the gui if it is found."
+msgstr ""
+
+#: libchristine/Plugins/getInfo/__init__.py:44
+#: libchristine/Plugins/getInfo/__init__.py:44
+msgid "getInfo"
+msgstr ""
+
+#: libchristine/Plugins/getInfo/__init__.py:45
+#: libchristine/Plugins/getInfo/__init__.py:45
+msgid "Shows/Update the info on the tags of the given file."
+msgstr ""
+
+#: libchristine/Plugins/lastfm/__init__.py:39
+#: libchristine/Plugins/lastfm/__init__.py:39
+msgid "Lastfm"
+msgstr ""
+
+#: libchristine/Plugins/lastfm/__init__.py:40
+#: libchristine/Plugins/lastfm/__init__.py:40
+msgid "Enables the last.fm interaction"
+msgstr ""
+
+#: libchristine/Plugins/twitter/__init__.py:44
+#: libchristine/Plugins/twitter/__init__.py:44
+msgid "Twitter"
+msgstr ""
+
+#: libchristine/Plugins/twitter/__init__.py:45
+#: libchristine/Plugins/twitter/__init__.py:45
+msgid "This plugins send and update to your twitter account"
+msgstr ""
+
+#: libchristine/Plugins/pidgin/__init__.py:39
+#: libchristine/Plugins/pidgin/__init__.py:39
+msgid "Pidgin"
+msgstr ""
+
+#: libchristine/Plugins/pidgin/__init__.py:40
+#: libchristine/Plugins/pidgin/__init__.py:40
+msgid "This plugin set the song you are playing on pidgin"
+msgstr ""
+
+#: libchristine/Plugins/christinePyNotify/__init__.py:40
+#: libchristine/Plugins/christinePyNotify/__init__.py:40
+msgid "PyNotify"
+msgstr ""
+
+#: libchristine/Plugins/christinePyNotify/__init__.py:41
+#: libchristine/Plugins/christinePyNotify/__init__.py:41
+msgid "Shows notify bubbles"
 msgstr ""
