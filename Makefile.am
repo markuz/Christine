@@ -68,8 +68,8 @@ run:
 	./christine --devel $*
 
 christine: Makefile $(srcdir)/christine.c
-	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -c christine.c -o christine.o
-	gcc ${pythonlfs} christine.o -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion} ${pythonlibdir}/libpython${pythonversion}.a -o christine
+	$(CC) -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -c christine.c -o christine.o
+	$(CC) ${LDFLAGS} ${pythonlfs} christine.o -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion} -o christine
 	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'),force=True, maxlevels=11)"
 
 ACLOCAL_AMFLAGS = -I m4

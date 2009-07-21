@@ -14,6 +14,8 @@
 ####LOCATIONS="$LOCATIONS `ls -1 --color=none libchristine/Storage/*py`"
 ####LOCATIONS="$LOCATIONS `ls -1 --color=none gui/*glade`"
 LOCATIONS=`find -iname "*py"`;
+NLOCATIONS=`find -iname "*glade"`;
+LOCATIONS="$NLOCATIONS $LOCATIONS"
 
 TRANSLATIONS="christine es_ES ca cs da de el en_GB  eu fr hu it nl pt sv_FI sv"
 

@@ -169,33 +169,6 @@ class libraryBase(GtkMisc):
 		self.model.createSubmodels()
 		self.fillModel()
 		self.tv.set_model(self.model.getModel())
-		#self.CURRENT_ITER = self.model.get_iter_first()
-
-#===============================================================================
-#	def __rowChanged(self,model,path,iter):
-#		'''
-#		Handle the row changed stuff
-#		'''
-#		a = model.get(iter,PATH,
-#				    NAME,ARTIST,ALBUM,
-#					TN,PATH, TYPE,
-#					PLAY_COUNT,TIME,GENRE)
-#		if a[0] == None:
-#			return False
-#		a = [k for k in a]
-#		for i in range(len(a)):
-#			if a[i] == None:
-#				if i in [4,8]:
-#					a[i] = 0
-#				else:
-#					a[i] = ""
-#		self.library_lib[a[0]] = {"title":a[1],	"type":a[6],"artist":a[2],
-#				"album":a[3],"track_number":a[4],"playcount":a[7],
-#				"time":a[8],"genre":a[9]}
-#		for i in self.library_lib[a[0]].keys():
-#			if self.library_lib[a[0]][i] == None:
-#				sys.exit(-1)
-#===============================================================================
 
 	def gen_model(self):
 		'''

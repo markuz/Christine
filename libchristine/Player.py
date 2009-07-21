@@ -217,15 +217,6 @@ class Player(gtk.DrawingArea, object):
 		self.__Context.fill_preserve()
 		#self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
-#===============================================================================
-#		self.__Layout  = self.create_pango_layout(self.__Text)
-#		fonth = self.__Layout.get_pixel_size()[1]
-#		self.__Context.move_to(w, (fonth)/2)
-#		self.__Context.set_source_rgb(1,1,1)
-#		self.__Layout.set_font_description(self.style.font_desc)
-#		self.__Context.update_layout(self.__Layout)
-#		self.__Context.show_layout(self.__Layout)
-#===============================================================================
 		if self.__ShouldShow:
 			width = self.getTag('width')
 			height = self.getTag('height')

@@ -6,7 +6,6 @@ scripts_DATA=__init__.py \
 			Display.py \
 			Preferences.py \
 			GtkMisc.py \
-			christineNotify.py \
 			openRemote.py
 
 DISTFILES=Makefile.in \
