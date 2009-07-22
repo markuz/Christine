@@ -57,6 +57,8 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.column_size = len(args)
 		self.column_types = args
 		self.data = []
+		self.data_size = 0
+		self.index = None
 		self.__emptyData = map(lambda x: '', range(self.column_size))
 		self.interface = interface()
 		self.set = self.set_value
@@ -82,7 +84,8 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def append(self, *args):
 		self.data.append(self.__emptyData[:])
-		path = len(self.data) -1
+		self.data_size +=1
+		path = self.data_size -1
 		if args:
 			self.emit_inserted = True
 			return self.set_value(path, *args)
@@ -95,6 +98,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def prepend(self, *args):
 		self.data.insert(0,self.__emptyData[:])
+		self.data_size +=1
 		iter = 0
 		if args:
 			return self.set_value(iter, *args)
@@ -127,7 +131,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def on_get_path(self, rowref):
 		if not isinstance(rowref, tuple):
-			return self.data.index(rowref)
+			return self.get_index(rowref)
 		else:
 			return rowref[0]
 			
@@ -138,27 +142,28 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		return self.data.index(ref)
 		
 	def on_get_value(self, rowref, column):
-		rowref = self.data.index(rowref)
+		rowref = self.get_index(rowref)
 		return self.data[rowref][column]
+	
 
 	def on_iter_next(self, rowref):
-		index = self.data.index(rowref)
-		if len(self.data) > index + 1: 
+		index = self.get_index(rowref)
+		if self.data_size > index + 1: 
 			return self.data[ index + 1 ]
-
+	
 	def on_get_n_columns(self):
 		return self.column_size
 
 	def on_iter_nth_child(self, rowref, n):
 		if rowref:
 			return None
-		elif len(self.data):
+		elif self.data_size:
 			return self.data[n]
 
 	def on_iter_children(self, rowref):
 		if rowref:
 			return None
-		elif len(self.data):
+		elif self.data_size:
 			return self.data[0]
 		
 	def on_iter_has_child(self, rowref):
@@ -167,7 +172,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def on_iter_n_children(self, rowref):
 		if rowref:
 			return 0
-		return len(self.data)
+		return self.data_size
 
 	def on_iter_parent(self, child):
 		return None
@@ -188,14 +193,15 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):
 			path = self.get_path(path)[0]
-		if len(self.data):
+		if self.data_size:
 			self.data.pop(path)
+			self.data_size -= 1
 			self.row_deleted((path,))
 			return True
 
 	def __removeLast20(self,):
 		for i in xrange(20):
-			path = len(self.data)-1
+			path = self.data_size-1
 			if not self.remove(path):
 				return False
 		return True
@@ -217,7 +223,7 @@ class LibraryModel(GtkMisc):
 	def __init__(self,*args):
 		'''Constructor
 		'''
-		self.Logger = LoggerManager.getLogger('LibraryModel')
+		self.Logger = LoggerManager().getLogger('LibraryModel')
 		self.basemodel =  christineModel(*args)
 		self.TextToSearch = ''
 		self.append = self.basemodel.append
