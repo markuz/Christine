@@ -14,14 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-
+from libchristine.Logger import LoggerManager
 import gtk
 import gc
-import time
-import gobject
 from libchristine.ui import interface
+from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.CLibraryModel import CLibraryModel
+
 (PATH,
 NAME,
 TYPE,
@@ -126,24 +125,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.__data_tuple = tuple(self.data)
 		return iter
 
-#===============================================================================
-#	def on_get_iter(self, rowref):
-#		try:
-#			result =  CLibraryModel.on_get_iter(self, rowref)
-#		except:
-#			result = None
-#		return result
-#===============================================================================
-	
-#===============================================================================
-#	def on_get_iter(self, rowref):
-#		try:
-#			result = self.data[rowref[0]]
-#		except:
-#			result = None
-#		return result
-#===============================================================================
-
 	def on_get_path(self, rowref):
 		if not isinstance(rowref, tuple):
 			return self.data.index(rowref)
@@ -198,9 +179,11 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		@param value: Value to compare
 		@param column: Column number.
 		'''
-		for c, data in enumerate(self.data):
+		c = 0
+		for data in self.data:
 			if data[column] == value:
-				return self.get_iter((c,)) 
+				return self.get_iter((c,))
+			c+=1
 
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):
@@ -226,7 +209,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		gc.collect()
 	
 		
-class LibraryModel:
+class LibraryModel(GtkMisc):
 	'''This is a custom model that
 	implements ListStore, Filter and Sortable
 	models
@@ -234,14 +217,11 @@ class LibraryModel:
 	def __init__(self,*args):
 		'''Constructor
 		'''
+		self.Logger = LoggerManager.getLogger('LibraryModel')
 		self.basemodel =  christineModel(*args)
 		self.TextToSearch = ''
-
-	def append(self, *args):
-		return  self.basemodel.append(*args)
-
-	def prepend(self, *args):
-		return self.basemodel.prepend(*args)
+		self.append = self.basemodel.append
+		self.prepend = self.basemodel.prepend
 
 	def createSubmodels(self):
 		self.__sorted = gtk.TreeModelSort(self.basemodel)
@@ -274,17 +254,12 @@ class LibraryModel:
 
 	def __encode(self, item):
 		if isinstance(item,str):
-			try:
-				value = u'%s'%item.encode('latin-1')
-			except:
-				value = item
-		else:
-			return item
-		return value
+			value = self.encode_text(item)
+			return value
+		return item
 	
 	def setValues(self,iter,*args):
-		niter = iter
-		if niter != None:
+		if iter != None:
 			args2 = tuple(map( self.__encode, args))
 			return self.basemodel.set(iter, *args2)
 
@@ -321,7 +296,8 @@ class LibraryModel:
 		try:
 			iter = self.__sorted.convert_child_iter_to_iter(None, iter)
 			return iter	
-		except:
+		except Exception, e:
+			self.Logger.exception(e)
 			return None
 	
 	def convert_natural_path_to_path(self, path):

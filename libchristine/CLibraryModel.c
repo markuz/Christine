@@ -47,9 +47,10 @@ on_get_iter(PyObject *self, PyObject *args)
     return Py_BuildValue("O", result);
 }
 
+
 static PyMethodDef CLibraryModelMethods[] = {
 	{"__init__", init, METH_VARARGS,"doc string"},
-    {"on_get_iter",  on_get_iter, METH_VARARGS,"Extend.. something."},
+    {"on_get_iter",  on_get_iter, METH_VARARGS,"Returns a ref."},
     {NULL, NULL, 0, NULL}
 };
 
