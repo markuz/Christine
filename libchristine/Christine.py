@@ -25,9 +25,6 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-import pango
-
-#import os
 import sys
 import random
 import time
@@ -51,10 +48,8 @@ from libchristine.Library import library, queue,PATH, HAVE_TAGS
 from libchristine.Library import PIX,TIME
 from libchristine.Player import Player
 from libchristine.Share import Share
-#from libchristine.christineConf import christineConf
 from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_EXTRA
 from libchristine.Logger import LoggerManager
-#from libchristine.Events import christineEvents
 from libchristine.christine_dbus import *
 from libchristine.options import options
 import webbrowser
@@ -78,6 +73,10 @@ signal.signal(signal.SIGTERM, close)
 if (gtk.gtk_version < (2, 10, 0)):
 	print translate('Gtk+ 2.10 or better is required')
 	sys.exit()
+
+share = Share()
+logo = share.getImageFromPix('logo')
+gtk.window_set_default_icon(logo)
 
 class Christine(GtkMisc):
 	def __init__(self):

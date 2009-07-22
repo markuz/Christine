@@ -23,6 +23,9 @@ from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Events import christineEvents
+from libchristine.Translator import translate
+
+logger = LoggerManager().getLogger('PyNotify')
 
 try:
 	import pynotify
@@ -30,17 +33,24 @@ try:
 	pynotify.init(PROGRAMNAME)
 	version = pynotify.get_server_info()['version'].split('.')
 	if (version < [0, 3, 6]):
-		raise ImportError("server version is %d.%d.%d, 0.3.6 or major required" % version)
-
+		msg = translate("server version is %d.%d.%d, 0.3.6 or major required" % version)
+		raise ImportError(msg)
 	PYNOTIFY = True
-except ImportError:
-	print 'no pynotify available'
+except ImportError,e:
+	logger.info(translate('no pynotify available'))
+	logger.exception(e)
 	PYNOTIFY = False
 
 __name__ = _('PyNotify')
 __description__  = _('Shows notify bubbles')
 __author__  = 'Marco Antonio Islas Cruz <markuz@islascruz.org>'
 __enabled__ = christineConf.getBool('pynotify/enabled')
+
+
+def _christinePyNotify(*args):
+	result = pynotify.Notification(*args)
+	return result
+
 
 class christinePyNotify(plugin_base):
 	'''
@@ -57,7 +67,7 @@ class christinePyNotify(plugin_base):
 		self.__Logger = LoggerManager().getLogger('PyNotify')
 		self.interface = interface()
 		self.Events.addWatcher('gotTags', self.gotTags)
-		
+		self.__Logger = logger
 		self.interface.PyNotify = self
 	
 	def gotTags(self, tags):
@@ -73,8 +83,8 @@ class christinePyNotify(plugin_base):
 				
 			if getattr(self, 'Notify', False):
 				self.Notify.close()
-			pixmap = self.__Share.getImage('trayicon')
-			self.Notify = pynotify.Notification('christine', '',pixmap)
+			pixmap = self.__Share.getImage('logo')
+			self.Notify = _christinePyNotify('christine', '',pixmap)
 			if getattr(self.interface, 'TrayIcon', False):
 				self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
 			self.Notify.set_property('body', notify_text)

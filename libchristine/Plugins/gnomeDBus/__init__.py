@@ -35,18 +35,7 @@ from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Share import Share
-
-try:
-	import pynotify
-	pynotify.Urgency(pynotify.URGENCY_NORMAL)
-	pynotify.init(PROGRAMNAME)
-	version = pynotify.get_server_info()['version'].split('.')
-	if (version < [0, 3, 6]):
-		raise ImportError("server version is %d.%d.%d, 0.3.6 or major required" % version)
-	PYNOTIFY = True
-except ImportError:
-	print 'no pynotify available'
-	PYNOTIFY = False
+from libchristine.Plugins.christinePyNotify import _christinePyNotify
 
 import gobject
 import os
@@ -111,13 +100,11 @@ class gnomeDBus(plugin_base):
 		if getattr(self, 'Notify', False):
 			self.Notify.close()
 		pixmap = self.__Share.getImage('trayicon')
-		self.Notify = pynotify.Notification('christine', '',pixmap)
+		self.Notify = _christinePyNotify('christine', '',pixmap)
 		if getattr(self.interface, 'TrayIcon', False):
 			self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
 		self.Notify.set_property('body', key)
 		self.Notify.show()
-		#a = notifyWindow()
-		#a.set_text(key)
 	
 	def get_active(self):
 		return self.christineConf.getBool('dbus/gnome_media')

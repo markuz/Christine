@@ -309,7 +309,7 @@ class sqlite3db(Singleton):
 			try:
 				value = self.cursor.next()
 			except sqlite3.OperationalError, e:
-				print e
+				self.__logger.exception(e)
 				continue
 			except StopIteration:
 				break

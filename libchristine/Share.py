@@ -40,7 +40,7 @@ import gobject
 
 # global PATH to share files required
 if "--devel" in sys.argv:
-	SHARE_PATH = os.path.join("./")
+	SHARE_PATH = os.getcwd()
 else:
 	SHARE_PATH = os.path.join(DATADIR, 'christine')
 

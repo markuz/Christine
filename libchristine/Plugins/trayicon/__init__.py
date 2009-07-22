@@ -23,8 +23,6 @@ from libchristine.ui import interface
 from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.Events import christineEvents
 
-print christineConf
-
 __name__ = _('TrayIcon')
 __description__  = _('This plugins shows a Try Icon on the notification area')
 __author__  = ['Marco Antonio Islas Cruz <markuz@islascruz.org>']
@@ -44,7 +42,7 @@ class trayicon(plugin_base):
 		self.christineConf.notifyAdd('trayicon/enabled', 
 							lambda *args: self.__create_and_delete())
 		self.__Share   = Share()
-		self.__Logger = LoggerManager().getLogger('tryIcon')
+		self.__Logger = LoggerManager().getLogger('trayIcon')
 		self.interface = interface()
 		self.__IsHidden =  False
 		self.__buildTrayIcon()

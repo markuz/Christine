@@ -50,8 +50,8 @@ globalvars.py: Makefile $(srcdir)/globalvars.py.in
 
 
 CLibraryModel.so:  Makefile $(srcdir)/CLibraryModel.so
-	gcc -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c CLibraryModel.c -o CLibraryModel.o
-	gcc -shared ${pythonlfs} CLibraryModel.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o CLibraryModel.so
+	$(CC) -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c CLibraryModel.c -o CLibraryModel.o
+	$(CC) -shared ${LDFLAGS} ${pythonlfs} CLibraryModel.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o CLibraryModel.so
 
 all: globalvars.py
 

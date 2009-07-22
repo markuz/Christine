@@ -40,6 +40,9 @@ import re
 from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
 from libchristine.gui.GtkMisc import GtkMisc
+from libchristine.Logger import LoggerManager
+
+
 
 main_loop = DBusGMainLoop()
 
@@ -59,6 +62,7 @@ class christineDBus(dbus.service.Object,GtkMisc):
 		GtkMisc.__init__(self)
 		self.christineConf = christineConf()
 		self.Events = christineEvents()
+		self.__Logger = LoggerManager().getLogger('christineDBus')
 		global DBUS_SESSION
 		bus_name = dbus.service.BusName(DBUS_NAME, bus=DBUS_SESSION)
 		dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
@@ -183,6 +187,6 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	
 	@dbus.service.signal(dbus_interface='org.christine', signature='s')
 	def NewLocation(self, location):
-		print location
+		self.__Logger.info(location)
 	
 a = christineDBus()

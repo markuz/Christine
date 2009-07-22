@@ -51,7 +51,6 @@ class Manager(Singleton):
 			module = __import__(modulename,
 						globals(), locals(), lname)
 		except ImportError, e:
-			print e
 			self.logger.exception(e)
 			return None
 		return module
