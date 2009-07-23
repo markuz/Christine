@@ -28,15 +28,6 @@ AC_SUBST(pygtk_CFLAGS)
 AC_SUBST(pygtk_LIBS)
 
 
-for i in mutagen gtk gtk.glade gst sqlite3; do
-	(`$PYTHON -c "import $i"`) < /dev/null > /dev/null 2>&1 || {
-		AC_MSG_ERROR([Python module '$i' not found])
-		exit 1
-	}
-	echo "checking for $i python module... yes"
-done
-
-
 PROGRAM_NAME="christine"
 VERSION="0.5.0"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
