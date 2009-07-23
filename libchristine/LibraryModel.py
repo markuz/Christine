@@ -372,3 +372,11 @@ class LibraryModel(GtkMisc):
 			return self.__sorted.iter_is_valid(iter)
 		return False
 	
+
+	def insert_after(self, iter, data):
+		iter = self.getNaturalIter(iter)
+		self.basemodel.insert_after(iter, data)
+	
+	def insert_before(self, iter, data):
+		iter = self.getNaturalIter(iter)
+		self.basemodel.insert_before(iter, data)

@@ -85,6 +85,16 @@ class GtkMisc:
 		for i in entities.keys():
 			text = text.replace(i,entities[i])
 		return text
+	
+	def replace_XML_entities(self,text):
+		entities = {"&amp;":"&",
+				"&lt;":"<",
+				"&gt":">;",
+				"%20":" "
+				}
+		for i in entities.keys():
+			text = text.replace(i,entities[i])
+		return text
 
 	def scalePixbuf(self, pixbuf, width, height):
 		if type(pixbuf) != gtk.gdk.Pixbuf:
@@ -105,6 +115,7 @@ class GtkMisc:
 				text =  u'%s'%text.decode(i)
 				text =  u'%s'%text.encode(i)
 		except Exception, e:
+			#print e, text
 			return text
 		return text
 

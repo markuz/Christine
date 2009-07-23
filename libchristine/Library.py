@@ -51,12 +51,11 @@ HAVE_TAGS
 VNAME,
 VPIX) = range(3)
 
-QUEUE_TARGETS = [
-		('MY_TREE_MODEL_ROW',gtk.TARGET_SAME_WIDGET,0),
-		('text/plain',0,1),
-		('TEXT',0,2),
-		('STRING',0,3)
-		]
+QUEUE_TARGETS = [('text/plain',0,0),
+                              ('TEXT', 0, 1),
+                              ('STRING', 0, 2),
+                              ('COMPOUND_TEXT', 0, 3),
+                              ('UTF8_STRING', 0, 4)]
 
 
 ##
@@ -93,7 +92,37 @@ class libraryBase(GtkMisc):
 		self.scroll = self.__xml['scrolledwindow']
 		self.scroll.add_events(gtk.gdk.SCROLL_MASK)
 		self.scroll.connect('scroll-event', self.__scroll_child)
+		self.scroll.drag_dest_set(gtk.DEST_DEFAULT_DROP,
+								QUEUE_TARGETS,
+								gtk.gdk.ACTION_COPY)
 		self.tv.connect('scroll-event', self.__scroll_child)
+		self.tv.drag_source_set(gtk.gdk.BUTTON1_MASK, 
+							QUEUE_TARGETS, 
+								gtk.gdk.ACTION_COPY)
+		self.tv.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
+                  gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
+                  QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
+		self.tv.connect('drag-data-get', self.drag_data_get)
+		self.tv.connect('drag-data-received',self.drag_data_received)
+	
+	def drag_data_received(self, treeview, context, x, y, 
+						selection, info, etime):
+		self.tv.emit_stop_by_name('drag-data-received')
+		data = selection.data
+		for i in data.split("\n"):
+			self.add(i.strip())
+		if context.action == gtk.gdk.ACTION_MOVE:
+			context.finish(True, True, etime)
+			return
+	
+	def drag_data_get(self, treeview,drag_context,selection, 
+					info, timestamp):
+		treeselection = treeview.get_selection()
+		model, iter = treeselection.get_selected()
+		text = model.get_value(iter, PATH)
+		selection.set('text/plain', 8, text)
+
+
 
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
@@ -222,8 +251,11 @@ class libraryBase(GtkMisc):
 
 
 	def add(self,file,prepend=False):
-		if type(file) == type(()):
+		if isinstance(file, tuple):
 			file = file[0]
+		if file.lower().startswith('file://'):
+			file = self.replace_XML_entities(file[7:])
+			print file
 		if not os.path.isfile(file):
 			return False
 		name = os.path.split(file)[1]
@@ -724,24 +756,29 @@ class queue (libraryBase):
 		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		keys = sounds.keys()
 		keys.sort()
-		for path in keys:
-			values = sounds[path]
+		for path,values in sounds.iteritems():
 			for key in values.keys():
 				if isinstance(values[key],str):
 					values[key] = self.strip_XML_entities(self.encode_text(values[key]))
-			name	= self.strip_XML_entities(self.encode_text(values["title"]))
-			album	= self.strip_XML_entities(self.encode_text(values["album"]))
-			artist	= self.strip_XML_entities(self.encode_text(values["artist"]))
+			name	= self.strip_XML_entities(values["title"])
+			album	= self.strip_XML_entities(values["album"])
+			artist	= self.strip_XML_entities(values["artist"])
 			tn		= values["track_number"]
-			genre	= self.strip_XML_entities(self.encode_text(values["genre"]))
+			genre	= self.strip_XML_entities(values["genre"])
 			if name :
 				n = os.path.split(path)[1].split(".")
 				name = ".".join([k for k in n[:-1]])
 			name = "<b><i>%s</i></b>"%name
 			if album !="":
-				name += "\n from <i>%s</i>"%album
+				try:
+					name += "\n from <i>%s</i>"%album
+				except:
+					pass
 			if artist != "":
-				name += "\n by <i>%s</i>"%artist
+				try:
+					name += "\n by <i>%s</i>"%artist
+				except:
+					pass
 				
 			iter = self.model.append(PATH,path,
 					NAME, name,

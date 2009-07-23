@@ -181,7 +181,10 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	#Signals
 	def emit_last_played(self, *args):
 		file = self.christineConf.getString('backend/last_played')
-		self.NewLocation(file)
+		try:
+			self.NewLocation(file)
+		except:
+			pass
 	
 	
 	
