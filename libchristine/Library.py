@@ -102,6 +102,9 @@ class libraryBase(GtkMisc):
 		self.tv.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
                   gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                   QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
+		self.scroll.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
+                  gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
+                  QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
 		self.tv.connect('drag-data-get', self.drag_data_get)
 		self.tv.connect('drag-data-received',self.drag_data_received)
 	
@@ -114,6 +117,7 @@ class libraryBase(GtkMisc):
 		if context.action == gtk.gdk.ACTION_MOVE:
 			context.finish(True, True, etime)
 			return
+		return True
 	
 	def drag_data_get(self, treeview,drag_context,selection, 
 					info, timestamp):
