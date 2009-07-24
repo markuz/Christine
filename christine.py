@@ -2,7 +2,6 @@
 import os
 import sys
 sys.path.insert(0,os.getcwd())
-print sys.path
 elements = locals()
 #lista = [k for k in elements['arguments'] if type(k) == str]
 #sys.argv = lista
@@ -18,8 +17,5 @@ try:
 				a.Queue.add(i,prepend=True)
 		a.play()
 except Exception, e:
-	if '--debug' in sys.argv:
-		print e
-	else:
-		BugReport()
+	print e
 a.runGtk()

@@ -304,7 +304,6 @@ class Christine(GtkMisc):
 		else:
 			self.__HScaleVolume.set_value(0.8)
 
-		self.__HBoxToolBoxContainerMini = self.__HBoxToolBoxContainer
 		self.jumpToPlaying(location = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
 		gobject.timeout_add(500, self.__check_items_on_media)
@@ -517,11 +516,11 @@ class Christine(GtkMisc):
 			return True
 
 		if (self.__ShowButtons):
-			self.__HBoxToolBoxContainerMini.show()
+			self.__HBoxToolBoxContainer.show()
 			self.MenuBar.show()
 			self.__ShowButtons = False
 		else:
-			self.__HBoxToolBoxContainerMini.hide()
+			self.__HBoxToolBoxContainer.hide()
 			self.MenuBar.hide()
 			self.__ShowButtons = True
 
@@ -863,18 +862,14 @@ class Christine(GtkMisc):
 		files    = fs.get_filenames()
 		fs.destroy()
 		if response == gtk.RESPONSE_OK:
-			self.addFiles(files = files, queue = queue)
+			if queue:
+				self.queue.addFiles(files = files, queue = queue)
+			else:
+				self.mainLibrary.addFiles(files = files, queue = queue)
 			path = os.path.join(os.path.split(files[0])[:-1])[0]
 			self.christineConf.setValue("ui/LastFolder",path)
-
+	
 	def importFolder(self, widget):
-		"""
-		This is the 'simple' way to import folders
-		Creates and run a filechooser dialog to
-		select the dir.
-		A Checkbox let you set if the import will be
-		recursive.
-		"""
 		XML  = self.share.getTemplate('directorySelector')
 		ds   = XML['ds']
 		walk = XML['walk']
@@ -882,186 +877,18 @@ class Christine(GtkMisc):
 		if uri:
 			ds.set_uri('file://'+uri)
 		ds.set_icon(self.share.getImageFromPix('logo'))
-		response  = ds.run()
-		filenames = ds.get_filenames()
+		ds.connect('response', self.__do_import_folder_response, walk)
+		ds.show_all()
+	
+	def __do_import_folder_response(self, ds, response, walk):
 		if response == gtk.RESPONSE_OK:
+			filenames = ds.get_filenames()
 			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
-			for i in filenames:
-				if walk.get_active():
-					self.addDirectories(i)
-				else:
-					files = [os.path.join(i, k) \
-						for k in os.listdir(i) \
-						if os.path.isfile(os.path.join(i, k))]
-					if files:
-						self.addFiles(files = files)
+			self.mainLibrary.importFolder(filenames, walk.get_active())
 			return True
 		ds.destroy()
-
-	def addDirectory(self, dir):
-		"""
-		This add a single directory, is simplier that addDirectories
-		because there is no need to dig
-		"""
-		files = os.listdir(dir)
-		f     = []
-		self.f = []
-		extensions = self.christineConf.getString('backend/allowed_files').split(',')
-		for i in files:
-			ext = i.split('.').pop()
-			if ext in extensions:
-				f.append(i)
-		files = f
-		self.addFiles(files)
-
-	def addDirectories(self, dir):
-		"""
-		Recursive import, first and only argument
-		is the dir where to digg
-		"""
-		# dig looking for files
-		a         = os.walk(dir)
-		f         = []
-		filenames = []
-		self.f = []
-		xml = self.share.getTemplate('walkdirectories')
-		dialog = xml['dialog1']
-		progress = xml['progressbar1']
-		label = xml['label1']
-		self.__walking = True
-		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
-		self.__walkProgressPulse(progress)
-		dialog.set_modal(False)
-		response = dialog.run()
-		if response:
-			self.__walking = False
-		dialog.destroy()
-
-	def __walkProgressPulse(self, progress):
-		progress.pulse()
-		while gtk.events_pending():
-			gtk.main_iteration_do()
-		return not self.__walking
-
-	def __walkDirectories(self, a, f, filenames, label, dialog):
-		if not self.__walking:
-			return False
-		try:
-			(dirpath, dirnames, files) = a.next()
-			del dirnames
-			filenames.append([dirpath, files])
-			npath = self.encode_text(dirpath)
-			label.set_text(translate('Exploring') + '%s'%npath)
-			allowdexts = self.christineConf.getString('backend/allowed_files')
-			allowdexts = allowdexts.split(',')
-			for path in filenames[-1][1]:
-				ext    = path.split('.').pop().lower()
-				exists = os.path.join(filenames[-1][0], path) in self.f
-				if ext in allowdexts and not exists:
-					f.append(os.path.join(filenames[-1][0],path))
-		except StopIteration:
-			dialog.destroy()
-			if f:
-				self.addFiles(files = f)
-			return False
-		return True
-
-	def __addFile(self, list = None, data = None,queue = False):
-		"""
-		Add a single file, to the library or queue.
-		the files are taken from the self.__FilesToAdd
-		list. the only one argument is queue, wich defines
-		if the importing is to the queue
-		"""
-		if not isinstance(queue, bool):
-			queue = False
-		library = (self.mainLibrary, self.Queue)[queue]
-		gobject.idle_add(self.__addFileCycle, library)
-
-	def __addFileCycle(self, library):
-		for i in  xrange(1,2):
-			if self.__FilesToAdd:
-				new_file = self.__FilesToAdd.pop()
-				library.add(new_file)
-				self.__updateAddProgressBar(new_file)
-			else:
-				self.__AddWindow.destroy()
-				self.__walking = False
-				return False
-		return True
-
-	def __updateAddProgressBar(self, file):
-		length = len(self.__FilesToAdd)
-		self.__Percentage = 1
-		if length:
-			self.__Percentage = (1 - (length / float(self.__TimeTotalNFiles)))
-		if self.__Percentage > 1.0:
-			self.__Percentage = 1.0
-		# Setting the value and text in the progressbar
-		self.__AddProgress.set_fraction(self.__Percentage)
-		rest = (self.__TimeTotalNFiles - length)
-		text = "%d/%d" % (rest, self.__TimeTotalNFiles)
-		self.__AddProgress.set_text(text)
-		filename = self.encode_text(os.path.split(file)[1])
-		self.__AddFileLabel.set_text(filename)
-		return length
-
-	def addFiles(self, widget = None, files = None, queue = False):
-		"""
-		Add files to the library or to the queue
-		"""
-		XML = self.share.getTemplate('addFiles')
-		XML.signal_autoconnect(self)
-
-		self.__AddWindow       = XML['window']
-		self.__AddWindow.set_transient_for(self.coreWindow)
-		self.__AddProgress     = XML['progressbar']
-		self.__AddCloseButton  = XML['close']
-		self.__AddCloseButton.connect('clicked',lambda *args: self.importCancel())
-		self.__AddFileLabel    = XML['file_label']
-		self.__AddFileLabel.set_text('None')
-		self.__AddWindow.connect('destroy', lambda *args: self.importCancel())
-		self.__AddWindow.show_all()
-
-		self.__AddCloseButton.grab_add()
-		# Be sure that we are working with a list of files
-		if not isinstance(files, list):
-			raise TypeError, "files must be List, got %s" % type(files)
-		files.reverse()
-		# Global variable to save temporal files and paths
-		self.__FilesToAdd = []
-		self.__Paths      = []
-		self.mainLibrary.model.basemodel.foreach(self.getPaths)
-		extensions = self.christineConf.getString('backend/allowed_files')
-		extensions = extensions.split(',')
-		iterator = iter(files)
-		while True:
-			try:
-				i = iterator.next()
-				ext = i.split('.').pop().lower()
-				if (not i in self.__Paths) and \
-						(ext in extensions):
-					self.__FilesToAdd.append(i)
-			except StopIteration:
-				break
-		self.__Percentage      = 0
-		self.__TimeTotalNFiles = len(self.__FilesToAdd)
-		self.__addFile(queue=queue)
-
-	def getPaths(self, model, path, iter):
-		"""
-		Gets path from
-		"""
-		self.__Paths.append(model.get_value(iter, PATH))
-
-	def importCancel(self):
-		"""
-		Cancel de import stuff
-		"""
-		self.__AddCloseButton.grab_remove()
-		self.__FilesToAdd = []
-		self.__AddWindow.destroy()
+	
 
 	def importToQueue(self, widget):
 		"""

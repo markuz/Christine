@@ -143,9 +143,9 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def get_index(self, ref):
 		start = self.last_index - 20
+		end = self.last_index + 20
 		if start < 0:
 			start = 0
-		end = self.last_index + 20
 		if end >= self.data_size:
 			end =  self.data_size -1
 		try:

@@ -5,12 +5,15 @@ import sys
 import traceback
 import webbrowser
 from libchristine.Share import Share
+from libchristine.Logger import LoggerManager
 
 class BugReport:
 	def __init__(self):
+		self.logger = LoggerManager('BugReport')
 		self.__Share = Share()
 		xml = self.__Share.getTemplate('errorReporter')
 		vals = '\n'.join([str(k) for k in self.formatExceptionInfo()])
+		self.logger.error(vals)
 		window = xml['window']
 		textview = xml['textview']
 		buffer = textview.get_buffer()

@@ -465,6 +465,174 @@ class libraryBase(GtkMisc):
 	
 	def iter_is_valid(self, iter):
 		return self.model.iter_is_valid(iter)
+
+
+	def importFolder(self, filenames, walk):
+		"""
+		This is the 'simple' way to import folders
+		Creates and run a filechooser dialog to
+		select the dir.
+		A Checkbox let you set if the import will be
+		recursive.
+		"""
+		for i in filenames:
+			if walk:
+				self.addDirectories(i)
+			else:
+				files = [os.path.join(i, k)  for k in os.listdir(i) \
+					if os.path.isfile(os.path.join(i, k))]
+				if files:
+					self.addFiles(files = files)
+		return True
+		
+	
+	def addDirectories(self, dir):
+		"""
+		Recursive import, first and only argument
+		is the dir where to digg
+		"""
+		a         = os.walk(dir)
+		f         = []
+		filenames = []
+		self.f = []
+		xml = self.share.getTemplate('walkdirectories')
+		dialog = xml['dialog1']
+		dialog.show()
+		progress = xml['progressbar1']
+		label = xml['label1']
+		self.__walking = True
+		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
+		gobject.timeout_add(100, self.__walkProgressPulse, progress)
+		dialog.connect('response', self.__addDirectories_response)
+	
+	def __addDirectories_response(self, dialog, response):
+		self.__walking = False
+		dialog.destroy()
+
+	def __walkProgressPulse(self, progress):
+		progress.pulse()
+		return not self.__walking
+
+	def __walkDirectories(self, a, f, filenames, label, dialog):
+		if not self.__walking:
+			return False
+		try:
+			(dirpath, dirnames, files) = a.next()
+			filenames.append([dirpath, files])
+			npath = self.encode_text(dirpath)
+			label.set_text(translate('Exploring') + '%s'%npath)
+			allowdexts = self.christineConf.getString('backend/allowed_files')
+			allowdexts = allowdexts.split(',')
+			for path in filenames[-1][1]:
+				ext    = path.split('.').pop().lower()
+				exists = os.path.join(filenames[-1][0], path) in self.f
+				if ext in allowdexts and not exists:
+					f.append(os.path.join(filenames[-1][0],path))
+		except StopIteration:
+			dialog.destroy()
+			self.__walking = False
+			if f:
+				self.addFiles(files = f)
+			return False
+		return True
+
+	def __addFile(self, ):
+		"""
+		Add a single file, to the library or queue.
+		the files are taken from the self.__FilesToAdd
+		list. the only one argument is queue, wich defines
+		if the importing is to the queue
+		"""
+		gobject.idle_add(self.__addFileCycle, self)
+		
+
+	def __addFileCycle(self):
+		for i in  xrange(1,2):
+			if self.__FilesToAdd:
+				new_file = self.__FilesToAdd.pop()
+				self.add(new_file)
+				self.__updateAddProgressBar(new_file)
+			else:
+				self.__AddWindow.destroy()
+				self.__walking = False
+				return False
+		return True
+
+	def __updateAddProgressBar(self, file):
+		length = len(self.__FilesToAdd)
+		self.__Percentage = 1
+		if length:
+			self.__Percentage = (1 - (length / float(self.__TimeTotalNFiles)))
+		if self.__Percentage > 1.0:
+			self.__Percentage = 1.0
+		# Setting the value and text in the progressbar
+		self.__AddProgress.set_fraction(self.__Percentage)
+		rest = (self.__TimeTotalNFiles - length)
+		text = "%d/%d" % (rest, self.__TimeTotalNFiles)
+		self.__AddProgress.set_text(text)
+		filename = self.encode_text(os.path.split(file)[1])
+		self.__AddFileLabel.set_text(filename)
+		return length
+
+	def addFiles(self, widget = None, files = None, queue = False):
+		"""
+		Add files to the library or to the queue
+		"""
+		XML = self.share.getTemplate('addFiles')
+		XML.signal_autoconnect(self)
+
+		self.__AddWindow       = XML['window']
+		self.__AddWindow.set_transient_for(self.interface.coreWindow)
+		self.__AddProgress     = XML['progressbar']
+		self.__AddCloseButton  = XML['close']
+		self.__AddCloseButton.connect('clicked',lambda *args: self.importCancel())
+		self.__AddFileLabel    = XML['file_label']
+		self.__AddFileLabel.set_text('None')
+		self.__AddWindow.connect('destroy', lambda *args: self.importCancel())
+		self.__AddWindow.show_all()
+		self.__AddWindow.set_modal(True)
+		self.__AddWindow.set_modal(False)
+		self.__AddWindow.set_property('modal', False)
+
+		#self.__AddCloseButton.grab_add()
+		# Be sure that we are working with a list of files
+		if not isinstance(files, list):
+			raise TypeError, "files must be List, got %s" % type(files)
+		files.reverse()
+		# Global variable to save temporal files and paths
+		self.__FilesToAdd = []
+		self.__Paths      = []
+		self.model.basemodel.foreach(self.getPaths)
+		extensions = self.christineConf.getString('backend/allowed_files')
+		extensions = extensions.split(',')
+		iterator = iter(files)
+		while True:
+			try:
+				i = iterator.next()
+				ext = i.split('.').pop().lower()
+				if not i in self.__Paths and ext in extensions:
+					self.__FilesToAdd.append(i)
+			except StopIteration:
+				break
+		self.__Percentage      = 0
+		self.__TimeTotalNFiles = len(self.__FilesToAdd)
+		gobject.idle_add(self.__addFileCycle)
+		#gobject.timeout_add(100, self.__addFileCycle)
+	
+	def importCancel(self):
+		"""
+		Cancel de import stuff
+		"""
+		self.__AddCloseButton.grab_remove()
+		self.__FilesToAdd = []
+		self.__AddWindow.destroy()
+		
+	def getPaths(self, model, path, iter):
+		"""
+		Gets path from
+		"""
+		self.__Paths.append(model.get_value(iter, PATH))
+	
 		
 class library(gtk.Widget,libraryBase):
 	__gsignals__= {
