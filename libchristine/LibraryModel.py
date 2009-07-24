@@ -15,6 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 from libchristine.Logger import LoggerManager
+import sys
+import time
 import gtk
 import gc
 from libchristine.ui import interface
@@ -58,6 +60,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.column_types = args
 		self.data = []
 		self.data_size = 0
+		self.last_index = 0
 		self.index = None
 		self.__emptyData = map(lambda x: '', range(self.column_size))
 		self.interface = interface()
@@ -139,13 +142,29 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		return self.column_types[n]
 
 	def get_index(self, ref):
-		return self.data.index(ref)
+		start = self.last_index - 20
+		if start < 0:
+			start = 0
+		end = self.last_index + 20
+		if end >= self.data_size:
+			end =  self.data_size -1
+		#c = time.time()
+		try:
+			d = self.data[start:end]
+			nindex = d.index(ref)
+		except ValueError, e:
+			result = self.data.index(ref)
+			self.last_index = result
+			return result 
+		#print start,end, d, ref
+		self.last_index = start + nindex
+		#print time.time()-c  
+		return start + nindex
 		
 	def on_get_value(self, rowref, column):
 		rowref = self.get_index(rowref)
 		return self.data[rowref][column]
 	
-
 	def on_iter_next(self, rowref):
 		index = self.get_index(rowref)
 		if self.data_size > index + 1: 
