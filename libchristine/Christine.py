@@ -281,7 +281,7 @@ class Christine(GtkMisc):
 									self.MenuItemSidePane)
 		
 		translateMenuItem = xml['translateThisApp']
-		URL = 'https://translations.launchpad.net/christine/0.1/'
+		URL = 'https://translations.launchpad.net/christine'
 		translateMenuItem.connect('activate', lambda widget: webbrowser.open(URL))
 
 		reportaBug = xml['reportABug']
