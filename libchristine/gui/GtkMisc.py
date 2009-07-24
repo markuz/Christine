@@ -81,6 +81,8 @@ class GtkMisc:
 		entities = {"&":"&amp;",
 				"<":"&lt;",
 				">":"&gt;",
+				"[":"%5B",
+				"]":"%5D",
 				}
 		for i in entities.keys():
 			text = text.replace(i,entities[i])
@@ -90,7 +92,9 @@ class GtkMisc:
 		entities = {"&amp;":"&",
 				"&lt;":"<",
 				"&gt":">;",
-				"%20":" "
+				"%20":" ",
+				"%5B":"[",
+				"%5D":"]",
 				}
 		for i in entities.keys():
 			text = text.replace(i,entities[i])

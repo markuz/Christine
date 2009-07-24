@@ -865,7 +865,7 @@ class Christine(GtkMisc):
 			if queue:
 				self.queue.addFiles(files = files, queue = queue)
 			else:
-				self.mainLibrary.addFiles(files = files, queue = queue)
+				self.mainLibrary.addFiles(files)
 			path = os.path.join(os.path.split(files[0])[:-1])[0]
 			self.christineConf.setValue("ui/LastFolder",path)
 	
@@ -883,6 +883,7 @@ class Christine(GtkMisc):
 	def __do_import_folder_response(self, ds, response, walk):
 		if response == gtk.RESPONSE_OK:
 			filenames = ds.get_filenames()
+			print "filenames", filenames
 			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
 			self.mainLibrary.importFolder(filenames, walk.get_active())

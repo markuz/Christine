@@ -72,6 +72,7 @@ class libraryBase(GtkMisc):
 		and set some class variables
 		'''
 		self.iters = {}
+		self.__FilesToAdd = []
 		self.do_save = False
 		GtkMisc.__init__(self)
 		self.logger = LoggerManager().getLogger('sqldb')
@@ -112,8 +113,18 @@ class libraryBase(GtkMisc):
 						selection, info, etime):
 		self.tv.emit_stop_by_name('drag-data-received')
 		data = selection.data
-		for i in data.split("\n"):
-			self.add(i.strip())
+		files = []
+		dirs = []
+		for url in [k.strip() for k in data.split("\n")]:
+			file = url
+			if file.lower().startswith('file://'):
+				file = self.replace_XML_entities(file[7:])
+			if os.path.isdir(file):
+				dirs.append(file)
+			else:
+				files.append(file)
+		self.addFiles(files)
+		self.importFolder(dirs, True)
 		if context.action == gtk.gdk.ACTION_MOVE:
 			context.finish(True, True, etime)
 			return
@@ -259,7 +270,6 @@ class libraryBase(GtkMisc):
 			file = file[0]
 		if file.lower().startswith('file://'):
 			file = self.replace_XML_entities(file[7:])
-			print file
 		if not os.path.isfile(file):
 			return False
 		name = os.path.split(file)[1]
@@ -514,8 +524,8 @@ class libraryBase(GtkMisc):
 		return not self.__walking
 
 	def __walkDirectories(self, a, f, filenames, label, dialog):
-		if not self.__walking:
-			return False
+		#if not self.__walking:
+		#	return False
 		try:
 			(dirpath, dirnames, files) = a.next()
 			filenames.append([dirpath, files])
@@ -574,7 +584,7 @@ class libraryBase(GtkMisc):
 		self.__AddFileLabel.set_text(filename)
 		return length
 
-	def addFiles(self, widget = None, files = None, queue = False):
+	def addFiles(self,files):
 		"""
 		Add files to the library or to the queue
 		"""
@@ -600,7 +610,6 @@ class libraryBase(GtkMisc):
 			raise TypeError, "files must be List, got %s" % type(files)
 		files.reverse()
 		# Global variable to save temporal files and paths
-		self.__FilesToAdd = []
 		self.__Paths      = []
 		self.model.basemodel.foreach(self.getPaths)
 		extensions = self.christineConf.getString('backend/allowed_files')
