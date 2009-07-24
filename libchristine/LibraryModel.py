@@ -148,18 +148,16 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		end = self.last_index + 20
 		if end >= self.data_size:
 			end =  self.data_size -1
-		#c = time.time()
 		try:
 			d = self.data[start:end]
 			nindex = d.index(ref)
 		except ValueError, e:
 			result = self.data.index(ref)
 			self.last_index = result
-			return result 
-		#print start,end, d, ref
-		self.last_index = start + nindex
-		#print time.time()-c  
-		return start + nindex
+			return result
+		result =  start + nindex
+		self.last_index = result
+		return result
 		
 	def on_get_value(self, rowref, column):
 		rowref = self.get_index(rowref)
