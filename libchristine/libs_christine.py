@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+import shutil
 
 
 import os
@@ -28,14 +29,17 @@ class sanity:
 	'''
 	def __init__(self):
 		self.__check_christine_dir()
-		self.__check_dir(os.path.join(USERDIR,"sources"))
-		self.__check_dir(os.path.join(USERDIR,"uplugins"))
-		if not os.path.exists(os.path.join(USERDIR,"uplugins","__init__.py")):
-				f = open(os.path.join(USERDIR,"uplugins","__init__.py"),"w+")
-				f.write("#python")
-				f.close()
-		if os.getgid() == 0:
-			self.__check_dir(os.path.join(DATADIR,"christine","cplugins"))
+		self.check_xgd_data_home()
+		#=======================================================================
+		# self.__check_dir(os.path.join(USERDIR,"sources"))
+		# self.__check_dir(os.path.join(USERDIR,"uplugins"))
+		# if not os.path.exists(os.path.join(USERDIR,"uplugins","__init__.py")):
+		#		f = open(os.path.join(USERDIR,"uplugins","__init__.py"),"w+")
+		#		f.write("#python")
+		#		f.close()
+		# if os.getgid() == 0:
+		#	self.__check_dir(os.path.join(DATADIR,"christine","cplugins"))
+		#=======================================================================
 
 	def __check_christine_dir(self):
 		if not os.path.exists(USERDIR):
@@ -52,6 +56,22 @@ class sanity:
 			if os.path.isfile(dir):
 				os.unlink(dir)
 				self.__check_dir(dir)
+	
+	def check_xgd_data_home(self):
+		oldpath = os.path.join(os.environ["HOME"],".christine")
+		if os.path.exists(oldpath):
+			a = os.walk(oldpath)
+			while 1:
+				try:
+					dirpath, dirnames, files = a.next()
+					for i in dirnames:
+						shutil.move(os.path.join(dirpath, i), USERDIR)
+					for i in files:
+						shutil.move(os.path.join(dirpath, i), USERDIR)
+				except StopIteration:
+					break
+			#remove the old directory:
+			shutil.rmtree(oldpath)
 
 class lib_library(object):
 	def __init__(self,list):

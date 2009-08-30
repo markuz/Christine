@@ -3,7 +3,7 @@
 #
 # This file is part of the Christine project
 #
-# Copyright (c) 2006-2007 Marco Antonio Islas Cruz
+# Copyright (c) 2006-2009 Marco Antonio Islas Cruz
 #
 # Christine is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.gui.Preferences import guiPreferences
 from libchristine.gui.About import guiAbout
 from libchristine.gui.Display import Display
-from libchristine.globalvars import  BUGURL
+from libchristine.globalvars import  BUGURL,USERDIR, PIDFILE
 from libchristine.ui import interface
 from libchristine.gui.openRemote import openRemote
 from libchristine.Library import library, queue,PATH, HAVE_TAGS
@@ -52,6 +52,7 @@ from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_E
 from libchristine.Logger import LoggerManager
 from libchristine.christine_dbus import *
 from libchristine.options import options
+from libchristine.gui.BugReport import BugReport
 import webbrowser
 import gc
 
@@ -61,9 +62,8 @@ opts = options()
 
 
 def close(*args):
-	pidfile = 	os.path.join(os.environ['HOME'],'.christine','christine.pid')
-	if os.path.exists(pidfile):
-		os.unlink(pidfile)
+	if os.path.exists(PIDFILE):
+		os.unlink(PIDFILE)
 	sys.exit()
 	gtk.main_quit()
 
@@ -229,6 +229,7 @@ class Christine(GtkMisc):
 		self.queue_mi = xml['Queue']
 		self.queue_mi.connect('activate', lambda x: self.sideNotebook.set_current_page(0))
 		self.Queue.tv.connect('row-activated',   self.Queue.itemActivated)
+		self.Queue.connect('size-changed',   self.__check_queue)
 
 		self.sourcesList = sources_list()
 		label = gtk.Label(_('Sources List'))
@@ -307,7 +308,14 @@ class Christine(GtkMisc):
 		self.jumpToPlaying(location = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
 		gobject.timeout_add(500, self.__check_items_on_media)
-		#gobject.idle_add(self.__check_items_on_media)
+		#gobject.timeout_add(500, self.__check_queue)
+	
+	def __check_queue(self, queue, size):
+		if size < 1:
+			self.sources_mi.activate()
+		else:
+			self.queue_mi.activate()
+		
 	
 	def __check_items_on_media(self):
 		size = len(self.mainLibrary.model.basemodel)
@@ -1089,6 +1097,7 @@ def runChristine():
 	'''
 	This function handles parameters for christine.
 	'''
+	
 	try:
 		import dbus
 		from dbus.mainloop.glib import DBusGMainLoop
@@ -1099,12 +1108,18 @@ def runChristine():
 		add_items_to_queue(obj,c)
 		sys.exit()
 	except dbus.exceptions.DBusException:
+		print PIDFILE
+		f = open(PIDFILE,'w')
+		f.write('%d'%(os.getpid()))
+		f.close()
 		a = christineDBus()
 		c = Christine()
 		for i in sys.argv[1:]:
 			if os.path.exists(i) and os.path.isfile(i):
 				print i
 				c.Queue.add(i)
+	except:
+		BugReport()
 	gtk.main()
 	
 	

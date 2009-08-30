@@ -18,33 +18,9 @@ lista = [k for k in elements['arguments'] if type(k) == str]\n\
 sys.argv = lista\n\
 #print sys.path\n\
 from libchristine.libs_christine import sanity\n\
-from libchristine.gui.BugReport import BugReport\n\
-import gtk\n\
 sanity()\n\
-pidfile = 	os.path.join(os.environ['HOME'],\n\
-			'.christine','christine.pid')\n\
-if os.path.exists(pidfile):\n\
-	f = open(pidfile)\n\
-	pid = f.read()\n\
-	print pid \n\
-	f.close()\n\
-	if not \'--devel\' in sys.argv:\n\
-		if os.path.exists(os.path.join('/','proc',pid)):\n\
-			print 'Christine is already running...'\n\
-			sys.exit(0)\n\
-		else:\n\
-			os.unlink(pidfile)\n\
-f = open(pidfile,'w')\n\
-f.write('%d'%(os.getpid()))\n\
-f.close()\n\
 from libchristine.Christine import *\n\
-if not '--devel' in sys.argv: \n\
-	try:\n\
-		runChristine()\n\
-	except:\n\
-	   BugReport()\n\
-else:\n\
-	runChristine()\n\
+runChristine()\n\
 ";
 
 

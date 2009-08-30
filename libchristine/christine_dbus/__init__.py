@@ -99,9 +99,14 @@ class christineDBus(dbus.service.Object,GtkMisc):
 		return result
 	
 	@dbus.service.method(DBUS_NAME)
+	def get_location(self):
+		return iface.Player.getLocation()
+	
+	@dbus.service.method(DBUS_NAME)
 	def now_playing(self):
-		return iface.Player.get_location()
+		return iface.Player.getLocation()
 
+	@dbus.service.method(DBUS_NAME)
 	def get_tags(self, uri):
 		'''
 		Devuelve un diccionario con los tags del elemento definido por 

@@ -44,36 +44,42 @@ columns = curses.tigetnum('cols')
 lines = curses.tigetnum('lines')
 
 import sys
-sys.stdout.write(clear)
+#sys.stdout.write(clear)
 main_loop = DBusGMainLoop()
 
 
 
 DBUS_SESSION = dbus.SessionBus(mainloop = main_loop)
 
-obj = DBUS_SESSION.get_object('org.christine',
-							'/org/christine',)
+obj = DBUS_SESSION.get_object('org.christine', '/org/christine',)
+uri = obj.now_playing()
+print uri
+tags = obj.get_tags(uri)
+print tags
 
 def printLocation(newlocation):
 	print newlocation
-obj.connect_to_signal('NewLocation', printLocation)
-options = {
-		'Play': obj.play,
-		'Pause': obj.pause,
-		'Go prev': obj.go_prev,
-		'Go next': obj.go_next,
-		}
-gtk.main()
-keys = ('Play', 'Pause', 'Go prev','Go next')
-#while True:
+#obj.connect_to_signal('NewLocation', printLocation)
+#===============================================================================
+# options = {
+#		'Play': obj.play,
+#		'Pause': obj.pause,
+#		'Go prev': obj.go_prev,
+#		'Go next': obj.go_next,
+#		}
+# gtk.main()
+# keys = ('Play', 'Pause', 'Go prev','Go next')
+#===============================================================================
 #	time.sleep(a
 	
-####for num, key in enumerate(keys):
-####	print '%d - %s'%(num, key)
-####value = raw_input()
-####try: 
-####	method = options[keys[int(value)]]
-####	method()
-####	sys.stdout.write(clear)
-####except Exception, e:
-####	pass
+#===============================================================================
+# for num, key in enumerate(keys):
+#	print '%d - %s'%(num, key)
+# value = raw_input()
+# try: 
+#	method = options[keys[int(value)]]
+#	method()
+#	sys.stdout.write(clear)
+# except Exception, e:
+#	pass
+#===============================================================================

@@ -8,14 +8,4 @@ elements = locals()
 from libchristine.libs_christine import sanity
 sanity()
 from libchristine.Christine import *
-from libchristine.gui.BugReport import BugReport
-a = Christine()
-try:
-	if len(sys.argv) > 1 and not "--devel" in sys.argv:
-		for i in sys.argv[1:]:
-			if os.path.isfile(i):
-				a.Queue.add(i,prepend=True)
-		a.play()
-except Exception, e:
-	print e
-a.runGtk()
+runChristine()

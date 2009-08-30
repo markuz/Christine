@@ -25,6 +25,7 @@ from ConfigParser import ConfigParser
 from libchristine.pattern.Singleton import Singleton
 from libchristine.Translator import *
 from libchristine.Logger import LoggerManager
+from libchristine.globalvars import USERDIR
 import gtk
 import sys
 import os
@@ -51,7 +52,7 @@ class christineConf(Singleton):
 		'''
 		Constructor
 		'''
-		self.filepath = os.path.join(os.environ['HOME'],'.christine','christine.conf')
+		self.filepath = os.path.join(USERDIR, 'christine.conf')
 		self.configParser = ConfigParser()
 		self.__notify = {}
 		if os.path.exists(self.filepath):

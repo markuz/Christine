@@ -839,10 +839,16 @@ class library(gtk.Widget,libraryBase):
 			pass
 		return True
 
-class queue (libraryBase):
+class queue (gobject.GObject,libraryBase):
+	__gsignals__= {
+				'size-changed' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								(gobject.TYPE_PYOBJECT,))
+				}
 	def __init__(self):
+		gobject.GObject.__init__(self)
 		libraryBase.__init__(self)
 		self.__logger = LoggerManager().getLogger('Library')
+		self.last_check = -1
 		self.loadLibrary('queue')
 		self.tv.connect('key-press-event', self.QueueHandlerKey)
 		gobject.timeout_add(500, self.checkQueue)
@@ -988,14 +994,11 @@ class queue (libraryBase):
 				self.remove(iter)
 				
 	def	checkQueue(self):
-		return 1
 		model = self.tv.get_model()
-		if (model != None):
-			b = model.get_iter_first()
-			if b == None:
-				self.scroll.hide()
-			else:
-				self.scroll.show()
+		size = len(model) 
+		if size != self.last_check:
+			self.emit('size-changed', size)
+			self.last_check = size
 		return True
 	
 	def itemActivated(self, widget, path, iter):
