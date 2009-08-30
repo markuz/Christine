@@ -1074,3 +1074,38 @@ class Christine(GtkMisc):
 		"""
 		gtk.main()
 
+def add_items_to_queue(obj, c):
+	#print 1
+	if c == None or c.coreWindow.get_property('window'):
+		for i in sys.argv[1:]:
+			if os.path.exists(i) and os.path.isfile(i):
+				print i
+				obj.add_to_queue(i)
+		return False
+	return True
+
+
+def runChristine():
+	'''
+	This function handles parameters for christine.
+	'''
+	try:
+		import dbus
+		from dbus.mainloop.glib import DBusGMainLoop
+		main_loop = DBusGMainLoop()
+		DBUS_SESSION = dbus.SessionBus(mainloop = main_loop)
+		obj = DBUS_SESSION.get_object('org.christine', '/org/christine',)
+		c = None
+		add_items_to_queue(obj,c)
+		sys.exit()
+	except dbus.exceptions.DBusException:
+		a = christineDBus()
+		c = Christine()
+		for i in sys.argv[1:]:
+			if os.path.exists(i) and os.path.isfile(i):
+				print i
+				c.Queue.add(i)
+	gtk.main()
+	
+	
+			

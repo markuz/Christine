@@ -40,23 +40,11 @@ f.close()\n\
 from libchristine.Christine import *\n\
 if not '--devel' in sys.argv: \n\
 	try:\n\
-		a = Christine()\n\
-		if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
-			for i in sys.argv[1:]:\n\
-				if os.path.isfile(i):\n\
-					a.Queue.add(i,prepend=True)\n\
-			a.play()\n\
+		runChristine()\n\
 	except:\n\
 	   BugReport()\n\
-	gtk.main()\n\
 else:\n\
-	a = Christine()\n\
-	if len(sys.argv) > 1 and not \"--devel\" in sys.argv:\n\
-		for i in sys.argv[1:]:\n\
-			if os.path.isfile(i):\n\
-				a.Queue.add(i,prepend=True)\n\
-		a.play()\n\
-	gtk.main()\n\
+	runChristine()\n\
 ";
 
 

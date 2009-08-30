@@ -1,11 +1,5 @@
-Changes since 0.3.1
-
-* Plugins as packages
-* Font selector for subtitles
-* Encoding selector for subtitles
-* Dbus methods:
-  * get_playlists
-  * get_radio
-  * get_tags
-  * get_tracks_for_playlist
+Changes since 0.4.0
+- Delete unused functions
+- Code cleanup
+- 
 

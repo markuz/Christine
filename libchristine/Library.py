@@ -866,7 +866,7 @@ class queue (libraryBase):
 		if isinstance(file, tuple):
 			file = file[0]
 		if not os.path.isfile(file):
-			self.__Logger.warning(translate("I can't find the file "),file)
+			self.__logger.warning(translate("I can't find the file %s"),file)
 			return False
 		name = os.path.split(file)[1]
 		if isinstance(name,()):

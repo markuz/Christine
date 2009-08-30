@@ -25,7 +25,12 @@ for i in $TRANSLATIONS; do
 		xgettext -p po  -o $i.$end -l --keyword=translate --keyword=_N --keyword=_ --from-code=Glade $LOCATIONS
 	else
 		end='po';
-		xgettext -p po -j -o $i.$end -l --keyword=translate --keyword=_N --keyword=_ --from-code=Glade $LOCATIONS
+		if [ -f $i.$end ]; then
+			$join="-j";
+		else
+			$join=""
+		fi
+		xgettext -p po $join -o $i.$end -l --keyword=translate --keyword=_N --keyword=_ --from-code=Glade $LOCATIONS
 	fi
 	echo "$i.$end"
 

@@ -179,6 +179,7 @@ class christineDBus(dbus.service.Object,GtkMisc):
 		
 
 	#Signals
+	
 	def emit_last_played(self, *args):
 		file = self.christineConf.getString('backend/last_played')
 		try:
@@ -192,4 +193,5 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	def NewLocation(self, location):
 		self.__Logger.info(location)
 	
-a = christineDBus()
+if __name__ == "__main__":
+	a = christineDBus()

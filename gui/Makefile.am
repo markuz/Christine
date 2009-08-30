@@ -10,10 +10,9 @@ Error.glade \
 errorReporter.glade \
 FileSelector.glade \
 genericQuestion.glade \
-iconView.glade \
 JumpTo.glade \
 MenuTrayIcon.glade \
-miniViewer.glade \
+NewRadioDialog.glade \
 NewSourceDialog.glade \
 openRemote.glade \
 plugin_lastfm_main.glade \
@@ -21,12 +20,14 @@ plugin_pidgin_main.glade \
 PopupMenu.glade \
 Preferences.glade \
 Properties.glade \
+showInfo.glade \
 SourcesList.glade \
 TreeViewReorderable.glade \
 TreeViewSources.glade \
+twitter.glade \
 walkdirectories.glade \
-WindowCore.glade \
-twitter.glade
+WindowCore.glade 
+
 
 DISTFILES= Makefile.in $(scripts_DATA)
 
