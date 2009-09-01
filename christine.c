@@ -12,13 +12,9 @@ void error(char *msg) {
 char* python_code = "\
 import os\n\
 import sys\n\
+print os.getcwd()\n\
 sys.path.insert(0,os.getcwd())\n\
-elements = locals()\n\
-lista = [k for k in elements['arguments'] if type(k) == str]\n\
-sys.argv = lista\n\
-#print sys.path\n\
-from libchristine.libs_christine import sanity\n\
-sanity()\n\
+sys.argv = [k for k in locals()['arguments'] if isinstance(k, str)]\n\
 from libchristine.Christine import *\n\
 runChristine()\n\
 ";
@@ -64,8 +60,9 @@ main(int argc, char *argv[]){
 	PyDict_SetItemString(main_dict,"arguments",c_argv);
 	main_dict_copy = PyDict_Copy(main_dict);
 	if (main_dict_copy == NULL)
-		error ("asdfa");
-	t = PyRun_String(python_code,Py_file_input,main_dict,main_dict);
+		error ("");
+	//t = PyRun_String(python_code, Py_file_input, main_dict, main_dict);
+	t = PyRun_String(python_code, Py_file_input, main_dict, main_dict);
 	if (t == NULL){
 		error("Error while trying to run christine");
 	}

@@ -839,7 +839,7 @@ class library(gtk.Widget,libraryBase):
 			pass
 		return True
 
-class queue (gobject.GObject,libraryBase):
+class queue (libraryBase ,gobject.GObject):
 	__gsignals__= {
 				'size-changed' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
 								(gobject.TYPE_PYOBJECT,))

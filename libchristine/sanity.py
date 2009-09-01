@@ -26,16 +26,6 @@ class sanity:
 	def __init__(self):
 		self.__check_christine_dir()
 		self.check_xgd_data_home()
-		#=======================================================================
-		# self.__check_dir(os.path.join(USERDIR,"sources"))
-		# self.__check_dir(os.path.join(USERDIR,"uplugins"))
-		# if not os.path.exists(os.path.join(USERDIR,"uplugins","__init__.py")):
-		#		f = open(os.path.join(USERDIR,"uplugins","__init__.py"),"w+")
-		#		f.write("#python")
-		#		f.close()
-		# if os.getgid() == 0:
-		#	self.__check_dir(os.path.join(DATADIR,"christine","cplugins"))
-		#=======================================================================
 
 	def __check_christine_dir(self):
 		if not os.path.exists(USERDIR):

@@ -19,10 +19,12 @@ scripts_DATA=christineConf.py \
 			Translator.py \
 			ui.py \
 			Validator.py \
-			CLibraryModel.so
+			CLibraryModel.so \
+			sanity.py
 
 DISTFILES= Makefile.in \
-		   globalvars.py.in\
+		   globalvars.py.in \
+		   CLibraryModel.c \
 			${scripts_DATA}
 
 

@@ -35,13 +35,15 @@ import gst.interfaces
 import gobject
 import os
 import signal
+from libchristine.globalvars import  BUGURL,USERDIR, PIDFILE
+from libchristine.sanity import sanity
+sanity()
 from  libchristine.Plugins import Manager
 from libchristine.Translator import translate
 from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.gui.Preferences import guiPreferences
 from libchristine.gui.About import guiAbout
 from libchristine.gui.Display import Display
-from libchristine.globalvars import  BUGURL,USERDIR, PIDFILE
 from libchristine.ui import interface
 from libchristine.gui.openRemote import openRemote
 from libchristine.Library import library, queue,PATH, HAVE_TAGS
@@ -50,16 +52,14 @@ from libchristine.Player import Player
 from libchristine.Share import Share
 from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_EXTRA
 from libchristine.Logger import LoggerManager
-from libchristine.christine_dbus import *
+from libchristine.christineConf import christineConf
+from libchristine.Events import christineEvents
+from libchristine.christine_dbus import christineDBus
 from libchristine.options import options
 from libchristine.gui.BugReport import BugReport
 import webbrowser
-import gc
 
 opts = options()
-
-#gc.enable()
-
 
 def close(*args):
 	if os.path.exists(PIDFILE):
@@ -70,7 +70,7 @@ def close(*args):
 
 signal.signal(signal.SIGTERM, close)
 
-if (gtk.gtk_version < (2, 10, 0)):
+if (gtk.gtk_version < (2, 12, 0)):
 	print translate('Gtk+ 2.10 or better is required')
 	sys.exit()
 
@@ -1097,7 +1097,6 @@ def runChristine():
 	'''
 	This function handles parameters for christine.
 	'''
-	
 	try:
 		import dbus
 		from dbus.mainloop.glib import DBusGMainLoop
@@ -1108,16 +1107,15 @@ def runChristine():
 		add_items_to_queue(obj,c)
 		sys.exit()
 	except dbus.exceptions.DBusException:
-		print PIDFILE
-		f = open(PIDFILE,'w')
-		f.write('%d'%(os.getpid()))
-		f.close()
 		a = christineDBus()
 		c = Christine()
 		for i in sys.argv[1:]:
 			if os.path.exists(i) and os.path.isfile(i):
 				print i
 				c.Queue.add(i)
+		f = open(PIDFILE,'w')
+		f.write('%d'%(os.getpid()))
+		f.close()
 	except:
 		BugReport()
 	gtk.main()

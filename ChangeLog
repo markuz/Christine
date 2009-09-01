@@ -1,5 +1,10 @@
 Changes since 0.4.0
 - Delete unused functions
 - Code cleanup
-- 
+- Dbus methods improvement
+- Bugfix in compile command line
+- Import by drag and Drop from Nautilus
+- TreeView is faster even in the last items of the list.
+- Auto switch for Queue and source list if Queue is empty or an item has been
+  added. 
 
