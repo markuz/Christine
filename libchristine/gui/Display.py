@@ -251,16 +251,17 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		
 	
 	def draw_pos_circle(self):
-		x,y,w,h = self.allocation
+		w,h = (self.allocation.width, self.allocation.height)
 		x,y = (0,0)
 		fh = self.__Layout.get_pixel_size()[1]
 		mx,my = self.get_pointer()
+		twidth = ((w - fh) - (BORDER_WIDTH * 3))
 		if self.__ButtonPress and mx > x and mx < w and my > y and my < h:
 			width = mx - fh
-			if width > ((w - fh) - (BORDER_WIDTH * 3)):
-				width = ((w - fh) - (BORDER_WIDTH * 3))
+			if width > twidth:
+				width = twidth
 		else:
-			width = ((w - fh) - (BORDER_WIDTH * 3))
+			width = twidth
 			width = (self.__Value * width)
 		self.context.set_source_rgb(self.bar,self.bag,self.bab)
 		self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
@@ -280,7 +281,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		pat.add_color_stop_rgb(0.5,self.bar,self.bag,self.bab)
 		self.context.set_source(pat)
 		self.context.fill()
-
 		self.context.arc(int (fh + width),
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 2, 0, 2 * math.pi)
 		self.context.set_source_rgb(1,1,1)
