@@ -48,7 +48,7 @@ class openRemote(GtkMisc):
 		button  = XML['okbutton']
 		entry.connect("key-press-event", self.__oRButtonClick,button)
 		comboboxentry.connect("changed",self.__orChanged)
-		dialog.set_icon(self.__Share.getImageFromPix('logo'))
+		self.dialog.set_icon(self.__Share.getImageFromPix('logo'))
 		model = gtk.ListStore(str)
 		comboboxentry.set_model(model)
 		comboboxentry.set_text_column(0)
@@ -63,7 +63,7 @@ class openRemote(GtkMisc):
 			comboboxentry.set_active(0)
 		response = self.dialog.run()
 		if (response == gtk.RESPONSE_OK):
-			self.open_remote()
+			self.open_remote(comboboxentry.get_child(), '')
 		self.dialog.destroy()
 		
 	def open_remote(self, entry, location):
@@ -83,6 +83,7 @@ class openRemote(GtkMisc):
 		self.__christineConf.setValue('backend/last_stream_played',stream_history)
 		extension = location.split(".").pop()
 		urldesc = None
+		file = None
 		if location.split(":")[0] == "file":
 			file = ":".join(location.split(":")[1:])[2:]
 		elif location[0] == '/':
