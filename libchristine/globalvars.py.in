@@ -60,4 +60,4 @@ else:
 	PLUGINSDIR = '@pythonlibdir@/libchristine/Plugins'
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
 LOCALE_DIR = "@datadir@/locale/"
-BUGURL='https://apps.sourceforge.net/trac/christine/newticket'
+BUGURL='http://apps.sourceforge.net/trac/christine/newticket'

@@ -9,7 +9,7 @@ from libchristine.Logger import LoggerManager
 
 class BugReport:
 	def __init__(self):
-		self.logger = LoggerManager('BugReport')
+		self.logger = LoggerManager().getLogger('BugReport')
 		self.__Share = Share()
 		xml = self.__Share.getTemplate('errorReporter')
 		vals = '\n'.join([str(k) for k in self.formatExceptionInfo()])
