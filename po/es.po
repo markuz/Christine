@@ -1,111 +1,76 @@
-# Po translation file for Christine.
-# Copyright (C) 2006 Marco Antonio Islas Cruz
-# This file is distributed under the same license as the Christine package.
-# Marco Antonio Islas Cruz <markuz@islascruz.org>, 2006.
+# Spanish translation for christine
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the christine package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-21 01:03-0600\n"
-"PO-Revision-Date: 2008-12-05 19:27+0000\n"
-"Last-Translator: Paco Molinero <paco@byasl.com>\n"
-"Language-Team: es <LL@li.org>\n"
+"Project-Id-Version: christine\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-08-11 03:53-0500\n"
+"PO-Revision-Date: 2009-09-10 18:40+0000\n"
+"Last-Translator: Federico Vera <Unknown>\n"
+"Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-04-12 19:52+0000\n"
+"X-Launchpad-Export-Date: 2009-09-26 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: libchristine/Plugins/twitter.py:89
-msgid "not authorized"
-msgstr "No autorizado"
-
-#: libchristine/Plugins/twitter.py:91
-msgid "not found"
-msgstr "no encontrado"
-
-#: libchristine/Plugins/twitter.py:93
-msgid "service not available"
-msgstr "servicio no disponible"
-
-#: libchristine/Plugins/twitter.py:95
-msgid "unknown error"
-msgstr "error desconocido"
-
-#: libchristine/Plugins/twitter.py:97
-#, python-format
-msgid "twitt -> %s"
-msgstr "twitt -> %s"
-
-#: gui/About.glade:61
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Alejandro Ignacio Sánchez Verduzco "
-"https://launchpad.net/~alejandrosanchez\n"
-"  Andres Quintero Arias https://launchpad.net/~anrras-deactivatedaccount\n"
-"  Cristian Alberto Orozco https://launchpad.net/~alitadeposca\n"
-"  Dante Díaz https://launchpad.net/~dante\n"
-"  Paco Molinero https://launchpad.net/~franciscomol\n"
-"  Rodrigo Garcia Gonzalez https://launchpad.net/~nibblesmx\n"
-"  garaged https://launchpad.net/~garaged\n"
-"  markuz https://launchpad.net/~markuz"
-
-#: gui/addFiles.glade:59
+#: gui/addFiles.glade:53
 msgid "Importing:"
-msgstr "Importando:"
+msgstr "Importando"
 
-#: gui/addFiles.glade:69
+#: gui/addFiles.glade:64
 msgid "label2"
 msgstr "etiqueta2"
 
-#: gui/addFiles.glade:103
+#: gui/addFiles.glade:106
 msgid "<b>Importing files</b>"
 msgstr "<b>Importando archivos</b>"
 
-#: gui/deleteFileFromDisk.glade:35
-msgid ""
-"Are you sure?\n"
-"This cannot be undone"
+#: gui/About.glade:59
+msgid "translator-credits"
 msgstr ""
-"Esta seguro?\n"
-"Esto no se puede deshacer"
+"Launchpad Contributions:\n"
+"  Federico Vera https://launchpad.net/~fedevera\n"
+"  markuz https://launchpad.net/~markuz"
 
-#: gui/deleteFileFromDisk.glade:55 gui/deleteQuestion.glade:49
-#: gui/genericQuestion.glade:49 gui/NewSourceDialog.glade:81
-#: gui/walkdirectories.glade:85
-msgid "gtk-cancel"
-msgstr "gtk-cancelar"
+#: gui/SourcesList.glade:42
+msgid "Add a new source."
+msgstr "Agregar nueva fuente"
 
-#: gui/deleteFileFromDisk.glade:63 gui/deleteQuestion.glade:56
-#: gui/genericQuestion.glade:57
-msgid "gtk-ok"
-msgstr "gtk-ok"
+#: gui/SourcesList.glade:51
+msgid "Remove selected item"
+msgstr "Quitar elemento seleccionado"
 
-#: gui/deleteQuestion.glade:29
-msgid ""
-"You are about to remove all your files in the Library. \n"
-"Note that this cannot be undone!"
-msgstr ""
-"Usted está por remover todos los archivos en la biblioteca. \n"
-"Note que es no se puede deshacer!"
+#: gui/showInfo.glade:35
+msgid "Path"
+msgstr "Ubicación"
 
-#: gui/directorySelector.glade:9
-msgid "Select a folder"
-msgstr "Selecciona un directorio"
+#: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
+msgid "Title"
+msgstr "Título"
 
-#: gui/directorySelector.glade:19
-msgid "Include subfolders"
-msgstr "Incluir subcarpetas"
+#: gui/showInfo.glade:57 gui/Properties.glade:500 gui/Preferences.glade:41
+msgid "Artist"
+msgstr "Intérprete"
 
-#: gui/Error.glade:8
-msgid "Error"
-msgstr "Error"
+#: gui/showInfo.glade:69 gui/Properties.glade:528 gui/Preferences.glade:56
+msgid "Album"
+msgstr "Álbum"
 
-#: gui/Error.glade:82
-msgid "Error text"
-msgstr "Texto de error"
+#: gui/showInfo.glade:81 gui/Properties.glade:472 gui/Preferences.glade:126
+msgid "Genre"
+msgstr "Género"
+
+#: gui/showInfo.glade:93
+msgid "Track Number"
+msgstr "Número de pista"
+
+#: gui/NewSourceDialog.glade:41
+msgid "Source Name"
+msgstr "Nombre de la fuente"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -129,182 +94,13 @@ msgstr ""
 msgid "Report the bug"
 msgstr "Reporta un error"
 
-#: gui/FileSelector.glade:13
-msgid "Select your files"
-msgstr "Selecciona tus archivos"
-
-#: gui/genericQuestion.glade:30
-msgid "Label"
-msgstr "Etiqueta"
-
-#: gui/iconView.glade:8 gui/TreeViewReorderable.glade:7
-msgid "window1"
-msgstr "ventana1"
-
-#: gui/JumpTo.glade:8
-msgid "Jump to time"
-msgstr "Saltar al tiempo"
-
-#: gui/JumpTo.glade:98
-msgid ":"
-msgstr ":"
-
-#: gui/miniViewer.glade:10
-msgid "video player"
-msgstr "video reproductor"
-
-#: gui/NewSourceDialog.glade:41
-msgid "Source Name"
-msgstr "Nombre de la fuente"
-
-#: gui/NewSourceDialog.glade:92
-msgid "gtk-save"
-msgstr "gtk-save"
-
-#: gui/openRemote.glade:8
-msgid "Open Remote"
-msgstr "Abrir remoto"
-
-#: gui/openRemote.glade:20
-msgid "Location"
-msgstr "Ubicación"
-
-#: gui/plugin_lastfm_main.glade:36
-msgid "Request authorization"
-msgstr "Solicita autorización"
-
-#: gui/plugin_lastfm_main.glade:45
-msgid "Fetch session data"
-msgstr "Obtener datos de session"
-
-#: gui/plugin_lastfm_main.glade:59
-msgid "<b>Authorization</b>"
-msgstr "<b>Autorización</b>"
-
-#: gui/plugin_lastfm_main.glade:113
-msgid "Password"
-msgstr "Contrase&ntilde;a"
-
-#: gui/plugin_lastfm_main.glade:125
-msgid "Username"
-msgstr "Nombre de usuario"
-
-#: gui/plugin_lastfm_main.glade:139
-msgid "<b>Authentication</b>"
-msgstr "<b>Autenticación</b>"
-
-#: gui/plugin_pidgin_main.glade:55
+#: gui/plugin_pidgin_main.glade:38
 msgid ""
-"Usage: Tags like \"_artist_\" or \"_title_\" \n"
-"will be translated according to the \n"
-"current track"
+"Put here the the message you want to be put as\n"
+"status in pidgin."
 msgstr ""
-"Uso: Etiquetas como \"_artist_\" o \"_title_\" serán traducidas de acuerdo a "
-"la pista actual"
-
-#: gui/plugin_pidgin_main.glade:71
-msgid "<b>Message Format</b>"
-msgstr "<b>Formato del Mensaje</b>"
-
-#: gui/plugin_pidgin_main.glade:85
-msgid "<b>Pidgin</b>"
-msgstr "<b>Pidgin</b>"
-
-#: gui/plugin_pidgin_main.glade:108
-msgid "Accept"
-msgstr "Aceptar"
-
-#: gui/Preferences.glade:48 gui/Properties.glade:500
-msgid "Artist"
-msgstr "Intérprete"
-
-#: gui/Preferences.glade:62 gui/Properties.glade:528
-msgid "Album"
-msgstr "Álbum"
-
-#: gui/Preferences.glade:77
-msgid "Type"
-msgstr "Tipo"
-
-#: gui/Preferences.glade:91
-msgid "Length"
-msgstr "Duración"
-
-#: gui/Preferences.glade:102 gui/Properties.glade:584
-msgid "Track number"
-msgstr "Número de pista"
-
-#: gui/Preferences.glade:115
-msgid "Play count"
-msgstr "Contador de reproducción"
-
-#: gui/Preferences.glade:128 gui/Properties.glade:472
-msgid "Genre"
-msgstr "Genero"
-
-#: gui/Preferences.glade:145
-msgid "<b>Library columns</b>"
-msgstr "<b>Columnas de la biblioteca</b>"
-
-#: gui/Preferences.glade:169
-msgid "View"
-msgstr "Ver"
-
-#: gui/Preferences.glade:198
-msgid ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-msgstr ""
-"gconfaudiosink\n"
-"alsasink\n"
-"esdsink\n"
-"autoaudiosink"
-
-#: gui/Preferences.glade:218
-msgid "<b>Audiosink</b>"
-msgstr "<b>Audiosink</b>"
-
-#: gui/Preferences.glade:247
-msgid ""
-"ximagesink\n"
-"xvimagesink"
-msgstr ""
-"ximagesink\n"
-"xvimagesink"
-
-#: gui/Preferences.glade:265
-msgid "<b>Videosink</b>"
-msgstr "<b>Videosink</b>"
-
-#: gui/Preferences.glade:287
-msgid "Backend"
-msgstr "Backend"
-
-#: gui/Preferences.glade:333
-msgid "gtk-add"
-msgstr "gtk-add"
-
-#: gui/Preferences.glade:346
-msgid "gtk-delete"
-msgstr "gtk-delete"
-
-#: gui/Preferences.glade:371
-msgid "<b>Allowed Files</b>"
-msgstr "<b>Archivos Permitidos</b>"
-
-#: gui/Preferences.glade:386
-msgid "Importing"
-msgstr "Importando"
-
-#: gui/Preferences.glade:426
-msgid "Configure _Plugin"
-msgstr "Configurar Extensión"
-
-#: gui/Preferences.glade:449
-msgid "Plugins"
-msgstr "Extensiones"
+"Coloca aqui el mensja que quieres que se coloque como \n"
+"estatus en Pidgin"
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -312,7 +108,7 @@ msgstr "Propiedades"
 
 #: gui/Properties.glade:69
 msgid "File"
-msgstr "Fichero"
+msgstr "Archivo"
 
 #: gui/Properties.glade:108
 msgid "Audio codec"
@@ -337,186 +133,387 @@ msgstr "Ninguno"
 msgid "Date"
 msgstr "Fecha"
 
-#: gui/Properties.glade:556
-msgid "Title"
-msgstr "Titulo"
+#: gui/Properties.glade:584 gui/Preferences.glade:98
+msgid "Track number"
+msgstr "Número de pista"
 
 #: gui/Properties.glade:612
 msgid "Video codec"
 msgstr "Códec de vídeo"
 
-#: gui/walkdirectories.glade:44
-msgid "Exploring"
-msgstr "Explorando"
+#: gui/deleteQuestion.glade:29
+msgid ""
+"You are about to remove all your files in the Library. \n"
+"Note that this cannot be undone!"
+msgstr ""
+"Usted está por remover todos los archivos en la biblioteca. \n"
+"Note que es no se puede deshacer!"
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
 msgstr "_Medios"
 
-#: gui/WindowCore.glade:28
-msgid "Import File"
-msgstr "Importar el archivo"
-
-#: gui/WindowCore.glade:45
-msgid "Import Folder"
-msgstr "Importar Folder"
-
-#: gui/WindowCore.glade:67
+#: gui/WindowCore.glade:60
 msgid "Import to queue"
 msgstr "Importar a la cola"
 
-#: gui/WindowCore.glade:81
+#: gui/WindowCore.glade:74
 msgid "Open remote"
 msgstr "Abrir remoto"
 
-#: gui/WindowCore.glade:95
+#: gui/WindowCore.glade:88
 msgid "Jump _to"
-msgstr "Saltar _a"
+msgstr "Brincar _a"
 
-#: gui/WindowCore.glade:104
+#: gui/WindowCore.glade:97
 msgid "_Jump to playing"
-msgstr "Seleccionar actual"
+msgstr "Brincar a actual"
 
-#: gui/WindowCore.glade:118
+#: gui/WindowCore.glade:111
 msgid "Clean main List"
-msgstr "Limpiar lista principal"
+msgstr "Limpiar Lista principal"
 
-#: gui/WindowCore.glade:131
-msgid "gtk-quit"
-msgstr "gtk-quit"
-
-#: gui/WindowCore.glade:144
+#: gui/WindowCore.glade:137
 msgid "_Edit"
-msgstr "Editar"
+msgstr "_Editar"
 
-#: gui/WindowCore.glade:151
-msgid "gtk-find"
-msgstr "gtk-find"
-
-#: gui/WindowCore.glade:165
-msgid "gtk-preferences"
-msgstr "gtk-preferences"
-
-#: gui/WindowCore.glade:183
+#: gui/WindowCore.glade:176
 msgid "_Control"
 msgstr "_Control"
 
-#: gui/WindowCore.glade:191
+#: gui/WindowCore.glade:184
 msgid "Play"
-msgstr "Tocar"
+msgstr "Reproducir"
 
-#: gui/WindowCore.glade:205
-msgid "Prev"
-msgstr "Prev"
-
-#: gui/WindowCore.glade:221
-msgid "_Next"
-msgstr "Siguie_nte"
-
-#: gui/WindowCore.glade:242
+#: gui/WindowCore.glade:222
 msgid "Shuffle"
-msgstr "Al azar"
+msgstr "Modo Aleatorio"
 
-#: gui/WindowCore.glade:250
+#: gui/WindowCore.glade:230
 msgid "Repeat"
 msgstr "Repetir"
 
-#: gui/WindowCore.glade:263
+#: gui/WindowCore.glade:243
 msgid "Less volume"
-msgstr "Menos Volumen"
+msgstr "Bajar volumen"
 
-#: gui/WindowCore.glade:272
+#: gui/WindowCore.glade:252
 msgid "More volume"
-msgstr "Mas Volumen"
+msgstr "Mas volumen"
 
-#: gui/WindowCore.glade:281
+#: gui/WindowCore.glade:261
 msgid "Mute"
-msgstr "Mudo"
+msgstr "Silenciar"
 
-#: gui/WindowCore.glade:294
+#: gui/WindowCore.glade:274
 msgid "_View"
-msgstr "_Ver"
+msgstr "Vista"
 
-#: gui/WindowCore.glade:302
+#: gui/WindowCore.glade:282
 msgid "_Small view"
-msgstr "Vi_sta compacta"
+msgstr "Vi_sta pequeña"
 
-#: gui/WindowCore.glade:310
+#: gui/WindowCore.glade:291
+msgid "Switch the view of the side panel"
+msgstr "Cambiar vista"
+
+#: gui/WindowCore.glade:292
+msgid "S_ide panel"
+msgstr "_Panel lateral"
+
+#: gui/WindowCore.glade:300
 msgid "Browser"
 msgstr "Navegador"
 
-#: gui/WindowCore.glade:319
+#: gui/WindowCore.glade:309
 msgid "Full Screen"
 msgstr "Pantalla Completa"
 
-#: gui/WindowCore.glade:333
+#: gui/WindowCore.glade:323
 msgid "Visualization"
-msgstr "Visualizacion"
+msgstr "Visualización"
 
-#: gui/WindowCore.glade:346
+#: gui/WindowCore.glade:332 libchristine/Christine.py:225
+msgid "Queue"
+msgstr "Cola"
+
+#: gui/WindowCore.glade:340 libchristine/Christine.py:234
+msgid "Sources List"
+msgstr "Lista de fuentes"
+
+#: gui/WindowCore.glade:352
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: gui/WindowCore.glade:354
-msgid "Translate Christine"
-msgstr "Traducir Christine"
-
-#: gui/WindowCore.glade:370
-msgid "Report a Bug"
-msgstr "Informe de un error"
-
-#: gui/WindowCore.glade:385
-msgid "gtk-about"
-msgstr "gtk-about"
-
-#: gui/WindowCore.glade:513
+#: gui/WindowCore.glade:524
 msgid "Find"
 msgstr "Buscar"
 
-#~ msgid "<b>View</b>"
-#~ msgstr "<b>Ver</b>"
+#: gui/WindowCore.glade:578
+msgid "page 1"
+msgstr "página 1"
 
-#~ msgid "Library"
-#~ msgstr "Biblioteca"
+#: gui/WindowCore.glade:592
+msgid "page 2"
+msgstr "página 2"
 
-#~ msgid "Play or pause the player"
-#~ msgstr "Activa o detiene el reproductor"
+#: gui/WindowCore.glade:607
+msgid "page 3"
+msgstr "página 3"
 
-#~ msgid "Play/Pause"
-#~ msgstr "Reproducir/Pausar"
+#: gui/openRemote.glade:8
+msgid "Open Remote"
+msgstr "Abrir Remoto"
 
-#~ msgid "Next"
-#~ msgstr "Siguiente"
+#: gui/openRemote.glade:20
+msgid "Location"
+msgstr "Ubicación"
 
-#~ msgid "Previous"
-#~ msgstr "Anterior"
+#: gui/deleteFileFromDisk.glade:35
+msgid ""
+"Are you sure?\n"
+"This cannot be undone"
+msgstr ""
+"Esta seguro?\n"
+"Esto no se puede deshacer"
 
-#~ msgid "Add a file to the list"
-#~ msgstr "Agregar un archivo a la lista"
+#: gui/walkdirectories.glade:46
+msgid "Exploring"
+msgstr "Explorando"
 
-#~ msgid "Add a complete folder to the list"
-#~ msgstr "Agregar un folder a la lista"
+#: gui/Preferences.glade:71
+msgid "Type"
+msgstr "Tipo"
 
-#~ msgid "Import a file to the queue without add it to the list"
-#~ msgstr "Importar un archivo a la cola sin agregarlo a la lista"
+#: gui/Preferences.glade:86
+msgid "Length"
+msgstr "Duración"
 
-#~ msgid "Jump to some second on the song"
-#~ msgstr "Saltar a algun segundo en la cancion"
+#: gui/Preferences.glade:112
+msgid "Play count"
+msgstr "Número de reproducciones"
 
-#~ msgid "Ful Scren"
-#~ msgstr "Pantalla Completa"
+#: gui/Preferences.glade:145
+msgid "<b>Library columns</b>"
+msgstr "<b>Columnas de la biblioteca</b>"
 
-#~ msgid "<big>Not playing</big>"
-#~ msgstr "<big>Sin reproducir</big>"
+#: gui/Preferences.glade:179
+msgid "Font"
+msgstr "Tipografía"
 
-#~ msgid "T#"
-#~ msgstr "#"
+#: gui/Preferences.glade:190
+msgid "Encoding"
+msgstr "Codificación"
 
-#~ msgid "Count"
-#~ msgstr "Contador"
+#: gui/Preferences.glade:230
+msgid "<b>Subtitles</b>"
+msgstr "<b>Subtítulos</b>"
 
-#~ msgid "Lenght"
-#~ msgstr "Duracion"
+#: gui/Preferences.glade:250
+msgid "View"
+msgstr "Ver"
 
-#~ msgid "Queue"
-#~ msgstr "Cola"
+#: gui/Preferences.glade:279
+msgid ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
+msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
+
+#: gui/Preferences.glade:301
+msgid "<b>Audiosink</b>"
+msgstr "<b>Audiosink</b>"
+
+#: gui/Preferences.glade:331
+msgid ""
+"ximagesink\n"
+"xvimagesink"
+msgstr ""
+"ximagesink\n"
+"xvimagesink"
+
+#: gui/Preferences.glade:350
+msgid "<b>Videosink</b>"
+msgstr "<b>Videosink</b>"
+
+#: gui/Preferences.glade:372
+msgid "Backend"
+msgstr "Motor"
+
+#: gui/Preferences.glade:462
+msgid "<b>Allowed Files</b>"
+msgstr "<b>Archivos permitidos</b>"
+
+#: gui/Preferences.glade:477
+msgid "Importing"
+msgstr "Importando"
+
+#: gui/Preferences.glade:517
+msgid "Configure _Plugin"
+msgstr "Configurar _Plugin"
+
+#: gui/Preferences.glade:544
+msgid "Plugins"
+msgstr "Complementos"
+
+#: gui/twitter.glade:59
+msgid "Message"
+msgstr "Mensaje"
+
+#: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
+msgid "Username"
+msgstr "Nombre de Usuario"
+
+#: gui/twitter.glade:81 gui/plugin_lastfm_main.glade:113
+msgid "Password"
+msgstr "Contraseña"
+
+#: gui/NewRadioDialog.glade:43
+msgid "URL"
+msgstr "URL"
+
+#: gui/plugin_lastfm_main.glade:36
+msgid "Request authorization"
+msgstr "Solicitar autorización"
+
+#: gui/plugin_lastfm_main.glade:45
+msgid "Fetch session data"
+msgstr "Obtener datos de sesión"
+
+#: gui/plugin_lastfm_main.glade:59
+msgid "<b>Authorization</b>"
+msgstr "<b>Autortizacion</b>"
+
+#: gui/plugin_lastfm_main.glade:139
+msgid "<b>Authentication</b>"
+msgstr "<b>Autenticación</b>"
+
+#: gui/FileSelector.glade:13
+msgid "Select your files"
+msgstr "Seleccione sus archivos"
+
+#: gui/genericQuestion.glade:30
+msgid "Label"
+msgstr "Etiqueta"
+
+#: gui/directorySelector.glade:9
+msgid "Select a folder"
+msgstr "Seleccione un directorio"
+
+#: gui/directorySelector.glade:19
+msgid "Include subfolders"
+msgstr "Incluir subcarpetas"
+
+#: gui/TreeViewReorderable.glade:7
+msgid "window1"
+msgstr "ventana1"
+
+#: gui/Error.glade:8
+msgid "Error"
+msgstr "Error"
+
+#: gui/Error.glade:82
+msgid "Error text"
+msgstr "Texto del error"
+
+#: gui/JumpTo.glade:7
+msgid "Jump to time"
+msgstr "Saltar al tiempo"
+
+#: gui/JumpTo.glade:45
+msgid ":"
+msgstr ":"
+
+#: libchristine/Plugins/trayicon/__init__.py:26
+msgid "TrayIcon"
+msgstr "Icono del área de notificación"
+
+#: libchristine/Plugins/trayicon/__init__.py:27
+msgid "This plugins shows a Try Icon on the notification area"
+msgstr "Este plugin muestra un icono en el area de notificacion"
+
+#: libchristine/Plugins/gnomeDBus/__init__.py:55
+msgid "GNOME Media Keys"
+msgstr "Teclas multimedia de GNOME"
+
+#: libchristine/Plugins/gnomeDBus/__init__.py:56
+msgid "Allows christine to react to GNOME media key press events"
+msgstr ""
+"Permite a cristine reaccionar a los eventos de presion de teclas de GNOME"
+
+#: libchristine/Plugins/albumCover/__init__.py:43
+msgid "Album Cover"
+msgstr "Carátula de album"
+
+#: libchristine/Plugins/albumCover/__init__.py:44
+msgid "Try to get the album cover and shows on the gui if it is found."
+msgstr "Intenta obtener la carátula y mostrarla en la GUI si es encontrada"
+
+#: libchristine/Plugins/getInfo/__init__.py:44
+msgid "getInfo"
+msgstr ""
+
+#: libchristine/Plugins/getInfo/__init__.py:45
+msgid "Shows/Update the info on the tags of the given file."
+msgstr ""
+"Muestra/Actualiza la informacion de las etiquetas en el archivo dado."
+
+#: libchristine/Plugins/lastfm/__init__.py:39
+msgid "Lastfm"
+msgstr ""
+
+#: libchristine/Plugins/lastfm/__init__.py:40
+msgid "Enables the last.fm interaction"
+msgstr "Activa la interaccion con last.fm"
+
+#: libchristine/Plugins/twitter/__init__.py:44
+msgid "Twitter"
+msgstr "Twitter"
+
+#: libchristine/Plugins/twitter/__init__.py:45
+msgid "This plugins send and update to your twitter account"
+msgstr "Este plugin envia y actualiza tu cuenta de twitter"
+
+#: libchristine/Plugins/twitter/__init__.py:95
+msgid "not authorized"
+msgstr "No autorizado"
+
+#: libchristine/Plugins/twitter/__init__.py:97
+msgid "not found"
+msgstr "no encontrado"
+
+#: libchristine/Plugins/twitter/__init__.py:99
+msgid "service not available"
+msgstr "Servicio no disponible"
+
+#: libchristine/Plugins/twitter/__init__.py:101
+msgid "unknown error"
+msgstr "error desconocido"
+
+#: libchristine/Plugins/twitter/__init__.py:103
+#, python-format
+msgid "twitt -> %s"
+msgstr "twitt -> %s"
+
+#: libchristine/Plugins/pidgin/__init__.py:39
+msgid "Pidgin"
+msgstr "Pidgin"
+
+#: libchristine/Plugins/pidgin/__init__.py:40
+msgid "This plugin set the song you are playing on pidgin"
+msgstr "Este plugin coloca la cacnion que estas tocando en Pidgin"
+
+#: libchristine/Plugins/christinePyNotify/__init__.py:44
+msgid "PyNotify"
+msgstr "PyNotify"
+
+#: libchristine/Plugins/christinePyNotify/__init__.py:45
+msgid "Shows notify bubbles"
+msgstr "Muestra las ventanas de notificacion"
