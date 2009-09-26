@@ -111,7 +111,7 @@ class openRemote(GtkMisc):
 		elif extension == "m3u":
 			lines = urldesc.readlines()
 			if lines[0].lower() != "#extm3u":
-				self.goNext()
+				self.interface.coreClass.goNext()
 			sites = []
 			for i in range(len(lines)):
 				if lines[i].split(":")[0].lower() == "#extinf":
@@ -119,7 +119,7 @@ class openRemote(GtkMisc):
 			for i in sites:
 				i = i.strip("\r\n").strip()
 				self.interface.Queue.add(i)
-			self.goNext()
+			self.interface.coreClass.goNext()
 		urldesc.close()
 
 	def __orChanged(self,widget):
