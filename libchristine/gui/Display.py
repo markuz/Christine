@@ -101,7 +101,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		mx,my = self.get_pointer()
 		x,y,w,h = self.allocation
 		if mx > x and mx < w and my > y and my < h:
-			if time.time() - self.__last_time_moved > 0.2:
+			if time.time() - self.__last_time_moved > 0.05:
 				self.__emit()
 				self.__last_time_moved = time.time()
 		
