@@ -131,8 +131,14 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		miny         = (miny + (BORDER_WIDTH * 2))
 		maxx         = (minx + width)
 		maxy         = (miny + BORDER_WIDTH)
-		if (x >= nx) and x <= w and y >=ny and y <= h:
+		print x,nx,w,y,ny,h
+		print (x >= nx), x <= w, y >=ny, y <= h
+		print (x >= nx) and x <= w and y >=ny and y <= h
+		if  x and x <= w and y >=ny and y <= h:
 			value = (((x - minx) * 1.0) / width)
+			if value <0:
+				value = 0
+			print value
 			self.setScale(value)
 			self.emit("value-changed",self)
 
@@ -248,9 +254,11 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		pat.add_color_stop_rgb(0.9,self.bar,self.bag,self.bab)
 		context.set_source(pat)
 		context.fill()
-		
 	
 	def draw_pos_circle(self):
+		if not self.window:
+			return True
+		context = self.window.cairo_create()
 		w,h = (self.allocation.width, self.allocation.height)
 		x,y = (0,0)
 		fh = self.__Layout.get_pixel_size()[1]
@@ -263,14 +271,15 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		else:
 			width = twidth
 			width = (self.__Value * width)
-		self.context.set_source_rgb(self.bar,self.bag,self.bab)
-		self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
-		self.context.arc(int (fh + width),
+		
+		context.set_source_rgb(self.bar,self.bag,self.bab)
+		context.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		context.arc(int (fh + width),
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 
 				4, 
 				0, 
 				2 * math.pi)
-		self.context.fill_preserve()
+		context.fill_preserve()
 		pat = cairo.LinearGradient(	
 				fh, 
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 
@@ -279,12 +288,16 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 				)
 		pat.add_color_stop_rgb(0.0, self.bar1 -0.5,self.bag1-0.05,self.bab1-0.05)
 		pat.add_color_stop_rgb(0.5,self.bar,self.bag,self.bab)
-		self.context.set_source(pat)
-		self.context.fill()
-		self.context.arc(int (fh + width),
-				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +2, 2, 0, 2 * math.pi)
-		self.context.set_source_rgb(1,1,1)
-		self.context.fill()
+		context.set_source(pat)
+		context.fill()
+		context.arc(int (fh + width),
+				(BORDER_WIDTH * 2) + 
+				fh + (BORDER_WIDTH/2) +2, 
+				2, 
+				0, 
+				2 * math.pi)
+		context.set_source_rgb(1,1,1)
+		context.fill()
 	
 	def draw_text(self, x, y, w , h):
 		# Write text
