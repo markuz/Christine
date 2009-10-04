@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Feb  7 04:21:47 2009 -->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="window1">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <child>
@@ -12,25 +12,30 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
             <child>
               <widget class="GtkViewport" id="viewport1">
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="resize_mode">GTK_RESIZE_QUEUE</property>
-                <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                <property name="resize_mode">queue</property>
+                <property name="shadow_type">etched-in</property>
                 <child>
                   <widget class="GtkTreeView" id="treeview">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="rules_hint">True</property>
+                    <property name="headers_visible">False</property>
+                    <property name="headers_clickable">False</property>
+                    <property name="enable_search">False</property>
                   </widget>
                 </child>
               </widget>
             </child>
           </widget>
+          <packing>
+            <property name="position">0</property>
+          </packing>
         </child>
       </widget>
     </child>
@@ -38,18 +43,18 @@
   <widget class="GtkMenu" id="menu">
     <child>
       <widget class="GtkImageMenuItem" id="addSource">
+        <property name="label">gtk-add</property>
         <property name="visible">True</property>
         <property name="tooltip" translatable="yes">Add a new source.</property>
-        <property name="label" translatable="yes">gtk-add</property>
         <property name="use_underline">True</property>
         <property name="use_stock">True</property>
       </widget>
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="delSource">
+        <property name="label">gtk-remove</property>
         <property name="visible">True</property>
         <property name="tooltip" translatable="yes">Remove selected item</property>
-        <property name="label" translatable="yes">gtk-remove</property>
         <property name="use_underline">True</property>
         <property name="use_stock">True</property>
       </widget>

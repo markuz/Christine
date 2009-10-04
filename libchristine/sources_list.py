@@ -42,7 +42,7 @@ class sources_list (GtkMisc):
 		self.xml = self.__Share.getTemplate('SourcesList', 'vbox')
 		self.__gen_model()
 		self.treeview = self.xml["treeview"]
-		self.treeview.set_headers_visible(True)
+		#self.treeview.set_headers_visible(True)
 		self.treeview.set_model(self.model)
 		self.treeview.expand_all()
 		self.treeview.connect('button-press-event', self.treeview_bpe)

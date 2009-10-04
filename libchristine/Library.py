@@ -94,12 +94,10 @@ class libraryBase(GtkMisc):
 		self.scroll.add_events(gtk.gdk.SCROLL_MASK)
 		self.scroll.connect('scroll-event', self.__scroll_child)
 		self.scroll.drag_dest_set(gtk.DEST_DEFAULT_DROP,
-								QUEUE_TARGETS,
-								gtk.gdk.ACTION_COPY)
+								QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
 		self.tv.connect('scroll-event', self.__scroll_child)
 		self.tv.drag_source_set(gtk.gdk.BUTTON1_MASK, 
-							QUEUE_TARGETS, 
-								gtk.gdk.ACTION_COPY)
+							QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
 		self.tv.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
                   gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                   QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
@@ -130,14 +128,11 @@ class libraryBase(GtkMisc):
 			return
 		return True
 	
-	def drag_data_get(self, treeview,drag_context,selection, 
-					info, timestamp):
+	def drag_data_get(self, treeview,drag_context,selection, info, timestamp):
 		treeselection = treeview.get_selection()
 		model, iter = treeselection.get_selected()
 		text = model.get_value(iter, PATH)
 		selection.set('text/plain', 8, text)
-
-
 
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
@@ -151,19 +146,20 @@ class libraryBase(GtkMisc):
 			diff = 0.6
 		if diff > 0.5 and diff < 1 :
 			paths = self.tv.get_visible_range()
-			if paths:
-				startpath = paths[0][0]
-				endpath = paths[1][0]
-				model = self.model.getModel()
-				for i in range(startpath, endpath +1):
-					if not self.model.iter_is_valid(i):
-						continue
-					siter = model.get_iter(i)
-					filepath  = self.model.get_value(siter, PATH)
-					self.check_single_file_data(filepath)
-					while gtk.events_pending():
-							gtk.main_iteration_do()
-		if diff > 1.5:
+			if not paths:
+				return True
+			startpath = paths[0][0]
+			endpath = paths[1][0]
+			model = self.model.getModel()
+			for i in range(startpath, endpath +1):
+				if not self.model.iter_is_valid(i): continue
+				siter = model.get_iter(i)
+				filepath  = self.model.get_value(siter, PATH)
+				self.check_single_file_data(filepath)
+				while gtk.events_pending():
+						gtk.main_iteration_do()
+							
+		elif diff > 1.5:
 			return False
 		return True
 	
