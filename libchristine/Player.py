@@ -187,9 +187,9 @@ class Player(gtk.DrawingArea, object):
 		@param property: string Property
 		@param value: property value
 		'''
-		self.__Logger.info("setting property '%s' with value '%s",
-						property,str(value))
+		self.__Logger.info("setting property '%s' with value '%s", property,str(value))
 		element.set_property(property,value)
+		return True
 
 	def exposeCallback(self, window, event):
 		"""
@@ -264,7 +264,6 @@ class Player(gtk.DrawingArea, object):
 
 	def playIt(self):
 		"""
-		Seek to secs
 		Play the current song
 		"""
 		self.__setState(gst.STATE_PLAYING)
@@ -309,11 +308,26 @@ class Player(gtk.DrawingArea, object):
 									self.visualizationPlugin)
 			self.show()
 		else:
-			self.visualizationPlugin = None
+			if gst.STATE_PLAYING in self.getState():
+				location = self.getLocation()
+				sec = self.query_duration(gst.FORMAT_TIME)[0]
+				self.stop()
+				gobject.timeout_add(100, self.__replay, location, sec)
+			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
+			#self.visualizationPlugin = None
 			self.VideoSink.set_property('force-aspect-ratio', True)
 			self.__ShouldShow = False
-			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
-			del self.visualizationPlugin
+		return True
+	
+	def  __replay(self, location, sec):
+		self.setLocation(location)
+		sec = (sec / gst.SECOND)
+		self.playIt()
+		self.seekTo(sec)
+		return False
+
+	def __do_quit_visualization(self, sec):
+		
 		return True
 
 	def setVolume(self, volume):
