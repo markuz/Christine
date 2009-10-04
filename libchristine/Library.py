@@ -752,7 +752,7 @@ class library(gtk.Widget,libraryBase):
 		tv = self.tv
 		tvc = gtk.TreeViewColumn
 
-		tn = tvc(translate("T#"),render,text=TN)
+		tn = tvc(translate(""),render,text=TN)
 		tn.set_sort_column_id(TN)
 		tn.set_min_width(30)
 		tn.set_resizable(True)
@@ -790,7 +790,7 @@ class library(gtk.Widget,libraryBase):
 		type = tvc(translate("Type"),render,text=TYPE)
 		type.set_sort_column_id(TYPE)
 		type.set_resizable(True)
-		type.set_min_width(250)
+		type.set_min_width(80)
 		type.set_visible(self.gconf.getBool("ui/show_type"))
 		tv.append_column(type)
 
@@ -805,7 +805,7 @@ class library(gtk.Widget,libraryBase):
 		length.set_sort_column_id(TIME)
 		length.set_resizable(True)
 		length.set_visible(self.gconf.getBool("ui/show_length"))
-		length.set_min_width(100)
+		length.set_min_width(80)
 		tv.append_column(length)
 
 		genre = tvc(translate("Genre"),render,text=GENRE)
