@@ -131,9 +131,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		miny         = (miny + (BORDER_WIDTH * 2))
 		maxx         = (minx + width)
 		maxy         = (miny + BORDER_WIDTH)
-		print x,nx,w,y,ny,h
-		print (x >= nx), x <= w, y >=ny, y <= h
-		print (x >= nx) and x <= w and y >=ny and y <= h
 		if  x and x <= w and y >=ny and y <= h:
 			value = (((x - minx) * 1.0) / width)
 			if value <0:

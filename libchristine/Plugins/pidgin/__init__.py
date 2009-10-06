@@ -34,6 +34,7 @@ from libchristine.Tagger import Tagger
 from libchristine.Share import Share
 from libchristine.christine_dbus import DBUS_SESSION
 from libchristine.Translator import translate 
+from libchristine.Logger import LoggerManager
 
 
 __name__ = _('Pidgin')
@@ -48,6 +49,7 @@ class pidgin(plugin_base):
 	and puts the current song played on the message
 	"""
 	def __init__(self):
+		self.logger = LoggerManager().getLogger('Plugin:Pidgin')
 		plugin_base.__init__(self)
 		self.name = __name__
 		self.description =  __description__
@@ -91,25 +93,25 @@ class pidgin(plugin_base):
 			message = translate("Listening to: _title_ by _artist_ on Chrsitine")
 			self.christineConf.setValue('pidgin/message', message)
 		message = self.tagger.taggify(file, message)
-		if ( self.obj is not None ):
+		print self.obj
+		if self.obj:
 			try:
 				current = self.purple.PurpleSavedstatusGetType(
 									self.purple.PurpleSavedstatusGetCurrent())
 				status = self.purple.PurpleSavedstatusNew("", current)
 				self.purple.PurpleSavedstatusSetMessage(status, message)
 				self.purple.PurpleSavedstatusActivate(status)
-			except:
-				self.obj = None
+			except Exception, e:
+				self.logger.exception(e)
 
 	def SessionStart(self):
-		session_bus = DBUS_SESSION
 		try:
-			self.obj = session_bus.get_object("im.pidgin.purple.PurpleService",
+			self.obj = DBUS_SESSION.get_object("im.pidgin.purple.PurpleService",
 											"/im/pidgin/purple/PurpleObject")
 			self.purple = dbus.Interface(self.obj,
 										"im.pidgin.purple.PurpleInterface")
-		except:
-			self.obj = None
+		except Exception, e:
+			self.logger.exception(e)
 
 	def set_message(self, *args):
 		"""
@@ -118,7 +120,8 @@ class pidgin(plugin_base):
 		Could be done inside the self.SetMessage() but I don't
 		like the idea, this is more flexible
 		"""
-		if self.obj !=  None and self.active:
+		print self.active
+		if self.active:
 			self.SessionStart()
 			self.SetMessage()
 
