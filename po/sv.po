@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2009-09-26 23:16+0000\n"
+"Last-Translator: Carl-Uno Olsson <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-09-26 05:00+0000\n"
+"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: gui/addFiles.glade:53
@@ -32,18 +32,20 @@ msgstr "<b>Importerar filer</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Carl-Uno Olsson https://launchpad.net/~carl-uno"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
-msgstr ""
+msgstr "Lägg till en ny källa."
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
-msgstr ""
+msgstr "Ta bort markerat objekt"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr ""
+msgstr "Sökväg"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
@@ -63,7 +65,7 @@ msgstr "Genre"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Spårnummer"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -79,6 +81,13 @@ msgid ""
 "\n"
 "Thank you for taking the time to improve christine."
 msgstr ""
+"Vi har hittat ett fel, var vänlig och rapportera det. \n"
+"\n"
+"Vid inrapportering av ett fel, vänligen kopiera nedanstående info så det går "
+"\n"
+"att återskapa felet och åtgärda det. Du bör också säga vad du gorde. \n"
+"\n"
+"Tack för att du tog dig tid att förbättra christine."
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
@@ -89,6 +98,8 @@ msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
 msgstr ""
+"Skriv det meddelande du vill ange som status \n"
+"i pidgin här."
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -203,11 +214,11 @@ msgstr "_Liten visning"
 
 #: gui/WindowCore.glade:291
 msgid "Switch the view of the side panel"
-msgstr ""
+msgstr "Ändra bild i sidpanelen"
 
 #: gui/WindowCore.glade:292
 msgid "S_ide panel"
-msgstr ""
+msgstr "S_idpanel"
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
@@ -223,11 +234,11 @@ msgstr "Visualisering"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
-msgstr ""
+msgstr "Kö"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "Lista över källor"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
@@ -239,15 +250,15 @@ msgstr "Sök"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "sida 1"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "sida 2"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "sida 3"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -287,15 +298,15 @@ msgstr "<b>Bibliotekskolumner</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
-msgstr ""
+msgstr "Typsnitt"
 
 #: gui/Preferences.glade:190
 msgid "Encoding"
-msgstr ""
+msgstr "Kodning"
 
 #: gui/Preferences.glade:230
 msgid "<b>Subtitles</b>"
-msgstr ""
+msgstr "<b>Undertexter</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
@@ -309,6 +320,11 @@ msgid ""
 "autoaudiosink\n"
 "pulsesink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
@@ -348,7 +364,7 @@ msgstr "Insticksprogram"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "Meddelande"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
@@ -360,7 +376,7 @@ msgstr "Lösenord"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
@@ -372,11 +388,11 @@ msgstr "Hämta sessionsdata"
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr ""
+msgstr "<b>Auktorisering</b>"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
-msgstr ""
+msgstr "<b>Autentisering</b>"
 
 #: gui/FileSelector.glade:13
 msgid "Select your files"
@@ -416,51 +432,51 @@ msgstr ":"
 
 #: libchristine/Plugins/trayicon/__init__.py:26
 msgid "TrayIcon"
-msgstr ""
+msgstr "Lådikon"
 
 #: libchristine/Plugins/trayicon/__init__.py:27
 msgid "This plugins shows a Try Icon on the notification area"
-msgstr ""
+msgstr "Denna plugin visar en lådikon i meddelandearean"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:55
 msgid "GNOME Media Keys"
-msgstr ""
+msgstr "GNOME Media Keys"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:56
 msgid "Allows christine to react to GNOME media key press events"
-msgstr ""
+msgstr "Tillåter christine att reagera på GNOME media key händelser"
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
-msgstr ""
+msgstr "Skivomslag"
 
 #: libchristine/Plugins/albumCover/__init__.py:44
 msgid "Try to get the album cover and shows on the gui if it is found."
-msgstr ""
+msgstr "Försöker skaffa skivomslaget och visar det på gui om det hittas."
 
 #: libchristine/Plugins/getInfo/__init__.py:44
 msgid "getInfo"
-msgstr ""
+msgstr "getInfo"
 
 #: libchristine/Plugins/getInfo/__init__.py:45
 msgid "Shows/Update the info on the tags of the given file."
-msgstr ""
+msgstr "Visa/uppdatera informationen på etiketten för filen."
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Lastfm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
-msgstr ""
+msgstr "Aktiverar samarbete med last.fm"
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
-msgstr ""
+msgstr "Denna plugin uppdaterar ditt twitter-konto"
 
 #: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
@@ -481,23 +497,23 @@ msgstr "okänt fel"
 #: libchristine/Plugins/twitter/__init__.py:103
 #, python-format
 msgid "twitt -> %s"
-msgstr ""
+msgstr "twitt -> %s"
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
-msgstr ""
+msgstr "Pidgin"
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
-msgstr ""
+msgstr "Denna plugin placerar låten du spelar på pidgin"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
-msgstr ""
+msgstr "Visar Notify-bubblor"
 
 #~ msgid "gtk-add"
 #~ msgstr "Lägg till"

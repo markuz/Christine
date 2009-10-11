@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-09-26 05:00+0000\n"
+"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: gui/addFiles.glade:53
@@ -55,7 +55,7 @@ msgstr "Izpildītājs"
 
 #: gui/showInfo.glade:69 gui/Properties.glade:528 gui/Preferences.glade:56
 msgid "Album"
-msgstr "Albums"
+msgstr "Albūms"
 
 #: gui/showInfo.glade:81 gui/Properties.glade:472 gui/Preferences.glade:126
 msgid "Genre"
@@ -67,7 +67,7 @@ msgstr ""
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
-msgstr ""
+msgstr "Avota nosaukums"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -92,7 +92,7 @@ msgstr ""
 
 #: gui/Properties.glade:9
 msgid "Properties"
-msgstr ""
+msgstr "Īpašības"
 
 #: gui/Properties.glade:69
 msgid "File"
@@ -104,7 +104,7 @@ msgstr ""
 
 #: gui/Properties.glade:136
 msgid "Mode"
-msgstr ""
+msgstr "Režīms"
 
 #: gui/Properties.glade:164
 msgid "Bitrate"
@@ -115,7 +115,7 @@ msgstr "Bitu ātrums"
 #: gui/Properties.glade:360 gui/Properties.glade:388 gui/Properties.glade:416
 #: gui/Properties.glade:640
 msgid "None"
-msgstr ""
+msgstr "Nekas"
 
 #: gui/Properties.glade:444
 msgid "Date"
@@ -137,7 +137,7 @@ msgstr ""
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
-msgstr ""
+msgstr "_Media"
 
 #: gui/WindowCore.glade:60
 msgid "Import to queue"
@@ -161,23 +161,23 @@ msgstr ""
 
 #: gui/WindowCore.glade:137
 msgid "_Edit"
-msgstr ""
+msgstr "R_ediģēt"
 
 #: gui/WindowCore.glade:176
 msgid "_Control"
-msgstr ""
+msgstr "_Kontrole"
 
 #: gui/WindowCore.glade:184
 msgid "Play"
-msgstr ""
+msgstr "Atskaņot"
 
 #: gui/WindowCore.glade:222
 msgid "Shuffle"
-msgstr ""
+msgstr "Samaisīt"
 
 #: gui/WindowCore.glade:230
 msgid "Repeat"
-msgstr ""
+msgstr "Atkārtot"
 
 #: gui/WindowCore.glade:243
 msgid "Less volume"
@@ -189,11 +189,11 @@ msgstr ""
 
 #: gui/WindowCore.glade:261
 msgid "Mute"
-msgstr ""
+msgstr "Apklusināt"
 
 #: gui/WindowCore.glade:274
 msgid "_View"
-msgstr ""
+msgstr "_Skats"
 
 #: gui/WindowCore.glade:282
 msgid "_Small view"
@@ -209,15 +209,15 @@ msgstr ""
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
-msgstr ""
+msgstr "Pārlūks"
 
 #: gui/WindowCore.glade:309
 msgid "Full Screen"
-msgstr ""
+msgstr "Pilnekrāna režīms"
 
 #: gui/WindowCore.glade:323
 msgid "Visualization"
-msgstr ""
+msgstr "Vizualizēšana"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
@@ -229,11 +229,11 @@ msgstr ""
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
-msgstr ""
+msgstr "_Palīdzība"
 
 #: gui/WindowCore.glade:524
 msgid "Find"
-msgstr ""
+msgstr "Atrast"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
@@ -253,7 +253,7 @@ msgstr ""
 
 #: gui/openRemote.glade:20
 msgid "Location"
-msgstr "Atrašanās vieta"
+msgstr "Atrašānās vieta"
 
 #: gui/deleteFileFromDisk.glade:35
 msgid ""
@@ -267,15 +267,15 @@ msgstr ""
 
 #: gui/Preferences.glade:71
 msgid "Type"
-msgstr ""
+msgstr "Tips"
 
 #: gui/Preferences.glade:86
 msgid "Length"
-msgstr "Garums"
+msgstr "Ilgums"
 
 #: gui/Preferences.glade:112
 msgid "Play count"
-msgstr ""
+msgstr "Atskaņošanu skaits"
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
@@ -295,7 +295,7 @@ msgstr ""
 
 #: gui/Preferences.glade:250
 msgid "View"
-msgstr ""
+msgstr "Skats"
 
 #: gui/Preferences.glade:279
 msgid ""
@@ -308,21 +308,23 @@ msgstr ""
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
-msgstr ""
+msgstr "<b>Audiosink</b>"
 
 #: gui/Preferences.glade:331
 msgid ""
 "ximagesink\n"
 "xvimagesink"
 msgstr ""
+"ximagesink\n"
+"xvimagesink"
 
 #: gui/Preferences.glade:350
 msgid "<b>Videosink</b>"
-msgstr ""
+msgstr "<b>Videosink</b>"
 
 #: gui/Preferences.glade:372
 msgid "Backend"
-msgstr ""
+msgstr "Aizmugure"
 
 #: gui/Preferences.glade:462
 msgid "<b>Allowed Files</b>"
@@ -330,7 +332,7 @@ msgstr ""
 
 #: gui/Preferences.glade:477
 msgid "Importing"
-msgstr ""
+msgstr "Notiek ievade"
 
 #: gui/Preferences.glade:517
 msgid "Configure _Plugin"
@@ -338,7 +340,7 @@ msgstr ""
 
 #: gui/Preferences.glade:544
 msgid "Plugins"
-msgstr ""
+msgstr "Paplašinājumi"
 
 #: gui/twitter.glade:59
 msgid "Message"
@@ -346,11 +348,11 @@ msgstr ""
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
-msgstr ""
+msgstr "Lietotājvārds"
 
 #: gui/twitter.glade:81 gui/plugin_lastfm_main.glade:113
 msgid "Password"
-msgstr ""
+msgstr "Parole"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
@@ -370,7 +372,7 @@ msgstr ""
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
-msgstr ""
+msgstr "<b>Autentifikācija</b>"
 
 #: gui/FileSelector.glade:13
 msgid "Select your files"
@@ -378,7 +380,7 @@ msgstr "Izvēlēties failus"
 
 #: gui/genericQuestion.glade:30
 msgid "Label"
-msgstr ""
+msgstr "Iezīme"
 
 #: gui/directorySelector.glade:9
 msgid "Select a folder"
@@ -386,11 +388,11 @@ msgstr "Izvēlēties mapi"
 
 #: gui/directorySelector.glade:19
 msgid "Include subfolders"
-msgstr "Ietverot apakšmapes"
+msgstr "Iekļaut apakšmapes"
 
 #: gui/TreeViewReorderable.glade:7
 msgid "window1"
-msgstr ""
+msgstr "logs1"
 
 #: gui/Error.glade:8
 msgid "Error"
@@ -398,7 +400,7 @@ msgstr "Kļūda"
 
 #: gui/Error.glade:82
 msgid "Error text"
-msgstr ""
+msgstr "Kļūdas teksts:"
 
 #: gui/JumpTo.glade:7
 msgid "Jump to time"
@@ -470,7 +472,7 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:101
 msgid "unknown error"
-msgstr ""
+msgstr "nezināma kļūda"
 
 #: libchristine/Plugins/twitter/__init__.py:103
 #, python-format

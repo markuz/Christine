@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2009-10-09 01:21+0000\n"
+"Last-Translator: Ruban Victor <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-09-26 05:00+0000\n"
+"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: gui/addFiles.glade:53
@@ -32,18 +32,21 @@ msgstr "<b>Импортирование файлов</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Andy Lemz https://launchpad.net/~andy-lemz\n"
+"  Ruban Victor https://launchpad.net/~scorp337150"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
-msgstr ""
+msgstr "Добавить новый источник"
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
-msgstr ""
+msgstr "Удалить выбранный пункт"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr ""
+msgstr "Путь"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
@@ -63,7 +66,7 @@ msgstr "Жанр"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Номер дорожки"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -96,6 +99,8 @@ msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
 msgstr ""
+"Поместите здесь сообщение, которое вы хотели бы видеть как\n"
+"статус в pidgin."
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -210,11 +215,11 @@ msgstr "_Компактный вид"
 
 #: gui/WindowCore.glade:291
 msgid "Switch the view of the side panel"
-msgstr ""
+msgstr "Включить  видимость боковой панели"
 
 #: gui/WindowCore.glade:292
 msgid "S_ide panel"
-msgstr ""
+msgstr "С_вернуть панель"
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
@@ -230,11 +235,11 @@ msgstr "Визуализация"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
-msgstr ""
+msgstr "В очередь"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "Список источников"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
@@ -246,15 +251,15 @@ msgstr "Поиск"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "страница 1"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "страница 2"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "Страница 3"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -274,7 +279,7 @@ msgstr ""
 
 #: gui/walkdirectories.glade:46
 msgid "Exploring"
-msgstr ""
+msgstr "Навигация"
 
 #: gui/Preferences.glade:71
 msgid "Type"
@@ -294,15 +299,15 @@ msgstr "<b>Колонки</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
-msgstr ""
+msgstr "Шрифт"
 
 #: gui/Preferences.glade:190
 msgid "Encoding"
-msgstr ""
+msgstr "Кодировка"
 
 #: gui/Preferences.glade:230
 msgid "<b>Subtitles</b>"
-msgstr ""
+msgstr "<b>Субтитры</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
@@ -316,20 +321,27 @@ msgid ""
 "autoaudiosink\n"
 "pulsesink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
-msgstr ""
+msgstr "<b>Аудиовыход</b>"
 
 #: gui/Preferences.glade:331
 msgid ""
 "ximagesink\n"
 "xvimagesink"
 msgstr ""
+"ximagesink\n"
+"xvimagesink"
 
 #: gui/Preferences.glade:350
 msgid "<b>Videosink</b>"
-msgstr ""
+msgstr "<b>Видеовыход</b>"
 
 #: gui/Preferences.glade:372
 msgid "Backend"
@@ -353,7 +365,7 @@ msgstr "Плагины"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "Сообщение"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
@@ -365,7 +377,7 @@ msgstr "Пароль"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
-msgstr ""
+msgstr "Ссылка"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
@@ -421,51 +433,55 @@ msgstr ":"
 
 #: libchristine/Plugins/trayicon/__init__.py:26
 msgid "TrayIcon"
-msgstr ""
+msgstr "Значок в трее"
 
 #: libchristine/Plugins/trayicon/__init__.py:27
 msgid "This plugins shows a Try Icon on the notification area"
-msgstr ""
+msgstr "Этот плагин отображает значок в трее в области уведомлений"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:55
 msgid "GNOME Media Keys"
-msgstr ""
+msgstr "Мультимедийные кнопки GNOME"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:56
 msgid "Allows christine to react to GNOME media key press events"
 msgstr ""
+"Позволяет christine обрабатывать нажатие мультимедийных клавиши GNOME"
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
-msgstr ""
+msgstr "Обложка альбома"
 
 #: libchristine/Plugins/albumCover/__init__.py:44
 msgid "Try to get the album cover and shows on the gui if it is found."
 msgstr ""
+"Пытаться получить обложку альбома и если она найдена, отображать в "
+"графическом интерфейсе."
 
 #: libchristine/Plugins/getInfo/__init__.py:44
 msgid "getInfo"
-msgstr ""
+msgstr "получить информацию"
 
 #: libchristine/Plugins/getInfo/__init__.py:45
 msgid "Shows/Update the info on the tags of the given file."
-msgstr ""
+msgstr "Показать/Обновить информацию о тегах файла."
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Last.fm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
-msgstr ""
+msgstr "Включить взаимодействие с last.fm"
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
 msgstr ""
+"Этот плагин отправляет и обновляет информацию вашего аккаунта Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
@@ -490,16 +506,16 @@ msgstr "твиттер -> %s"
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
-msgstr ""
+msgstr "Pidgin"
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
-msgstr ""
+msgstr "Этот плагин отображает прослушиваемую вами песню в pidgin"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
-msgstr ""
+msgstr "Показывает вплывающие уведомления"

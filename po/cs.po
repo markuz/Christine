@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-08-28 04:23+0000\n"
-"Last-Translator: Petr Simacek <petr.simacek@gmail.com>\n"
+"PO-Revision-Date: 2009-10-06 04:41+0000\n"
+"Last-Translator: Petr Šimáček <petr.simacek@gmail.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-09-26 05:00+0000\n"
+"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: gui/addFiles.glade:53
@@ -33,7 +33,7 @@ msgstr "<b>Importuji soubory</b>"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Petr Simacek https://launchpad.net/~petr-simacek"
+"  Petr Šimáček https://launchpad.net/~petr-simacek"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
@@ -454,7 +454,7 @@ msgstr "Získat informace"
 
 #: libchristine/Plugins/getInfo/__init__.py:45
 msgid "Shows/Update the info on the tags of the given file."
-msgstr ""
+msgstr "Ukazuje/aktualizuje tagy daného souboru"
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
@@ -503,7 +503,7 @@ msgstr "Tento zásuvný modul ukáže v Pidginu, jaký song posloucháš"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
