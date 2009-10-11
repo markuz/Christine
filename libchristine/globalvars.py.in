@@ -36,7 +36,7 @@ PROGRAMNAME = '@programname@'
 DATADIR = '@datadir@'
 PREFIX = '@prefix@'
 SYSCONFDIR = '@sysconfdir@'
-if os.environ.has_key('XDG_DATA_HOME'):
+if os.environ.has_key('XDG_CONFIG_HOME'):
 	USERDIR  = os.path.join(os.environ['XDG_CONFIG_HOME'],"christine")
 else: 
 	USERDIR  = os.path.join(os.environ["HOME"],".config","christine")
