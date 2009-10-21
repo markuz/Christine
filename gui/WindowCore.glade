@@ -11,6 +11,7 @@
     <child>
       <widget class="GtkVBox" id="VBoxCore">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
           <widget class="GtkMenuBar" id="MenuBar">
             <property name="visible">True</property>
@@ -196,6 +197,7 @@
                       <widget class="GtkImageMenuItem" id="prev1">
                         <property name="label">gtk-media-previous</property>
                         <property name="visible">True</property>
+                        <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="goPrev"/>
                         <accelerator key="Left" signal="activate" modifiers="GDK_MOD1_MASK"/>
@@ -404,79 +406,105 @@
         <child>
           <widget class="GtkVBox" id="VBoxVideo">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">3</property>
             <child>
-              <widget class="GtkHBox" id="HBoxCairoDisplay">
+              <widget class="GtkToolbar" id="toolbar1">
                 <property name="visible">True</property>
-                <property name="spacing">3</property>
+                <property name="show_arrow">False</property>
                 <child>
-                  <widget class="GtkHBox" id="HBoxToolBoxContainer">
+                  <widget class="GtkToolItem" id="toolitem2">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkVBox" id="vbox1">
+                      <widget class="GtkHBox" id="HBoxToolBoxContainer">
                         <property name="visible">True</property>
                         <child>
-                          <widget class="GtkHBox" id="HBoxButtonBox">
+                          <widget class="GtkVBox" id="vbox1">
                             <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <widget class="GtkButton" id="button1">
+                              <widget class="GtkHBox" id="HBoxButtonBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="relief">none</property>
-                                <signal name="clicked" handler="goPrev"/>
                                 <child>
-                                  <widget class="GtkImage" id="image1">
+                                  <widget class="GtkButton" id="button1">
                                     <property name="visible">True</property>
-                                    <property name="stock">gtk-media-previous</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="relief">none</property>
+                                    <signal name="clicked" handler="goPrev"/>
+                                    <child>
+                                      <widget class="GtkImage" id="image1">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-media-previous</property>
+                                      </widget>
+                                    </child>
                                   </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkToggleButton" id="ToggleButtonPlay">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="relief">none</property>
+                                    <signal name="toggled" handler="switchPlay"/>
+                                    <accelerator key="space" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                                    <child>
+                                      <widget class="GtkImage" id="image2">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-media-play</property>
+                                      </widget>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkButton" id="button2">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="relief">none</property>
+                                    <signal name="clicked" handler="goNext"/>
+                                    <child>
+                                      <widget class="GtkImage" id="image3">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-media-next</property>
+                                      </widget>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">2</property>
+                                  </packing>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkToggleButton" id="ToggleButtonPlay">
+                              <widget class="GtkHScale" id="HScaleVolume">
+                                <property name="width_request">100</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="relief">none</property>
-                                <signal name="toggled" handler="switchPlay"/>
-                                <accelerator key="space" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
-                                <child>
-                                  <widget class="GtkImage" id="image2">
-                                    <property name="visible">True</property>
-                                    <property name="stock">gtk-media-play</property>
-                                  </widget>
-                                </child>
+                                <property name="adjustment">0 0 1 0 0 0</property>
+                                <property name="draw_value">False</property>
+                                <signal name="value_changed" handler="changeVolume"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
+                                <property name="pack_type">end</property>
                                 <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkButton" id="button2">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="relief">none</property>
-                                <signal name="clicked" handler="goNext"/>
-                                <child>
-                                  <widget class="GtkImage" id="image3">
-                                    <property name="visible">True</property>
-                                    <property name="stock">gtk-media-next</property>
-                                  </widget>
-                                </child>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">2</property>
                               </packing>
                             </child>
                           </widget>
@@ -484,74 +512,65 @@
                             <property name="position">0</property>
                           </packing>
                         </child>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkToolItem" id="HBoxCairoDisplay">
+                    <property name="visible">True</property>
+                    <property name="border_width">3</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkToolItem" id="HBoxSearch">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkHBox" id="as">
+                        <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <widget class="GtkHScale" id="HScaleVolume">
-                            <property name="width_request">100</property>
+                          <widget class="GtkLabel" id="label6">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="adjustment">0 0 1 0 0 0</property>
-                            <property name="draw_value">False</property>
-                            <signal name="value_changed" handler="changeVolume"/>
+                            <property name="label" translatable="yes">Search</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
-                            <property name="pack_type">end</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkEntry" id="EntrySearch">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
                       </widget>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="HBoxSearch">
-                    <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkLabel" id="label6">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Find</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkEntry" id="EntrySearch">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="pack_type">end</property>
-                    <property name="position">2</property>
                   </packing>
                 </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>

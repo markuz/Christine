@@ -202,7 +202,9 @@ class Christine(GtkMisc):
 		# Create the display and attach it to the main window
 		self.__Display = Display()
 		self.__Display.connect('value-changed', self.onScaleChanged)
-		self.__HBoxCairoDisplay.pack_start(self.__Display, True, True, 0)
+		#self.__HBoxCairoDisplay.pack_start(self.__Display, True, True, 0)
+		self.__HBoxCairoDisplay.add(self.__Display)
+		self.__HBoxCairoDisplay.set_expand(True)
 		self.__Display.show()
 
 		# Create the library by calling to libs_christine.library class
@@ -288,9 +290,9 @@ class Christine(GtkMisc):
 		reportaBug = xml['reportABug']
 		reportaBug.connect('activate', lambda widget: webbrowser.open(BUGURL))
 
-		self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
-		self.__HBoxToolBoxContainer.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
-		self.__HBoxToolBoxContainer.connect("scroll-event",self.changeVolumeWithScroll)
+		#self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
+		#self.__HBoxToolBoxContainer.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
+		#self.__HBoxToolBoxContainer.connect("scroll-event",self.changeVolumeWithScroll)
 
 		self.__HBoxButtonBox		= xml['HBoxButtonBox']
 		self.__HBoxButtonBox.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
@@ -309,6 +311,7 @@ class Christine(GtkMisc):
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
 		gobject.timeout_add(500, self.__check_items_on_media)
 		#gobject.timeout_add(500, self.__check_queue)
+		
 	
 	def __check_queue(self, queue, size):
 		if size < 1:
@@ -524,11 +527,11 @@ class Christine(GtkMisc):
 			return True
 
 		if (self.__ShowButtons):
-			self.__HBoxToolBoxContainer.show()
+			#self.__HBoxToolBoxContainer.show()
 			self.MenuBar.show()
 			self.__ShowButtons = False
 		else:
-			self.__HBoxToolBoxContainer.hide()
+			#self.__HBoxToolBoxContainer.hide()
 			self.MenuBar.hide()
 			self.__ShowButtons = True
 

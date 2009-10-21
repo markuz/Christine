@@ -77,15 +77,21 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.connect('configure-event', self.__on_size_allocate)
 		self.connect('motion-notify-event', self.__motion_notify)
 		self.connect('leave-notify-event', self.__leave_notify)
+		#self.connect('size-allocate', self.__size_allocate)
 
 		self.__Song           = ""
 		self.__Text           = ""
 		self.__WindowPosition = 0
 		self.__Value          = 0
 		self.setText(text)
-		self.set_size_request(150, 2)
+		self.set_size_request(100, 30)
 		self.Events.addWatcher('gotTags', self.gotTags)
 		gobject.timeout_add(300, self.__emit)
+	
+	def __size_allocate(self,display, area):
+		x,y,w,h = area
+		self.set_size_request(w,h)
+		
 	
 	def gotTags(self, tags):
 		tooltext = tags['title']
@@ -192,14 +198,19 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.context.paint()
 		self.context.move_to(0, 0)
 		self.context.set_line_width(1.0)
-		self.context.rectangle(x,y,w,h)
-		self.context.clip()
+		#self.context.rectangle(x,y,w,h)
+		self.render_rect(self.context, x, y, w, h, 0.5)
+		#self.context.clip()
+		
+		
 		
 		self.fontdesc = self.style.font_desc
 		tcolor = self.style.fg[0]
 		wcolor = self.style.bg[0]
-		bcolor = self.style.bg[3]
-		b1color = self.style.bg[2]
+		#bcolor = self.style.bg[3]
+		bcolor = gtk.gdk.color_parse("#000000")
+		#b1color = self.style.bg[2]
+		b1color = gtk.gdk.color_parse("grey")
 		self.br, self.bg, self.bb = (self.getCairoColor(wcolor.red),
 				self.getCairoColor(wcolor.green),
 				self.getCairoColor(wcolor.blue))
@@ -220,9 +231,49 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.context.rectangle(x,y,w,h)
 		self.context.set_source_rgb(self.br,self.bg,self.bb)
 		self.context.fill()
+		
+		self.render_rect(self.context, x+2, y+2, w-2, h-2, 1)
+		
+		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
+		color = gtk.gdk.color_parse("#F8FBE2")
+		linear.add_color_stop_rgb(0.0,
+						self.getCairoColor(color.red),
+						self.getCairoColor(color.green),
+						self.getCairoColor(color.blue),)
+		colorbg = gtk.gdk.color_parse("#D6D0B7")
+		linear.add_color_stop_rgb(1,
+						self.getCairoColor(colorbg.red),
+						self.getCairoColor(colorbg.green),
+						self.getCairoColor(colorbg.blue))
+		self.context.set_source(linear)
+		self.context.fill()
+		#self.render_rect(self.context, x+1, y+1, w-2, h-2, 0.5)
+		self.render_rect(self.context, x, y, w, h, 0.5)
+		color = gtk.gdk.color_parse("#DDD")
+		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
+		linear.add_color_stop_rgba(0.00,
+						self.getCairoColor(color.red),
+						self.getCairoColor(color.green),
+						self.getCairoColor(color.blue),
+						0.5)
+		color = gtk.gdk.color_parse("#EEE")
+		linear.add_color_stop_rgba(0.99,
+						self.getCairoColor(color.red),
+						self.getCairoColor(color.green),
+						self.getCairoColor(color.blue),
+						0.5)
+		colorbg = gtk.gdk.color_parse("#FFFFFF")
+		linear.add_color_stop_rgb(1,
+						self.getCairoColor(colorbg.red),
+						self.getCairoColor(colorbg.green),
+						self.getCairoColor(colorbg.blue))
+		self.context.set_source(linear)
+		self.context.stroke()
+		
 		self.draw_text(x,y,w,h)
 		self.draw_progress_bar(x,y,w,h)
 		self.draw_pos_circle()
+		
 	
 	def draw_progress_bar(self, x, y, w, h):
 		fh = self.__Layout.get_pixel_size()[1]
@@ -247,7 +298,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
 		pat = cairo.LinearGradient(fh, ((BORDER_WIDTH * 2) + fh)+1, fh, 
 								((BORDER_WIDTH * 2) + fh)+1 + BORDER_WIDTH)
-		pat.add_color_stop_rgb(0.0, self.bar1 -0.5,self.bag1-0.05,self.bab1-0.05)
+		pat.add_color_stop_rgb(0.0, self.bar1 ,self.bag1,self.bab1)
 		pat.add_color_stop_rgb(0.9,self.bar,self.bag,self.bab)
 		context.set_source(pat)
 		context.fill()
@@ -283,8 +334,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 				fh, 
 				(BORDER_WIDTH * 2) + fh + (BORDER_WIDTH/2) +4,
 				)
-		pat.add_color_stop_rgb(0.0, self.bar1 -0.5,self.bag1-0.05,self.bab1-0.05)
-		pat.add_color_stop_rgb(0.5,self.bar,self.bag,self.bab)
+		pat.add_color_stop_rgb(0.0, self.bar1 ,self.bag1,self.bab1)
+		pat.add_color_stop_rgb(0.1,self.bar,self.bag,self.bab)
 		context.set_source(pat)
 		context.fill()
 		context.arc(int (fh + width),

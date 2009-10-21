@@ -154,7 +154,7 @@ class CairoMisc:
 		y0 = y
 		rect_width = w
 		rect_height = h
-		radius = 10 + o
+		radius = 5 + o
 
 		x1 = x0 + rect_width
 		y1 = y0 + rect_height
