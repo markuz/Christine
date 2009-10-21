@@ -221,6 +221,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 			path = self.data_size-1
 			if not self.remove(path):
 				return False
+		self.invalidate_iters()
 		return True
 
 	def clear(self):

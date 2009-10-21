@@ -33,29 +33,13 @@ from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Events import christineEvents
 from libchristine.Logger import LoggerManager
 
-(PATH,
-NAME,
-TYPE,
-PIX,
-ALBUM,
-ARTIST,
-TN,
-SEARCH,
-PLAY_COUNT,
-TIME,
-GENRE,
-HAVE_TAGS
-) = range(12)
+(PATH,NAME,TYPE,PIX,ALBUM,ARTIST,TN,SEARCH,PLAY_COUNT,TIME,GENRE,
+HAVE_TAGS) = range(12)
 
-(VPATH,
-VNAME,
-VPIX) = range(3)
+(VPATH,VNAME,VPIX) = range(3)
 
-QUEUE_TARGETS = [('text/plain',0,0),
-                              ('TEXT', 0, 1),
-                              ('STRING', 0, 2),
-                              ('COMPOUND_TEXT', 0, 3),
-                              ('UTF8_STRING', 0, 4)]
+QUEUE_TARGETS = [('text/plain',0,0),('TEXT', 0, 1),('STRING', 0, 2),
+				('COMPOUND_TEXT', 0, 3), ('UTF8_STRING', 0, 4)]
 
 
 ##
@@ -204,6 +188,8 @@ class libraryBase(GtkMisc):
 		'''
 		self.tv.set_model(None)
 		self.library_name = library
+		if getattr(self, "library_lib", False):
+			del self.library_lib
 		self.library_lib = lib_library(library)
 		self.gen_model()
 		self.model.createSubmodels()

@@ -232,7 +232,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.context.set_source_rgb(self.br,self.bg,self.bb)
 		self.context.fill()
 		
-		self.render_rect(self.context, x+2, y+2, w-2, h-2, 1)
+		self.render_rect(self.context, x, y, w, h-1, 0.5)
 		
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
 		color = gtk.gdk.color_parse("#F8FBE2")
@@ -248,7 +248,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.context.set_source(linear)
 		self.context.fill()
 		#self.render_rect(self.context, x+1, y+1, w-2, h-2, 0.5)
-		self.render_rect(self.context, x, y, w, h, 0.5)
+		self.render_rect(self.context, x, y, w, h-1, 0.5)
 		color = gtk.gdk.color_parse("#DDD")
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
 		linear.add_color_stop_rgba(0.00,

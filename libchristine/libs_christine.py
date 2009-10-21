@@ -35,6 +35,12 @@ class lib_library(object):
 		self.list = list
 		self.__files = self.__db.getItemsForPlaylist(self.idlist)
 		self.__logger.debug(len(self.__files))
+	
+	def __del__(self):
+		del self.__files
+		del self.__db
+		import gc
+		gc.collect()
 
 	def __setitem__(self,name,path):
 		self.append(name,path)
