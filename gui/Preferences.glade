@@ -328,8 +328,13 @@ pulsesink</property>
                             <child>
                               <widget class="GtkComboBox" id="videosink">
                                 <property name="visible">True</property>
-                                <property name="items" translatable="yes">ximagesink
-xvimagesink</property>
+                                <property name="items" translatable="yes">autovideosink
+xvimagesink
+ximagesink
+sdlvideosink
+gconfvideosink
+cacasink
+aasink</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -417,7 +422,7 @@ xvimagesink</property>
                             <property name="spacing">3</property>
                             <child>
                               <widget class="GtkButton" id="fadd">
-                                <property name="label" translatable="yes">gtk-add</property>
+                                <property name="label">gtk-add</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
@@ -432,7 +437,7 @@ xvimagesink</property>
                             </child>
                             <child>
                               <widget class="GtkButton" id="fdel">
-                                <property name="label" translatable="yes">gtk-delete</property>
+                                <property name="label">gtk-delete</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>

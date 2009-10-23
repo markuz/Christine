@@ -84,7 +84,11 @@ class Player(gtk.DrawingArea, object):
 		self.__ShouldShow = False
 		self.__createPlaybin()
 		self.connect('expose-event', self.exposeCallback)
+		#self.connect('event', self.__print_event)
 		#self.connect('key-press-event', self.__set_text)
+	
+	def __print_event(self, *args):
+		print args
 	
 #===============================================================================
 #	def __set_text(self, widget, event):
@@ -154,10 +158,10 @@ class Player(gtk.DrawingArea, object):
 		if self.getLocation() != None:
 			self.pause()
 		vsink = self.config.getString('backend/videosink')
-		self.VideoSink = self.__elementFactoryMake(vsink)
+		self.VideoSink = self.__elementFactoryMake(vsink, 'vsink')
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
-		if vsink in ['xvimagesink', 'ximagesink']:
-			self.VideoSink.set_property('force-aspect-ratio', True)
+		self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
+		self.__elementSetProperty(self.VideoSink,'draw-borders', True)
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playIt()
 
@@ -170,17 +174,17 @@ class Player(gtk.DrawingArea, object):
 			self.__elementSetProperty(self.VideoSink, 'pixel-aspect-ratio',
 									aspect_ratio)
 
-	def __elementFactoryMake(self,element):
+	def __elementFactoryMake(self,element, type= ''):
 		'''
 		Wrap the gst.element_factory_make, but add logging capabilities
 
 		@param element: element to be created (str)
 		'''
 		self.__Logger.info("creatign a gst element %s"%element)
-		return gst.element_factory_make(element)
+		return gst.element_factory_make(element, type)
 
 	def __elementSetProperty(self,element,property,value):
-		'''
+		''' 
 		Wrap the self.(element).set_property, but add logging capabilities
 
 		@parame element: gst.Element
@@ -188,8 +192,11 @@ class Player(gtk.DrawingArea, object):
 		@param value: property value
 		'''
 		self.__Logger.info("setting property '%s' with value '%s", property,str(value))
-		element.set_property(property,value)
-		return True
+		try:
+			element.set_property(property,value)
+			return True
+		except Exception, e:
+			self.__Logger.exception(e)
 
 	def exposeCallback(self, window, event):
 		"""
@@ -197,25 +204,22 @@ class Player(gtk.DrawingArea, object):
 		"""
 		# Drawing a black background because some
 		# GTK themes (clearlooks) don't draw it
+		
+		if not self.window:
+			return False
 		w, h = (self.allocation.width, self.allocation.height)
 		try:
 			self.VideoSink.set_xwindow_id(self.window.xid)
-			self.__Context = self.window.cairo_create()
-		except Exception, e:
-			self.__Logger.exception(e)
-			return False
-
+		except:
+			pass
+		self.__Context = self.window.cairo_create()
 		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
 		                         w - 2 * BORDER_WIDTH,
 		                         h - 2 * BORDER_WIDTH)
-		self.__Context.clip()
-		self.__Context.rectangle(BORDER_WIDTH, BORDER_WIDTH,
-		                         w - 2 * BORDER_WIDTH,
-		                         h - 2 * BORDER_WIDTH)
+		self.__Context.clip_preserve()
 
 		self.__Context.set_source_rgba(0,0,0)
 		self.__Context.fill_preserve()
-		#self.__Context.set_source_rgb(0,0,0)
 		self.__Context.stroke()
 		if self.__ShouldShow:
 			width = self.getTag('width')
@@ -239,7 +243,8 @@ class Player(gtk.DrawingArea, object):
 			self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', None)
 			self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', None)
 			if self.isVideo():
-				self.VideoSink.set_property('force-aspect-ratio', True)
+				self.__ShouldShow = True
+				self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
 				subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
 				if os.path.exists(subtitle):
 					self.__elementSetProperty(self.__PlayBin, 'suburi', 'file://'+subtitle)
@@ -302,7 +307,7 @@ class Player(gtk.DrawingArea, object):
 		self.__Logger.info("Setting visualization to %s"%repr(active))
 		if active:
 			self.visualizationPlugin = self.__elementFactoryMake(self.config.getString('backend/vis-plugin'))
-			self.VideoSink.set_property('force-aspect-ratio', self.isVideo())
+			self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', self.isVideo())
 			self.__ShouldShow = True
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', 
 									self.visualizationPlugin)
@@ -315,7 +320,7 @@ class Player(gtk.DrawingArea, object):
 				gobject.timeout_add(100, self.__replay, location, sec)
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
 			#self.visualizationPlugin = None
-			self.VideoSink.set_property('force-aspect-ratio', True)
+			self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
 			self.__ShouldShow = False
 		return True
 	
@@ -367,11 +372,12 @@ class Player(gtk.DrawingArea, object):
 		Sets file type
 		"""
 		if self.isVideo():
-			return 'video'
+			result =  'video'
 		elif self.isSound():
-			return 'sound'
+			result =  'sound'
 		else:
-			return 'Unknown'
+			result = 'Unknown'
+		return result
 			
 
 	def nano2str(self,nanos):

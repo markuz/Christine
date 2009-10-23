@@ -405,6 +405,9 @@ class Christine(GtkMisc):
 		else:
 			self.__LocationCount +=1
 		self.mainLibrary.tv.grab_focus()
+		if self.__Player.getType() == 'video':
+			self.__MenuItemVisualMode.set_active(False)
+			gobject.idle_add(self.__MenuItemVisualMode.set_active,True)
 
 	def stop(self, widget=None):
 		"""
