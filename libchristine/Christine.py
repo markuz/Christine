@@ -1109,6 +1109,7 @@ def runChristine():
 	if os.name == 'nt':
 		ex = Exception
 	else:
+		import dbus
 		ex = dbus.exceptions.DBusException
 	try:
 		import dbus
