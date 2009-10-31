@@ -49,7 +49,6 @@ class RolaChristine:
 			xchat.command('Nada a mostrar.. :-(')
 			return xchat.EAT_XCHAT
 		uri = christine.now_playing()
-		print uri
 		tags = christine.get_tags(uri)
 		title = '%s'%tags.get('title','')
 		if not title:

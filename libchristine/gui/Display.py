@@ -61,6 +61,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		GtkMisc.__init__(self)
 		self.__ButtonPress = False
 		self.__last_time_moved = time.time()
+		self.__last_emit = time.time()
+		self.__override_timer = False
 		self.Events = christineEvents()
 		self.__color1 = gtk.gdk.color_parse('#FFFFFF')
 		self.__color2 = gtk.gdk.color_parse('#3D3D3D')
@@ -86,7 +88,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.setText(text)
 		self.set_size_request(100, 30)
 		self.Events.addWatcher('gotTags', self.gotTags)
-		gobject.timeout_add(500, self.__emit)
+		gobject.timeout_add(1000, self.__emit)
 	
 	def __size_allocate(self,display, area):
 		x,y,w,h = area
@@ -108,7 +110,9 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		x,y,w,h = self.allocation
 		if mx > x and mx < w and my > y and my < h:
 			if time.time() - self.__last_time_moved > 0.05:
+				self.__override_timer = True
 				self.__emit()
+				self.__override_timer = False
 				self.__last_time_moved = time.time()
 		
 	def __leave_notify(self, widget,event):
@@ -118,7 +122,9 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		'''
 		Emits an expose event
 		'''
-		self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
+		if (time.time() - self.__last_emit) > 0.3 or self.__override_timer:
+			self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
+			self.__last_emit = time.time()
 		return True
 
 	def __buttonPressEvent(self, widget, event):
@@ -141,7 +147,6 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 			value = (((x - minx) * 1.0) / width)
 			if value <0:
 				value = 0
-			print value
 			self.setScale(value)
 			self.emit("value-changed",self)
 

@@ -52,7 +52,7 @@ class Target:
 			self.copyright      = "(c) 2006-2009, Marco Islas"
 			self.name           = "Christine Media Player"
 			self.description = 'Christine Media Player'
-			#self.icon_resources =  [(0, "logo.ico")]
+			self.icon_resources =  [(0, "win32resources/logo.ico")]
 
 target = Target(script = "christine.py")
 
@@ -63,6 +63,9 @@ CLibraryModel = Extension(name = 'libchristine.CLibraryModel',
 
 setup(
     windows = [target],
+	#Useful for debuggin?, I don't know, but if you want you can use the
+	#sources.
+    #console = [target],
     options = {
                   'py2exe': {
                       'packages':'encodings,libchristine',
@@ -86,5 +89,4 @@ try:
 	shutil.copy(os.path.join('c:\\','GTK','bin','jpeg62.dll'),
                              os.path.join('dist','jpeg62.dll'))
 except Exception, e:
-	print e
 	pass

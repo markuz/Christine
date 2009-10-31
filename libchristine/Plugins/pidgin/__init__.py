@@ -93,7 +93,6 @@ class pidgin(plugin_base):
 			message = translate("Listening to: _title_ by _artist_ on Chrsitine")
 			self.christineConf.setValue('pidgin/message', message)
 		message = self.tagger.taggify(file, message)
-		print self.obj
 		if self.obj:
 			try:
 				current = self.purple.PurpleSavedstatusGetType(
@@ -120,7 +119,6 @@ class pidgin(plugin_base):
 		Could be done inside the self.SetMessage() but I don't
 		like the idea, this is more flexible
 		"""
-		print self.active
 		if self.active:
 			self.SessionStart()
 			self.SetMessage()

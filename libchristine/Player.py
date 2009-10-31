@@ -84,17 +84,6 @@ class Player(gtk.DrawingArea, object):
 		self.__ShouldShow = False
 		self.__createPlaybin()
 		self.connect('expose-event', self.exposeCallback)
-		#self.connect('event', self.__print_event)
-		#self.connect('key-press-event', self.__set_text)
-	
-	def __print_event(self, *args):
-		print args
-	
-#===============================================================================
-#	def __set_text(self, widget, event):
-#		name = gtk.gdk.keyval_name()
-#		self.__Text = name
-#===============================================================================
 		
 	def __createPlaybin(self):
 		"""
@@ -237,6 +226,9 @@ class Player(gtk.DrawingArea, object):
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.visualizationPlugin)
 		if (isFile(file)):
 			self.__setState(gst.STATE_READY)
+			if os.name == 'nt':
+				p = file.split("\\")
+				file = "/" + "/".join(p)
 			nfile = 'file://' + file
 			self.__elementSetProperty(self.__PlayBin,'uri', nfile)
 			self.__elementSetProperty(self.__PlayBin, 'suburi', None)

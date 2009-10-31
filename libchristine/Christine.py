@@ -57,7 +57,7 @@ from libchristine.Events import christineEvents
 try:
 	from libchristine.christine_dbus import christineDBus
 except Exception, e:
-	print e
+	pass
 from libchristine.options import options
 from libchristine.gui.BugReport import BugReport
 import webbrowser
@@ -73,8 +73,8 @@ def close(*args):
 
 signal.signal(signal.SIGTERM, close)
 
-if (gtk.gtk_version < (2, 12, 0)):
-	print translate('Gtk+ 2.10 or better is required')
+if (gtk.gtk_version < (2, 10, 0)):
+	sys.stderr.write(translate('Gtk+ 2.10 or better is required'))
 	sys.exit()
 
 share = Share()
@@ -85,7 +85,7 @@ class Christine(GtkMisc):
 	def __init__(self):
 		"""
 		Constructor, this method will init the gtk_misc parent class,
-		initialize the gnome ui client, create the XML interface descriptor,
+		create the XML interface descriptor,
 		initialize class variables and create some timeouts calls
 		"""
 		self.__Logger = LoggerManager().getLogger('Christine')
@@ -359,13 +359,15 @@ class Christine(GtkMisc):
 					error(translate('%s does not exists'%file))
 					return False
 			else:
-				import urllib
-				gate = urllib.FancyURLopener()
-				urldesc = gate.open(location)
+				if os.name == 'posix':
+					import urllib
+					gate = urllib.FancyURLopener()
+					urldesc = gate.open(location)
+				else:
+					urldes = location
 
 			if extension == "pls":
 				for i in urldesc.readlines():
-					print i
 					if i.lower().find("file") >= 0:
 						location = i.split("=").pop().strip()
 						break
@@ -900,7 +902,6 @@ class Christine(GtkMisc):
 	def __do_import_folder_response(self, ds, response, walk):
 		if response == gtk.RESPONSE_OK:
 			filenames = ds.get_filenames()
-			print "filenames", filenames
 			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
 			self.mainLibrary.importFolder(filenames, walk.get_active())
@@ -1092,11 +1093,9 @@ class Christine(GtkMisc):
 		gtk.main()
 
 def add_items_to_queue(obj, c):
-	#print 1
 	if c == None or c.coreWindow.get_property('window'):
 		for i in sys.argv[1:]:
 			if os.path.exists(i) and os.path.isfile(i):
-				print i
 				obj.add_to_queue(i)
 		return False
 	return True
@@ -1128,7 +1127,6 @@ def runChristine():
 		c = Christine()
 		for i in sys.argv[1:]:
 			if os.path.exists(i) and os.path.isfile(i):
-				print i
 				c.Queue.add(i)
 		f = open(PIDFILE,'w')
 		f.write('%d'%(os.getpid()))

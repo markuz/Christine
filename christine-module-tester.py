@@ -29,7 +29,6 @@ def showGarbage():
 	'''
 	Muestra la informacion de basura encontrada por el colector de basura
 	'''
-	#print gc.collect()
 	for x in gc.garbage:
 		s = str(x)
 		if len(s) > 80: s = s[:80]

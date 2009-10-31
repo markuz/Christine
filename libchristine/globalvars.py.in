@@ -48,7 +48,6 @@ def get_nt_config_dir():
 	return USERDIR
 
 func = [get_nt_config_dir, get_posix_config_dir][os.name == 'posix']
-print func
 USERDIR = func()
 
 

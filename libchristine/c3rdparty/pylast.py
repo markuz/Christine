@@ -3087,7 +3087,7 @@ class UserPlaylist(_BaseObject, _Cacheable):
 		
 		_Request(self, 'playlist.addTrack', self.api_key, params, True, self.secret).execute()
 		
-		print self.last_error()
+		#print self.last_error()
 	
 	def getTitle(self):
 		"""Returns the title of this playlist."""

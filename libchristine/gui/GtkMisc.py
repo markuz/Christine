@@ -114,17 +114,14 @@ class GtkMisc:
 		Trata de encodificar el texto para ser usado por Gtk.
 		@param text:
 		'''
-		try:
-			for i in ('latin-1','iso8859-1', 'utf8'):
-				text =  u'%s'%text.decode(i)
-				text =  u'%s'%text.encode(i)
-		except Exception, e:
-			#print e, text
-			return text
+		for i in ('latin-1','iso8859-1', 'utf8'):
+			try:
+				text1 =  u'%s'%text.decode(i)
+				text1 =  u'%s'%text1.encode(i)
+				return text1
+			except Exception, e:
+				pass
 		return text
-
-
-
 
 class CairoMisc:
 	def __init__(self):
