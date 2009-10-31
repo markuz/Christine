@@ -1,10 +1,9 @@
-#include <Python.h>
-#include <pythonrun.h>
-#include <import.h>
-
+#include "Python.h"
+#include "pythonrun.h"
+#include "import.h"
 
 static PyObject*
-init(PyObject *self){
+init(PyObject *self, PyObject *args){
 	Py_INCREF(Py_None);
     return Py_None;
 }
@@ -49,9 +48,9 @@ on_get_iter(PyObject *self, PyObject *args)
 
 
 static PyMethodDef CLibraryModelMethods[] = {
-	{"__init__", init, METH_VARARGS,"doc string"},
+	{"__init__", init, METH_VARARGS, "doc string"},
     {"on_get_iter",  on_get_iter, METH_VARARGS,"Returns a ref."},
-    {NULL, NULL, 0, NULL}
+    {NULL, NULL}
 };
 
 
@@ -65,12 +64,20 @@ initCLibraryModel(void)
 {
 
 	PyMethodDef *def;
+
+	PyObject *module = NULL;
+	PyObject *moduleDict = NULL;
+	PyObject *classDict = NULL;
+	PyObject *className = NULL;
+	PyObject *fooClass = NULL;
+
+    (PyObject*) module = Py_InitModule("CLibraryModel", ModuleMethods);
+    (PyObject*) moduleDict = PyModule_GetDict(module);
+    (PyObject*) classDict = PyDict_New();
+    (PyObject*) className = PyString_FromString("CLibraryModel");
+    (PyObject*) fooClass = PyClass_New(NULL, classDict, className);
+
 	PyImport_AddModule("CLibraryModel");
-    PyObject *module = Py_InitModule("CLibraryModel", ModuleMethods);
-    PyObject *moduleDict = PyModule_GetDict(module);
-    PyObject *classDict = PyDict_New();
-    PyObject *className = PyString_FromString("CLibraryModel");
-    PyObject *fooClass = PyClass_New(NULL, classDict, className);
 
     PyDict_SetItemString(moduleDict, "CLibraryModel", fooClass);
     Py_DECREF(classDict);
@@ -101,3 +108,4 @@ main(int argc, char *argv[])
     initCLibraryModel();
     return 0;
 }
+

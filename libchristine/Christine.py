@@ -54,7 +54,10 @@ from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_E
 from libchristine.Logger import LoggerManager
 from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
-from libchristine.christine_dbus import christineDBus
+try:
+	from libchristine.christine_dbus import christineDBus
+except Exception, e:
+	print e
 from libchristine.options import options
 from libchristine.gui.BugReport import BugReport
 import webbrowser
@@ -1103,6 +1106,10 @@ def runChristine():
 	'''
 	This function handles parameters for christine.
 	'''
+	if os.name == 'nt':
+		ex = Exception
+	else:
+		ex = dbus.exceptions.DBusException
 	try:
 		import dbus
 		from dbus.mainloop.glib import DBusGMainLoop
@@ -1112,8 +1119,11 @@ def runChristine():
 		c = None
 		add_items_to_queue(obj,c)
 		sys.exit()
-	except dbus.exceptions.DBusException:
-		a = christineDBus()
+	except ex:
+		try:
+			a = christineDBus()
+		except:
+			pass
 		c = Christine()
 		for i in sys.argv[1:]:
 			if os.path.exists(i) and os.path.isfile(i):
@@ -1127,4 +1137,3 @@ def runChristine():
 	gtk.main()
 	
 	
-			

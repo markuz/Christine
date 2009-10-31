@@ -36,10 +36,22 @@ PROGRAMNAME = '@programname@'
 DATADIR = '@datadir@'
 PREFIX = '@prefix@'
 SYSCONFDIR = '@sysconfdir@'
-if os.environ.has_key('XDG_CONFIG_HOME'):
-	USERDIR  = os.path.join(os.environ['XDG_CONFIG_HOME'],"christine")
-else: 
-	USERDIR  = os.path.join(os.environ["HOME"],".config","christine")
+def get_posix_config_dir():
+	if os.environ.has_key('XDG_CONFIG_HOME'):
+		USERDIR  = os.path.join(os.environ['XDG_CONFIG_HOME'],"christine")
+	else: 
+		USERDIR  = os.path.join(os.environ["HOME"],".config","christine")
+	return USERDIR
+
+def get_nt_config_dir():
+	USERDIR = os.path.join(os.environ['APPDATA'],'christine')
+	return USERDIR
+
+func = [get_nt_config_dir, get_posix_config_dir][os.name == 'posix']
+print func
+USERDIR = func()
+
+
 IMAGEDIR = os.path.join(USERDIR,'cache_images')
 PIDFILE = os.path.join(USERDIR,'christine.pid')
 
@@ -54,10 +66,10 @@ opts = options()
 # global PATH to share files required
 if opts.options.debug:
 	SHARE_PATH = os.path.join("./")
-	PLUGINSDIR = './libchristine/Plugins'
+	PLUGINSDIR = os.path.join('./','libchristine','Plugins')
 else:
 	SHARE_PATH = os.path.join('@datadir@', 'christine')
-	PLUGINSDIR = '@pythonlibdir@/libchristine/Plugins'
+	PLUGINSDIR = os.path.join('@pythonlibdir@','libchristine','Plugins')
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
-LOCALE_DIR = "@datadir@/locale/"
+LOCALE_DIR = os.path.join("@datadir@','locale")
 BUGURL='http://apps.sourceforge.net/trac/christine/newticket?version=%s'%VERSION

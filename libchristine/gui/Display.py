@@ -86,7 +86,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.setText(text)
 		self.set_size_request(100, 30)
 		self.Events.addWatcher('gotTags', self.gotTags)
-		gobject.timeout_add(300, self.__emit)
+		gobject.timeout_add(500, self.__emit)
 	
 	def __size_allocate(self,display, area):
 		x,y,w,h = area

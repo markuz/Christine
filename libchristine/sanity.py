@@ -44,8 +44,9 @@ class sanity:
 				self.__check_dir(dir)
 	
 	def check_xgd_data_home(self):
+		if os.name == 'nt':
+			return True
 		oldpath = os.path.join(os.environ["HOME"],".christine")
-		#oldpath = "/home/markuz/.christine"
 		if os.path.exists(oldpath):
 			import shutil
 			a = os.walk(oldpath)
