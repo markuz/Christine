@@ -23,36 +23,25 @@ class lib_library(object):
 		self.__logger = LoggerManager().getLogger('liblibrary')
 		self.__db = sqlite3db()
 		self.idlist = self.__db.PlaylistIDFromName(list)
-		if self.idlist == None and list == 'music':
-			self.__db.execute('INSERT INTO playlists VALUES (null, ?)',"music")
+		if self.idlist == None:
+			self.__db.insert_music_playlist()
 			self.idlist = self.__db.PlaylistIDFromName('music')
-		if not self.idlist:
-			self.idlist = self.__db.PlaylistIDFromName('music')
-			if not self.idlist:
-				self.__db.execute('INSERT INTO playlists VALUES (null, ?)',"music")
-				self.idlist = self.__db.PlaylistIDFromName('music')
 		self.idlist = self.idlist['id']
 		self.list = list
 		self.__files = self.__db.getItemsForPlaylist(self.idlist)
-		self.__logger.debug(len(self.__files))
 	
-	def __del__(self):
-		del self.__files
-		del self.__db
-		import gc
-		gc.collect()
-
 	def __setitem__(self,name,path):
 		self.append(name,path)
 
 	def __getitem__(self,key):
 		return self.__files[key]
+	def iteritems(self):
+		return self.__files.iteritems()
 
 	def append(self,name,data):
 		if not isinstance(data, dict):
 			raise TypeError("data must be a dict, got %s"%type(data))
 		self.__files[name]=data
-		self.__logger.debug(data)
 		id = self.__db.additem(
 						path = name,
 						title = data['title'],
@@ -87,14 +76,8 @@ class lib_library(object):
 		Remove an item from the main dict and return True or False
 		'''
 		self.__db.removeItem(key,self.idlist)
-		c = {}
-		if key in self.keys():
-			keys = [k for k in self.keys() if k != key]
-			for i in keys:
-				c[i]= self.__files[i]
-			self.__files = c.copy()
-			return True
-		return False
+		self.__files = self.__db.getItemsForPlaylist(self.idlist)
+		return True
 
 	def get_all(self):
 		return self.__files

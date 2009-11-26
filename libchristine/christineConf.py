@@ -90,7 +90,8 @@ class christineConf(Singleton):
 		if not self.configParser.has_section('backend'):
 			self.configParser.add_section('backend')
 		self.configParser.set('backend','audiosink','autoaudiosink')
-		self.configParser.set('backend','videosink','ximagesink')
+		sink =['autovideosink', 'xvimagesink'][os.name == 'posix']
+		self.configParser.set('backend','videosink',sink)
 		self.configParser.set('backend','video-aspect-ratio','1/1')
 		self.configParser.set('backend','aspect-ratio','1/1')
 		self.configParser.set('backend','allowed_files','mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav')

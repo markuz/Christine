@@ -27,8 +27,6 @@
 
 from optparse import OptionParser
 from libchristine.pattern.Singleton import Singleton
-from libchristine.globalvars import VERSION
-from libchristine.Translator import translate
 
 
 class options(Singleton):
@@ -45,14 +43,14 @@ class options(Singleton):
 		self.options.daemon (-D, --daemon)
 		'''
 		usage ='%prog [-v --debug]'
-		version = '%prog' +VERSION
+		version = '%prog' 
 		parser = OptionParser(usage = usage,version=version)
 		parser.add_option("-d","--devel", dest="debug",action='store_true',
-                  help=translate("If christine must run in devel mode"))
+                  help="If christine must run in devel mode")
 		parser.add_option("-v","--verbose", dest="verbose",action='store_true',
-                  help=translate("Force christine to dump the logs to the stdout"))
+                  help="Force christine to dump the logs to the stdout")
 		parser.add_option("-q","--quit", dest="quit",action='store_true',
-                 help=translate("Force christine to quit after startup"))
+                 help="Force christine to quit after startup")
 		
 		self.options, self.args = parser.parse_args()
 		

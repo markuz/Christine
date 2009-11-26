@@ -122,7 +122,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		'''
 		Emits an expose event
 		'''
-		if (time.time() - self.__last_emit) > 0.3 or self.__override_timer:
+		if (time.time() - self.__last_emit) > 0.5 or self.__override_timer:
 			self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
 			self.__last_emit = time.time()
 		return True
@@ -199,22 +199,18 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		x,y = (0,0)
 		self.context = self.window.cairo_create()
 		
-		self.context.set_operator(cairo.OPERATOR_SOURCE)
-		self.context.paint()
 		self.context.move_to(0, 0)
 		self.context.set_line_width(1.0)
 		#self.context.rectangle(x,y,w,h)
 		self.render_rect(self.context, x, y, w, h, 0.5)
-		#self.context.clip()
-		
-		
+		self.context.clip()
+		self.context.set_operator(cairo.OPERATOR_SOURCE)
+		self.context.paint()
 		
 		self.fontdesc = self.style.font_desc
 		tcolor = self.style.fg[0]
 		wcolor = self.style.bg[0]
-		#bcolor = self.style.bg[3]
 		bcolor = gtk.gdk.color_parse("#000000")
-		#b1color = self.style.bg[2]
 		b1color = gtk.gdk.color_parse("grey")
 		self.br, self.bg, self.bb = (self.getCairoColor(wcolor.red),
 				self.getCairoColor(wcolor.green),
@@ -229,9 +225,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 				self.getCairoColor(b1color.green),
 				self.getCairoColor(b1color.blue))
 		#clear the bitmap
-		self.context.move_to( x, y )
-		#self.context.set_operator(cairo.OPERATOR_OVER)
-		self.context.set_line_width( 1 )
+		#self.context.move_to( x, y )
 		self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
 		self.context.rectangle(x,y,w,h)
 		self.context.set_source_rgb(self.br,self.bg,self.bb)
@@ -251,9 +245,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 						self.getCairoColor(colorbg.green),
 						self.getCairoColor(colorbg.blue))
 		self.context.set_source(linear)
-		self.context.fill()
-		#self.render_rect(self.context, x+1, y+1, w-2, h-2, 0.5)
-		self.render_rect(self.context, x, y, w, h-1, 0.5)
+		self.context.fill_preserve()
+		#self.render_rect(self.context, x, y, w, h-1, 0.5)
 		color = gtk.gdk.color_parse("#DDD")
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
 		linear.add_color_stop_rgba(0.00,

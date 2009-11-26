@@ -1,6 +1,7 @@
 SUBDIRS = \
 		  gui \
 		  po \
+		  win32resources \
 		  libchristine \
 		  libchristine/christine_dbus/ \
 		  libchristine/pattern/ \
@@ -15,7 +16,7 @@ SUBDIRS = \
 		  libchristine/Plugins/pidgin/ \
 		  libchristine/Plugins/trayicon/ \
 		  libchristine/Plugins/twitter/ \
-		  libchristine/c3rdparty/
+		  libchristine/c3rdparty/ 
 		  
 
 bin_SCRIPTS = christine
@@ -24,7 +25,10 @@ bin_SCRIPTS = christine
 DIST_FILES = config.rpath \
 	   	    mkinstalldirs \
 	   	   	christine.desktop.in \
+			christine.py \
 	   	   	christine.c 
+
+
 	   	   	
 EXTRA_DIST = config.rpath  createDeb.sh.in \
 			 $(DIST_FILES)

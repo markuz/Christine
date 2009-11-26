@@ -78,7 +78,6 @@ class sqlite3db(Singleton):
 		loger
 		'''
 		val = self.cursor.fetchone()
-		self.__logger.debug(val)
 		return val
 
 	def fetchall(self):
@@ -87,7 +86,6 @@ class sqlite3db(Singleton):
 		loger
 		'''
 		val = self.cursor.fetchall()
-		self.__logger.debug(val)
 		return val
 
 	def fetchmany(self):
@@ -95,7 +93,6 @@ class sqlite3db(Singleton):
 		Fecth all rows from a resultset, and saves the value on the logger.
 		'''
 		val = self.cursor.fetchmany()
-		self.__logger.debug(val)
 		return val
 
 	def commit(self):
@@ -106,7 +103,6 @@ class sqlite3db(Singleton):
 	
 	def do_commit(self):
 		if self.have_to_commit:
-			self.__logger.info('Doing a commit')
 			self.connection.commit()
 			self.have_to_commit = False
 		return True
@@ -129,8 +125,8 @@ class sqlite3db(Singleton):
 		Create the default schema for the cristine data base
 		'''
 		tabledesc =[
-		'CREATE TABLE registry (id INTEGER PRIMARY KEY, desc VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL)',
-		'CREATE TABLE items (id INTEGER PRIMARY KEY, path text NOT NULL, \
+		'CREATE TABLE IF NOT EXISTS registry (id INTEGER PRIMARY KEY, desc VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL)',
+		'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY, path text NOT NULL, \
 						title VARCHAR(255) NOT NULL, artist VARCHAR(255), \
 						album VARCHAR(255), time VARCHAR(10), \
 						playcount INTEGER NOT NULL, \
@@ -140,10 +136,10 @@ class sqlite3db(Singleton):
 						genre varchar(30), \
 						have_tags bool \
 						)',
-		'CREATE TABLE playlists (id INTEGER PRIMARY KEY, name VARCHAR(255))',
-		'CREATE TABLE playlist_relation (id INTEGER PRIMARY KEY, \
+		'CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, name VARCHAR(255))',
+		'CREATE TABLE IF NOT EXISTS playlist_relation (id INTEGER PRIMARY KEY, \
 					playlistid INTEGER NOT NULL, itemid INTEGER NOT NULL)',
-		'CREATE TABLE radio (id INTEGER NOT NULL, title VARCHAR(30) NOT NULL,\
+		'CREATE TABLE IF NOT EXISTS radio (id INTEGER NOT NULL, title VARCHAR(30) NOT NULL,\
 					url VARCHAR(255) NOT NULL, rate INTEGER)',
 		]
 
@@ -176,8 +172,6 @@ class sqlite3db(Singleton):
 		# Check if the item is not already in the registry.
 		values = self.getItemByPath(kwargs['path'])
 		if values:
-			self.__logger.info('file with path %s already exists in the db',
-							kwargs['path'])
 			return values['id'];
 		strSQL = 'INSERT INTO items VALUES(null,?,?,?,?,?,0,1,?,?,?,?)'
 		self.execute(strSQL,
@@ -303,16 +297,10 @@ class sqlite3db(Singleton):
 					\nORDER BY a.path'%(playlistid)
 
 		self.execute(strSQL)
-		self.__logger.debug('cursor.rowcount: %d', self.cursor.rowcount)
+		r = self.cursor.fetchall()
 		d = {}
-		while 1:
-			try:
-				value = self.cursor.next()
-			except sqlite3.OperationalError, e:
-				self.__logger.exception(e)
-				continue
-			except StopIteration:
-				break
+		while r:
+			value = r.pop(0)
 			d[value['path']] = value
 		return d
 
@@ -402,3 +390,9 @@ class sqlite3db(Singleton):
 		self.commit()
 		return True
 
+	def insert_music_playilst(self):
+		'''
+		Insert the music playlist
+		'''
+		self.execute('INSERT INTO playlists VALUES (null, ?)',"music")
+		return True

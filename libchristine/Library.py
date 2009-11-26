@@ -15,9 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-
-
-import os,gtk,gobject,sys,pango, time
+import gc
+import os
+import gtk
+import gobject
+import pango
+import time
 import gst
 from libchristine.libs_christine import lib_library
 from libchristine.gui.GtkMisc import GtkMisc, error
@@ -31,7 +34,6 @@ from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
 from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Events import christineEvents
-from libchristine.Logger import LoggerManager
 
 (PATH,NAME,TYPE,PIX,ALBUM,ARTIST,TN,SEARCH,PLAY_COUNT,TIME,GENRE,
 HAVE_TAGS) = range(12)
@@ -41,6 +43,9 @@ HAVE_TAGS) = range(12)
 QUEUE_TARGETS = [('text/plain',0,0),('TEXT', 0, 1),('STRING', 0, 2),
 				('COMPOUND_TEXT', 0, 3), ('UTF8_STRING', 0, 4)]
 
+share = Share()
+pix =share.getImageFromPix('blank')
+pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 
 ##
 ## Since library and queue are more or less the same
@@ -57,7 +62,6 @@ class libraryBase(GtkMisc):
 		'''
 		self.iters = {}
 		self.__FilesToAdd = []
-		self.do_save = False
 		GtkMisc.__init__(self)
 		self.logger = LoggerManager().getLogger('sqldb')
 		self.share = Share()
@@ -121,7 +125,7 @@ class libraryBase(GtkMisc):
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:
 			self.last_scroll_time = time.time()
-			gobject.timeout_add(100, self.check_file_data)
+			gobject.timeout_add(500, self.check_file_data)
 	
 	def check_file_data(self, override = False):
 		if not override:
@@ -191,6 +195,8 @@ class libraryBase(GtkMisc):
 		if getattr(self, "library_lib", False):
 			del self.library_lib
 		self.library_lib = lib_library(library)
+		if getattr(self, 'model',False):
+			del self.model
 		self.gen_model()
 		self.model.createSubmodels()
 		self.fillModel()
@@ -217,10 +223,11 @@ class libraryBase(GtkMisc):
 					) 
 		else:
 			self.model.clear()
+		del self.iters
+		self.iters = {}
+		gc.collect(2)
 
 	def fillModel(self):
-		pix = self.share.getImageFromPix('blank')
-		pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 		keys = self.library_lib.keys()
 		keys.sort()
 		for path in keys:
@@ -228,8 +235,7 @@ class libraryBase(GtkMisc):
 			for key, value in values.iteritems():
 				if isinstance(value,str):
 					values[key] = self.encode_text(value)
-			searchstring = ''.join((values['title'], values['artist'],
-								values['album'],	values['type']))
+			searchstring = '%(title)s%(artist)s%(album)s%(type)s'%values
 			if not self.model.TextToSearch or \
 				searchstring.lower().find(self.model.TextToSearch) > -1:
 				iter = self.model.append(PATH,path,
@@ -313,7 +319,6 @@ class libraryBase(GtkMisc):
 				"playcount":0,
 				"time":'0:00',
 				"genre":tags['genre'],}
-		self.do_save = True
 
 	def remove(self,iter):
 		'''
@@ -608,7 +613,6 @@ class libraryBase(GtkMisc):
 		self.__Percentage      = 0
 		self.__TimeTotalNFiles = len(self.__FilesToAdd)
 		gobject.idle_add(self.__addFileCycle)
-		#gobject.timeout_add(100, self.__addFileCycle)
 	
 	def importCancel(self):
 		"""

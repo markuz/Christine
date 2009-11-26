@@ -26,26 +26,27 @@
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 import sys
-import random
+from random import randint
 import time
 import gtk
 import gtk.gdk
-import pygst; pygst.require('0.10')
+#import pygst;
+#pygst.require('0.10')
 import gst.interfaces
 import gobject
 import os
 import signal
+import gc
+gc.enable()
+gc.set_threshold(2)
 from libchristine.globalvars import  BUGURL,USERDIR, PIDFILE
 from libchristine.sanity import sanity
 sanity()
 from  libchristine.Plugins import Manager
 from libchristine.Translator import translate
 from libchristine.gui.GtkMisc import GtkMisc, error
-from libchristine.gui.Preferences import guiPreferences
-from libchristine.gui.About import guiAbout
 from libchristine.gui.Display import Display
 from libchristine.ui import interface
-from libchristine.gui.openRemote import openRemote
 from libchristine.Library import library, queue,PATH, HAVE_TAGS
 from libchristine.Library import PIX,TIME
 from libchristine.Player import Player
@@ -70,6 +71,12 @@ def close(*args):
 	sys.exit()
 	gtk.main_quit()
 
+def clean_traceback():
+	sys.exc_traceback = None
+	gc.collect(2)
+	return True
+
+gobject.timeout_add(10000, clean_traceback)
 
 signal.signal(signal.SIGTERM, close)
 
@@ -80,6 +87,16 @@ if (gtk.gtk_version < (2, 10, 0)):
 share = Share()
 logo = share.getImageFromPix('logo')
 gtk.window_set_default_icon(logo)
+
+
+def gc_collect():
+	try:
+		gc.collect()
+	except:
+		pass
+	return True
+
+gobject.timeout_add(1000, gc_collect)
 
 class Christine(GtkMisc):
 	def __init__(self):
@@ -195,7 +212,7 @@ class Christine(GtkMisc):
 		self.menuItemPlay = xml['MenuItemPlay']
 
 		openremotemitem = xml['open_remote1']
-		openremotemitem.connect('activate', lambda widget: openRemote())
+		openremotemitem.connect('activate', self.openRemote)
 		self.Menus = {}
 		for i in ('media', 'edit', 'control', 'help'):
 			self.Menus["%s" % i] = xml["%s_menu" % i].get_submenu()
@@ -325,7 +342,7 @@ class Christine(GtkMisc):
 	
 	def __check_items_on_media(self):
 		size = len(self.mainLibrary.model.basemodel)
-		randompath = ((int(size * random.random())),)
+		randompath = (randint(1,size),)
 		if randompath[0]:
 			filepath, tags = self.mainLibrary.model.basemodel.get(
 							self.mainLibrary.model.basemodel.get_iter(randompath),
@@ -401,12 +418,13 @@ class Christine(GtkMisc):
 		self.__LastPlayed.append(filename)
 		# enable the stream-length for the current song.
 		# this will be stopped when we get the length
-		gobject.timeout_add(100, self.__streamLength)
+		gobject.timeout_add(500,self.__streamLength)
 		# if we can't get the length, in more than 20
 		# times in the same song, then, jump to the
 		# next song
 		if (self.__LocationCount > 20):
-			self.goNext()
+			gobject.timeout_add(1000, self.goNext)
+			self.__LocationCount = 0
 		else:
 			self.__LocationCount +=1
 		self.mainLibrary.tv.grab_focus()
@@ -647,6 +665,7 @@ class Christine(GtkMisc):
 		Go to play the previous song. If no previous song was played in the
 		current session, then plays the previous song in the library
 		"""
+		import gst
 		if self.__Player.getLocation():
 			nanos = self.__Player.query_position(gst.FORMAT_TIME)[0]
 			ts = (nanos / gst.SECOND)
@@ -708,8 +727,8 @@ class Christine(GtkMisc):
 			if (self.__MenuItemShuffle.get_active()):
 				Elements = len (self.mainLibrary.tv.get_model()) - 1
 				if Elements < 0:
-					return True
-				randompath = ((int(Elements * random.random())),)
+					return
+				randompath = randint(0,int(Elements))
 				filename = self.mainLibrary.tv.get_model()[randompath][PATH]
 				if (not filename in self.__LastPlayed) or \
 						(self.christineConf.getBool('control/repeat')) and filename:
@@ -1060,11 +1079,16 @@ class Christine(GtkMisc):
 			self.mainLibrary.clear()
 		dialog.destroy()
 
+	def openRemote(self,widget):
+		import libchristine.gui.openRemote 
+		libchristine.gui.openRemote.openRemote()
+
 	def showGtkAbout(self, widget):
 		"""
 		Show the about dialog
 		"""
-		a = guiAbout()
+		import libchristine.gui.About
+		a = libchristine.gui.About.guiAbout()
 		a.about.set_transient_for(self.coreWindow)
 		a.run()
 
@@ -1072,7 +1096,8 @@ class Christine(GtkMisc):
 		"""
 		Show the preferences dialog
 		"""
-		guiPreferences()
+		import libchristine.gui.Preferences
+		libchristine.gui.Preferences.guiPreferences()
 
 	def ShowHideSidePanel(self, widget):
 		'''
@@ -1119,8 +1144,10 @@ def runChristine():
 		c = None
 		add_items_to_queue(obj,c)
 		sys.exit()
-	except ex:
+	except ex, e:
+		print e
 		try:
+			import libchristine.christine_dbus.christineDBus
 			a = christineDBus()
 		except:
 			pass
@@ -1131,8 +1158,9 @@ def runChristine():
 		f = open(PIDFILE,'w')
 		f.write('%d'%(os.getpid()))
 		f.close()
-	except:
-		BugReport()
+	except Exception, e:
+		print e
+		#BugReport()
 	gtk.main()
 	
 	

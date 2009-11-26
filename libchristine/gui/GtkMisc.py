@@ -116,8 +116,8 @@ class GtkMisc:
 		'''
 		for i in ('latin-1','iso8859-1', 'utf8'):
 			try:
-				text1 =  u'%s'%text.decode(i)
-				text1 =  u'%s'%text1.encode(i)
+				text1 = unicode(text, i)
+				text1 =  text1.encode(i)
 				return text1
 			except Exception, e:
 				pass

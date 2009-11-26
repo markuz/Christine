@@ -15,8 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 from libchristine.Logger import LoggerManager
-import sys
-import time
 import gtk
 import gc
 from libchristine.ui import interface
@@ -62,7 +60,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.data_size = 0
 		self.last_index = 0
 		self.index = None
-		self.__emptyData = map(lambda x: '', range(self.column_size))
+		self.__emptyData = map(lambda x: '', xrange(self.column_size))
 		self.interface = interface()
 		self.set = self.set_value
 
@@ -77,7 +75,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		except:
 			pass
 		del self
-		gc.collect()
+		gc.collect(2)
 
 	def get_flags(self):
 		return self.on_get_flags()
@@ -96,7 +94,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		iter = self.get_iter(path)
 		self.row_inserted(path, iter)
 		self.invalidate_iters()
-		self.__data_tuple = tuple(self.data)
 		return iter
 
 	def prepend(self, *args):
@@ -109,7 +106,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		niter = self.get_iter((iter,))
 		self.row_inserted(path, niter)
 		self.invalidate_iters()
-		self.__data_tuple = tuple(self.data)
 		return iter
 
 	def set_value(self, path, *args):
@@ -129,7 +125,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 			self.row_inserted(path, iter)
 			self.emit_inserted = False
 		self.row_changed(path, iter)
-		self.__data_tuple = tuple(self.data)
 		return iter
 
 	def on_get_path(self, rowref):
@@ -214,6 +209,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 			self.data.pop(path)
 			self.data_size -= 1
 			self.row_deleted((path,))
+			self.invalidate_iters()
 			return True
 
 	def __removeLast20(self,):
@@ -229,8 +225,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 			if not self.__removeLast20():
 				break
 		self.invalidate_iters()
-		self.__data_tuple = tuple(self.data)
-		gc.collect()
+		gc.collect(2)
 	
 		
 class LibraryModel(GtkMisc):
@@ -246,6 +241,9 @@ class LibraryModel(GtkMisc):
 		self.TextToSearch = ''
 		self.append = self.basemodel.append
 		self.prepend = self.basemodel.prepend
+	
+	def destroy(self):
+		del self
 
 	def createSubmodels(self):
 		self.__sorted = gtk.TreeModelSort(self.basemodel)

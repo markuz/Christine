@@ -25,7 +25,8 @@ def getFiles(dir):
 
 origIsSystemDLL = py2exe.build_exe.isSystemDLL
 def isSystemDLL(pathname):
-	if os.path.basename(pathname).lower() in ("msvcp71.dll", "dwmapi.dll", "jpeg62.dll","mfc71.dll"):
+	dlls = ("msvcp71.dll", "dwmapi.dll", "jpeg62.dll","mfc71.dll")
+	if os.path.basename(pathname).lower() in dlls:
 		return 0
 	return origIsSystemDLL(pathname)
 py2exe.build_exe.isSystemDLL = isSystemDLL
@@ -41,10 +42,11 @@ class Target:
 		          'Development Status :: 4 - Beta',
 		          'Environment :: GUI',
 		          'Intended Audience :: End Users/Desktop',
-		          'License :: OSI Approved :: Python Software Foundation License',
+		          'License :: OSI Approved :: GNU/GPL v.2.0',
 		          'Operating System :: Microsoft :: Windows',
 		          'Operating System :: POSIX',
 		          'Programming Language :: Python',
+		          'Programming Language :: C',
 		          ]
 			self.platforms = ['Posix','Windows XP', 'Windows 2000','Windows Vista']
 			self.version        = "0.6.0"
@@ -52,7 +54,7 @@ class Target:
 			self.copyright      = "(c) 2006-2009, Marco Islas"
 			self.name           = "Christine Media Player"
 			self.description = 'Christine Media Player'
-			self.icon_resources =  [(0, "win32resources/logo.ico")]
+			self.icon_resources =  [(0, "win32resources/christine.ico")]
 
 target = Target(script = "christine.py")
 
@@ -74,6 +76,7 @@ setup(
                       'excludes':'doctest,pdb,unittest,difflib,inspect',
 					  'compressed': 0,
 					  'skip_archive':1,
+					  'unbuffered':True,
                   }
               },
 
@@ -90,3 +93,6 @@ try:
                              os.path.join('dist','jpeg62.dll'))
 except Exception, e:
 	pass
+
+shutil.copy(os.path.join("./",'build','lib.win32-%d.%d'%tuple(sys.version_info[:2]),'libchristine','CLibraryModel.pyd'),
+		os.path.join('dist','libchristine','CLibraryModel.pyd'))

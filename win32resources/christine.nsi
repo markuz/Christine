@@ -1,12 +1,12 @@
 !define exe "christine.exe"
 !define link "christine.lnk"
-;!define install_path "C:\simecob"
+!define install_path "$PROGRAMFILES\Christine"
 !define source_path "dist\"
-!define install_file "Christine-0.06.00.exe"
-;!define config_path "C:\simecob"
+!define install_file "Christine-0.06.00-pre1.exe"
+;!define config_path ${}\Christine
 ;!define config_file "config.ini"
 !define PRODUCT_NAME "Christine"
-!define PRODUCT_VERSION "0.06.00"
+!define PRODUCT_VERSION "0.06.00-pre1"
 !define PRODUCT_PUBLISHER "Christine Project"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${exe}"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -26,8 +26,8 @@ Function .onInit
   IfFileExists $R0 +1 NotInstalled
   messagebox::show MB_DEFBUTTON4|MB_TOPMOST "${PRODUCT_NAME}" \
 	"0,103" \
-	"Aparentemente ${PRODUCT_NAME} ya esta instalado." \
-	"Desinstalar" "Cancelar"
+	"It seems that ${PRODUCT_NAME} is already installed." \
+	"Uninstall" "Cancel"
 	Pop $R1
   StrCmp $R1 2 Quit +1
   Exec $R0
@@ -53,11 +53,16 @@ FunctionEnd
 ; MUI Settings
 !define MUI_ABORTWARNING
 !define MUI_ICON "win32resources/christine.ico"
-!define MUI_UNICON "win32resources/christine.ico"
+!define MUI_UNICON "win32resources/christine_uninst.ico"
 ;!define MUI_WELCOMEFINISHPAGE_BITMAP "nsis.bmp" ; optional
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
+; Licence
+!define MUI_LICENSEPAGE_CHECKBOX
+!insertmacro MUI_PAGE_LICENSE COPYING
+; Directory
+!insertmacro MUI_PAGE_DIRECTORY
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
@@ -67,7 +72,7 @@ FunctionEnd
 !insertmacro MUI_UNPAGE_INSTFILES
 
 ; Language files
-!insertmacro MUI_LANGUAGE "Spanish"
+!insertmacro MUI_LANGUAGE "English"
 
 ; MUI end ------
 
@@ -91,10 +96,8 @@ Section
 SectionEnd
 
 Section -AdditionalIcons
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninst.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\simecob.lnk" "$INSTDIR\${exe}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\configuracion.lnk" "$INSTDIR\configuracion.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\bitacoras.lnk" "$INSTDIR\bitacoras.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall Christine.lnk" "$INSTDIR\uninst.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\christine.lnk" "$INSTDIR\${exe}"
 SectionEnd
 
 Section -Post
@@ -110,11 +113,11 @@ SectionEnd
 
 Function un.onUninstSuccess
   HideWindow
-  MessageBox MB_ICONINFORMATION|MB_OK "La desinstalacion de $(^Name) finalizo satisfactoriamente."
+  MessageBox MB_ICONINFORMATION|MB_OK "Christine will not play anymore here :-(."
 FunctionEnd
 
 Function un.onInit
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Esta completamente seguro que desea desinstalar $(^Name) junto con todos sus componentes?" IDYES +2
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure?" IDYES +2
   Abort
 FunctionEnd
 

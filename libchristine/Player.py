@@ -22,7 +22,6 @@
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-from libchristine.Validator import isNull
 from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
 from libchristine.Validator import isFile
@@ -33,7 +32,6 @@ import gst
 import gtk
 import gobject
 import os
-import pygst; pygst.require('0.10')
 
 
 BORDER_WIDTH = 0
@@ -95,6 +93,7 @@ class Player(gtk.DrawingArea, object):
 								self.config.getInt('backend/gst_delay'))
 		self.play = self.__PlayBin
 		self.bus  = self.__PlayBin.get_bus()
+		self.getState = self.__PlayBin.get_state
 		self.__updateAudioSink()
 		self.__updateVideoSink()
 		self.__updateAspectRatio()
@@ -309,7 +308,7 @@ class Player(gtk.DrawingArea, object):
 				location = self.getLocation()
 				sec = self.query_duration(gst.FORMAT_TIME)[0]
 				self.stop()
-				gobject.timeout_add(100, self.__replay, location, sec)
+				gobject.timeout_add(500, self.__replay, location, sec)
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
 			#self.visualizationPlugin = None
 			self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
@@ -352,12 +351,6 @@ class Player(gtk.DrawingArea, object):
 				if tags[i] != None:
 					self.Tags[i] = tags[i]
 		self.getType()
-
-	def getState(self):
-		"""
-		Gets current state
-		"""
-		return self.__PlayBin.get_state()
 
 	def getType(self):
 		"""

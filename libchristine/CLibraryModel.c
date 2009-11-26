@@ -71,11 +71,11 @@ initCLibraryModel(void)
 	PyObject *className = NULL;
 	PyObject *fooClass = NULL;
 
-    (PyObject*) module = Py_InitModule("CLibraryModel", ModuleMethods);
-    (PyObject*) moduleDict = PyModule_GetDict(module);
-    (PyObject*) classDict = PyDict_New();
-    (PyObject*) className = PyString_FromString("CLibraryModel");
-    (PyObject*) fooClass = PyClass_New(NULL, classDict, className);
+    module = Py_InitModule("CLibraryModel", ModuleMethods);
+    moduleDict = PyModule_GetDict(module);
+    classDict = PyDict_New();
+    className = PyString_FromString("CLibraryModel");
+    fooClass = PyClass_New(NULL, classDict, className);
 
 	PyImport_AddModule("CLibraryModel");
 

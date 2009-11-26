@@ -20,16 +20,11 @@
 #
 # http://code.google.com/p/pylast/
 
-import md5
-import urllib2
 import thread
-import os
 from libchristine.Plugins.plugin_base import plugin_base,christineConf
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
-from libchristine.globalvars import USERDIR
 from libchristine.c3rdparty.pylast import *
-import gtk
 import webbrowser
 
 

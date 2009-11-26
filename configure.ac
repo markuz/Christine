@@ -1,5 +1,5 @@
-AC_INIT('christine', '0.5.1', 'markuz@islascruz.org')
-AM_INIT_AUTOMAKE('christine', '0.5.1')
+AC_INIT('christine', '0.6.0-pre1', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.6.0-pre1')
 
 
 #AC_GNU_SOURCE
@@ -28,7 +28,7 @@ AC_SUBST(pygtk_LIBS)
 
 
 PROGRAM_NAME="christine"
-VERSION="0.5.1"
+VERSION="0.6.0-pre1"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib(plat_specific=True)"`
 PYTHON_LFS=`python -c "from distutils import sysconfig; print sysconfig.get_config_var('LINKFORSHARED')"`
@@ -120,10 +120,9 @@ ALL_LINGUAS="ar  bg cs de en_GB es fi ga hu it mk nb oc pt_BR ro sk sv zh_CN be 
 AC_SUBST(ALL_LINGUAS)
 USE_NLS=yes
 AC_SUBST(USE_NLS)
-AM_GNU_GETTEXT
 IT_PROG_INTLTOOL
 
-AC_CONFIG_FILES([ po/Makefile.in
+AC_CONFIG_FILES([po/Makefile.in
 Makefile
 libchristine/Makefile
 libchristine/pattern/Makefile
@@ -140,13 +139,11 @@ libchristine/Plugins/trayicon/Makefile
 libchristine/Plugins/twitter/Makefile
 libchristine/christine_dbus/Makefile
 libchristine/c3rdparty/Makefile
+win32resources/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
 po/Makefile
 po/POTFILES
-intltool-extract
-intltool-merge
-intltool-update
 ])
 
 AC_OUTPUT

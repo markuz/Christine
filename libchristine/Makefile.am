@@ -12,7 +12,6 @@ scripts_DATA=christineConf.py \
 			Logger.py \
 			options.py \
 			Player.py \
-			Sanity.py \
 			Share.py \
 			sources_list.py \
 			Tagger.py \

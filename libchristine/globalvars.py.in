@@ -30,6 +30,7 @@
 
 import os
 import sys
+from libchristine.options import options
 
 VERSION = '@version@'
 PROGRAMNAME = '@programname@'
@@ -60,10 +61,11 @@ LOGFILE  = os.path.join(USERDIR,"log")
 CHRISTINE_AUDIO_EXT = sound = ["mp3","ogg","wma"]
 CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
 
-from libchristine.options import options
 opts = options()
 # global PATH to share files required
-if opts.options.debug:
+# Ugly hack to make this work on win32
+print os.name
+if opts.options.debug or os.name == 'nt':
 	SHARE_PATH = os.path.join("./")
 	PLUGINSDIR = os.path.join('./','libchristine','Plugins')
 else:
