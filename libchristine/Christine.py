@@ -342,7 +342,7 @@ class Christine(GtkMisc):
 	
 	def __check_items_on_media(self):
 		size = len(self.mainLibrary.model.basemodel)
-		randompath = (randint(1,size),)
+		randompath = (randint(1,size-1),)
 		if randompath[0]:
 			filepath, tags = self.mainLibrary.model.basemodel.get(
 							self.mainLibrary.model.basemodel.get_iter(randompath),
@@ -728,7 +728,7 @@ class Christine(GtkMisc):
 				Elements = len (self.mainLibrary.tv.get_model()) - 1
 				if Elements < 0:
 					return
-				randompath = randint(0,int(Elements))
+				randompath = randint(0,int(Elements)-1)
 				filename = self.mainLibrary.tv.get_model()[randompath][PATH]
 				if (not filename in self.__LastPlayed) or \
 						(self.christineConf.getBool('control/repeat')) and filename:

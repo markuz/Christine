@@ -195,8 +195,6 @@ class libraryBase(GtkMisc):
 		if getattr(self, "library_lib", False):
 			del self.library_lib
 		self.library_lib = lib_library(library)
-		if getattr(self, 'model',False):
-			del self.model
 		self.gen_model()
 		self.model.createSubmodels()
 		self.fillModel()
@@ -236,6 +234,7 @@ class libraryBase(GtkMisc):
 				if isinstance(value,str):
 					values[key] = self.encode_text(value)
 			searchstring = '%(title)s%(artist)s%(album)s%(type)s'%values
+			print (searchstring, self.model.TextToSearch)
 			if not self.model.TextToSearch or \
 				searchstring.lower().find(self.model.TextToSearch) > -1:
 				iter = self.model.append(PATH,path,
