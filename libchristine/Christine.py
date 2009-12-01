@@ -55,6 +55,7 @@ from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_E
 from libchristine.Logger import LoggerManager
 from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
+from libchristine.gui.buttons import next_button, toggle_button, prev_button
 try:
 	from libchristine.christine_dbus import christineDBus
 except Exception, e:
@@ -207,15 +208,38 @@ class Christine(GtkMisc):
 		self.coreWindow.connect('size-allocate', self.__on_corewindow_resized)
 		self.interface.coreWindow = self.coreWindow
 
-		self.PlayButton   = xml['ToggleButtonPlay']
+		self.__HBoxButtonBox		= xml['HBoxButtonBox']
+		self.__HBoxButtonBox.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
+		self.__HBoxButtonBox.connect('scroll-event',self.changeVolumeWithScroll)
+
+		parent = self.__HBoxButtonBox
+		prev1 = prev_button()
+		parent.pack_start(prev1, False, False, 2)
+		prev1.connect('clicked', self.goPrev)
+		prev1.show()
+
+
+		self.PlayButton = toggle_button("")
+		self.PlayButton.connect('toggled', self.switchPlay)
+		parent.pack_start(self.PlayButton, False, False, 2)
+		self.PlayButton.show()
 		self.interface.playButton =  self.PlayButton
 		self.menuItemPlay = xml['MenuItemPlay']
+		
+		next = next_button()
+		parent.pack_start(next, False, False, 2)
+		next.connect('clicked', self.goNext)
+		next.show()
 
 		openremotemitem = xml['open_remote1']
 		openremotemitem.connect('activate', self.openRemote)
 		self.Menus = {}
 		for i in ('media', 'edit', 'control', 'help'):
 			self.Menus["%s" % i] = xml["%s_menu" % i].get_submenu()
+
+		
+		
+
 
 		self.__HBoxCairoDisplay = xml['HBoxCairoDisplay']
 
@@ -310,13 +334,6 @@ class Christine(GtkMisc):
 		reportaBug = xml['reportABug']
 		reportaBug.connect('activate', lambda widget: webbrowser.open(BUGURL))
 
-		#self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
-		#self.__HBoxToolBoxContainer.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
-		#self.__HBoxToolBoxContainer.connect("scroll-event",self.changeVolumeWithScroll)
-
-		self.__HBoxButtonBox		= xml['HBoxButtonBox']
-		self.__HBoxButtonBox.set_property('events',gtk.gdk.ENTER_NOTIFY|gtk.gdk.SCROLL_MASK)
-		self.__HBoxButtonBox.connect('scroll-event',self.changeVolumeWithScroll)
 
 		self.__HScaleVolume         = xml['HScaleVolume']
 		self.__HScaleVolume.connect("scroll-event",self.changeVolumeWithScroll)

@@ -25,12 +25,6 @@
 # @copyright 2006-2008 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 
-#import gtk
-#import gst
-#import gst.interfaces
-#import random
-#import sys
-
 from libchristine.Share import Share
 from libchristine.Translator import translate
 from libchristine.globalvars import PROGRAMNAME, VERSION
