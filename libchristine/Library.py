@@ -234,7 +234,6 @@ class libraryBase(GtkMisc):
 				if isinstance(value,str):
 					values[key] = self.encode_text(value)
 			searchstring = '%(title)s%(artist)s%(album)s%(type)s'%values
-			print (searchstring, self.model.TextToSearch)
 			if not self.model.TextToSearch or \
 				searchstring.lower().find(self.model.TextToSearch) > -1:
 				iter = self.model.append(PATH,path,
