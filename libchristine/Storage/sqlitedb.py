@@ -34,13 +34,15 @@ from libchristine.globalvars import DBFILE
 from libchristine.pattern.Singleton import Singleton
 from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
+from libchristine.gui.GtkMisc import GtkMisc
 
-class sqlite3db(Singleton):
+class sqlite3db(Singleton, GtkMisc):
 	def __init__(self):
 		'''
 		Constructor
 		'''
 		#create the 'connection'
+		GtkMisc.__init__(self)
 		self.connection = sqlite3.connect(DBFILE)
 		self.connection.row_factory = self.dict_factory
 		self.connection.text_factory = str
@@ -55,12 +57,15 @@ class sqlite3db(Singleton):
 			self.fillRegistry()
 		self.iface = interface()
 		self.iface.db = self
-		gobject.timeout_add(300, self.do_commit)
+		#gobject.timeout_add(1000, self.do_commit)
 
 	def dict_factory(self, cursor, row):
 		d = {}
 		for idx, col in enumerate(cursor.description):
-			d[col[0]] = row[idx]
+			val = row[idx]
+			if isinstance(val, str):
+				val = self.encode_text(val)
+			d[col[0]] = val
 		return d
 
 	def execute(self, strSQL,*args):

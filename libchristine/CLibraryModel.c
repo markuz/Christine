@@ -15,10 +15,12 @@ on_get_iter(PyObject *self, PyObject *args)
 	static PyObject *result;
 	static PyObject *selfobj;
 	static PyObject *data;
+	static PyObject *size;
 	int index;
     if (!PyArg_ParseTuple(args, "OO", &selfobj, &rowref))
         return NULL;
     data = PyObject_GetAttrString(selfobj, "data");
+    size = PyObject_GetAttrString(selfobj, "data_size");
     if (!data){
     	Py_DECREF(rowref);
 		Py_DECREF(data);
@@ -26,7 +28,7 @@ on_get_iter(PyObject *self, PyObject *args)
     	return Py_None;
     }
     PyArg_ParseTuple(rowref, "i", &index);
-    if (index <= PyList_Size(data) -1){
+    if (index <= PyInt_AsLong(size) -1){
     	result = PyList_GetItem(data, index);
     }
     else{
@@ -38,12 +40,14 @@ on_get_iter(PyObject *self, PyObject *args)
 	if (!result){
 		Py_DECREF(rowref);
 		Py_DECREF(data);
+		Py_DECREF(result);
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
 	Py_XDECREF(rowref);
+	Py_XDECREF(size);
 	Py_XDECREF(data);
-    return Py_BuildValue("O", result);
+    return  result;
 }
 
 

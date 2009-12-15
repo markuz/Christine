@@ -203,7 +203,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.context.set_line_width(1.0)
 		#self.context.rectangle(x,y,w,h)
 		self.render_rect(self.context, x, y, w, h, 0.5)
-		self.context.clip()
+		self.context.clip_preserve()
+		self.context.save()
 		self.context.set_operator(cairo.OPERATOR_SOURCE)
 		self.context.paint()
 		
@@ -281,10 +282,11 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 
 		# Drawing the progress bar
 		context = self.window.cairo_create()
-		context.set_antialias(cairo.ANTIALIAS_NONE)
-		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,width +1 , BORDER_WIDTH +1)
-		context.clip()
-		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,width, BORDER_WIDTH)
+		#context.set_antialias(cairo.ANTIALIAS_NONE)
+		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,width, BORDER_WIDTH +1)
+		context.clip_preserve()
+		context.save()
+		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,width, BORDER_WIDTH+1)
 		context.set_line_width(1)
 		self.context.set_line_cap(cairo.LINE_CAP_BUTT)
 		

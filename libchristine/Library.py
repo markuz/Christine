@@ -193,18 +193,20 @@ class libraryBase(GtkMisc):
 		self.tv.set_model(None)
 		self.library_name = library
 		if getattr(self, "library_lib", False):
-			del self.library_lib
+			self.library_lib = None
 		self.library_lib = lib_library(library)
 		self.gen_model()
-		self.model.createSubmodels()
 		self.fillModel()
+		self.model.createSubmodels()
 		self.tv.set_model(self.model.getModel())
 
 	def gen_model(self):
 		'''
 		Generates the model
 		'''
-		if not getattr(self, 'model', False):
+		if getattr(self, 'model', False):
+			self.model.clear()
+		else:
 			self.model = LibraryModel(
 					str, #path
 					str, #name
@@ -219,36 +221,52 @@ class libraryBase(GtkMisc):
 					str, #Genre
 					bool, # Have tags
 					) 
-		else:
-			self.model.clear()
 		del self.iters
-		self.iters = {}
 		gc.collect(2)
+		self.iters = {}
 
 	def fillModel(self):
 		keys = self.library_lib.keys()
 		keys.sort()
-		for path in keys:
-			values = self.library_lib[path]
-			for key, value in values.iteritems():
-				if isinstance(value,str):
-					values[key] = self.encode_text(value)
-			searchstring = '%(title)s%(artist)s%(album)s%(type)s'%values
-			if not self.model.TextToSearch or \
-				searchstring.lower().find(self.model.TextToSearch) > -1:
-				iter = self.model.append(PATH,path,
-					NAME, values['title'],
-					SEARCH,searchstring,
-					PIX, pix,
-					TYPE,values['type'],
-					ARTIST,values['artist'],
-					ALBUM ,values['album'],
-					TN,values['track_number'],
-					PLAY_COUNT ,values['playcount'],
-					TIME ,values['time'],
-					GENRE ,values['genre'],
-					HAVE_TAGS, [False, True][values['have_tags']])
-				self.iters[path] = iter
+		l = self.library_lib
+		model = self.model
+		tts = model.TextToSearch.lower()
+		while keys:
+			path = keys.pop(0)
+			self.__insert_item(path, l, model, tts)
+		self.library_lib.clear()
+	
+	def __insert_item(self, path,l,model, tts):
+		values = l[path]
+		#for key, value in values.iteritems():
+		#	if isinstance(value,str):
+		#		values[key] = self.encode_text(value)
+		searchstring = ''.join((values['title'],values['artist'],
+							values['album'],values['type']))
+		if not tts or searchstring.lower().find(tts) > -1:
+			iter = model.append(PATH,path,
+				NAME, values['title'],
+				SEARCH,searchstring,
+				PIX, pix,
+				ARTIST,values['artist'],
+				ALBUM ,values['album'],
+				GENRE ,values['genre'],
+				HAVE_TAGS, bool(values['have_tags']),
+				TYPE,values['type'],
+				TN,values['track_number'],
+				PLAY_COUNT ,values['playcount'],
+				TIME ,values['time'],
+				)
+			#gobject.idle_add(self.__set_extras, model, iter, values)
+			self.iters[path] = iter
+
+	def __set_extras(self, model, iter, values):
+		model.append(
+				TYPE,values['type'],
+				TN,values['track_number'],
+				PLAY_COUNT ,values['playcount'],
+				TIME ,values['time'],
+				)
 
 
 	def add(self,file,prepend=False):
@@ -272,22 +290,22 @@ class libraryBase(GtkMisc):
 			tags['genre'] = ''
 		else:
 			tags = {}
-			tags['title'] = self.encode_text(self.strip_XML_entities(vals['title']))
-			tags['album'] =  self.encode_text(self.strip_XML_entities(vals['album']))
-			tags['artist'] = self.encode_text(self.strip_XML_entities(vals['artist']))
+			sme = self.strip_XML_entities
+			tags['title'] = sme(self.encode_text(vals['title']))
+			tags['album'] =  sme(self.encode_text(vals['album']))
+			tags['artist'] = sme(self.encode_text(vals['artist']))
 			tags['track'] = vals['track_number']
-			tags['genre'] = self.encode_text(self.strip_XML_entities(vals['genre']))
+			tags['genre'] = sme(self.encode_text(vals['genre']))
 
 		if tags["title"] == "":
 			n = os.path.split(file)[1].split(".")
 			tags["title"] = ".".join([k for k in n[:-1]])
 
+		t = "audio"
 		if "video-codec" in tags.keys() or \
 				os.path.splitext(file)[1][1:] in CHRISTINE_VIDEO_EXT:
 			t = "video"
-		else:
-			t = "audio"
-		if type(tags["track"]) !=  type(1):
+		if not isinstance(tags["track"], int):
 			tags["track"] = 0
 		name	= tags["title"]
 		album	= tags["album"]
@@ -835,7 +853,7 @@ class queue (libraryBase ,gobject.GObject):
 		self.last_check = -1
 		self.loadLibrary('queue')
 		self.tv.connect('key-press-event', self.QueueHandlerKey)
-		gobject.timeout_add(500, self.checkQueue)
+		gobject.timeout_add(1000, self.checkQueue)
 		self.scroll.set_size_request(100,150)
 		self.interface.Queue = self
 		self.tv.set_property('fixed-height-mode', False)

@@ -81,7 +81,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		return self.on_get_flags()
 
 	def on_get_flags(self):
-		return gtk.TREE_MODEL_LIST_ONLY#|gtk.TREE_MODEL_ITERS_PERSIST
+		return gtk.TREE_MODEL_LIST_ONLY
 
 	def append(self, *args):
 		self.data.append(self.__emptyData[:])
@@ -109,9 +109,11 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		return iter
 
 	def set_value(self, path, *args):
+		titer = None
 		if isinstance(path, tuple):
 			path = path[0]
 		elif isinstance(path, gtk.TreeIter):
+			titer = path
 			path = self.get_path(path)
 			if not path:
 				return False
@@ -120,7 +122,10 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		size = len(args)
 		for c in xrange(0,size,2):
 			list[args[c]] = args[c+1]
-		iter = self.get_iter((path,))
+		if not titer:
+			iter = self.get_iter((path,))
+		else:
+			iter = titer
 		if self.emit_inserted:
 			self.row_inserted(path, iter)
 			self.emit_inserted = False
@@ -139,20 +144,17 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def get_index(self, ref):
 		start = self.last_index - 20
 		end = self.last_index + 20
-		if start < 0:
-			start = 0
-		if end >= self.data_size:
-			end =  self.data_size -1
-		try:
-			d = self.data[start:end]
-			nindex = d.index(ref)
-		except ValueError, e:
-			result = self.data.index(ref)
-			self.last_index = result
-			return result
-		result =  start + nindex
+		start = [start, 0][start < 0]
+		end =  [end, self.data_size -1][end >= self.data_size]
+		for nindex, i in enumerate(self.data[start:end]):
+			if ref == i:
+				result =  start + nindex
+				self.last_index = result
+				return result
+		result = self.data.index(ref)
 		self.last_index = result
 		return result
+		
 		
 	def on_get_value(self, rowref, column):
 		rowref = self.get_index(rowref)
@@ -241,12 +243,14 @@ class LibraryModel(GtkMisc):
 		self.TextToSearch = ''
 		self.append = self.basemodel.append
 		self.prepend = self.basemodel.prepend
+		self.__sorted = None
 	
 	def destroy(self):
 		del self
 
 	def createSubmodels(self):
-		self.__sorted = gtk.TreeModelSort(self.basemodel)
+		if not self.__sorted:
+			self.__sorted = gtk.TreeModelSort(self.basemodel)
 
 	def getModel(self):
 		return self.__sorted

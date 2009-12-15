@@ -62,6 +62,7 @@ except Exception, e:
 	pass
 from libchristine.options import options
 from libchristine.gui.BugReport import BugReport
+from libchristine.gui.Volume import Volume
 import webbrowser
 
 opts = options()
@@ -180,6 +181,11 @@ class Christine(GtkMisc):
 		self.mainSpace = xml['mainSpace']
 		self.mainSpace.append_page(self.__Player,None)
 		self.__Player.bus.add_watch(self.__handlerMessage)
+
+		self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
+		v = Volume()
+		volobj = v.Volume(self.__HBoxToolBoxContainer)
+		self.__HBoxToolBoxContainer.show_all()
 
 		# Calling some widget descriptors with no callback connected "by hand"
 		# This interface should not be private.
@@ -346,7 +352,7 @@ class Christine(GtkMisc):
 
 		self.jumpToPlaying(location = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
-		gobject.timeout_add(500, self.__check_items_on_media)
+		gobject.timeout_add(1000, self.__check_items_on_media)
 		#gobject.timeout_add(500, self.__check_queue)
 		
 	

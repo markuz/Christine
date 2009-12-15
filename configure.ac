@@ -137,6 +137,7 @@ libchristine/Plugins/lastfm/Makefile
 libchristine/Plugins/pidgin/Makefile
 libchristine/Plugins/trayicon/Makefile
 libchristine/Plugins/twitter/Makefile
+libchristine/Plugins/webservices/Makefile
 libchristine/christine_dbus/Makefile
 libchristine/c3rdparty/Makefile
 win32resources/Makefile
