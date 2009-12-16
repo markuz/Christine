@@ -24,6 +24,7 @@
 
 /* global variable declared at top of file */
 static PyTypeObject *PyGObject_Type=NULL;    
+GtkWidget *Volume_widget = NULL;
 /* ... */
 
 static PyObject*
@@ -32,11 +33,16 @@ init(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static PyObject *set_value(PyObject *self, PyObject *args){
+	float value;
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 
 static PyObject *Volume(PyObject *self, PyObject *args){
 	PyGObject *py_container;
 	PyObject *py_self;
-	GtkWidget *Volume_widget;
 	GtkWidget *hbox;
 
 	if (!PyArg_ParseTuple(args, "OO!", &py_self, PyGObject_Type, &py_container)){

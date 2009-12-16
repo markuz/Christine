@@ -146,11 +146,17 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		end = self.last_index + 20
 		start = [start, 0][start < 0]
 		end =  [end, self.data_size -1][end >= self.data_size]
-		for nindex, i in enumerate(self.data[start:end]):
+		nindex = 0
+		slice = self.data[start:end]
+		#print start, end, len(self.data), type(self.data), type(slice)
+		slice.reverse()
+		while slice:
+			i = slice.pop()
 			if ref == i:
 				result =  start + nindex
 				self.last_index = result
 				return result
+			nindex += 1
 		result = self.data.index(ref)
 		self.last_index = result
 		return result
@@ -191,18 +197,23 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def on_iter_parent(self, child):
 		return None
 
-	def search_iter_on_column(self, value, column):
+	def search_iter_on_column1(self, value, column):
 		'''
 		Devuelve una referencia de la fila de la primera ocurrencia de
 		path en la columna indicada
 		@param value: Value to compare
 		@param column: Column number.
 		'''
-		c = 0
-		for data in self.data:
-			if data[column] == value:
-				return self.get_iter((c,))
-			c+=1
+		print 'locals',locals()
+		c = CLibraryModel.search_iter_on_column(self, value, column)
+		print 'c >>>>',c
+		return c
+		#
+		#c = 0
+		#for data in self.data:
+		#	if data[column] == value:
+		#		return self.get_iter((c,))
+		#	c+=1
 
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):
