@@ -64,6 +64,12 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.interface = interface()
 		self.set = self.set_value
 
+	def __len__(self):
+		result = len (self.data)
+		print result
+		return result
+		result = self.data_size
+
 	def destroy(self):
 		'''
 		Deletes everything
@@ -118,6 +124,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 			if not path:
 				return False
 			path = path[0]
+		#print "path >>>>>", path, len (self.data)
 		list = self.data[path]
 		size = len(args)
 		for c in xrange(0,size,2):
@@ -197,23 +204,18 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def on_iter_parent(self, child):
 		return None
 
-	def search_iter_on_column1(self, value, column):
+	def asearch_iter_on_column(self, value, column):
 		'''
 		Devuelve una referencia de la fila de la primera ocurrencia de
 		path en la columna indicada
 		@param value: Value to compare
 		@param column: Column number.
 		'''
-		print 'locals',locals()
-		c = CLibraryModel.search_iter_on_column(self, value, column)
-		print 'c >>>>',c
-		return c
-		#
-		#c = 0
-		#for data in self.data:
-		#	if data[column] == value:
-		#		return self.get_iter((c,))
-		#	c+=1
+		c = 0
+		for data in self.data:
+			if data[column] == value:
+				return self.get_iter((c,))
+			c+=1
 
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):

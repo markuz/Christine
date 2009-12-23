@@ -71,7 +71,7 @@ AUTOMAKE = ${SHELL} /home/markuz/workspace/christine/missing --run automake-1.9
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=none
-CFLAGS = -O3 -march=athlon-xp  -msse3 -O2 -pipe -fomit-frame-pointer
+CFLAGS = -g
 CPP = gcc -E
 CPPFLAGS = -O3 -march=athlon-xp  -msse3 -O2 -pipe -fomit-frame-pointer
 CYGPATH_W = echo

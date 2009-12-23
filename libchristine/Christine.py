@@ -62,7 +62,7 @@ except Exception, e:
 	pass
 from libchristine.options import options
 from libchristine.gui.BugReport import BugReport
-from libchristine.gui.Volume import Volume
+#from libchristine.gui.Volume import Volume
 import webbrowser
 
 opts = options()
@@ -182,10 +182,10 @@ class Christine(GtkMisc):
 		self.mainSpace.append_page(self.__Player,None)
 		self.__Player.bus.add_watch(self.__handlerMessage)
 
-		self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
-		v = Volume()
-		volobj = v.Volume(self.__HBoxToolBoxContainer)
-		self.__HBoxToolBoxContainer.show_all()
+		#self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
+		#v = Volume()
+		#volobj = v.Volume(self.__HBoxToolBoxContainer)
+		#self.__HBoxToolBoxContainer.show_all()
 
 		# Calling some widget descriptors with no callback connected "by hand"
 		# This interface should not be private.
@@ -365,7 +365,10 @@ class Christine(GtkMisc):
 	
 	def __check_items_on_media(self):
 		size = len(self.mainLibrary.model.basemodel)
-		randompath = (randint(1,size-1),)
+		if size>1:
+			randompath = (randint(1,size-1),)
+		else:
+			randompath = (0,)
 		if randompath[0]:
 			filepath, tags = self.mainLibrary.model.basemodel.get(
 							self.mainLibrary.model.basemodel.get_iter(randompath),
@@ -751,7 +754,9 @@ class Christine(GtkMisc):
 				Elements = len (self.mainLibrary.tv.get_model()) - 1
 				if Elements < 0:
 					return
-				randompath = randint(0,int(Elements)-1)
+				randompath = 0
+				if int(Elements) > 1:
+					randompath = randint(0,int(Elements)-1)
 				filename = self.mainLibrary.tv.get_model()[randompath][PATH]
 				if (not filename in self.__LastPlayed) or \
 						(self.christineConf.getBool('control/repeat')) and filename:

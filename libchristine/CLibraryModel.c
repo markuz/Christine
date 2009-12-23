@@ -19,82 +19,81 @@ init(PyObject *self, PyObject *args){
 static PyObject *
 search_iter_on_column(PyObject *self, PyObject *args){
 	int counter = 0; 
-	int intsize = 0;
-	const char *string; 
-	const char *string1;
 	static PyObject *data;
 	static PyObject *sdatat;
-	static PyObject *size;
 	static PyObject *selfobj;
-	static PyObject *svalue;
 	static PyObject *column;
 	int columnint;
 	static PyObject *get_iter;
 	static PyObject *result;
 	static PyObject *nargs;
 	static PyObject *lvalue;
+	static PyObject *value;
+	static PyObject *iter;
 	int comp;
 
-	if (!PyArg_ParseTuple(args, "OsO", &selfobj, &string1, &column)){
-		printf("Unabel parse args\n");
+	if (!PyArg_ParseTuple(args, "OOO", &selfobj, &value, &column)){
+		printf("Unable parse args\n");
 		return NULL;
 	}
 	data = PyObject_GetAttrString(selfobj, "data");
-	size = PyObject_GetAttrString(selfobj, "data_size");
 	get_iter = PyObject_GetAttrString(selfobj, "get_iter");
-	if (!data || !size || !get_iter){
-		printf("no data, size, get_iter, svalue or column\n");
-		/*Py_DECREF(data);
-		Py_DECREF(size);
-		Py_DECREF(svalue);
-		Py_DECREF(column);
-		Py_DECREF(get_iter);
-		Py_DECREF(result);
-		Py_DECREF(nargs);*/
+	if (!data || !get_iter || !value ){
+		printf("no data, get_iter, value or column\n");
 		Py_INCREF(Py_None);
     	return Py_None;
 	}
-	intsize = PyInt_AsLong(size);
-	//string1 = PyString_AsString(svalue);
-	for (counter=0; counter < intsize; counter++){
-		sdatat = PyList_GetItem(data, counter);
+	iter = PyObject_GetIter(data);
+	columnint = PyInt_AsLong(column);
+	result = NULL;
+	while (1){
+		sdatat = PyIter_Next(iter);
 		if (!sdatat){
-			printf("No sdatat\n");
-			continue;
-		}
-		columnint = PyInt_AsLong(column);
-		lvalue = PyList_GetItem(sdatat, columnint); 
-		if (!lvalue){
-			printf("%d,%d\n", columnint, PyList_Size(sdatat));
-			printf("No lvalue\n");
-			continue;
-		}
-		string = PyString_AsString(lvalue);
-		if (string == NULL){
-			printf("No string\n");
-			continue;
-		}
-		if (string1 == NULL){
-			error("No string1\n");
-		}
-		comp = strcmp(string, string1);
-		//printf("comp: %d %s %s\n",comp, string, string1);
-		if ( comp == 0){
-			nargs = Py_BuildValue("(i)", counter);
-			result = PyEval_CallObject(get_iter, nargs);
+			result = NULL;
 			break;
 		}
+		if (!sdatat){
+			printf("No sdatat\n");
+			result = NULL;
+			break;
+		}
+		lvalue = PyList_GetItem(sdatat, columnint); 
+		Py_DECREF(sdatat);
+		if (!lvalue){
+			printf("No lvalue\n");
+			result = NULL;
+			break;
+		}
+		comp = PyObject_RichCompareBool(value, lvalue, Py_EQ);
+		if ( comp == 1){
+			nargs = Py_BuildValue("(i)", counter);
+			result = PyEval_CallObject(get_iter, nargs);
+			printf("dec get_iter\n");
+			Py_DECREF(get_iter);
+			break;
+		}
+		counter ++;
 	}
+	// Decrementar las referencias
+	printf("dec data\n");
+	Py_DECREF(data);
+	printf("dec column\n");
+	Py_DECREF(column);
+	printf("dec iter\n");
+	Py_DECREF(iter);
+
 	if (result == NULL){
+		printf("return None\n");
 		Py_INCREF(Py_None);
     	return Py_None;
 	}
-	// Decrementar las referencias
-	/*Py_XDECREF(data);
-	Py_XDECREF(size);
-	Py_XDECREF(svalue);
-	Py_XDECREF(column);
-	Py_XDECREF(nargs);*/
+	
+	printf("return algun valor\n");
+	//printf("dec lvalue\n");
+	//Py_DECREF(lvalue);
+	//printf("dec nargs\n");
+	//Py_DECREF(nargs);
+
 	return result;
 }
 
