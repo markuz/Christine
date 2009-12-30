@@ -743,7 +743,7 @@ class library(gtk.Widget,libraryBase):
 		"""
 		selection     = self.tv.get_selection()
 		(model, iter) = selection.get_selected()
-		path     = model.get_vaue(iter, PATH)
+		path     = model.get_value(iter, PATH)
 		if self.christineConf.getString("backend/last_played") == path:
 			self.christineConf.setValue("backend/last_played","")
 		self.remove(iter)
