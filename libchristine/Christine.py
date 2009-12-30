@@ -1094,11 +1094,6 @@ class Christine(GtkMisc):
 			isPlaying = True
 		self.__Player.set_property('visible', self.__Player.isVideo() or \
 				self.christineConf.getBool('ui/visualization'))
-####	if (self.__Player.isVideo()):
-####		self.mainSpace.set_current_page(1)
-####	else:
-####		page = [1,0][self.christineConf.getBool('ui/visualization') and isPlaying]
-####		self.mainSpace.set_current_page(page)
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")

@@ -1,87 +1,64 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.0.3 on Sat Apr  7 10:32:53 2007 by markuz@cucusa
-	Version: 3.0.1
-	Date: Sun Feb  4 19:16:55 2007
-	User: markuz
-	Host: cucusa
--->
-<glade-interface>
-  <widget class="GtkMenu" id="menu">
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkMenu" id="menu">
     <child>
-      <widget class="GtkImageMenuItem" id="play">
-        <property name="visible">True</property>
-        <property name="tooltip">Play or pause the player</property>
+      <object class="GtkImageMenuItem" id="play">
         <property name="label">Play</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="trayIconPlay"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="image1">
-            <property name="visible">True</property>
-            <property name="stock">gtk-media-play</property>
-            <property name="icon_size">1</property>
-          </widget>
-        </child>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkImageMenuItem" id="pause">
         <property name="visible">True</property>
-        <property name="label">pause</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="pause"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image4">
-            <property name="visible">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK</property>
-            <property name="stock">gtk-media-pause</property>
-          </widget>
-        </child>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkImageMenuItem" id="previous1">
-        <property name="visible">True</property>
-        <property name="label">Previous</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="goPrev"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="image3">
-            <property name="visible">True</property>
-            <property name="stock">gtk-media-previous</property>
-            <property name="icon_size">1</property>
-          </widget>
-        </child>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkImageMenuItem" id="next1">
-        <property name="visible">True</property>
-        <property name="label">Next</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="goNext"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image5">
-            <property name="visible">True</property>
-            <property name="stock">gtk-media-next</property>
-            <property name="icon_size">1</property>
-          </widget>
-        </child>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkSeparatorMenuItem" id="separator1">
-        <property name="visible">True</property>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkImageMenuItem" id="quit">
-        <property name="visible">True</property>
-        <property name="label">gtk-quit</property>
+        <property name="tooltip_text" translatable="yes">Play or pause the player</property>
         <property name="use_underline">True</property>
         <property name="use_stock">True</property>
-        <signal name="activate" handler="quitGtk"/>
-      </widget>
+        <property name="accel_group">accelgroup1</property>
+        <signal name="activate" handler="trayIconPlay"/>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+    <child>
+      <object class="GtkImageMenuItem" id="pause">
+        <property name="label">pause</property>
+        <property name="visible">True</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+        <property name="accel_group">accelgroup1</property>
+        <signal name="activate" handler="pause"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="previous1">
+        <property name="label">Previous</property>
+        <property name="visible">True</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+        <property name="accel_group">accelgroup1</property>
+        <signal name="activate" handler="goPrev"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="next1">
+        <property name="label">Next</property>
+        <property name="visible">True</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+        <property name="accel_group">accelgroup1</property>
+        <signal name="activate" handler="goNext"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="separator1">
+        <property name="visible">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="quit">
+        <property name="label">gtk-quit</property>
+        <property name="visible">True</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+        <property name="accel_group">accelgroup1</property>
+        <signal name="activate" handler="quitGtk"/>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAccelGroup" id="accelgroup1"/>
+</interface>

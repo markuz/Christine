@@ -1,56 +1,60 @@
 <?xml version="1.0"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
+<interface>
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
-  <widget class="GtkMenu" id="menu">
+  <object class="GtkMenu" id="menu">
     <child>
-      <widget class="GtkImageMenuItem" id="add_to_queue1">
+      <object class="GtkImageMenuItem" id="add_to_queue1">
         <property name="label">Add to queue</property>
         <property name="visible">True</property>
         <property name="use_underline">True</property>
         <property name="use_stock">True</property>
-        <signal name="activate" handler="popupAddToQueue"/>
+        <property name="accel_group">accelgroup1</property>
         <accelerator key="q" signal="activate"/>
-      </widget>
+        <signal name="activate" handler="popupAddToQueue"/>
+      </object>
     </child>
     <child>
-      <widget class="GtkSeparatorMenuItem" id="separator1">
+      <object class="GtkSeparatorMenuItem" id="separator1">
         <property name="visible">True</property>
-      </widget>
+      </object>
     </child>
     <child>
-      <widget class="GtkImageMenuItem" id="remove1">
+      <object class="GtkImageMenuItem" id="remove1">
         <property name="label">Remove</property>
         <property name="visible">True</property>
         <property name="use_underline">True</property>
         <property name="use_stock">True</property>
+        <property name="accel_group">accelgroup1</property>
         <signal name="activate" handler="removeFromLibrary"/>
-      </widget>
+      </object>
     </child>
     <child>
-      <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
+      <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
         <property name="visible">True</property>
-      </widget>
+      </object>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="menuitem1">
+      <object class="GtkMenuItem" id="menuitem1">
         <property name="visible">True</property>
         <property name="label">Misc</property>
-        <child>
-          <widget class="GtkMenu" id="menu1">
+        <child type="submenu">
+          <object class="GtkMenu" id="menu1">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkImageMenuItem" id="imagemenuitem1">
+              <object class="GtkImageMenuItem" id="imagemenuitem1">
                 <property name="label">Delete from disk</property>
                 <property name="visible">True</property>
                 <property name="use_underline">True</property>
                 <property name="use_stock">True</property>
+                <property name="accel_group">accelgroup1</property>
                 <signal name="activate" handler="delete_from_disk"/>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+  <object class="GtkAccelGroup" id="accelgroup1"/>
+</interface>

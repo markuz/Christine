@@ -20,7 +20,7 @@
 import gtk
 import os
 import os.path
-import gtk.glade
+#import gtk.glade
 import logging
 from  libchristine.globalvars import DATADIR, PROGRAMNAME, SHARE_PATH
 
@@ -28,26 +28,18 @@ class glade_xml:
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of the interface descriptor
 		and then initialize gtk.glade.XML'''
-		try:
-			locale_dir = os.path.join(DATADIR, 'locale')
-			gtk.glade.bindtextdomain(PROGRAMNAME,locale_dir)
-			gtk.glade.textdomain(PROGRAMNAME)
-			self.xml = gtk.glade.XML(file,root,None)
-			self.get_widget = self.xml.get_widget
-		except:
-			b = Builder(file)
-			self.xml = b.builder
-
-	
-	def openGladeXML(self, file, root):
-		'''
-		Open Files using libglade
-		'''
-		locale_dir = os.path.join(DATADIR, 'locale')
-		gtk.glade.bindtextdomain(PROGRAMNAME,locale_dir)
-		gtk.glade.textdomain(PROGRAMNAME)
-		self.xml = gtk.glade.XML(file,root,None)
-		self.get_widget = self.xml.get_widget
+		b = Builder(file, root)
+		self.xml = b.builder
+				
+####def openGladeXML(self, file, root):
+####	'''
+####	Open Files using libglade
+####	'''
+####	locale_dir = os.path.join(DATADIR, 'locale')
+####	gtk.glade.bindtextdomain(PROGRAMNAME,locale_dir)
+####	gtk.glade.textdomain(PROGRAMNAME)
+####	self.xml = gtk.glade.XML(file,root,None)
+####	self.get_widget = self.xml.get_widget
 	
 	def __getitem__(self,widget):
 		'''
@@ -63,19 +55,34 @@ class glade_xml:
 		self.xml.signal_autoconnect(signals)
 	
 class Builder:
-	def __init__(self, file):
+	def __init__(self, file, root):
 		'''
 		Load a GUI description from a gtkbuilder file
 		'''
-		print "builder", file
+		self.__widgets = {}
+		print "".center(80,'-')
+		print "builder %s"%file
+		print "".center(80,'-')
 		locale_dir = os.path.join(DATADIR, 'locale')
 		self.builder = gtk.Builder()
 		self.builder.set_translation_domain(PROGRAMNAME)
 		self.builder.add_from_file(file)
-		print self.builder
-		print dir (self.builder)
 		self.builder.signal_autoconnect = self.builder.connect_signals
-		self.builder.get_widget = self.builder.get_object
+		if root:
+			widget = self.get_widget(root)
+			if widget.get_parent():
+				parent= widget.get_parent()
+				parent.remove(widget)
+				widget.unparent()
+		self.builder.get_widget = self.get_widget
+
+	
+	def get_widget(self, name):
+		if not name  in self.__widgets.keys():
+			widget = self.builder.get_object(name)
+			self.__widgets[name] = widget
+			return widget
+		return self.__widgets[name]
 
 
 class GtkMisc:

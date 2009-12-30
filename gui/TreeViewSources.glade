@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
+<interface>
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
-  <widget class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="window1">
     <child>
-      <widget class="GtkScrolledWindow" id="scrolledwindow">
+      <object class="GtkScrolledWindow" id="scrolledwindow">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="hscrollbar_policy">automatic</property>
@@ -12,13 +12,13 @@
         <property name="window_placement_set">True</property>
         <property name="shadow_type">in</property>
         <child>
-          <widget class="GtkTreeView" id="treeview">
+          <object class="GtkTreeView" id="treeview">
             <property name="visible">True</property>
             <property name="rules_hint">True</property>
             <property name="enable_search">False</property>
-          </widget>
+          </object>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>
