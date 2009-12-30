@@ -179,7 +179,7 @@ class Christine(GtkMisc):
 									gtk.gdk.SCROLL_MASK)
 		self.__VBoxCore.connect('scroll-event',self.changeVolumeWithScroll)
 		self.mainSpace = xml['mainSpace']
-		self.mainSpace.append_page(self.__Player,None)
+		self.mainSpace.add1(self.__Player)
 		self.__Player.bus.add_watch(self.__handlerMessage)
 
 		#self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
@@ -267,11 +267,15 @@ class Christine(GtkMisc):
 
 		self.mainLibrary.scroll
 		#self.libraryVBox = xml['libraryVBox']
-		self.mainSpace.append_page(self.mainLibrary.scroll, None)
-		self.mainSpace.set_current_page(1)
-		self.mainSpace.show_all()
+		self.mainSpace.add2(self.mainLibrary.scroll)
+		self.mainLibrary.show_all()
+		self.__Player.hide()
 		
-		self.sideNotebook = xml['sideNotebook']
+		self.__VBoxList = xml["VBoxList"]
+		self.sideNotebook = gtk.Notebook()
+		self.sideNotebook.set_show_tabs(False)
+		self.sideNotebook.show_all()
+		self.__VBoxList.pack_start(self.sideNotebook, True, True, 0)
 
 		self.Queue = queue()
 		label = gtk.Label(_('Queue'))
@@ -517,35 +521,30 @@ class Christine(GtkMisc):
 		self.visualModePlayer()
 
 		# Be shure that we are not in small view mode.
+
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
 		self.__Player.setVisualization(widget.get_active())
-		page = [1,0][widget.get_active()]
-		self.mainSpace.set_current_page(page)
+		self.__Player.set_property('visible', self.__Player.isVideo() or \
+				self.christineConf.getBool('ui/visualization'))
 
 	def toggleFullScreen(self, widget = None):
 		"""
 		Set the full Screen mode
 		"""
+		#Set the player visualization
 		# Only if we are not in FullScreen and we are playing a video.
-		# FIXME: We must enable the full screen if christine has
-		#        visualization enabled
-		if (not self.__IsFullScreen):
-			if ((self.__Player.isVideo()) or (self.christineConf.getBool('ui/visualization'))):
-				self.coreWindow.fullscreen()
-				#self.mainLibray.scroll.set_size_request(0,0)
+		if not self.__IsFullScreen:
+			self.__IsFullScreen = True
+			self.coreWindow.fullscreen()
+			if self.__Player.isVideo() or self.christineConf.getBool('ui/visualization'):
 				self.__VBoxList.set_size_request(0,0)
-
-				self.__IsFullScreen = True
-			else:
-				self.__Logger.warning('Full screen with no visualization')
-				self.coreWindow.fullscreen()
-				self.__IsFullScreen = True
 		else:
 		# Non-full screen mode.
 		# hide if we are not playing a video nor
 		# visualization.
-			if ((not self.__Player.isVideo()) and (not self.christineConf.getBool('ui/visualization'))):
+			if not self.__Player.isVideo() and \
+					not self.christineConf.getBool('ui/visualization'):
 				self.__Player.hide()
 			self.mainLibrary.scroll.set_size_request(200,200)
 			self.__VBoxList.set_size_request(150,0)
@@ -1010,7 +1009,7 @@ class Christine(GtkMisc):
 				self.__Display.setText("%s/%s" % (time, time_total))
 				if ((currenttime >= 0) and (currenttime <= 1)):
 					self.__Display.setScale(currenttime)
-		except gst.QueryError:
+		except:
 			pass
 		return True
 
@@ -1093,11 +1092,13 @@ class Christine(GtkMisc):
 		state = self.__Player.getState()[1]
 		if gst.State(gst.STATE_PLAYING) is state:
 			isPlaying = True
-		if (self.__Player.isVideo()):
-			self.mainSpace.set_current_page(1)
-		else:
-			page = [1,0][self.christineConf.getBool('ui/visualization') and isPlaying]
-			self.mainSpace.set_current_page(page)
+		self.__Player.set_property('visible', self.__Player.isVideo() or \
+				self.christineConf.getBool('ui/visualization'))
+####	if (self.__Player.isVideo()):
+####		self.mainSpace.set_current_page(1)
+####	else:
+####		page = [1,0][self.christineConf.getBool('ui/visualization') and isPlaying]
+####		self.mainSpace.set_current_page(page)
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")

@@ -205,8 +205,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.render_rect(self.context, x, y, w, h, 0.5)
 		self.context.clip_preserve()
 		self.context.save()
-		self.context.set_operator(cairo.OPERATOR_SOURCE)
-		self.context.paint()
+		#self.context.set_operator(cairo.OPERATOR_SOURCE)
+		#self.context.paint()
 		
 		self.fontdesc = self.style.font_desc
 		tcolor = self.style.fg[0]
@@ -227,40 +227,28 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 				self.getCairoColor(b1color.blue))
 		#clear the bitmap
 		#self.context.move_to( x, y )
-		self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
-		self.context.rectangle(x,y,w,h)
-		self.context.set_source_rgb(self.br,self.bg,self.bb)
-		self.context.fill()
+####	self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
+####	self.context.rectangle(x,y,w,h)
+####	self.context.set_source_rgb(self.br,self.bg,self.bb)
+####	self.context.fill()
 		
 		self.render_rect(self.context, x, y, w, h-1, 0.5)
 		
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
 		color = gtk.gdk.color_parse("#F8FBE2")
-		linear.add_color_stop_rgb(0.0,
-						self.getCairoColor(color.red),
-						self.getCairoColor(color.green),
-						self.getCairoColor(color.blue),)
+		cr, cg,cb = map(self.getCairoColor, (color.red, color.green, color.blue))
 		colorbg = gtk.gdk.color_parse("#D6D0B7")
-		linear.add_color_stop_rgb(1,
-						self.getCairoColor(colorbg.red),
-						self.getCairoColor(colorbg.green),
-						self.getCairoColor(colorbg.blue))
+		cr1, cg1,cb1 = map(self.getCairoColor, (colorbg.red, colorbg.green, colorbg.blue))
+		linear.add_color_stop_rgb(0.0,cr,cg,cb,)
+		linear.add_color_stop_rgb(1,cr1,cg1,cb1)
 		self.context.set_source(linear)
 		self.context.fill_preserve()
 		#self.render_rect(self.context, x, y, w, h-1, 0.5)
 		color = gtk.gdk.color_parse("#DDD")
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
-		linear.add_color_stop_rgba(0.00,
-						self.getCairoColor(color.red),
-						self.getCairoColor(color.green),
-						self.getCairoColor(color.blue),
-						0.5)
+		linear.add_color_stop_rgba(0,cr1,cg1,cb1,0.5)
 		color = gtk.gdk.color_parse("#EEE")
-		linear.add_color_stop_rgba(0.99,
-						self.getCairoColor(color.red),
-						self.getCairoColor(color.green),
-						self.getCairoColor(color.blue),
-						0.5)
+		linear.add_color_stop_rgb(0.99,cr,cg,cb,)
 		colorbg = gtk.gdk.color_parse("#FFFFFF")
 		linear.add_color_stop_rgb(1,
 						self.getCairoColor(colorbg.red),
@@ -272,6 +260,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.draw_text(x,y,w,h)
 		self.draw_progress_bar(x,y,w,h)
 		self.draw_pos_circle()
+		return True
 		
 	
 	def draw_progress_bar(self, x, y, w, h):

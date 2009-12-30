@@ -33,7 +33,6 @@ search_iter_on_column(PyObject *self, PyObject *args){
 	int comp;
 
 	if (!PyArg_ParseTuple(args, "OOO", &selfobj, &value, &column)){
-		printf("Unable parse args\n");
 		return NULL;
 	}
 	data = PyObject_GetAttrString(selfobj, "data");
@@ -67,33 +66,25 @@ search_iter_on_column(PyObject *self, PyObject *args){
 		comp = PyObject_RichCompareBool(value, lvalue, Py_EQ);
 		if ( comp == 1){
 			nargs = Py_BuildValue("(i)", counter);
-			result = PyEval_CallObject(get_iter, nargs);
-			printf("dec get_iter\n");
-			Py_DECREF(get_iter);
-			break;
+			if (nargs){
+				result = PyEval_CallObject(get_iter, nargs);
+				Py_DECREF(get_iter);
+				Py_DECREF(nargs);
+				break;
+			}
 		}
 		counter ++;
 	}
 	// Decrementar las referencias
-	printf("dec data\n");
 	Py_DECREF(data);
-	printf("dec column\n");
 	Py_DECREF(column);
-	printf("dec iter\n");
 	Py_DECREF(iter);
 
 	if (result == NULL){
-		printf("return None\n");
 		Py_INCREF(Py_None);
     	return Py_None;
 	}
 	
-	printf("return algun valor\n");
-	//printf("dec lvalue\n");
-	//Py_DECREF(lvalue);
-	//printf("dec nargs\n");
-	//Py_DECREF(nargs);
-
 	return result;
 }
 
@@ -104,21 +95,18 @@ on_get_iter(PyObject *self, PyObject *args)
 	static PyObject *result;
 	static PyObject *selfobj;
 	static PyObject *data;
-	static PyObject *size;
 	int index;
     if (!PyArg_ParseTuple(args, "OO", &selfobj, &rowref))
         return NULL;
     data = PyObject_GetAttrString(selfobj, "data");
-    size = PyObject_GetAttrString(selfobj, "data_size");
     if (!data){
     	Py_DECREF(rowref);
 		Py_DECREF(data);
-		Py_DECREF(size);
     	Py_INCREF(Py_None);
     	return Py_None;
     }
     PyArg_ParseTuple(rowref, "i", &index);
-    if (index <= PyInt_AsLong(size) -1){
+    if (index <= PyList_Size(data) -1){
     	result = PyList_GetItem(data, index);
     }
     else{
@@ -135,7 +123,6 @@ on_get_iter(PyObject *self, PyObject *args)
 		return Py_None;
 	}
 	Py_XDECREF(rowref);
-	Py_XDECREF(size);
 	Py_XDECREF(data);
     return  result;
 }

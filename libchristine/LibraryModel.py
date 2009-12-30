@@ -57,7 +57,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		self.column_size = len(args)
 		self.column_types = args
 		self.data = []
-		self.data_size = 0
 		self.last_index = 0
 		self.index = None
 		self.__emptyData = map(lambda x: '', xrange(self.column_size))
@@ -66,9 +65,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def __len__(self):
 		result = len (self.data)
-		print result
 		return result
-		result = self.data_size
 
 	def destroy(self):
 		'''
@@ -91,8 +88,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def append(self, *args):
 		self.data.append(self.__emptyData[:])
-		self.data_size +=1
-		path = self.data_size -1
+		path = len(self) -1
 		if args:
 			self.emit_inserted = True
 			return self.set_value(path, *args)
@@ -104,7 +100,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 
 	def prepend(self, *args):
 		self.data.insert(0,self.__emptyData[:])
-		self.data_size +=1
 		iter = 0
 		if args:
 			return self.set_value(iter, *args)
@@ -152,7 +147,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		start = self.last_index - 20
 		end = self.last_index + 20
 		start = [start, 0][start < 0]
-		end =  [end, self.data_size -1][end >= self.data_size]
+		end =  [end, len(self)-1][end >= len(self)]
 		nindex = 0
 		slice = self.data[start:end]
 		#print start, end, len(self.data), type(self.data), type(slice)
@@ -175,7 +170,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	
 	def on_iter_next(self, rowref):
 		index = self.get_index(rowref)
-		if self.data_size > index + 1: 
+		if len(self) > index + 1: 
 			return self.data[ index + 1 ]
 	
 	def on_get_n_columns(self):
@@ -184,13 +179,13 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def on_iter_nth_child(self, rowref, n):
 		if rowref:
 			return None
-		elif self.data_size:
+		elif len(self):
 			return self.data[n]
 
 	def on_iter_children(self, rowref):
 		if rowref:
 			return None
-		elif self.data_size:
+		elif len(self):
 			return self.data[0]
 		
 	def on_iter_has_child(self, rowref):
@@ -199,7 +194,7 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def on_iter_n_children(self, rowref):
 		if rowref:
 			return 0
-		return self.data_size
+		return len(self)
 
 	def on_iter_parent(self, child):
 		return None
@@ -220,16 +215,15 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 	def remove(self, path):
 		if isinstance(path, gtk.TreeIter):
 			path = self.get_path(path)[0]
-		if self.data_size:
+		if len(self):
 			self.data.pop(path)
-			self.data_size -= 1
 			self.row_deleted((path,))
 			self.invalidate_iters()
 			return True
 
 	def __removeLast20(self,):
 		for i in xrange(20):
-			path = self.data_size-1
+			path = len(self)-1
 			if not self.remove(path):
 				return False
 		self.invalidate_iters()
