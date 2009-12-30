@@ -1005,5 +1005,4 @@ class queue (libraryBase ,gobject.GObject):
 	
 	def itemActivated(self, widget, path, iter):
 		libraryBase.itemActivated(self, widget, path, iter)
-		model    = widget.get_model()
-		model.remove(iter)
+		self.remove(iter)
