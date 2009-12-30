@@ -328,13 +328,13 @@ class libraryBase(GtkMisc):
 				GENRE,tags["genre"]
 				)
 
-		self.library_lib[file] = {"title":name,
+		self.library_lib.append(file, {"title":name,
 				"type":t,"artist":artist,
 				"album":album,
 				"track_number":int(tn),
 				"playcount":0,
 				"time":'0:00',
-				"genre":tags['genre'],}
+				"genre":tags['genre'],})
 
 	def remove(self,iter):
 		'''

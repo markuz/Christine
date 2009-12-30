@@ -27,6 +27,7 @@
 import time
 
 import gtk
+import pangocairo
 import cairo
 import gobject
 import math
@@ -122,9 +123,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		'''
 		Emits an expose event
 		'''
-		if (time.time() - self.__last_emit) > 0.5 or self.__override_timer:
-			self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
-			self.__last_emit = time.time()
+		self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
 		return True
 
 	def __buttonPressEvent(self, widget, event):
@@ -197,18 +196,14 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 			return False
 		x,y,w,h = self.allocation
 		x,y = (0,0)
-		self.context = self.window.cairo_create()
+		surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w,h)
+		context = cairo.Context(surface)
+		context.move_to(0, 0)
+		context.set_line_width(1.0)
+		self.render_rect(context, x, y, w, h, 0.5)
+		context.clip_preserve()
+		context.save()
 		
-		self.context.move_to(0, 0)
-		self.context.set_line_width(1.0)
-		#self.context.rectangle(x,y,w,h)
-		self.render_rect(self.context, x, y, w, h, 0.5)
-		self.context.clip_preserve()
-		self.context.save()
-		#self.context.set_operator(cairo.OPERATOR_SOURCE)
-		#self.context.paint()
-		
-		self.fontdesc = self.style.font_desc
 		tcolor = self.style.fg[0]
 		wcolor = self.style.bg[0]
 		bcolor = gtk.gdk.color_parse("#000000")
@@ -225,14 +220,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.bar1 , self.bag1, self.bab1 = (self.getCairoColor(b1color.red),
 				self.getCairoColor(b1color.green),
 				self.getCairoColor(b1color.blue))
-		#clear the bitmap
-		#self.context.move_to( x, y )
-####	self.context.set_antialias(cairo.ANTIALIAS_DEFAULT)
-####	self.context.rectangle(x,y,w,h)
-####	self.context.set_source_rgb(self.br,self.bg,self.bb)
-####	self.context.fill()
 		
-		self.render_rect(self.context, x, y, w, h-1, 0.5)
+		self.render_rect(context, x, y, w, h-1, 0.5)
 		
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
 		color = gtk.gdk.color_parse("#F8FBE2")
@@ -241,9 +230,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		cr1, cg1,cb1 = map(self.getCairoColor, (colorbg.red, colorbg.green, colorbg.blue))
 		linear.add_color_stop_rgb(0.0,cr,cg,cb,)
 		linear.add_color_stop_rgb(1,cr1,cg1,cb1)
-		self.context.set_source(linear)
-		self.context.fill_preserve()
-		#self.render_rect(self.context, x, y, w, h-1, 0.5)
+		context.set_source(linear)
+		context.fill_preserve()
 		color = gtk.gdk.color_parse("#DDD")
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
 		linear.add_color_stop_rgba(0,cr1,cg1,cb1,0.5)
@@ -254,48 +242,48 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 						self.getCairoColor(colorbg.red),
 						self.getCairoColor(colorbg.green),
 						self.getCairoColor(colorbg.blue))
-		self.context.set_source(linear)
-		self.context.stroke()
+		context.set_source(linear)
+		context.fill_preserve()
+		context.set_source_rgb(0.5,0.5,0.5)
+		context.stroke()
 		
-		self.draw_text(x,y,w,h)
-		self.draw_progress_bar(x,y,w,h)
-		self.draw_pos_circle()
+		self.draw_text(context, x,y,w,h)
+		self.draw_progress_bar(context)
+		self.draw_pos_circle(context)
+		cr = self.window.cairo_create()
+		cr.set_source_surface(surface)
+		cr.paint()
 		return True
 		
 	
-	def draw_progress_bar(self, x, y, w, h):
+	def draw_progress_bar(self, context):
+		x,y,w,h = self.allocation
 		fh = self.__Layout.get_pixel_size()[1]
 		width    = ((w - fh) - (BORDER_WIDTH * 3))
-		x,y,w,h = self.allocation
 		x,y = (0,0)
 
 		# Drawing the progress bar
-		context = self.window.cairo_create()
-		#context.set_antialias(cairo.ANTIALIAS_NONE)
-		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,width, BORDER_WIDTH +1)
-		context.clip_preserve()
-		context.save()
-		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1 ,width, BORDER_WIDTH+1)
+		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1.5 ,width, BORDER_WIDTH +1)
+		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1.5,width, BORDER_WIDTH+1)
 		context.set_line_width(1)
-		self.context.set_line_cap(cairo.LINE_CAP_BUTT)
+		context.set_line_cap(cairo.LINE_CAP_BUTT)
 		
 		context.set_source_rgb(1,1,1)
 		context.fill_preserve()
 		context.set_source_rgb(self.bar,self.bag,self.bab)
 		context.stroke()
 		width = (self.__Value * width)
-		context.rectangle(fh, ((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH)
-		pat = cairo.LinearGradient(fh, ((BORDER_WIDTH * 2) + fh)+1, fh, 
-								((BORDER_WIDTH * 2) + fh)+1 + BORDER_WIDTH)
+		context.rectangle(fh-1, ((BORDER_WIDTH * 2) + fh)+1, width, BORDER_WIDTH+1)
+		pat = cairo.LinearGradient(fh, ((BORDER_WIDTH * 2) + fh)+1.5, fh, 
+								((BORDER_WIDTH * 2) + fh)+1.5 + BORDER_WIDTH)
 		pat.add_color_stop_rgb(0.0, self.bar1 ,self.bag1,self.bab1)
 		pat.add_color_stop_rgb(0.9,self.bar,self.bag,self.bab)
 		context.set_source(pat)
 		context.fill()
 	
-	def draw_pos_circle(self):
+	def draw_pos_circle(self, context):
 		if not self.window:
 			return True
-		context = self.window.cairo_create()
 		w,h = (self.allocation.width, self.allocation.height)
 		x,y = (0,0)
 		fh = self.__Layout.get_pixel_size()[1]
@@ -336,7 +324,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		context.set_source_rgb(1,1,1)
 		context.fill()
 	
-	def draw_text(self, x, y, w , h):
+	def draw_text(self, context, x, y, w , h):
 		# Write text
 		msg = ''
 		if self.__Song:
@@ -344,7 +332,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		if self.__Text:
 			msg += '--' + self.__Text
 		self.__Layout  = self.create_pango_layout(msg)
-		self.__Layout.set_font_description(self.fontdesc)
+		self.__Layout.set_font_description(self.style.font_desc)
 		(fontw, fonth) = self.__Layout.get_pixel_size()
 		if self.__HPos == x or fontw < w:
 			self.__HPos = (w - fontw) / 2
@@ -352,10 +340,12 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 			self.__HPos = self.__HPos - 1
 		else:
 			self.__HPos = w + 1
-		self.context.move_to(self.__HPos, (fonth)/2)
-		self.context.set_source_rgb(self.fr,self.fg,self.fb)
-		self.context.update_layout(self.__Layout)
-		self.context.show_layout(self.__Layout)
+		c = pangocairo.CairoContext(context)
+		c.move_to(self.__HPos, (fonth)/2)
+		c.set_source_rgb(self.fr,self.fg,self.fb)
+		c.update_layout(self.__Layout)
+		c.show_layout(self.__Layout)
+
 		
 
 	value = property(getValue, setScale)

@@ -60,9 +60,6 @@ class Builder:
 		Load a GUI description from a gtkbuilder file
 		'''
 		self.__widgets = {}
-		print "".center(80,'-')
-		print "builder %s"%file
-		print "".center(80,'-')
 		locale_dir = os.path.join(DATADIR, 'locale')
 		self.builder = gtk.Builder()
 		self.builder.set_translation_domain(PROGRAMNAME)

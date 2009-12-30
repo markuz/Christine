@@ -35,6 +35,7 @@ class lib_library(object):
 
 	def __getitem__(self,key):
 		return self.__files[key]
+
 	def iteritems(self):
 		return self.__files.iteritems()
 

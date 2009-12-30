@@ -44,6 +44,7 @@ class sqlite3db(Singleton, GtkMisc):
 		#create the 'connection'
 		GtkMisc.__init__(self)
 		self.connection = sqlite3.connect(DBFILE)
+		self.connection.isolation_level = None
 		self.connection.row_factory = self.dict_factory
 		self.connection.text_factory = str
 		self.have_to_commit = False
