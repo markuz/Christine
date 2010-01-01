@@ -282,8 +282,8 @@ class Christine(GtkMisc):
 		label.set_angle(90)
 		self.sideNotebook.append_page(self.Queue.scroll, label)
 		#self.VBoxList.pack_start(self.Queue.scroll, False, False, 0)
-		self.queue_mi = xml['Queue']
-		self.queue_mi.connect('activate', lambda x: self.sideNotebook.set_current_page(0))
+		self.Queue_mi = xml['Queue']
+		self.Queue_mi.connect('activate', lambda x: self.sideNotebook.set_current_page(0))
 		self.Queue.tv.connect('row-activated',   self.Queue.itemActivated)
 		self.Queue.connect('size-changed',   self.__check_queue)
 
@@ -364,7 +364,7 @@ class Christine(GtkMisc):
 		if size < 1:
 			self.sources_mi.activate()
 		else:
-			self.queue_mi.activate()
+			self.Queue_mi.activate()
 		
 	
 	def __check_items_on_media(self):
@@ -928,7 +928,7 @@ class Christine(GtkMisc):
 		fs.destroy()
 		if response == gtk.RESPONSE_OK:
 			if queue:
-				self.queue.addFiles(files = files, queue = queue)
+				self.Queue.addFiles(files)
 			else:
 				self.mainLibrary.addFiles(files)
 			path = os.path.join(os.path.split(files[0])[:-1])[0]
@@ -1092,8 +1092,9 @@ class Christine(GtkMisc):
 		state = self.__Player.getState()[1]
 		if gst.State(gst.STATE_PLAYING) is state:
 			isPlaying = True
-		self.__Player.set_property('visible', self.__Player.isVideo() or \
-				self.christineConf.getBool('ui/visualization'))
+		comp = self.__Player.isVideo() or \
+				self.christineConf.getBool('ui/visualization')
+		self.__Player.set_property('visible', comp)
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")

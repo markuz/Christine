@@ -395,8 +395,7 @@ class Player(gtk.DrawingArea, object):
 		if self.Tags.has_key('video-codec') or ext in CHRISTINE_VIDEO_EXT:
 			self.__ShouldShow = True
 			return True
-		else:
-			return False
+		return False
 
 	def isSound(self):
 		"""

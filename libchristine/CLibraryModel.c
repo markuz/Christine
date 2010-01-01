@@ -30,7 +30,6 @@ search_iter_on_column(PyObject *self, PyObject *args){
 	static PyObject *lvalue;
 	static PyObject *value;
 	static PyObject *iter;
-	int comp;
 
 	if (!PyArg_ParseTuple(args, "OOO", &selfobj, &value, &column)){
 		return NULL;
@@ -49,9 +48,6 @@ search_iter_on_column(PyObject *self, PyObject *args){
 		sdatat = PyIter_Next(iter);
 		if (!sdatat){
 			result = NULL;
-			break;
-		}
-		if (!sdatat){
 			printf("No sdatat\n");
 			result = NULL;
 			break;
@@ -63,12 +59,13 @@ search_iter_on_column(PyObject *self, PyObject *args){
 			result = NULL;
 			break;
 		}
-		comp = PyObject_RichCompareBool(value, lvalue, Py_EQ);
-		if ( comp == 1){
+		if ( PyObject_RichCompareBool(value, lvalue, Py_EQ) == 1){
 			nargs = Py_BuildValue("(i)", counter);
 			if (nargs){
 				result = PyEval_CallObject(get_iter, nargs);
+				printf("dec get_iter \n");
 				Py_DECREF(get_iter);
+				printf("dec nargs \n");
 				Py_DECREF(nargs);
 				break;
 			}
@@ -76,15 +73,21 @@ search_iter_on_column(PyObject *self, PyObject *args){
 		counter ++;
 	}
 	// Decrementar las referencias
+	printf("dec data \n");
 	Py_DECREF(data);
+	printf("dec column \n");
 	Py_DECREF(column);
-	Py_DECREF(iter);
+	if (iter){
+		printf("dec iter \n");
+		Py_DECREF(iter);
+	}
 
 	if (result == NULL){
+		printf("return none\n");
 		Py_INCREF(Py_None);
     	return Py_None;
 	}
-	
+	printf("return result\n");
 	return result;
 }
 

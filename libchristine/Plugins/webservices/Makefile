@@ -71,12 +71,12 @@ AUTOMAKE = ${SHELL} /home/markuz/workspace/christine/missing --run automake-1.9
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=none
-CFLAGS = -g
+CFLAGS = -O3 -march=athlon-xp  -msse3 -O2 -pipe -fomit-frame-pointer
 CPP = gcc -E
 CPPFLAGS = -O3 -march=athlon-xp  -msse3 -O2 -pipe -fomit-frame-pointer
 CYGPATH_W = echo
 DATADIRNAME = share
-DEFS = -DPACKAGE_NAME=\"christine\" -DPACKAGE_TARNAME=\"-christine-\" -DPACKAGE_VERSION=\"0.6.0-pre1\" -DPACKAGE_STRING=\"christine\ 0.6.0-pre1\" -DPACKAGE_BUGREPORT=\"markuz@islascruz.org\" -DPACKAGE_URL=\"\" -DPACKAGE=\"christine\" -DVERSION=\"0.6.0-pre1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -D__EXTENSIONS__=1 -D_ALL_SOURCE=1 -D_GNU_SOURCE=1 -D_POSIX_PTHREAD_SEMANTICS=1 -D_TANDEM_SOURCE=1 -DSTDC_HEADERS=1 -DSTDC_HEADERS=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\"
+DEFS = -DPACKAGE_NAME=\"christine\" -DPACKAGE_TARNAME=\"-christine-\" -DPACKAGE_VERSION=\"0.6.0-pre2\" -DPACKAGE_STRING=\"christine\ 0.6.0-pre2\" -DPACKAGE_BUGREPORT=\"markuz@islascruz.org\" -DPACKAGE_URL=\"\" -DPACKAGE=\"christine\" -DVERSION=\"0.6.0-pre2\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -D__EXTENSIONS__=1 -D_ALL_SOURCE=1 -D_GNU_SOURCE=1 -D_POSIX_PTHREAD_SEMANTICS=1 -D_TANDEM_SOURCE=1 -DSTDC_HEADERS=1 -DSTDC_HEADERS=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_READLINE_READLINE_H=1 -DHAVE_READLINE_HISTORY_H=1 -DHAVE_READLINE_READLINE_H=1 -DHAVE_LIBREADLINE=1 -DHAVE_LIBREADLINE_NEW=1
 DEPDIR = .deps
 DSYMUTIL = 
 DUMPBIN = 
@@ -139,16 +139,14 @@ OTOOL64 =
 PACKAGE = christine
 PACKAGE_BUGREPORT = markuz@islascruz.org
 PACKAGE_NAME = christine
-PACKAGE_STRING = christine 0.6.0-pre1
+PACKAGE_STRING = christine 0.6.0-pre2
 PACKAGE_TARNAME = -christine-
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.6.0-pre1
+PACKAGE_VERSION = 0.6.0-pre2
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PREFIX = 
 PROGRAM_NAME = christine
-PYGTK_CFLAGS = 
-PYGTK_LIBS = 
 PYTHON = /usr/bin/python
 PYTHON_EXEC_PREFIX = ${exec_prefix}
 PYTHON_INCLUDE_DIR = /usr/include/python2.6
@@ -163,9 +161,9 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 TERMLDFLAGS = 
-TERMLIBS = 
+TERMLIBS = -lreadline 
 USE_NLS = yes
-VERSION = 0.6.0-pre1
+VERSION = 0.6.0-pre2
 XGETTEXT = /usr/bin/xgettext
 XMKMF = 
 ac_ct_CC = gcc
@@ -228,7 +226,7 @@ pkgsysconfdir = ${sysconfdir}
 pythonincludedir = /usr/include/python2.6
 usr_libdir = ${prefix}/include
 programname = christine
-version = 0.6.0-pre1
+version = 0.6.0-pre2
 edit = sed \
 	   -e 's,@datadir\@,$(pkgdatadir),g' \
 	   -e 's,@prefix\@,$(prefix),g' \

@@ -31,16 +31,6 @@ class glade_xml:
 		b = Builder(file, root)
 		self.xml = b.builder
 				
-####def openGladeXML(self, file, root):
-####	'''
-####	Open Files using libglade
-####	'''
-####	locale_dir = os.path.join(DATADIR, 'locale')
-####	gtk.glade.bindtextdomain(PROGRAMNAME,locale_dir)
-####	gtk.glade.textdomain(PROGRAMNAME)
-####	self.xml = gtk.glade.XML(file,root,None)
-####	self.get_widget = self.xml.get_widget
-	
 	def __getitem__(self,widget):
 		'''
 		returns the widget according to the name of the widget.
@@ -62,8 +52,9 @@ class Builder:
 		self.__widgets = {}
 		locale_dir = os.path.join(DATADIR, 'locale')
 		self.builder = gtk.Builder()
-		self.builder.set_translation_domain(PROGRAMNAME)
 		self.builder.add_from_file(file)
+		self.builder.add_from_file(file)
+		self.builder.set_translation_domain(PROGRAMNAME)
 		self.builder.signal_autoconnect = self.builder.connect_signals
 		if root:
 			widget = self.get_widget(root)

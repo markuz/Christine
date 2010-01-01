@@ -61,6 +61,14 @@ target = Target(script = "christine.py")
 CLibraryModel = Extension(name = 'libchristine.CLibraryModel',
 					language = 'c',
                     sources = ['libchristine/CLibraryModel.c'])
+ChristineGtkBuilder= Extension(name = 'libchristine.gui.ChristineGtkBuilder',
+					language = 'c',
+                    sources = ['libchristine/gui/ChristineGtkBuilder.c'],
+                include_dirs=['./gtksrc', 'c:\Python26\include',
+                              'c:\Python26\include\pygtk-2.0',
+                              'c:\Python26\include\pycairo'],
+				)
+
 
 
 setup(
@@ -83,7 +91,7 @@ setup(
      data_files=[("gui", glob.glob("gui/*.*")),
                  ("gui/pixmaps",glob.glob("gui/pixmaps/*.*")),
     ],
-	ext_modules=[CLibraryModel,],
+	ext_modules=[CLibraryModel]#,ChristineGtkBuilder],
 )
 
 try:
@@ -96,3 +104,5 @@ except Exception, e:
 
 shutil.copy(os.path.join("./",'build','lib.win32-%d.%d'%tuple(sys.version_info[:2]),'libchristine','CLibraryModel.pyd'),
 		os.path.join('dist','libchristine','CLibraryModel.pyd'))
+#shutil.copy(os.path.join("./",'build','lib.win32-%d.%d'%tuple(sys.version_info[:2]),'libchristine','ChristineGtkBuilder.pyd'),
+#		os.path.join('dist','libchristine','ChristineGtkBuilder.pyd'))

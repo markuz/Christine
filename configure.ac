@@ -1,5 +1,5 @@
-AC_INIT('christine', '0.6.0-pre1', 'markuz@islascruz.org')
-AM_INIT_AUTOMAKE('christine', '0.6.0-pre1')
+AC_INIT('christine', '0.6.0-pre2', 'markuz@islascruz.org')
+AM_INIT_AUTOMAKE('christine', '0.6.0-pre2')
 
 
 #AC_GNU_SOURCE
@@ -28,7 +28,7 @@ AC_SUBST(pygtk_LIBS)
 
 
 PROGRAM_NAME="christine"
-VERSION="0.6.0-pre1"
+VERSION="0.6.0-pre2"
 PYTHON_INCLUDE_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"`
 PYTHON_LIB_DIR=`python -c "from distutils import sysconfig; print sysconfig.get_python_lib(plat_specific=True)"`
 PYTHON_LFS=`python -c "from distutils import sysconfig; print sysconfig.get_config_var('LINKFORSHARED')"`

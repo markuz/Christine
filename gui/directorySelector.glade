@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.6 -->
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkFileChooserDialog" id="ds">
     <property name="visible">True</property>
     <property name="title" translatable="yes">Select a folder</property>
     <property name="type_hint">dialog</property>
-    <property name="action">select-folder</property>
     <property name="select_multiple">True</property>
+    <property name="action">select-folder</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
