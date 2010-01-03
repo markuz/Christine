@@ -53,6 +53,8 @@ class sources_list (GtkMisc):
 	def treeview_bpe(self, treeview, event):
 		if event.button == 3:
 			self.__Share = Share()
+			#import pdb
+			#pdb.set_trace()
 			xml = self.__Share.getTemplate('SourcesList', 'menu')
 			menu = xml['menu']
 			addButton = xml['addSource']

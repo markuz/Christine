@@ -6,7 +6,7 @@
 
 void error(char *msg) {
 	PyErr_Print();
-	printf("%s\n", msg);
+	//printf("%s\n", msg);
 	exit(1);
 }
 
@@ -19,11 +19,10 @@ init(PyObject *self, PyObject *args){
 static PyObject *
 search_iter_on_column(PyObject *self, PyObject *args){
 	int counter = 0; 
+	int columnint;
 	static PyObject *data;
 	static PyObject *sdatat;
 	static PyObject *selfobj;
-	static PyObject *column;
-	int columnint;
 	static PyObject *get_iter;
 	static PyObject *result;
 	static PyObject *nargs;
@@ -31,31 +30,34 @@ search_iter_on_column(PyObject *self, PyObject *args){
 	static PyObject *value;
 	static PyObject *iter;
 
-	if (!PyArg_ParseTuple(args, "OOO", &selfobj, &value, &column)){
+	//printf("parsing arguments\n");
+	if (!PyArg_ParseTuple(args, "OOi", &selfobj, &value, &columnint)){
+		//printf("can't parse arguments\n");
 		return NULL;
 	}
 	data = PyObject_GetAttrString(selfobj, "data");
 	get_iter = PyObject_GetAttrString(selfobj, "get_iter");
 	if (!data || !get_iter || !value ){
-		printf("no data, get_iter, value or column\n");
+		//printf("no data, get_iter, value or column\n");
 		Py_INCREF(Py_None);
     	return Py_None;
 	}
+	//printf("Getting iterator\n");
 	iter = PyObject_GetIter(data);
-	columnint = PyInt_AsLong(column);
+	//printf("PyInt_AsLogn(column)\n");
 	result = NULL;
 	while (1){
 		sdatat = PyIter_Next(iter);
 		if (!sdatat){
 			result = NULL;
-			printf("No sdatat\n");
+			//printf("No sdatat\n");
 			result = NULL;
 			break;
 		}
 		lvalue = PyList_GetItem(sdatat, columnint); 
 		Py_DECREF(sdatat);
 		if (!lvalue){
-			printf("No lvalue\n");
+			//printf("No lvalue\n");
 			result = NULL;
 			break;
 		}
@@ -63,9 +65,9 @@ search_iter_on_column(PyObject *self, PyObject *args){
 			nargs = Py_BuildValue("(i)", counter);
 			if (nargs){
 				result = PyEval_CallObject(get_iter, nargs);
-				printf("dec get_iter \n");
+				//printf("dec get_iter \n");
 				Py_DECREF(get_iter);
-				printf("dec nargs \n");
+				//printf("dec nargs \n");
 				Py_DECREF(nargs);
 				break;
 			}
@@ -73,21 +75,19 @@ search_iter_on_column(PyObject *self, PyObject *args){
 		counter ++;
 	}
 	// Decrementar las referencias
-	printf("dec data \n");
+	//printf("dec data \n");
 	Py_DECREF(data);
-	printf("dec column \n");
-	Py_DECREF(column);
 	if (iter){
-		printf("dec iter \n");
+		//printf("dec iter \n");
 		Py_DECREF(iter);
 	}
 
 	if (result == NULL){
-		printf("return none\n");
+		//printf("return none\n");
 		Py_INCREF(Py_None);
     	return Py_None;
 	}
-	printf("return result\n");
+	//printf("return result\n");
 	return result;
 }
 

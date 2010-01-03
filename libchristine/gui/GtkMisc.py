@@ -53,15 +53,15 @@ class Builder:
 		locale_dir = os.path.join(DATADIR, 'locale')
 		self.builder = gtk.Builder()
 		self.builder.add_from_file(file)
-		self.builder.add_from_file(file)
 		self.builder.set_translation_domain(PROGRAMNAME)
 		self.builder.signal_autoconnect = self.builder.connect_signals
 		if root:
 			widget = self.get_widget(root)
-			if widget.get_parent():
-				parent= widget.get_parent()
-				parent.remove(widget)
-				widget.unparent()
+			if not isinstance(widget, gtk.Menu):
+				if widget.get_parent():
+					parent= widget.get_parent()
+					parent.remove(widget)
+					widget.unparent()
 		self.builder.get_widget = self.get_widget
 
 	
