@@ -20,7 +20,6 @@
 import gtk
 import os
 import os.path
-#import gtk.glade
 import logging
 from  libchristine.globalvars import DATADIR, PROGRAMNAME, SHARE_PATH
 
@@ -49,6 +48,7 @@ class Builder:
 		'''
 		Load a GUI description from a gtkbuilder file
 		'''
+		print ("%s -  %s"%(file, root)).center(80,'=')
 		self.__widgets = {}
 		locale_dir = os.path.join(DATADIR, 'locale')
 		self.builder = gtk.Builder()
@@ -63,6 +63,14 @@ class Builder:
 					parent.remove(widget)
 					widget.unparent()
 		self.builder.get_widget = self.get_widget
+		widgets = self.builder.get_objects()
+		for widget in widgets:
+			try:
+				self.__widgets[widget.name] = widget
+				if widget.name == 'walk':
+					print widget
+			except AttributeError:
+				pass
 
 	
 	def get_widget(self, name):
@@ -70,7 +78,8 @@ class Builder:
 			widget = self.builder.get_object(name)
 			self.__widgets[name] = widget
 			return widget
-		return self.__widgets[name]
+		widget = self.__widgets[name]
+		return widget
 
 
 class GtkMisc:

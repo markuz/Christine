@@ -1,24 +1,28 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkFileChooserDialog" id="ds">
     <property name="visible">True</property>
     <property name="title" translatable="yes">Select a folder</property>
+    <property name="window_position">center</property>
     <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
     <property name="select_multiple">True</property>
     <property name="action">select-folder</property>
+    <property name="preview_widget_active">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">24</property>
         <child>
           <object class="GtkCheckButton" id="walk">
-            <property name="label" translatable="yes">Include subfolders</property>
+            <property name="label" translatable="yes">Include Subfolders</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="use_underline">True</property>
             <property name="active">True</property>
             <property name="draw_indicator">True</property>
           </object>

@@ -515,7 +515,7 @@ class libraryBase(GtkMisc):
 		label = xml['label1']
 		self.__walking = True
 		gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
-		gobject.timeout_add(100, self.__walkProgressPulse, progress)
+		gobject.idle_add(self.__walkProgressPulse, progress)
 		dialog.connect('response', self.__addDirectories_response)
 	
 	def __addDirectories_response(self, dialog, response):
@@ -524,7 +524,7 @@ class libraryBase(GtkMisc):
 
 	def __walkProgressPulse(self, progress):
 		progress.pulse()
-		return not self.__walking
+		return self.__walking
 
 	def __walkDirectories(self, a, f, filenames, label, dialog):
 		#if not self.__walking:

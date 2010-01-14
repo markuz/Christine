@@ -36,9 +36,9 @@ import gst.interfaces
 import gobject
 import os
 import signal
-import gc
-gc.enable()
-gc.set_threshold(2)
+#import gc
+#gc.enable()
+#gc.set_threshold(2)
 from libchristine.globalvars import  BUGURL,USERDIR, PIDFILE
 from libchristine.sanity import sanity
 sanity()
@@ -78,7 +78,7 @@ def clean_traceback():
 	gc.collect(2)
 	return True
 
-gobject.timeout_add(10000, clean_traceback)
+#gobject.timeout_add(10000, clean_traceback)
 
 signal.signal(signal.SIGTERM, close)
 
@@ -942,15 +942,17 @@ class Christine(GtkMisc):
 		if uri:
 			ds.set_uri('file://'+uri)
 		ds.set_icon(self.share.getImageFromPix('logo'))
-		ds.connect('response', self.__do_import_folder_response, walk)
 		ds.show_all()
+		ds.connect('response', self.__do_import_folder_response, walk)
 	
 	def __do_import_folder_response(self, ds, response, walk):
 		if response == gtk.RESPONSE_OK:
 			filenames = ds.get_filenames()
+			print walk
+			walkdir = walk.get_active()
 			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
-			self.mainLibrary.importFolder(filenames, walk.get_active())
+			self.mainLibrary.importFolder(filenames, walkdir)
 			return True
 		ds.destroy()
 	
