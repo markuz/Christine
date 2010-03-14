@@ -48,7 +48,6 @@ class Builder:
 		'''
 		Load a GUI description from a gtkbuilder file
 		'''
-		print ("%s -  %s"%(file, root)).center(80,'=')
 		self.__widgets = {}
 		locale_dir = os.path.join(DATADIR, 'locale')
 		self.builder = gtk.Builder()
@@ -67,8 +66,6 @@ class Builder:
 		for widget in widgets:
 			try:
 				self.__widgets[widget.name] = widget
-				if widget.name == 'walk':
-					print widget
 			except AttributeError:
 				pass
 

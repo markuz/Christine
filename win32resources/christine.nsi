@@ -2,7 +2,7 @@
 !define link "christine.lnk"
 !define install_path "$PROGRAMFILES\Christine"
 !define source_path "dist\"
-!define install_file "Christine-0.6.exe"
+!define install_file "Christine-0.6.1.exe"
 ;!define config_path ${}\Christine
 ;!define config_file "config.ini"
 !define PRODUCT_NAME "Christine"
@@ -92,7 +92,6 @@ Section
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${link}" "$INSTDIR\${exe}"
   CreateShortCut "$DESKTOP\${link}" "$INSTDIR\${exe}"
-  CreateShortCut "$SMSTARTUP\${link}" "$INSTDIR\${exe}"
 SectionEnd
 
 Section -AdditionalIcons

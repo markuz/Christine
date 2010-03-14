@@ -114,6 +114,7 @@ class Christine(GtkMisc):
 		self.christineConf   = christineConf()
 		self.interface = interface()
 		self.interface.coreClass = self
+		self.interface.config = self.christineConf
 		self.Events = christineEvents()
 
 		# Class variables

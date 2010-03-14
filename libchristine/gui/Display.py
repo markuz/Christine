@@ -34,6 +34,8 @@ import math
 from libchristine.Validator import *
 from libchristine.gui.GtkMisc import CairoMisc, GtkMisc
 from libchristine.Events import christineEvents
+from libchristine.Share import Share
+from libchristine.christineConf import christineConf
 
 BORDER_WIDTH  = 3
 POS_INCREMENT = 3
@@ -60,6 +62,9 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		gtk.DrawingArea.__init__(self)
 		CairoMisc.__init__(self)
 		GtkMisc.__init__(self)
+		self.share = Share()
+		self.config = christineConf()
+		self.display = self
 		self.__ButtonPress = False
 		self.__last_time_moved = time.time()
 		self.__last_emit = time.time()
@@ -90,6 +95,12 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.set_size_request(100, 30)
 		self.Events.addWatcher('gotTags', self.gotTags)
 		gobject.timeout_add(1000, self.__emit)
+
+		self.__shuffle_pixbuf = self.scalePixbuf(self.share.getImageFromPix('usort'), 16,16)
+		self.__non_shuffle_pixbuf = self.scalePixbuf(self.share.getImageFromPix('sort'),16,16)
+		self.__repeat_pixbuf = self.scalePixbuf(self.share.getImageFromPix('repeat'), 16,16)
+		self.__non_repeat_pixbuf = self.scalePixbuf(self.share.getImageFromPix('urepeat'),16,16)
+
 	
 	def __size_allocate(self,display, area):
 		x,y,w,h = area
@@ -142,12 +153,23 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		miny         = (miny + (BORDER_WIDTH * 2))
 		maxx         = (minx + width)
 		maxy         = (miny + BORDER_WIDTH)
-		if  x and x <= w and y >=ny and y <= h:
+		cond_to_pbar = (x > minx and x <= w ) and (y >=miny and y <= h)
+		if cond_to_pbar :
 			value = (((x - minx) * 1.0) / width)
 			if value <0:
 				value = 0
 			self.setScale(value)
 			self.emit("value-changed",self)
+			return
+		cond_to_shuffle = (x >= 10 and x <= 26) and (y >= 3 and y <= 19)
+		cond_to_repeat = (x >= 26 and x <= 38) and (y >= 3 and y <= 19)
+		if cond_to_shuffle:
+			self.config.setValue('control/shuffle',not self.config.getBool('control/shuffle'))
+			self.__emit()
+		elif cond_to_repeat:
+			self.config.setValue('control/repeat',not self.config.getBool('control/repeat'))
+			self.__emit()
+
 
 	def setText(self, text):
 		"""
@@ -203,6 +225,9 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.render_rect(context, x, y, w, h, 0.5)
 		context.clip_preserve()
 		context.save()
+		context.set_operator(cairo.OPERATOR_SOURCE)
+		context.paint()
+		context.restore()
 		
 		tcolor = self.style.fg[0]
 		wcolor = self.style.bg[0]
@@ -232,19 +257,15 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		linear.add_color_stop_rgb(1,cr1,cg1,cb1)
 		context.set_source(linear)
 		context.fill_preserve()
-		color = gtk.gdk.color_parse("#DDD")
+
+		#Greadiente para el borde
+		color = gtk.gdk.color_parse("black")
 		linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
-		linear.add_color_stop_rgba(0,cr1,cg1,cb1,0.5)
-		color = gtk.gdk.color_parse("#EEE")
-		linear.add_color_stop_rgb(0.99,cr,cg,cb,)
-		colorbg = gtk.gdk.color_parse("#FFFFFF")
-		linear.add_color_stop_rgb(1,
-						self.getCairoColor(colorbg.red),
-						self.getCairoColor(colorbg.green),
-						self.getCairoColor(colorbg.blue))
+		linear.add_color_stop_rgb(0,cr1,cg1,cb1)
+		linear.add_color_stop_rgb(0.9,cr1,cg1,cb1)
+		color = gtk.gdk.color_parse("white")
+		linear.add_color_stop_rgb(1,cr,cg,cb,)
 		context.set_source(linear)
-		context.fill_preserve()
-		context.set_source_rgb(0.5,0.5,0.5)
 		context.stroke()
 		
 		self.draw_text(context, x,y,w,h)
@@ -253,6 +274,8 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		cr = self.window.cairo_create()
 		cr.set_source_surface(surface)
 		cr.paint()
+		self.show_shuffle()
+		self.show_repeat()
 		return True
 		
 	
@@ -345,7 +368,31 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		c.set_source_rgb(self.fr,self.fg,self.fb)
 		c.update_layout(self.__Layout)
 		c.show_layout(self.__Layout)
-
-		
+	
+	def show_shuffle(self):
+		'''
+		Show a widget that represent if the current playlist method is
+		shuffle or not.
+		'''
+		if self.config.getBool('control/shuffle'):
+			pixbuf = self.__shuffle_pixbuf
+		else:
+			pixbuf = self.__non_shuffle_pixbuf
+		cr = self.window.cairo_create()
+		cr.set_source_pixbuf(pixbuf, 10,3 )
+		cr.paint()
+	
+	def show_repeat(self):
+		'''
+		Show a widget that represent if the current playlist has to 
+		be repeated when it ends.
+		'''
+		if self.config.getBool('control/repeat'):
+			pixbuf = self.__repeat_pixbuf
+		else:
+			pixbuf = self.__non_repeat_pixbuf
+		cr = self.window.cairo_create()
+		cr.set_source_pixbuf(pixbuf, 26, 3)
+		cr.paint()
 
 	value = property(getValue, setScale)

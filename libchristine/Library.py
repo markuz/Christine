@@ -238,9 +238,6 @@ class libraryBase(GtkMisc):
 	
 	def __insert_item(self, path,l,model, tts):
 		values = l[path]
-		#for key, value in values.iteritems():
-		#	if isinstance(value,str):
-		#		values[key] = self.encode_text(value)
 		searchstring = ''.join((values['title'],values['artist'],
 							values['album'],values['type']))
 		if not tts or searchstring.lower().find(tts) > -1:
@@ -257,7 +254,6 @@ class libraryBase(GtkMisc):
 				PLAY_COUNT ,values['playcount'],
 				TIME ,values['time'],
 				)
-			#gobject.idle_add(self.__set_extras, model, iter, values)
 			self.iters[path] = iter
 
 	def __set_extras(self, model, iter, values):
