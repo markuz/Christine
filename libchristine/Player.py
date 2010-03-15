@@ -304,7 +304,7 @@ class Player(gtk.DrawingArea, object):
 									self.visualizationPlugin)
 			self.show()
 		else:
-			if gst.STATE_PLAYING in self.getState():
+			if gst.STATE_PLAYING in [k for k in self.getState() if isinstance(k, gst._gst.State)]:
 				location = self.getLocation()
 				sec = self.query_duration(gst.FORMAT_TIME)[0]
 				self.stop()

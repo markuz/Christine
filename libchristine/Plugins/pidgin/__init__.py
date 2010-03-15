@@ -92,7 +92,7 @@ class pidgin(plugin_base):
 		if (not message):
 			message = translate("Listening to: _title_ by _artist_ on Chrsitine")
 			self.christineConf.setValue('pidgin/message', message)
-		message = self.tagger.taggify(file, message)
+		message = self.strip_XML_entities(self.tagger.taggify(file, message))
 		if self.obj:
 			try:
 				current = self.purple.PurpleSavedstatusGetType(

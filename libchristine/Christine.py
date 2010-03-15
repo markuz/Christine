@@ -979,6 +979,7 @@ class Christine(GtkMisc):
 					error(translate('File was not found, going to next file'))
 					self.goNext()
 			else:
+				return True
 				error(b.parse_error()[1])
 		if (type_file == gst.MESSAGE_EOS):
 			self.goNext()
