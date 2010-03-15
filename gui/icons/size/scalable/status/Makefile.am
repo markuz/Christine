@@ -4,8 +4,7 @@ context = apps
 
 iconsdir = $(themedir)/$(size)/$(context)
 
-icons_DATA = \
-        christine.svg 
+icons_DATA = 
 
 EXTRA_DIST = \
         $(icons_DATA)

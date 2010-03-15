@@ -6,7 +6,7 @@ iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
         christine-sound.svg \
-	   christine-vide.svg	
+	   christine-video.svg	
 
 EXTRA_DIST = \
         $(icons_DATA)
