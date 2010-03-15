@@ -68,7 +68,7 @@ AR = ar
 AUTOCONF = ${SHELL} /home/markuz/workspace/christine/missing --run autoconf
 AUTOHEADER = ${SHELL} /home/markuz/workspace/christine/missing --run autoheader
 AUTOMAKE = ${SHELL} /home/markuz/workspace/christine/missing --run automake-1.9
-AWK = mawk
+AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=none
 CFLAGS = -O3 -march=athlon-xp  -msse3 -O2 -pipe -fomit-frame-pointer

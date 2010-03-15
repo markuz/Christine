@@ -87,7 +87,7 @@ if (gtk.gtk_version < (2, 10, 0)):
 	sys.exit()
 
 share = Share()
-logo = share.getImageFromPix('logo')
+logo = share.getImageFromPix('christine')
 gtk.window_set_default_icon(logo)
 
 
@@ -202,7 +202,6 @@ class Christine(GtkMisc):
 
 		# Gets window widget from glade template
 		self.coreWindow = xml['WindowCore']
-		self.coreWindow.set_icon(self.share.getImageFromPix('logo'))
 		# Uncoment next lines if you want to use RGBA in your theme
 		width = self.christineConf.getInt('ui/width')
 		height = self.christineConf.getInt('ui/height')
@@ -848,7 +847,6 @@ class Christine(GtkMisc):
 
 		XML    = self.share.getTemplate('JumpTo')
 		dialog = XML['dialog']
-		dialog.set_icon(self.share.getImageFromPix('logo'))
 		mins = divmod((self.__TimeTotal / gst.SECOND), 60)[0]
 		#Current minute and current second
 		nanos      = self.__Player.query_position(gst.FORMAT_TIME)[0]
@@ -923,7 +921,6 @@ class Christine(GtkMisc):
 		uri = self.christineConf.getString("ui/LastFolder")
 		if uri:
 			fs.set_uri('file://'+uri)
-		fs.set_icon(self.share.getImageFromPix('logo'))
 		response = fs.run()
 		files    = fs.get_filenames()
 		fs.destroy()
@@ -942,7 +939,6 @@ class Christine(GtkMisc):
 		uri = self.christineConf.getString("ui/LastFolder")
 		if uri:
 			ds.set_uri('file://'+uri)
-		ds.set_icon(self.share.getImageFromPix('logo'))
 		ds.show_all()
 		ds.connect('response', self.__do_import_folder_response, walk)
 	

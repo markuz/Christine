@@ -143,6 +143,12 @@ libchristine/c3rdparty/Makefile
 win32resources/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
+gui/icons/Makefile
+gui/icons/scalable/Makefile
+gui/icons/scalable/actions/Makefile
+gui/icons/scalable/apps/Makefile
+gui/icons/scalable/mimetypes/Makefile
+gui/icons/scalable/status/Makefile
 po/Makefile
 po/POTFILES
 ])

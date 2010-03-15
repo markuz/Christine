@@ -1,4 +1,4 @@
-SUBDIRS=pixmaps
+SUBDIRS=icons pixmaps
 scriptsdir = @datadir@/christine/gui
 
 scripts_DATA= About.glade \

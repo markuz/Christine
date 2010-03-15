@@ -44,7 +44,7 @@ QUEUE_TARGETS = [('text/plain',0,0),('TEXT', 0, 1),('STRING', 0, 2),
 				('COMPOUND_TEXT', 0, 3), ('UTF8_STRING', 0, 4)]
 
 share = Share()
-pix =share.getImageFromPix('blank')
+pix = share.getImageFromPix('blank')
 pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
 
 ##
