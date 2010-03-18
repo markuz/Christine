@@ -1,3 +1,7 @@
+Changelog for 0.7.0
+* Bug: Use themeable icons #34
+* Bug: Control buttons are not shown right with some themes #36
+* New: Botones de control de reproduccion
 Changelog for 0.6.1
 * Bugfix: Christine cannot import folders
 * Win32: Removed Christine from the start menu
