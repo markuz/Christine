@@ -119,8 +119,7 @@ class next_button(button):
 		context.line_to(((w/5)*1.5)+x, (h - (h/3))+y)
 		context.close_path()
 		context.fill()
-		context.move_to(((w/5)*3)+x, (h/5)+y)
-		context.rectangle(((w/5)*3.5)+x, (h/5)*2.1, w/7, ((h/10)*3))
+		context.rectangle(((w/5)*3.5)+x, (h/2)-3+y, 2, 6)
 		context.fill()
 		return True
 
@@ -142,8 +141,7 @@ class prev_button(button):
 		context.line_to(((w/5)*3.5)+x, (h - (h/3))+y)
 		context.close_path()
 		context.fill()
-		context.move_to(((w/5)*3)+x, (h/5)+y)
-		context.rectangle((w/5)+x, (h/5)*2.1, w/7, ((h/10)*3))
+		context.rectangle((w/5)+x, (h/2)-3+y, 2, 6)
 		context.fill()
 		return True
 
