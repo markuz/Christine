@@ -36,9 +36,6 @@ import gst.interfaces
 import gobject
 import os
 import signal
-#import gc
-#gc.enable()
-#gc.set_threshold(2)
 from libchristine.globalvars import  BUGURL,USERDIR, PIDFILE
 from libchristine.sanity import sanity
 sanity()
@@ -181,13 +178,13 @@ class Christine(GtkMisc):
 		self.__VBoxCore.connect('scroll-event',self.changeVolumeWithScroll)
 		self.mainSpace = xml['mainSpace']
 		self.mainSpace.add1(self.__Player)
-		self.__Player.bus.add_watch(self.__handlerMessage)
+		self.__Player.connect('gst-error', self.do_gst_error)
+		self.__Player.connect('end-of-stream', self.do_end_of_stream)
+		self.__Player.connect('found-tag', self.do_message_tag)
+		self.__Player.connect('buffering', self.do_buffering)
+		#self.__Player.bus.add_watch(self.__handlerMessage)
 
-		#self.__HBoxToolBoxContainer = xml['HBoxToolBoxContainer']
-		#v = Volume()
-		#volobj = v.Volume(self.__HBoxToolBoxContainer)
-		#self.__HBoxToolBoxContainer.show_all()
-
+	
 		# Calling some widget descriptors with no callback connected "by hand"
 		# This interface should not be private.
 		#===================================================
@@ -242,10 +239,6 @@ class Christine(GtkMisc):
 		self.Menus = {}
 		for i in ('media', 'edit', 'control', 'help'):
 			self.Menus["%s" % i] = xml["%s_menu" % i].get_submenu()
-
-		
-		
-
 
 		self.__HBoxCairoDisplay = xml['HBoxCairoDisplay']
 
@@ -319,9 +312,6 @@ class Christine(GtkMisc):
 			self.christineConf.toggleWidget,
 			self.__ControlRepeat)
 		
-		#self.__BothSr = xml['both_sr']
-		#self.__NoneSr = xml['none_sr']
-
 		self.__MenuItemVisualMode = xml['MenuItemVisualMode']
 		self.__MenuItemVisualMode.set_active(self.christineConf.getBool('ui/visualization'))
 
@@ -357,7 +347,6 @@ class Christine(GtkMisc):
 		self.jumpToPlaying(location = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
 		gobject.timeout_add(1000, self.__check_items_on_media)
-		#gobject.timeout_add(500, self.__check_queue)
 		
 	
 	def __check_queue(self, queue, size):
@@ -964,33 +953,20 @@ class Christine(GtkMisc):
 	#          PLayer section              #
 	########################################
 
-	def __handlerMessage(self, a, b, c = None, d = None):
-		"""
-		Handle the messages from self.__Player
-		"""
-		type_file = b.type
-		if (type_file == gst.MESSAGE_ERROR):
-			if not os.path.isfile(self.__Player.getLocation()):
-				if os.path.split(self.__Player.getLocation())[0] == '/':
-					error(translate('File was not found, going to next file'))
-					self.goNext()
-			else:
-				return True
-				error(b.parse_error()[1])
-		if (type_file == gst.MESSAGE_EOS):
-			self.goNext()
-		elif (type_file == gst.MESSAGE_TAG):
-			self.__Player.foundTagCallback(b.parse_tag())
-			self.setTags()
-		elif (type_file == gst.MESSAGE_BUFFERING):
-			percent = 0
-			percent = b.structure['buffer-percent']
-			self.__Display.setText("%d" % percent)
-			self.__Display.setScale((percent / 100))
-			if percent in(0, 100):
-				self.__Display.setText("")
-			return True
-		return True
+	def do_gst_error(self, player, emsg):
+		error(emsg)
+	
+	def do_end_of_stream(self, player):
+		self.goNext()
+
+	def do_message_tag(self, player):
+		self.setTags()
+	
+	def do_buffering(self, player, percent):
+		self.__Display.setText("%d" % percent)
+		self.__Display.setScale((percent / 100))
+		if percent in(0, 100):
+			self.__Display.setText("")
 
 	def checkTimeOnMedia(self):
 		"""
@@ -1030,9 +1006,9 @@ class Christine(GtkMisc):
 			text             = "%02d:%02d" % divmod(ts, 60)
 			self.__ErrorStreamCount = 0
 			iter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
-			if (iter is not None):
+			if iter is not None:
 				time= self.mainLibrary.model.get_value(iter, TIME)
-				if (time != text):
+				if time != text:
 					self.mainLibrary.updateData(self.__Player.getLocation(),
 								time=text)
 			self.__LocationCount = 0

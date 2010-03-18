@@ -52,7 +52,19 @@ class Player(gtk.DrawingArea, object):
 								tuple()),
 				'set-location' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
 								(gobject.TYPE_PYOBJECT, 
-									gobject.TYPE_PYOBJECT))
+									gobject.TYPE_PYOBJECT)),
+				'io-error' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple()),
+				'gst-error' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								(gobject.TYPE_PYOBJECT,)),
+				'end-of-stream' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple()),
+				'buffering' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								(gobject.TYPE_PYOBJECT,)),
+				'found-tag' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple()),
+
+
 				}
 	#
 	# Constructor
@@ -82,6 +94,7 @@ class Player(gtk.DrawingArea, object):
 		self.__ShouldShow = False
 		self.__createPlaybin()
 		self.connect('expose-event', self.exposeCallback)
+		self.bus.add_watch(self.__handlerMessage)
 		
 	def __createPlaybin(self):
 		"""
@@ -409,3 +422,24 @@ class Player(gtk.DrawingArea, object):
 			return True
 		else:
 			return False
+
+	def __handlerMessage(self, a, b, c = None, d = None):
+		"""
+		Handle the messages from self.__Player
+		"""
+		type_file = b.type
+		if (type_file == gst.MESSAGE_ERROR):
+			if not os.path.isfile(self.__Player.getLocation()):
+				#if os.path.split(self.__Player.getLocation())[0] == '/':
+				self.emit('io-eror')
+			else:
+				self.emit('gst-error',b.parse_error()[1])
+		if (type_file == gst.MESSAGE_EOS):
+			self.emit('end-of-stream')
+		elif (type_file == gst.MESSAGE_TAG):
+			self.foundTagCallback(b.parse_tag())
+			self.emit('found-tag')
+		elif (type_file == gst.MESSAGE_BUFFERING):
+			percent = b.structure['buffer-percent']
+			self.emit('buffering', percent)
+		return True
