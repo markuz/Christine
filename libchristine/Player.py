@@ -429,7 +429,7 @@ class Player(gtk.DrawingArea, object):
 		"""
 		type_file = b.type
 		if (type_file == gst.MESSAGE_ERROR):
-			if not os.path.isfile(self.__Player.getLocation()):
+			if not os.path.isfile(self.getLocation()):
 				#if os.path.split(self.__Player.getLocation())[0] == '/':
 				self.emit('io-eror')
 			else:

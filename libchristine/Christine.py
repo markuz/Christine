@@ -974,9 +974,9 @@ class Christine(GtkMisc):
 		"""
 		try:
 			self.__streamLength()
-			nanos      = self.__Player.query_position(gst.FORMAT_TIME)[0]
-			ts         = (nanos / gst.SECOND)
-			time       = "%02d:%02d" % divmod(ts, 60)
+			nanos = self.__Player.query_position(gst.FORMAT_TIME)[0]
+			ts = (nanos / gst.SECOND)
+			time = "%02d:%02d" % divmod(ts, 60)
 			time_total = "%02d:%02d" % divmod((self.__TimeTotal / gst.SECOND), 60)
 			if (ts < 0):
 				ts = long(0)
