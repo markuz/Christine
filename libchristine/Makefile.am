@@ -19,6 +19,7 @@ scripts_DATA=christineConf.py \
 			ui.py \
 			Validator.py \
 			CLibraryModel.so \
+			ChristineCore.py \
 			sanity.py
 
 DISTFILES= Makefile.in \
