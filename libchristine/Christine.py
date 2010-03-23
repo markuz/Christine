@@ -30,27 +30,23 @@ from random import randint
 import time
 import gtk
 import gtk.gdk
-#import pygst;
-#pygst.require('0.10')
 import gst.interfaces
 import gobject
 import os
 import signal
-from libchristine.globalvars import  BUGURL,USERDIR, PIDFILE
+from libchristine.globalvars import  BUGURL,PIDFILE
 from libchristine.sanity import sanity
 sanity()
-from  libchristine.Plugins import Manager
+#from  libchristine.Plugins import Manager
 from libchristine.Translator import translate
 from libchristine.gui.GtkMisc import GtkMisc, error
-from libchristine.gui.Display import Display
 from libchristine.ui import interface
-from libchristine.Library import library, queue,PATH, HAVE_TAGS
+from libchristine.Library import PATH, HAVE_TAGS
 from libchristine.Library import PIX,TIME
-from libchristine.Player import Player
+#from libchristine.Player import Player
 from libchristine.Share import Share
-from libchristine.sources_list import sources_list, LIST_NAME, LIST_TYPE, LIST_EXTRA
+from libchristine.sources_list import LIST_NAME, LIST_TYPE, LIST_EXTRA
 from libchristine.Logger import LoggerManager
-from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
 from libchristine.gui.buttons import next_button, toggle_button, prev_button
 try:
@@ -58,9 +54,13 @@ try:
 except Exception, e:
 	pass
 from libchristine.options import options
-from libchristine.gui.BugReport import BugReport
+#rom libchristine.gui.BugReport import BugReport
 #from libchristine.gui.Volume import Volume
 import webbrowser
+from libchristine.ChristineCore import ChristineCore
+from libchristine.gui.mainWindow import mainWindow
+
+core = ChristineCore()
 
 opts = options()
 
@@ -98,6 +98,19 @@ def gc_collect():
 gobject.timeout_add(1000, gc_collect)
 
 class Christine(GtkMisc):
+	'''
+	Wrapper
+	'''
+	def __init__(self):
+		if opts.options.use_new_main_window:
+			c = mainWindow()
+		else:
+			c = Christine_old()
+	
+	def runGtk(self):
+		gtk.main()
+
+class Christine_old(GtkMisc):
 	def __init__(self):
 		"""
 		Constructor, this method will init the gtk_misc parent class,
@@ -108,7 +121,7 @@ class Christine(GtkMisc):
 		GtkMisc.__init__(self)
 
 		self.share   = Share()
-		self.christineConf   = christineConf()
+		self.christineConf   = core.config
 		self.interface = interface()
 		self.interface.coreClass = self
 		self.interface.config = self.christineConf
@@ -137,11 +150,10 @@ class Christine(GtkMisc):
 
 		gobject.timeout_add(1000, self.checkTimeOnMedia)
 		# Creating the player and build the GUI interface
-		self.__Player = Player()
 		self.__buildInterface()
 		self.coreWindow.show()
 		self.HBoxSearch.hide()
-		plugins_manager = Manager()
+		#plugins_manager = Manager()
 		if opts.options.quit:
 			sys.exit(0)
 
@@ -177,12 +189,12 @@ class Christine(GtkMisc):
 									gtk.gdk.SCROLL_MASK)
 		self.__VBoxCore.connect('scroll-event',self.changeVolumeWithScroll)
 		self.mainSpace = xml['mainSpace']
-		self.mainSpace.add1(self.__Player)
-		self.__Player.connect('gst-error', self.do_gst_error)
-		self.__Player.connect('end-of-stream', self.do_end_of_stream)
-		self.__Player.connect('found-tag', self.do_message_tag)
-		self.__Player.connect('buffering', self.do_buffering)
-		#self.__Player.bus.add_watch(self.__handlerMessage)
+		self.mainSpace.add1(core.Player)
+		core.Player.connect('gst-error', self.do_gst_error)
+		core.Player.connect('end-of-stream', self.do_end_of_stream)
+		core.Player.connect('found-tag', self.do_message_tag)
+		core.Player.connect('buffering', self.do_buffering)
+		#core.Player.bus.add_watch(self.__handlerMessage)
 
 	
 		# Calling some widget descriptors with no callback connected "by hand"
@@ -243,26 +255,24 @@ class Christine(GtkMisc):
 		self.__HBoxCairoDisplay = xml['HBoxCairoDisplay']
 
 		# Create the display and attach it to the main window
-		self.__Display = Display()
-		self.__Display.connect('value-changed', self.onScaleChanged)
-		#self.__HBoxCairoDisplay.pack_start(self.__Display, True, True, 0)
-		self.__HBoxCairoDisplay.add(self.__Display)
+		core.Display.connect('value-changed', self.onScaleChanged)
+		#self.__HBoxCairoDisplay.pack_start(core.Display, True, True, 0)
+		self.__HBoxCairoDisplay.add(core.Display)
 		self.__HBoxCairoDisplay.set_expand(True)
-		self.__Display.show()
+		core.Display.show()
 
 		# Create the library by calling to libs_christine.library class
-		self.mainLibrary  = library()
 		lastSourceUsed = self.christineConf.get('backend/last_source')
 		if not lastSourceUsed:
 			lastSourceUsed = 'music'
-		self.mainLibrary.loadLibrary(lastSourceUsed)
-		self.mainLibrary.tv.show()
+		core.mainLibrary.loadLibrary(lastSourceUsed)
+		core.mainLibrary.tv.show()
 
-		self.mainLibrary.scroll
+		core.mainLibrary.scroll
 		#self.libraryVBox = xml['libraryVBox']
-		self.mainSpace.add2(self.mainLibrary.scroll)
-		self.mainLibrary.show_all()
-		self.__Player.hide()
+		self.mainSpace.add2(core.mainLibrary.scroll)
+		core.mainLibrary.show_all()
+		core.Player.hide()
 		
 		self.__VBoxList = xml["VBoxList"]
 		self.sideNotebook = gtk.Notebook()
@@ -270,26 +280,24 @@ class Christine(GtkMisc):
 		self.sideNotebook.show_all()
 		self.__VBoxList.pack_start(self.sideNotebook, True, True, 0)
 
-		self.Queue = queue()
 		label = gtk.Label(_('Queue'))
 		label.set_angle(90)
-		self.sideNotebook.append_page(self.Queue.scroll, label)
-		#self.VBoxList.pack_start(self.Queue.scroll, False, False, 0)
+		self.sideNotebook.append_page(core.Queue.scroll, label)
+		#self.VBoxList.pack_start(core.Queue.scroll, False, False, 0)
 		self.Queue_mi = xml['Queue']
 		self.Queue_mi.connect('activate', lambda x: self.sideNotebook.set_current_page(0))
-		self.Queue.tv.connect('row-activated',   self.Queue.itemActivated)
-		self.Queue.connect('size-changed',   self.__check_queue)
+		core.Queue.tv.connect('row-activated',   core.Queue.itemActivated)
+		core.Queue.connect('size-changed',   self.__check_queue)
 
-		self.sourcesList = sources_list()
 		label = gtk.Label(_('Sources List'))
 		label.set_angle(90)
 		self.sources_mi = xml['SourcesList']
 		self.sources_mi.connect('activate', lambda x: self.sideNotebook.set_current_page(1))
-		self.sideNotebook.append_page(self.sourcesList.vbox, label)
-		#self.VBoxList.pack_start(self.sourcesList.vbox)
-		self.sourcesList.treeview.connect('row-activated',
+		self.sideNotebook.append_page(core.sourcesList.vbox, label)
+		#self.VBoxList.pack_start(core.sourcesList.vbox)
+		core.sourcesList.treeview.connect('row-activated',
 				self.__srcListRowActivated)
-		self.sourcesList.vbox.show_all()
+		core.sourcesList.vbox.show_all()
 		self.__ControlButton = xml['control_button']
 		self.__MenuItemShuffle = xml['MenuItemShuffle']
 		self.__MenuItemShuffle.set_active(self.christineConf.getBool('control/shuffle'))
@@ -357,17 +365,17 @@ class Christine(GtkMisc):
 		
 	
 	def __check_items_on_media(self):
-		size = len(self.mainLibrary.model.basemodel)
+		size = len(core.mainLibrary.model.basemodel)
 		if size>1:
 			randompath = (randint(1,size-1),)
 		else:
 			randompath = (0,)
 		if randompath[0]:
-			filepath, tags = self.mainLibrary.model.basemodel.get(
-							self.mainLibrary.model.basemodel.get_iter(randompath),
+			filepath, tags = core.mainLibrary.model.basemodel.get(
+							core.mainLibrary.model.basemodel.get_iter(randompath),
 							PATH,HAVE_TAGS)
 			if not tags:
-				self.mainLibrary.check_single_file_data(filepath)
+				core.mainLibrary.check_single_file_data(filepath)
 		return True
 
 	def __srcListRowActivated(self, treeview, path, column):
@@ -376,7 +384,7 @@ class Christine(GtkMisc):
 		if ftype == 'source':
 			if fname == 'Sources':
 				return True
-			self.mainLibrary.loadLibrary(fname)
+			core.mainLibrary.loadLibrary(fname)
 			self.christineConf.setValue('backend/last_source', fname)
 		elif ftype == "radio":
 			if fname == 'Radio':
@@ -430,10 +438,10 @@ class Christine(GtkMisc):
 		# should be setted to None
 		# before using it
 
-		self.__Player.stop()
-		self.__Player.setLocation(filename)
+		core.Player.stop()
+		core.Player.setLocation(filename)
 		name = os.path.split(filename)[-1]
-		self.__Display.setSong(name)
+		core.Display.setSong(name)
 		self.__LastPlayed.append(filename)
 		# enable the stream-length for the current song.
 		# this will be stopped when we get the length
@@ -446,8 +454,8 @@ class Christine(GtkMisc):
 			self.__LocationCount = 0
 		else:
 			self.__LocationCount +=1
-		self.mainLibrary.tv.grab_focus()
-		if self.__Player.getType() == 'video':
+		core.mainLibrary.tv.grab_focus()
+		if core.Player.getType() == 'video':
 			self.__MenuItemVisualMode.set_active(False)
 			gobject.idle_add(self.__MenuItemVisualMode.set_active,True)
 
@@ -455,14 +463,14 @@ class Christine(GtkMisc):
 		"""
 		Stop the player
 		"""
-		self.__Player.stop()
+		core.Player.stop()
 
 	def changeVolume(self, widget):
 		"""
 		Callback for the volume scale widget
 		"""
 		value = widget.get_value()
-		self.__Player.setVolume(value)
+		core.Player.setVolume(value)
 		self.christineConf.setValue('control/volume', value)
 
 	def toggleViewSmall(self, widget):
@@ -513,8 +521,8 @@ class Christine(GtkMisc):
 
 		if ((self.__MenuItemSmallView.get_active()) and (not widget.get_active())):
 			self.toggleViewSmall(self.__MenuItemSmallView)
-		self.__Player.setVisualization(widget.get_active())
-		self.__Player.set_property('visible', self.__Player.isVideo() or \
+		core.Player.setVisualization(widget.get_active())
+		core.Player.set_property('visible', core.Player.isVideo() or \
 				self.christineConf.getBool('ui/visualization'))
 
 	def toggleFullScreen(self, widget = None):
@@ -526,16 +534,16 @@ class Christine(GtkMisc):
 		if not self.__IsFullScreen:
 			self.__IsFullScreen = True
 			self.coreWindow.fullscreen()
-			if self.__Player.isVideo() or self.christineConf.getBool('ui/visualization'):
+			if core.Player.isVideo() or self.christineConf.getBool('ui/visualization'):
 				self.__VBoxList.set_size_request(0,0)
 		else:
 		# Non-full screen mode.
 		# hide if we are not playing a video nor
 		# visualization.
-			if not self.__Player.isVideo() and \
+			if not core.Player.isVideo() and \
 					not self.christineConf.getBool('ui/visualization'):
-				self.__Player.hide()
-			self.mainLibrary.scroll.set_size_request(200,200)
+				core.Player.hide()
+			core.mainLibrary.scroll.set_size_request(200,200)
 			self.__VBoxList.set_size_request(150,0)
 
 			self.coreWindow.unfullscreen()
@@ -601,8 +609,8 @@ class Christine(GtkMisc):
 		diff = time.time() - self.__lastTypeTime
 		text = self.EntrySearch.get_text().lower()
 		if diff > 0.5 and diff < 1 or not text:
-			self.mainLibrary.model.TextToSearch = text
-			self.mainLibrary.refilter() 
+			core.mainLibrary.model.TextToSearch = text
+			core.mainLibrary.refilter() 
 			self.jumpToPlaying()
 			return False
 		if diff > 1.5:
@@ -630,7 +638,7 @@ class Christine(GtkMisc):
 		active = widget.get_active()
 
 		if (not active):
-			self.__Player.pause()
+			core.Player.pause()
 			self.__StatePlaying = False
 		else:
 			self.play()
@@ -646,7 +654,7 @@ class Christine(GtkMisc):
 		Play!!, but only if the state is not already playing
 		"""
 		if not self.__StatePlaying:
-			location = self.__Player.getLocation()
+			location = core.Player.getLocation()
 
 			if location == None:
 				self.goNext()
@@ -659,7 +667,7 @@ class Christine(GtkMisc):
 					self.goNext()
 			else:
 				self.setLocation(location)
-			self.__Player.playIt()
+			core.Player.playIt()
 			
 	def simplePlay(self):
 		'''
@@ -680,13 +688,13 @@ class Christine(GtkMisc):
 		current session, then plays the previous song in the library
 		"""
 		import gst
-		if self.__Player.getLocation():
-			nanos = self.__Player.query_position(gst.FORMAT_TIME)[0]
+		if core.Player.getLocation():
+			nanos = core.Player.query_position(gst.FORMAT_TIME)[0]
 			ts = (nanos / gst.SECOND)
 			cmins, cseconds = map(int, divmod(ts, 60))
 			if cseconds > 5:
 				self.__LastPlayed.pop()
-				self.setLocation(self.__Player.getLocation())
+				self.setLocation(core.Player.getLocation())
 				return 
 		if len(self.__LastPlayed) > 1:
 			#remove the last played since it's the same that we are playing.
@@ -695,21 +703,21 @@ class Christine(GtkMisc):
 			self.PlayButton.set_active(False)
 			self.PlayButton.set_active(True)
 		else:
-			iter = self.mainLibrary.model.basemodel.search_iter_on_column(
+			iter = core.mainLibrary.model.basemodel.search_iter_on_column(
 						self.christineConf.getString('backend/last_played'), 
 						PATH)
 			if iter == None:
 				return False
-			if not self.mainLibrary.tv.get_model().iter_is_valid(iter):
+			if not core.mainLibrary.tv.get_model().iter_is_valid(iter):
 				return False
-			path = self.mainLibrary.tv.get_model().get_path(iter)
+			path = core.mainLibrary.tv.get_model().get_path(iter)
 			if path == None:
 				return False
 			if (path > 0):
 				path = (path[0] -1,)
 			elif (path[0] > -1):
-				iter     = self.mainLibrary.tv.get_model().get_iter(path)
-				location = self.mainLibrary.model.getValue(iter, PATH)
+				iter     = core.mainLibrary.tv.get_model().get_iter(path)
+				location = core.mainLibrary.model.getValue(iter, PATH)
 				self.setLocation(location)
 
 				# This avoid the return to the last played song
@@ -726,26 +734,26 @@ class Christine(GtkMisc):
 		self.__LocationCount = 0
 		# Look for a file in the queue. Iter should not be None in the case
 		# there where something in the queue
-		model = self.Queue.tv.get_model()
+		model = core.Queue.tv.get_model()
 		iter  = model.get_iter_first()
 
 		if isinstance(iter,gtk.TreeIter):
-			location = self.Queue.model.get_value(iter,PATH)
+			location = core.Queue.model.get_value(iter,PATH)
 			self.setLocation(location)
 			self.jumpToPlaying()
-			self.Queue.remove(iter)
+			core.Queue.remove(iter)
 			self.PlayButton.set_active(False)
 			self.PlayButton.set_active(True)
 		else:
 			#self.interface.Queue.scroll.hide()
 			if (self.__MenuItemShuffle.get_active()):
-				Elements = len (self.mainLibrary.tv.get_model()) - 1
+				Elements = len (core.mainLibrary.tv.get_model()) - 1
 				if Elements < 0:
 					return
 				randompath = 0
 				if int(Elements) > 1:
 					randompath = randint(0,int(Elements)-1)
-				filename = self.mainLibrary.tv.get_model()[randompath][PATH]
+				filename = core.mainLibrary.tv.get_model()[randompath][PATH]
 				if (not filename in self.__LastPlayed) or \
 						(self.christineConf.getBool('control/repeat')) and filename:
 						self.setLocation(filename)
@@ -764,19 +772,19 @@ class Christine(GtkMisc):
 
 		if (path == None):
 			filename = self.christineConf.getString('backend/last_played')
-			iter = self.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
+			iter = core.mainLibrary.model.basemodel.search_iter_on_column(filename, PATH)
 			if (iter == None):
-				iter     = self.mainLibrary.tv.get_model().get_iter_first()
-				filename = self.mainLibrary.model.getValue(iter, PATH)
+				iter     = core.mainLibrary.tv.get_model().get_iter_first()
+				filename = core.mainLibrary.model.getValue(iter, PATH)
 			self.setLocation(filename)
 		else:
-			iter = self.mainLibrary.model.search(path, PATH)
+			iter = core.mainLibrary.model.search(path, PATH)
 			if (iter != None):
-				iter = self.mainLibrary.iter_next(iter)
+				iter = core.mainLibrary.iter_next(iter)
 			else:
-				iter = self.mainLibrary.tv.get_model().get_iter_first()
+				iter = core.mainLibrary.tv.get_model().get_iter_first()
 			try:
-				self.setLocation(self.mainLibrary.model.getValue(iter, PATH))
+				self.setLocation(core.mainLibrary.model.getValue(iter, PATH))
 				self.simplePlay()
 			except:
 				self.setScale('', '', b = 0)
@@ -787,11 +795,11 @@ class Christine(GtkMisc):
 		"""
 		Callback on the value changed signal on position scale
 		"""
-		value = (int(self.__Display.value * self.__TimeTotal) / gst.SECOND)
+		value = (int(core.Display.value * self.__TimeTotal) / gst.SECOND)
 		self.__ScaleMoving = False
 		if (value < 0):
 			value = 0
-		self.__Player.seekTo(value)
+		core.Player.seekTo(value)
 
 	def setScale(self, scale, a, b):
 		"""
@@ -809,18 +817,18 @@ class Christine(GtkMisc):
 		select the playing one
 		"""
 		if not location or not isinstance(location, str):
-			location = self.__Player.getLocation()
-		iter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
+			location = core.Player.getLocation()
+		iter = core.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
 		if iter:
 			if self.__StatePlaying:
 				pix  = self.share.getImageFromPix('sound')
 				pix  = pix.scale_simple(20, 20,	gtk.gdk.INTERP_BILINEAR)
-				self.mainLibrary.set(iter, PIX, pix)
-			iter = self.mainLibrary.model.get_sorted_iter(iter)
-			npath = self.mainLibrary.model.sorted_path(iter)
+				core.mainLibrary.set(iter, PIX, pix)
+			iter = core.mainLibrary.model.get_sorted_iter(iter)
+			npath = core.mainLibrary.model.sorted_path(iter)
 			if npath and npath[0]:
-				self.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
-				self.mainLibrary.tv.set_cursor(npath)
+				core.mainLibrary.tv.scroll_to_cell(npath, None, True, 0.5, 0.5)
+				core.mainLibrary.tv.set_cursor(npath)
 
 	def jumpTo(self, widget):
 		"""
@@ -838,7 +846,7 @@ class Christine(GtkMisc):
 		dialog = XML['dialog']
 		mins = divmod((self.__TimeTotal / gst.SECOND), 60)[0]
 		#Current minute and current second
-		nanos      = self.__Player.query_position(gst.FORMAT_TIME)[0]
+		nanos      = core.Player.query_position(gst.FORMAT_TIME)[0]
 		ts         = (nanos / gst.SECOND)
 		(cmins, cseconds) = map(int, divmod(ts, 60))
 		mins_adj = gtk.Adjustment(value = 0, lower = 0, upper = mins, step_incr = 1)
@@ -858,7 +866,7 @@ class Christine(GtkMisc):
 			time = (mins_scale.get_value() * 60) + secs_scale.get_value()
 			if time > self.__TimeTotal:
 				time = self.__TimeTotal
-			self.__Player.seekTo(time)
+			core.Player.seekTo(time)
 
 	def jumpToOkClicked(self, widget, event, button):
 		"""
@@ -915,9 +923,9 @@ class Christine(GtkMisc):
 		fs.destroy()
 		if response == gtk.RESPONSE_OK:
 			if queue:
-				self.Queue.addFiles(files)
+				core.Queue.addFiles(files)
 			else:
-				self.mainLibrary.addFiles(files)
+				core.mainLibrary.addFiles(files)
 			path = os.path.join(os.path.split(files[0])[:-1])[0]
 			self.christineConf.setValue("ui/LastFolder",path)
 	
@@ -938,7 +946,7 @@ class Christine(GtkMisc):
 			walkdir = walk.get_active()
 			self.christineConf.setValue("ui/LastFolder",filenames[0])
 			ds.destroy()
-			self.mainLibrary.importFolder(filenames, walkdir)
+			core.mainLibrary.importFolder(filenames, walkdir)
 			return True
 		ds.destroy()
 	
@@ -963,10 +971,10 @@ class Christine(GtkMisc):
 		self.setTags()
 	
 	def do_buffering(self, player, percent):
-		self.__Display.setText("%d" % percent)
-		self.__Display.setScale((percent / 100))
+		core.Display.setText("%d" % percent)
+		core.Display.setScale((percent / 100))
 		if percent in(0, 100):
-			self.__Display.setText("")
+			core.Display.setText("")
 
 	def checkTimeOnMedia(self):
 		"""
@@ -974,7 +982,7 @@ class Christine(GtkMisc):
 		"""
 		try:
 			self.__streamLength()
-			nanos = self.__Player.query_position(gst.FORMAT_TIME)[0]
+			nanos = core.Player.query_position(gst.FORMAT_TIME)[0]
 			ts = (nanos / gst.SECOND)
 			time = "%02d:%02d" % divmod(ts, 60)
 			time_total = "%02d:%02d" % divmod((self.__TimeTotal / gst.SECOND), 60)
@@ -982,9 +990,9 @@ class Christine(GtkMisc):
 				ts = long(0)
 			if ((nanos > 0) and (self.__TimeTotal > 0)):
 				currenttime = (nanos / float(self.__TimeTotal))
-				self.__Display.setText("%s/%s" % (time, time_total))
+				core.Display.setText("%s/%s" % (time, time_total))
 				if ((currenttime >= 0) and (currenttime <= 1)):
-					self.__Display.setScale(currenttime)
+					core.Display.setScale(currenttime)
 		except:
 			pass
 		return True
@@ -994,29 +1002,29 @@ class Christine(GtkMisc):
 		Catches the lenght of the media and update it in the
 		player
 		"""
-		location = self.__Player.getLocation()
+		location = core.Player.getLocation()
 		if not location:
 			return True
 		if (location.split(':')[0] == 'http'):
 			self.__TimeTotal = 0
 			return True
 		try:
-			self.__TimeTotal = self.__Player.query_duration(gst.FORMAT_TIME)[0]
+			self.__TimeTotal = core.Player.query_duration(gst.FORMAT_TIME)[0]
 			ts               = (self.__TimeTotal / gst.SECOND)
 			text             = "%02d:%02d" % divmod(ts, 60)
 			self.__ErrorStreamCount = 0
-			iter = self.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
+			iter = core.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
 			if iter is not None:
-				time= self.mainLibrary.model.get_value(iter, TIME)
+				time= core.mainLibrary.model.get_value(iter, TIME)
 				if time != text:
-					self.mainLibrary.updateData(self.__Player.getLocation(),
+					core.mainLibrary.updateData(core.Player.getLocation(),
 								time=text)
 			self.__LocationCount = 0
 			return False
 		except gst.QueryError, e:
 			self.__ErrorStreamCount += 1
 			if (self.__ErrorStreamCount > 10):
-				self.setLocation(self.__Player.getLocation())
+				self.setLocation(core.Player.getLocation())
 				self.simplePlay()
 
 			return True
@@ -1026,27 +1034,27 @@ class Christine(GtkMisc):
 		This method fetchs the data from the song/media in the player.
 		Then, ask to the library to update the values on it.
 		"""
-		title     = self.__Player.getTag('title').replace('_', ' ')
-		artist    = self.__Player.getTag('artist')
-		album     = self.__Player.getTag('album')
-		genre     = self.__Player.getTag('genre')
+		title     = core.Player.getTag('title').replace('_', ' ')
+		artist    = core.Player.getTag('artist')
+		album     = core.Player.getTag('album')
+		genre     = core.Player.getTag('genre')
 		tags = [title,artist,album,genre]
 		if tags == self.__LastTags:
 			return True
 		else:
 			self.__LastTags = tags
-		if (type(genre) == type([])):
+		if isinstance(genre, list):
 			genre = ','.join(genre)
-		elif type(genre) != type(""):
+		elif isinstance(genre, basestring):
 			genre = ""
-		track_number = self.__Player.getTag('track-number')
-		if isinstance(track_number,str):
+		track_number = core.Player.getTag('track-number')
+		if isinstance(track_number,basestring):
 			if track_number.isdigit():
 				track_number = int(track_number)
 			else:
 				track_number = 0
-		if (title == ''):
-			title = os.path.split(self.__Player.getLocation())[1]
+		if not title:
+			title = os.path.split(core.Player.getLocation())[1]
 			title = '.'.join(title.split('.')[:-1])
 		title    = self.strip_XML_entities(title)
 		# Sets window title, which it will be our current song :-)
@@ -1065,19 +1073,19 @@ class Christine(GtkMisc):
 		Simple or complete visualization
 		"""
 		isPlaying = False
-		state = self.__Player.getState()[1]
+		state = core.Player.getState()[1]
 		if gst.State(gst.STATE_PLAYING) is state:
 			isPlaying = True
-		comp = self.__Player.isVideo() or \
+		comp = core.Player.isVideo() or \
 				self.christineConf.getBool('ui/visualization')
-		self.__Player.set_property('visible', comp)
+		core.Player.set_property('visible', comp)
 
 	def cleanLibrary(self,widget):
 		xml = self.share.getTemplate("deleteQuestion")
 		dialog = xml["dialog"]
 		response = dialog.run()
 		if response == -5:
-			self.mainLibrary.clear()
+			core.mainLibrary.clear()
 		dialog.destroy()
 
 	def openRemote(self,widget):
@@ -1109,7 +1117,7 @@ class Christine(GtkMisc):
 		self.christineConf.setValue('ui/sidepanel', widget.get_active())
 
 	def quitGtk(self, widget = None):
-		self.__Player.stop()
+		core.Player.stop()
 		close()
 	
 	def runGtk(self):
@@ -1164,4 +1172,4 @@ def runChristine():
 		#BugReport()
 	gtk.main()
 	
-	
+

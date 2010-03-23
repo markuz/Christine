@@ -51,7 +51,8 @@ class options(Singleton):
                   help="Force christine to dump the logs to the stdout")
 		parser.add_option("-q","--quit", dest="quit",action='store_true',
                  help="Force christine to quit after startup")
-		
+		parser.add_option("-o","--use-new-main-window", dest="use_new_main_window",action='store_true',
+                 help="Force christine to use the new mainWindow ")
 		self.options, self.args = parser.parse_args()
 		
 	

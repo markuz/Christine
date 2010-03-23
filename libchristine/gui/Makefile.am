@@ -8,6 +8,7 @@ scripts_DATA=__init__.py \
 			GtkMisc.py \
 			openRemote.py \
 			buttons.py \
+			mainWindow.py \
 			Volume.so 
 
 DISTFILES=Makefile.in \

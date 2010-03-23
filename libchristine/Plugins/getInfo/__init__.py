@@ -58,7 +58,7 @@ class getInfo(plugin_base):
 		self.iface = interface()
 		self.Share = Share()
 		self.tagger = Tagger()
-		self.iface.mainLibrary.connect('popping_menu', self.append_option)
+		#self.iface.mainLibrary.connect('popping_menu', self.append_option)
 	
 	def append_option(self, library, menu):
 		item =gtk.MenuItem(translate('Show info'))

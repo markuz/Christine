@@ -317,13 +317,13 @@ class Player(gtk.DrawingArea, object):
 									self.visualizationPlugin)
 			self.show()
 		else:
-			if gst.STATE_PLAYING in [k for k in self.getState() if isinstance(k, gst._gst.State)]:
+			states = [k for k in self.getState() if isinstance(k, gst._gst.State)]
+			if gst.STATE_PLAYING in states :
 				location = self.getLocation()
 				sec = self.query_duration(gst.FORMAT_TIME)[0]
 				self.stop()
 				gobject.timeout_add(500, self.__replay, location, sec)
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', None)
-			#self.visualizationPlugin = None
 			self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
 			self.__ShouldShow = False
 		return True
@@ -425,12 +425,11 @@ class Player(gtk.DrawingArea, object):
 
 	def __handlerMessage(self, a, b, c = None, d = None):
 		"""
-		Handle the messages from self.__Player
+		Handle the messages from 
 		"""
 		type_file = b.type
 		if (type_file == gst.MESSAGE_ERROR):
 			if not os.path.isfile(self.getLocation()):
-				#if os.path.split(self.__Player.getLocation())[0] == '/':
 				self.emit('io-eror')
 			else:
 				self.emit('gst-error',b.parse_error()[1])
