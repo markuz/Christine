@@ -35,6 +35,8 @@ from libchristine.ui import interface
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.globalvars import IMAGEDIR
+from libchristine.ChristineCore import ChristineCore
+
 import gtk
 import urllib2
 import thread
@@ -51,10 +53,12 @@ class albumCover(plugin_base):
 		self.name = __name__
 		self.description = __description__
 		self.iface = interface()
+		self.core = ChristineCore()
 		self.tagger = Tagger()
 		if not self.christineConf.exists('lastfm/getimage'):
 			self.christineConf.setValue('lastfm/getimage', True)
-		self.christineConf.notifyAdd('backend/last_played', self.getImage)
+		#self.christineConf.notifyAdd('backend/last_played', self.getImage)
+		self.core.Player.connect('end-of-stream', self.getImage)
 	
 	def getImage(self, *args):
 		#First look in the folder:
@@ -71,10 +75,8 @@ class albumCover(plugin_base):
 			return False
 		directory = directory[0]
 		for i in os.listdir(directory):
-			print directory, i
 			for j in ['cover','albumart']:
 				if i.lower().startswith(j):
-					print os.path.join(directory, i)
 					self.set_image(os.path.join(directory,i))
 					return
 		tags =  self.tagger.readTags(file)
