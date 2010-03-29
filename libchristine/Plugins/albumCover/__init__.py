@@ -57,28 +57,24 @@ class albumCover(plugin_base):
 		self.tagger = Tagger()
 		if not self.christineConf.exists('lastfm/getimage'):
 			self.christineConf.setValue('lastfm/getimage', True)
-		#self.christineConf.notifyAdd('backend/last_played', self.getImage)
-		self.core.Player.connect('end-of-stream', self.getImage)
+		self.christineConf.notifyAdd('backend/last_played', self.getImage)
+		#self.core.Player.connect('end-of-stream', self.getImage)
 	
 	def getImage(self, *args):
-		#First look in the folder:
 		if getattr(self, 'lastfmimage', False):
 			self.lastfmimage.hide()
 			self.lastfmimage.destroy()
 		if not self.active:
 			return False
-		if not self.active:
-			return
 		file = self.christineConf.getString('backend/last_played')
 		directory = os.path.join(os.path.split(file)[:-1])
-		if not directory:
-			return False
-		directory = directory[0]
-		for i in os.listdir(directory):
-			for j in ['cover','albumart']:
-				if i.lower().startswith(j):
-					self.set_image(os.path.join(directory,i))
-					return
+		if directory:
+			directory = directory[0]
+			for i in os.listdir(directory):
+				for j in ['cover','albumart']:
+					if i.lower().startswith(j):
+						self.set_image(os.path.join(directory,i))
+						return
 		tags =  self.tagger.readTags(file)
 		for key in ('artist','title', 'album'):
 			if not tags[key]:

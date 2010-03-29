@@ -38,6 +38,7 @@ from libchristine.ui import interface
 from libchristine.Tagger import Tagger
 from libchristine.Share import Share
 from libchristine.Plugins.plugin_base import plugin_base, christineConf
+from libchristine.ChristineCore import ChristineCore
 import urllib2
 from urllib import urlencode
 
@@ -55,8 +56,10 @@ class twitter(plugin_base):
 		plugin_base.__init__(self)
 		self.name = __name__
 		self.description = __description__
-		self.christineConf.notifyAdd('backend/last_played', self.postMessage)
+		#self.christineConf.notifyAdd('backend/last_played', self.postMessage)
 		self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
+		self.core = ChristineCore()
+		self.core.Player.connect('end-of-stream', self.postMessage)
 		self.tagger = Tagger()
 		self.Share = Share()
 		self.interface = interface()
