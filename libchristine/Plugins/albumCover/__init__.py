@@ -71,7 +71,7 @@ class albumCover(plugin_base):
 		if directory:
 			directory = directory[0]
 			for i in os.listdir(directory):
-				for j in ['cover','albumart']:
+				for j in ['cover','folder','albumart']:
 					if i.lower().startswith(j):
 						self.set_image(os.path.join(directory,i))
 						return
