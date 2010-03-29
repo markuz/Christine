@@ -396,7 +396,7 @@ class sqlite3db(Singleton, GtkMisc):
 		self.commit()
 		return True
 
-	def insert_music_playilst(self):
+	def insert_music_playlst(self):
 		'''
 		Insert the music playlist
 		'''
