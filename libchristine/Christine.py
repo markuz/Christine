@@ -962,6 +962,10 @@ class Christine_old(GtkMisc):
 	########################################
 
 	def do_gst_error(self, player, emsg):
+		if emsg.find('File not found'):
+			sefl.Logger.warning(emsg)
+			self.goNext()
+			return
 		error(emsg)
 	
 	def do_end_of_stream(self, player):
