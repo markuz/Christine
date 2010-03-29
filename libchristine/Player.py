@@ -234,7 +234,8 @@ class Player(gtk.DrawingArea, object):
 		self.Tags = {}
 		last_location = self.getLocation()
 		self.location = file
-		if getattr(self, 'visualizationPlugin', None) != None:
+		if getattr(self, 'visualizationPlugin', None) != None and \
+			os.name != "nt":
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.visualizationPlugin)
 		if (isFile(file)):
 			self.__setState(gst.STATE_READY)
@@ -310,6 +311,8 @@ class Player(gtk.DrawingArea, object):
 		"""
 		self.__Logger.info("Setting visualization to %s"%repr(active))
 		if active:
+			if os.name == 'nt':
+				return True
 			self.visualizationPlugin = self.__elementFactoryMake(self.config.getString('backend/vis-plugin'))
 			self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', self.isVideo())
 			self.__ShouldShow = True
