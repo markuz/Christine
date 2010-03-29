@@ -57,14 +57,26 @@ class albumCover(plugin_base):
 		self.christineConf.notifyAdd('backend/last_played', self.getImage)
 	
 	def getImage(self, *args):
-		if not self.active:
-			return False
+		#First look in the folder:
 		if getattr(self, 'lastfmimage', False):
 			self.lastfmimage.hide()
 			self.lastfmimage.destroy()
 		if not self.active:
+			return False
+		if not self.active:
 			return
 		file = self.christineConf.getString('backend/last_played')
+		directory = os.path.join(os.path.split(file)[:-1])
+		if not directory:
+			return False
+		directory = directory[0]
+		for i in os.listdir(directory):
+			print directory, i
+			for j in ['cover','albumart']:
+				if i.lower().startswith(j):
+					print os.path.join(directory, i)
+					self.set_image(os.path.join(directory,i))
+					return
 		tags =  self.tagger.readTags(file)
 		for key in ('artist','title', 'album'):
 			if not tags[key]:
@@ -94,16 +106,23 @@ class albumCover(plugin_base):
 				g.close()
 				have_image = True
 		if have_image:
-			if getattr(self, 'lastfmimage', False):
-				self.lastfmimage.hide()
-				self.lastfmimage.destroy()
-			self.lastfmimage = gtk.Image()
-			pixbuf = self.gen_pixbuf_from_file(os.path.join(IMAGEDIR, filename))
-			pixbuf = self.scalePixbuf(pixbuf, 150, 150)
-			self.lastfmimage.set_from_pixbuf(pixbuf)
-			self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
-														False, False, 0)
-			self.lastfmimage.show()
+			self.set_image(os.path.join(IMAGEDIR, filename))
+	
+	def set_image(self, path):
+		'''
+		Set the image from the path
+		'''
+		if getattr(self, 'lastfmimage', False):
+			self.lastfmimage.hide()
+			self.lastfmimage.destroy()
+		self.lastfmimage = gtk.Image()
+		pixbuf = self.gen_pixbuf_from_file(path)
+		pixbuf = self.scalePixbuf(pixbuf, 150, 150)
+		self.lastfmimage.set_from_pixbuf(pixbuf)
+		self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
+													False, False, 0)
+		self.lastfmimage.show()
+
 	
 	def get_active(self):
 		return self.christineConf.getBool('lastfm/getimage')
