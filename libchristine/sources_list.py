@@ -21,6 +21,7 @@ from libchristine.Share import Share
 from libchristine.Translator import  translate
 from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Logger import LoggerManager
+from libchristine.gui.keyvals import ENTER, INTRO
 import gobject
 import gtk
 
@@ -113,6 +114,8 @@ class sources_list (GtkMisc):
 		xml = self.__Share.getTemplate('NewSourceDialog')
 		dialog = xml['dialog']
 		entry = xml['entry']
+		save = xml['savebtn']
+		entry.connect('key-release-event', self.__add_source_entrykre, save)
 		response = dialog.run()
 		if response == 1:
 			exists = False
@@ -125,6 +128,11 @@ class sources_list (GtkMisc):
 				self.__db.addPlaylist(entry.get_text())
 		self.__gen_model()
 		dialog.destroy()
+	
+	def __add_source_entrykre(self, widget, event,save):
+		keyval = event.keyval
+		if keyval in (ENTER,INTRO):
+			save.clicked()
 	
 	def add_radio(self):
 		xml = self.__Share.getTemplate('NewRadioDialog')
