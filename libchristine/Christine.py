@@ -34,7 +34,7 @@ import gst.interfaces
 import gobject
 import os
 import signal
-from libchristine.globalvars import  BUGURL,PIDFILE
+from libchristine.globalvars import  BUGURL,PIDFILE,TRANSLATEURL
 from libchristine.sanity import sanity
 sanity()
 #from  libchristine.Plugins import Manager
@@ -142,8 +142,6 @@ class Christine_old(GtkMisc):
 		self.__StatePlaying = False
 
 		# Create the try icon.
-		#tryIcon()
-
 		self.christineConf.notifyAdd('ui/show_in_notification_area',
 				lambda cl,cnx,entry,widget: \
 				self.interface.TrayIcon.TrayIcon.set_visible(entry.get_value().get_bool()))
@@ -336,8 +334,8 @@ class Christine_old(GtkMisc):
 									self.MenuItemSidePane)
 		
 		translateMenuItem = xml['translateThisApp']
-		URL = 'https://translations.launchpad.net/christine'
-		translateMenuItem.connect('activate', lambda widget: webbrowser.open(URL))
+		translateMenuItem.connect('activate', 
+				lambda widget: webbrowser.open(TRANSLATEURL))
 
 		reportaBug = xml['reportABug']
 		reportaBug.connect('activate', lambda widget: webbrowser.open(BUGURL))

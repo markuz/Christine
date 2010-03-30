@@ -77,6 +77,7 @@ else:
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
 LOCALE_DIR = os.path.join("@datadir@','locale")
 BUGURL='http://apps.sourceforge.net/trac/christine/newticket?version=%s'%VERSION
+TRANSLATEURL = 'https://translations.launchpad.net/christine'
 
 
 icon_theme = gtk.icon_theme_get_default()
