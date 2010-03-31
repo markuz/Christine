@@ -79,8 +79,8 @@ def clean_traceback():
 
 signal.signal(signal.SIGTERM, close)
 
-if (gtk.gtk_version < (2, 10, 0)):
-	sys.stderr.write(translate('Gtk+ 2.10 or better is required'))
+if (gtk.gtk_version < (2, 16, 0)):
+	sys.stderr.write(translate('Gtk+ 2.16 or better is required'))
 	sys.exit()
 
 share = Share()
@@ -961,7 +961,7 @@ class Christine_old(GtkMisc):
 
 	def do_gst_error(self, player, emsg):
 		if emsg.find('File not found'):
-			sefl.Logger.warning(emsg)
+			self.Logger.warning(emsg)
 			self.goNext()
 			return
 		error(emsg)
