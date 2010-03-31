@@ -365,7 +365,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 			self.__HPos = w + 1
 		c = pangocairo.CairoContext(context)
 		c.move_to(self.__HPos, (fonth)/2)
-		c.set_source_rgb(self.fr,self.fg,self.fb)
+		c.set_source_rgb(self.bar,self.bag,self.bab)
 		c.update_layout(self.__Layout)
 		c.show_layout(self.__Layout)
 	
