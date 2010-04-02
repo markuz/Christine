@@ -57,8 +57,8 @@ class albumCover(plugin_base):
 		self.tagger = Tagger()
 		if not self.christineConf.exists('lastfm/getimage'):
 			self.christineConf.setValue('lastfm/getimage', True)
-		self.christineConf.notifyAdd('backend/last_played', self.getImage)
-		#self.core.Player.connect('end-of-stream', self.getImage)
+		#self.christineConf.notifyAdd('backend/last_played', self.getImage)
+		self.core.Player.connect('set-location', self.getImage)
 	
 	def getImage(self, *args):
 		if getattr(self, 'lastfmimage', False):
@@ -66,20 +66,31 @@ class albumCover(plugin_base):
 			self.lastfmimage.destroy()
 		if not self.active:
 			return False
-		file = self.christineConf.getString('backend/last_played')
+		if not self.set_image_from_directory():
+			tags =  self.tagger.readTags(file)
+			for key in ('artist','title', 'album'):
+				if not tags[key]:
+					pass
+			thread.start_new(self.__getImage, (tags, ))
+	
+	def set_image_from_directory(self):
+		'''
+		Look for the album cover in the directory
+		'''
+		file = self.core.Player.getLocation()
+		if not os.path.exists(file):
+			return 
 		directory = os.path.join(os.path.split(file)[:-1])
-		if directory:
-			directory = directory[0]
-			for i in os.listdir(directory):
-				for j in ['cover','folder','albumart']:
-					if i.lower().startswith(j):
-						self.set_image(os.path.join(directory,i))
-						return
-		tags =  self.tagger.readTags(file)
-		for key in ('artist','title', 'album'):
-			if not tags[key]:
-				pass
-		thread.start_new(self.__getImage, (tags, ))
+		if not directory:
+			return
+		directory = directory[0]
+		files  = [k for k in os.listdir(directory) \
+				if k.lower().startswith('cover') or \
+				k.lower().startswith('folder') or\
+				k.lower().startswith('albumart')]
+		if files:
+			self.set_image(os.path.join(directory, files[0]))
+		return True
 			
 	def __getImage(self, tags):
 		have_image = False
@@ -110,16 +121,19 @@ class albumCover(plugin_base):
 		'''
 		Set the image from the path
 		'''
-		if getattr(self, 'lastfmimage', False):
-			self.lastfmimage.hide()
-			self.lastfmimage.destroy()
-		self.lastfmimage = gtk.Image()
-		pixbuf = self.gen_pixbuf_from_file(path)
-		pixbuf = self.scalePixbuf(pixbuf, 150, 150)
-		self.lastfmimage.set_from_pixbuf(pixbuf)
-		self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
-													False, False, 0)
-		self.lastfmimage.show()
+		try:
+			if getattr(self, 'lastfmimage', False):
+				self.lastfmimage.hide()
+				self.lastfmimage.destroy()
+			self.lastfmimage = gtk.Image()
+			pixbuf = self.gen_pixbuf_from_file(path)
+			pixbuf = self.scalePixbuf(pixbuf, 150, 150)
+			self.lastfmimage.set_from_pixbuf(pixbuf)
+			self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
+														False, False, 0)
+			self.lastfmimage.show()
+		except:
+			pass
 
 	
 	def get_active(self):
