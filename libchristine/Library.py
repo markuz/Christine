@@ -849,10 +849,12 @@ class queue (libraryBase ,gobject.GObject):
 		self.last_check = -1
 		self.loadLibrary('queue')
 		self.tv.connect('key-press-event', self.QueueHandlerKey)
-		gobject.timeout_add(1000, self.checkQueue)
+		#gobject.timeout_add(1000, self.checkQueue)
 		self.scroll.set_size_request(100,150)
 		self.interface.Queue = self
 		self.tv.set_property('fixed-height-mode', False)
+		self.model.basemodel.connect('row-inserted', lambda *x: self.emit('size-changed',len(self.model.basemodel)))
+		self.model.basemodel.connect('row-deleted', lambda *x: self.emit('size-changed',len(self.model.basemodel)))
 
 	def add_columns(self):
 		render = gtk.CellRendererText()
@@ -991,13 +993,13 @@ class queue (libraryBase ,gobject.GObject):
 				name = model.get_value(iter, NAME)
 				self.remove(iter)
 				
-	def	checkQueue(self):
-		model = self.tv.get_model()
-		size = len(model) 
-		if size != self.last_check:
-			self.emit('size-changed', size)
-			self.last_check = size
-		return True
+####def	checkQueue(self):
+####	model = self.tv.get_model()
+####	size = len(model) 
+####	if size != self.last_check:
+####		self.emit('size-changed', size)
+####		self.last_check = size
+####	return True
 	
 	def itemActivated(self, widget, path, iter):
 		libraryBase.itemActivated(self, widget, path, iter)
