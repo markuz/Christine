@@ -49,7 +49,7 @@ class Target:
 		          'Programming Language :: C',
 		          ]
 			self.platforms = ['Posix','Windows XP', 'Windows 2000','Windows Vista']
-			self.version        = "0.6.0"
+			self.version        = "0.7.0"
 			self.compay_name    = "Christine Project"
 			self.copyright      = "(c) 2006-2009, Marco Islas"
 			self.name           = "Christine Media Player"

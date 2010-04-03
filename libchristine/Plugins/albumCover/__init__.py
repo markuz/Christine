@@ -57,20 +57,24 @@ class albumCover(plugin_base):
 		self.tagger = Tagger()
 		if not self.christineConf.exists('lastfm/getimage'):
 			self.christineConf.setValue('lastfm/getimage', True)
-		#self.christineConf.notifyAdd('backend/last_played', self.getImage)
 		self.core.Player.connect('set-location', self.getImage)
 	
-	def getImage(self, *args):
+	def __clean_image(self):
+		'''
+		Destroy self.lastfmimage
+		'''
 		if getattr(self, 'lastfmimage', False):
 			self.lastfmimage.hide()
 			self.lastfmimage.destroy()
-		if not self.active:
-			return False
+	
+	def getImage(self, *args):
+		self.__clean_image()
+		if not self.active: return False
 		if not self.set_image_from_directory():
 			tags =  self.tagger.readTags(file)
-			for key in ('artist','title', 'album'):
-				if not tags[key]:
-					pass
+			#for key in ('artist','title', 'album'):
+			#	if not tags[key]:
+			#		pass
 			thread.start_new(self.__getImage, (tags, ))
 	
 	def set_image_from_directory(self):
@@ -78,11 +82,9 @@ class albumCover(plugin_base):
 		Look for the album cover in the directory
 		'''
 		file = self.core.Player.getLocation()
-		if not os.path.exists(file):
-			return 
+		if not os.path.exists(file):return 
 		directory = os.path.join(os.path.split(file)[:-1])
-		if not directory:
-			return
+		if not directory: return
 		directory = directory[0]
 		files  = [k for k in os.listdir(directory) \
 				if k.lower().startswith('cover') or \
@@ -107,24 +109,25 @@ class albumCover(plugin_base):
 			album = Album(tags['artist'], tags['album'], APIKEY, SECRET, sessionkey)
 			image = album.getImage(IMAGE_LARGE)
 			if image:
-				f = urllib2.urlopen(image)
-				name = os.path.split(image)[-1]
-				g = open(os.path.join(IMAGEDIR, filename),"w")
-				for line in f:
-					g.write(line)
-				g.close()
+				self.__write_image(image,filename)
 				have_image = True
 		if have_image:
 			self.set_image(os.path.join(IMAGEDIR, filename))
+
+	def __wirte_image(self, image, filename):
+		f = urllib2.urlopen(image)
+		name = os.path.split(image)[-1]
+		g = open(os.path.join(IMAGEDIR, filename),"w")
+		for line in f:
+			g.write(line)
+		g.close()
 	
 	def set_image(self, path):
 		'''
 		Set the image from the path
 		'''
 		try:
-			if getattr(self, 'lastfmimage', False):
-				self.lastfmimage.hide()
-				self.lastfmimage.destroy()
+			self.__clean_image()
 			self.lastfmimage = gtk.Image()
 			pixbuf = self.gen_pixbuf_from_file(path)
 			pixbuf = self.scalePixbuf(pixbuf, 150, 150)

@@ -4,7 +4,6 @@ scripts_DATA=christineConf.py \
 			christineLogger.py \
 			Christine.py \
 			Events.py \
-			globalvars.py \
 			__init__.py \
 			LibraryModel.py \
 			Library.py \
@@ -20,6 +19,7 @@ scripts_DATA=christineConf.py \
 			Validator.py \
 			CLibraryModel.so \
 			ChristineCore.py \
+			globalvars.py \
 			sanity.py
 
 DISTFILES= Makefile.in \

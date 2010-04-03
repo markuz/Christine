@@ -101,27 +101,30 @@ class Share(Singleton):
 		"""
 		Gets image from pixbuf
 		"""
-		try:
-			icon_theme = gtk.icon_theme_get_default()
+		icon_theme = gtk.icon_theme_get_default()
+		if icon_theme.has_icon(name):
 			pixbuf = icon_theme.load_icon(name, 48, 0)
 			return pixbuf
-		except gobject.GError, exc:
-			if not isNull(file) or not isStringEmpty(name):
-				names = []
-				for i in ['.png','.svg']:
-					names.append(os.path.join(self.__PathPixmap, name + i))
-				for i in names:
-					if isFile(i):
-						if self.__Pixmaps.has_key(i):
-							self.__Pixmaps[i]['timestamp'] = time.time()
-							return self.__Pixmaps[i]['pixmap']
-						else:
-							pixmap = gtk.gdk.pixbuf_new_from_file(i)
-							self.__Pixmaps[i] = {'pixmap':pixmap,
-												'timestamp': time.time()}
-							return pixmap
+		else:
+			return self.load_from_local_dir(name)
+
+	def load_from_local_dir(self, name):
+		if not name: return 
+		files = os.listdir(self.__PathPixmap)
+		filesf = [k for k in files if len(k.split('.')) > 1 \
+				and k.split('.')[0].startswith(name)]
+		if not filesf:
 			self.__logger.warning('None of this files \n%s\n where found'%repr(names))
-		return None
+			return
+		filepath = os.path.join(self.__PathPixmap, filesf[0])
+		pixdir = self.__Pixmaps.get(filepath,{})
+		if not pixdir:
+			self.__Pixmaps[filepath] = pixdir
+			pixmap = gtk.gdk.pixbuf_new_from_file(filepath)
+			self.__Pixmaps[filepath]['pixmap'] = pixmap
+		self.__Pixmaps[filepath]['timestamp'] = time.time()
+		return self.__Pixmaps[filepath]['pixmap']
+
 	
 	def check_pixmap_time_access(self):
 		'''

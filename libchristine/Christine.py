@@ -819,7 +819,7 @@ class Christine_old(GtkMisc):
 		iter = core.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
 		if iter:
 			if self.__StatePlaying:
-				pix  = self.share.getImageFromPix('sound')
+				pix  = self.share.getImageFromPix('christine-sound')
 				pix  = pix.scale_simple(20, 20,	gtk.gdk.INTERP_BILINEAR)
 				core.mainLibrary.set(iter, PIX, pix)
 			iter = core.mainLibrary.model.get_sorted_iter(iter)

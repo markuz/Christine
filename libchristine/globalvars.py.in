@@ -65,10 +65,9 @@ CHRISTINE_VIDEO_EXT = video = ["mpg","mpeg","mpe","avi"]
 opts = options()
 # global PATH to share files required
 # Ugly hack to make this work on win32
-print os.name
 if opts.options.debug or os.name == 'nt':
-	SHARE_PATH = os.path.join("./")
-	PLUGINSDIR = os.path.join('./','libchristine','Plugins')
+	SHARE_PATH = os.path.join(os.getcwd())
+	PLUGINSDIR = os.path.join(os.getcwd(),'libchristine','Plugins')
 	ICONPATH = os.path.join(SHARE_PATH,'gui','icons')
 else:
 	SHARE_PATH = os.path.join('@datadir@', 'christine')
