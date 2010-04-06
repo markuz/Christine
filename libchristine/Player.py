@@ -20,7 +20,7 @@
 # @package   Player
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @author    Miguel Vazquez Gocobachi <demrit@gnu.org>
-# @copyright 2006-2007 Christine Development Group
+# @copyright 2006-2010 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
 from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
@@ -122,13 +122,32 @@ class Player(gtk.DrawingArea, object):
 		self.query_duration = self.__PlayBin.query_duration
 		self.query_position = self.__PlayBin.query_position
 
+	def __create_equalizer(self):
+		self.equalizer = self.__elementFactoryMake('equalizer-10bands','eqsink')
+		self.aubin = gst.Bin('audio-bin')
+		pad = self.equalizer.get_static_pad('src')
+		self.aubin.add_pad(gst.GhostPad('src',pad))
+		pad = self.equalizer.get_static_pad('sink')
+		self.aubin.add_many(self.equalizer, self.__AudioSinkPack)
+		self.aubin.add_pad(gst.GhostPad('sink',pad))
+		self.equalizer.link(self.__AudioSinkPack)
+		#self.aubin.set_state(gst.STATE_NULL)
+		#self.aubin.set_state(gst.STATE_READY)
+		#self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
+
+	def set_band_value(self, band, value):
+		print band, value
+		self.__elementSetProperty(self.equalizer, band, value)
+
+
 	def __connectSinks(self):
 		"""
 		Connect the sinks to tye playbin by setting the sinks as elements in the
 		playbin
 		"""
 		self.__Logger.info("Connecting sinks")
-		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
+		#self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
+		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.aubin)
 		self.__elementSetProperty(self.__PlayBin,'video-sink', self.VideoSink)
 
 	def __updateAudioSink(self, *args):
@@ -137,19 +156,22 @@ class Player(gtk.DrawingArea, object):
 		"""
 		self.__Logger.info("__updateAudioSink")
 		state = self.getState()[1]
-		self.__AudioSinkPack = self.__elementFactoryMake('bin')
+		#self.__AudioSinkPack = self.__elementFactoryMake('bin')
 		if not self.getLocation() == None:
 			self.pause()
 		asink = self.config.getString('backend/audiosink')
-		self.__AudioSink = self.__elementFactoryMake(asink)
-		self.__AudioSinkPack.add(self.__AudioSink)
-		self.audio_ghost = gst.GhostPad('sink', self.__AudioSink.get_pad('sink'))
-		self.__AudioSinkPack.add_pad(self.audio_ghost)
-		self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
+		self.__AudioSinkPack = self.__elementFactoryMake(asink)
+		#self.__AudioSinkPack.add(self.__AudioSink)
+		#self.audio_ghost = gst.GhostPad('sink', self.__AudioSink.get_pad('sink'))
+		#self.__AudioSinkPack.add_pad(self.audio_ghost)
 		if asink == 'alsasink':
 			self.__AudioSink.set_property('device', 'default')
+		self.__create_equalizer()
+		#self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playIt()
+
+	
 
 	def __updateVideoSink(self, *args):
 		"""
@@ -165,6 +187,7 @@ class Player(gtk.DrawingArea, object):
 		self.__elementSetProperty(self.VideoSink,'draw-borders', True)
 		if gst.State(gst.STATE_PLAYING) == state:
 			self.playIt()
+	
 
 	def __updateAspectRatio(self, client = '', cnx_id = '', entry = '', userdata = ''):
 		"""

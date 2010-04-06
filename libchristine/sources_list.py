@@ -72,7 +72,7 @@ class sources_list (GtkMisc):
 		sources = self.__db.getPlaylists()
 		iter = self.model.append(None)
 		ltype = 'source'
-		self.model.set(iter, LIST_NAME, 'Sources', LIST_TYPE, ltype)
+		self.model.set(iter, LIST_NAME, 'Library', LIST_TYPE, ltype)
 		self.music_iter = iter
 		for source in sources:
 			iter = self.model.append(self.music_iter)

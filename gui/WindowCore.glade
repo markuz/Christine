@@ -528,11 +528,19 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHPaned" id="mainSpace">
+                  <object class="GtkVBox" id="VBoxList2">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
                     <child>
-                      <placeholder/>
+                      <object class="GtkHPaned" id="mainSpace">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                     <child>
                       <placeholder/>

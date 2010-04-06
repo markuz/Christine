@@ -9,7 +9,8 @@ scripts_DATA=__init__.py \
 			openRemote.py \
 			buttons.py \
 			mainWindow.py \
-			Volume.so 
+			Volume.so \
+			equalizer.py
 
 DISTFILES=Makefile.in \
 		  Volume.c \

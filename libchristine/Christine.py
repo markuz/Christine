@@ -29,7 +29,7 @@ import sys
 from random import randint
 import time
 import gtk
-import gtk.gdk
+#import gtk.gdk
 import gst.interfaces
 import gobject
 import os
@@ -39,7 +39,7 @@ from libchristine.sanity import sanity
 sanity()
 #from  libchristine.Plugins import Manager
 from libchristine.Translator import translate
-from libchristine.gui.GtkMisc import GtkMisc, error
+from libchristine.gui.GtkMisc import GtkMisc, error, load_rc
 from libchristine.ui import interface
 from libchristine.Library import PATH, HAVE_TAGS
 from libchristine.Library import PIX,TIME
@@ -59,6 +59,8 @@ from libchristine.options import options
 import webbrowser
 from libchristine.ChristineCore import ChristineCore
 from libchristine.gui.mainWindow import mainWindow
+from libchristine.gui.keyvals import PAGEDOWN,PAGEUP
+from libchristine.gui.equalizer import equalizer
 
 core = ChristineCore()
 
@@ -96,6 +98,9 @@ def gc_collect():
 	return True
 
 gobject.timeout_add(1000, gc_collect)
+
+if os.name == 'nt':
+	load_rc()
 
 class Christine(GtkMisc):
 	'''
@@ -217,7 +222,6 @@ class Christine_old(GtkMisc):
 		self.coreWindow.set_default_size(width, height)
 		self.coreWindow.connect("destroy",lambda widget: widget.hide())
 		self.coreWindow.connect("scroll-event",self.changeVolumeWithScroll)
-		self.coreWindow.connect("key-press-event",self.onWindowkeyPressEvent)
 		self.coreWindow.connect('size-allocate', self.__on_corewindow_resized)
 		self.interface.coreWindow = self.coreWindow
 
@@ -277,6 +281,7 @@ class Christine_old(GtkMisc):
 		self.sideNotebook.set_show_tabs(False)
 		self.sideNotebook.show_all()
 		self.__VBoxList.pack_start(self.sideNotebook, True, True, 0)
+
 
 		label = gtk.Label(_('Queue'))
 		label.set_angle(90)
@@ -353,6 +358,12 @@ class Christine_old(GtkMisc):
 		self.jumpToPlaying(location = self.christineConf.getString('backend/last_played'))
 		self.__pidginMessage = self.christineConf.getString('pidgin/message')
 		gobject.timeout_add(1000, self.__check_items_on_media)
+
+		self.VBoxList2 = xml["VBoxList2"]
+		eq = equalizer()
+		self.VBoxList2.pack_start(eq.topWidget,False, False, 2)
+		self.VBoxList2.show_all()
+		eq.topWidget.show_all()
 		
 	
 	def __check_queue(self, queue, size):
@@ -380,7 +391,7 @@ class Christine_old(GtkMisc):
 		model = treeview.get_model()
 		fname, ftype, fextra = model.get(model.get_iter(path), LIST_NAME, LIST_TYPE, LIST_EXTRA)
 		if ftype == 'source':
-			if fname == 'Sources':
+			if fname == 'Library':
 				return True
 			core.mainLibrary.loadLibrary(fname)
 			self.christineConf.setValue('backend/last_source', fname)
@@ -546,23 +557,6 @@ class Christine_old(GtkMisc):
 
 			self.coreWindow.unfullscreen()
 			self.__IsFullScreen = False
-
-	def onWindowkeyPressEvent(self, player, event):
-		"""
-		Handler for the key press events in the window
-		"""
-		if (event.keyval == gtk.gdk.keyval_from_name('g')):
-			self.viewPlayButtons()
-		elif (event.keyval == gtk.gdk.keyval_from_name('Page_Down')):
-			if (self.__IsFullScreen):
-				self.goNext()
-		elif (event.keyval == gtk.gdk.keyval_from_name('Page_Up')):
-			if (self.__IsFullScreen):
-				self.goPrev()
-				return True
-		elif ( event.keyval == gtk.gdk.keyval_from_name('f')):
-			if (self.__IsFullScreen):
-				self.toggleFullScreen()
 
 	def viewPlayButtons(self, widget = None):
 		"""

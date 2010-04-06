@@ -23,6 +23,15 @@ import os.path
 import logging
 from  libchristine.globalvars import DATADIR, PROGRAMNAME, SHARE_PATH
 
+
+def load_rc():
+	file = os.path.join(SHARE_PATH,'gui','gtkrc') 
+	if not os.path.exists(file):
+		return 
+	gtk.rc_parse(file)
+	gtk.rc_add_default_file(file)
+	gtk.rc_reparse_all()
+
 class glade_xml:
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of the interface descriptor
