@@ -360,10 +360,21 @@ class Christine_old(GtkMisc):
 		gobject.timeout_add(1000, self.__check_items_on_media)
 
 		self.VBoxList2 = xml["VBoxList2"]
-		eq = equalizer()
-		self.VBoxList2.pack_start(eq.topWidget,False, False, 2)
-		self.VBoxList2.show_all()
-		eq.topWidget.show_all()
+		self.eq = equalizer()
+		self.eq.connect('close', lambda x: self.hide_equalizer())
+		self.infoBar = gtk.InfoBar()
+		self.infoBar.get_content_area().pack_start(self.eq.topWidget)
+		self.equalizer_mi = xml["equalizer_mi"]
+		self.equalizer_mi.connect('activate', lambda x: self.infoBar.show_all())
+		self.VBoxList2.pack_start(self.infoBar,False, False, 2)
+		self.VBoxList2.show()
+		self.hide_equalizer()
+		#eq.topWidget.show_all()
+	
+	def hide_equalizer(self):
+		if not getattr(self, 'infoBar', False):
+			return
+		self.infoBar.hide()
 		
 	
 	def __check_queue(self, queue, size):

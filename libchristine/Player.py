@@ -63,7 +63,8 @@ class Player(gtk.DrawingArea, object):
 								(gobject.TYPE_PYOBJECT,)),
 				'found-tag' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
 								tuple()),
-
+				'preset-loaded' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple()),
 
 				}
 	#
@@ -122,22 +123,6 @@ class Player(gtk.DrawingArea, object):
 		self.query_duration = self.__PlayBin.query_duration
 		self.query_position = self.__PlayBin.query_position
 
-	def __create_equalizer(self):
-		self.equalizer = self.__elementFactoryMake('equalizer-10bands','eqsink')
-		self.aubin = gst.Bin('audio-bin')
-		pad = self.equalizer.get_static_pad('src')
-		self.aubin.add_pad(gst.GhostPad('src',pad))
-		pad = self.equalizer.get_static_pad('sink')
-		self.aubin.add_many(self.equalizer, self.__AudioSinkPack)
-		self.aubin.add_pad(gst.GhostPad('sink',pad))
-		self.equalizer.link(self.__AudioSinkPack)
-		#self.aubin.set_state(gst.STATE_NULL)
-		#self.aubin.set_state(gst.STATE_READY)
-		#self.__elementSetProperty(self.__PlayBin,'audio-sink', self.__AudioSinkPack)
-
-	def set_band_value(self, band, value):
-		print band, value
-		self.__elementSetProperty(self.equalizer, band, value)
 
 
 	def __connectSinks(self):
@@ -468,3 +453,50 @@ class Player(gtk.DrawingArea, object):
 			percent = b.structure['buffer-percent']
 			self.emit('buffering', percent)
 		return True
+
+	def __create_equalizer(self):
+		'''
+		Creates the equalizer element.
+		'''
+		self.equalizer = self.__elementFactoryMake('equalizer-10bands','eqsink')
+		self.aubin = gst.Bin('audio-bin')
+		pad = self.equalizer.get_static_pad('src')
+		self.aubin.add_pad(gst.GhostPad('src',pad))
+		pad = self.equalizer.get_static_pad('sink')
+		self.aubin.add_many(self.equalizer, self.__AudioSinkPack)
+		self.aubin.add_pad(gst.GhostPad('sink',pad))
+		self.equalizer.link(self.__AudioSinkPack)
+
+	def set_band_value(self, band, value):
+		'''
+		Set the value for the given band,
+		@param string band: may be from band0 to band9.
+		@param float value: May be from -24 to 12
+		'''
+		self.__elementSetProperty(self.equalizer, band, value)
+	
+	def get_band_value(self, band):
+		'''
+		return the band value
+		@param band: from 'band0' to 'band9'
+		'''
+		return self.equalizer.get_property(band)
+	
+	def load_preset(self, preset_name):
+		'''
+		Load a preset from the preset list.
+		@param string preset_name: name of the preset
+		@emits: preset_loaded
+		'''
+		if preset_name not in self.get_preset_names():
+			return
+		result = self.equalizer.load_preset(preset_name)
+		self.emit('preset_loaded')
+		return result
+
+	def get_preset_names(self):
+		'''
+		Return preset names obtanined from self.equalizer.get_preset_names()
+		'''
+		return self.equalizer.get_preset_names()
+

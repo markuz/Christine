@@ -25,11 +25,15 @@ import gtk
 from libchristine.ChristineCore import ChristineCore
 from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.Share import Share
+import gobject
 
-
-
-class equalizer(GtkMisc):
+class equalizer(gobject.GObject,GtkMisc):
+	__gsignals__= {
+				'close' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+								tuple()),
+				}
 	def __init__(self):
+		gobject.GObject.__init__(self)
 		GtkMisc.__init__(self)
 		self.core = ChristineCore()
 		#Set the adjustment
@@ -37,19 +41,50 @@ class equalizer(GtkMisc):
 		share = Share()
 		xml = share.getTemplate('equalizer','topWidget')
 		self.topWidget = xml['topWidget']
+		closebtn = xml['closebutton']
+		closebtn.connect('clicked', self.emitclose)
+		self.preset_cb = xml['preset_cb']
+		model = gtk.ListStore(str)
+		self.preset_cb.set_model(model)
+		cell = gtk.CellRendererText()
+		self.preset_cb.pack_start(cell, True)
+		self.preset_cb.add_attribute(cell, 'text',0)
+		self.preset_cb.connect('changed', self._do_load_preset)
+		presets = self.core.Player.get_preset_names()
+		for preset in presets:
+			iter = model.append()
+			model.set(iter, 0,preset)
 		for i in range(10):
 			wname = 'band%d'%i
-			print wname
 			widget = xml[wname]
 			adjustment = gtk.Adjustment(value=-24, lower=-24, upper=12)
 			widget.set_adjustment(adjustment)
-			widget.set_value(12)
 			widget.connect('value-changed', self.__apply_value, self.core, wname)
+			widget.set_value(0)
 			self.__dict__[wname] = widget
+		#Connect the "preset_loaded"
+		self.core.Player.connect('preset_loaded', self._do_preset_loaded)
+		if len (self.preset_cb.get_model()):
+			self.preset_cb.set_active(0)
 	
 	def __apply_value(self, widget, core, band):
 		value = widget.get_value()
 		core.Player.set_band_value(band, value)
+	
+	def _do_preset_loaded(self, player):
+		for i in range(10):
+			band = "band%d"%i
+			widget = getattr(self, band, None)
+			#Get the value of the band.
+			value = self.core.Player.get_band_value(band)
+			widget.set_value(value)
+	
+	def _do_load_preset(self, combo):
+		index = combo.get_active()
+		model = combo.get_model()
+		value = model.get_value(model.get_iter(index), 0)
+		self.core.Player.load_preset(value)
 
-
+	def emitclose(self, button):
+		self.emit('close')
 
