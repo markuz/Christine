@@ -37,7 +37,8 @@ from libchristine.ui import interface
 from libchristine.gui.GtkMisc import GtkMisc
 
 DBVERSIONS = (
-				(0,7,0)
+				(0,2,0),
+				(0,7,0),
 			)
 
 class sqlite3db(Singleton, GtkMisc):
@@ -47,8 +48,8 @@ class sqlite3db(Singleton, GtkMisc):
 		'''
 		#create the 'connection'
 		GtkMisc.__init__(self)
-		if self.connect():
-			self.check_version()
+		self.__logger = LoggerManager().getLogger('sqldb')
+		self.connect()
 	
 	def connect(self):
 		self.connection = sqlite3.connect(DBFILE)
@@ -58,24 +59,25 @@ class sqlite3db(Singleton, GtkMisc):
 		self.have_to_commit = False
 		self.cursor = self.connection.cursor()
 		self.cursor.row_factory = self.dict_factory
-		self.__logger = LoggerManager().getLogger('sqldb')
-		if not self.get_db_version():
+		if not self.check_version():
 			self.__logger.debug('No se encontro la version de la base de datos.')
 			self.__logger.debug(self.get_db_version())
 			self.createSchema()
 			self.fillRegistry()
 		self.iface = interface()
 		self.iface.db = self
+		return True
 	
 	def check_version(self):
 		try:
-			version = self.get_registry('/core/dbversion/')
+			version = self.get_registry('/core/dbversion')
 		except ValueError:
 			version = (0,0,0)
 		for i in DBVERSIONS:
 			if version >= i:
 				continue
-			self.update_version(i)
+			self.update_version(map(str, i ))
+		return True
 
 	def update_version(self, version):
 		ver = '_'.join(version)
@@ -89,17 +91,26 @@ class sqlite3db(Singleton, GtkMisc):
 		Update database to 0.7.0
 		'''
 		sentences = (
-				'ALTER TABLE registry ADD COLUMN type VARCHAR(10) NOT NULL',
-				'UPDATE registry SET version="0.7.0", type="list"',
+				'ALTER TABLE registry ADD COLUMN key VARCHAR(255)',
+				'ALTER TABLE registry ADD COLUMN type VARCHAR(10)',
+				'UPDATE registry SET value="0.7.0", type="list",key="/core/dbversion" WHERE desc = "version"',
 				)
 		for strSQL in sentences:
-			self.execute(strSQL)
+			try:
+				self.execute(strSQL)
+				self.commit()
+			except Exception, e:
+				print e
+
 
 	
 
 	def get_registry(self,key):
 		strSQL = '''SELECT * FROM registry WHERE key = ?'''
-		res = self.execute(strSQL)
+		try:
+			res = self.execute(strSQL)
+		except:
+			res = 0
 		if not res:
 			raise ValueError('There is no key %s in registry'%key)
 		result = self.fetchone()
@@ -177,13 +188,7 @@ class sqlite3db(Singleton, GtkMisc):
 		Look for the version of the database schema. If it can't get the
 		database version then it returns False
 		'''
-		strSQL = 'SELECT value FROM registry where desc="version"'
-		try:
-			self.execute(strSQL)
-			return self.fetchall()
-		except Exception, e:
-			self.__logger.debug(e)
-			return False
+		return self.get_registry('/core/dbversion')
 
 	def createSchema(self):
 		'''
