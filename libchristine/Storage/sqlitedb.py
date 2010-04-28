@@ -36,6 +36,10 @@ from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
 from libchristine.gui.GtkMisc import GtkMisc
 
+DBVERSIONS = (
+				(0,7,0)
+			)
+
 class sqlite3db(Singleton, GtkMisc):
 	def __init__(self):
 		'''
@@ -43,6 +47,10 @@ class sqlite3db(Singleton, GtkMisc):
 		'''
 		#create the 'connection'
 		GtkMisc.__init__(self)
+		if self.connect():
+			self.check_version()
+	
+	def connect(self):
 		self.connection = sqlite3.connect(DBFILE)
 		self.connection.isolation_level = None
 		self.connection.row_factory = self.dict_factory
@@ -58,7 +66,57 @@ class sqlite3db(Singleton, GtkMisc):
 			self.fillRegistry()
 		self.iface = interface()
 		self.iface.db = self
-		#gobject.timeout_add(1000, self.do_commit)
+	
+	def check_version(self):
+		try:
+			version = self.get_registry('/core/dbversion/')
+		except ValueError:
+			version = (0,0,0)
+		for i in DBVERSIONS:
+			if version >= i:
+				continue
+			self.update_version(i)
+
+	def update_version(self, version):
+		ver = '_'.join(version)
+		update_func = getattr(self, '_update_%s'%ver, None)
+		if update_func:
+			update_func()
+
+
+	def _update_0_7_0(self):
+		'''
+		Update database to 0.7.0
+		'''
+		sentences = (
+				'ALTER TABLE registry ADD COLUMN type VARCHAR(10) NOT NULL',
+				'UPDATE registry SET version="0.7.0", type="list"',
+				)
+		for strSQL in sentences:
+			self.execute(strSQL)
+
+	
+
+	def get_registry(self,key):
+		strSQL = '''SELECT * FROM registry WHERE key = ?'''
+		res = self.execute(strSQL)
+		if not res:
+			raise ValueError('There is no key %s in registry'%key)
+		result = self.fetchone()
+		try:
+			t = result['type']
+		except KeyError:
+			ValueError('Database must be upgraded at least to 0.7.0')
+		typefuncs = {
+				'bool':bool,
+				'list':list,
+				'int':int,
+				'string':str,
+				}
+		value = typefuncs[t](result['value'])
+		return value
+			
+
 
 	def dict_factory(self, cursor, row):
 		d = {}
@@ -76,7 +134,8 @@ class sqlite3db(Singleton, GtkMisc):
 		'''
 		tup = (strSQL, args)
 		self.__logger.debug('Executing : %s',repr(tup))
-		self.cursor.execute(strSQL,args)
+		res = self.cursor.execute(strSQL,args)
+		return res
 
 	def fetchone(self):
 		'''
