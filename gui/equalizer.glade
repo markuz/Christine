@@ -14,6 +14,8 @@
                 <property name="visible">True</property>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -28,6 +30,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="pack_type">end</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -48,7 +51,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -62,7 +64,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -76,7 +77,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -90,7 +90,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -104,7 +103,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -118,7 +116,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -132,7 +129,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -146,7 +142,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -160,7 +155,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>
@@ -174,7 +168,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="inverted">True</property>
-                <property name="show_fill_level">True</property>
                 <property name="digits">0</property>
               </object>
               <packing>

@@ -338,6 +338,8 @@ class LibraryModel(GtkMisc):
 		return path
 
 	def getNaturalIter(self,iter):
+		if not isinstance(iter, gtk.TreeIter):
+			return None
 		if self.basemodel.iter_is_valid(iter):
 			return iter
 		if not self.__sorted.iter_is_valid(iter):

@@ -966,7 +966,7 @@ class Christine_old(GtkMisc):
 
 	def do_gst_error(self, player, emsg):
 		if emsg.find('File not found'):
-			self.Logger.warning(emsg)
+			self.__Logger.warning(emsg)
 			self.goNext()
 			return
 		error(emsg)
@@ -993,12 +993,12 @@ class Christine_old(GtkMisc):
 			ts = (nanos / gst.SECOND)
 			time = "%02d:%02d" % divmod(ts, 60)
 			time_total = "%02d:%02d" % divmod((self.__TimeTotal / gst.SECOND), 60)
-			if (ts < 0):
-				ts = long(0)
-			if ((nanos > 0) and (self.__TimeTotal > 0)):
-				currenttime = (nanos / float(self.__TimeTotal))
-				core.Display.setText("%s/%s" % (time, time_total))
-				if ((currenttime >= 0) and (currenttime <= 1)):
+			#set ts=0 if ts if less than 0
+			ts = [ts, long(0)][ts < 0]
+			if nanos > 0 and self.__TimeTotal > 0:
+				currenttime = nanos / float(self.__TimeTotal)
+				core.Display.setText("%s/%s"%(time, time_total))
+				if currenttime >= 0 and currenttime <= 1:
 					core.Display.setScale(currenttime)
 		except:
 			pass

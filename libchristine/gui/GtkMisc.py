@@ -157,6 +157,9 @@ class GtkMisc:
 		'''
 		for i in ('latin-1','iso8859-1', 'utf8'):
 			try:
+				text =  u'%s'%text.decode(i)
+				text =  u'%s'%text.encode(i)
+				return text
 				text1 = unicode(text, i)
 				text1 =  text1.encode(i)
 				return text1

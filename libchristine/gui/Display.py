@@ -183,7 +183,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		"""
 		if (not isString(song)):
 			raise TypeError('Paramether must be text')
-		self.__Song = u'%s'%self.encode_text(song)
+		self.__Song = self.encode_text(song)
 		self.__emit()
 
 	def getValue(self):
