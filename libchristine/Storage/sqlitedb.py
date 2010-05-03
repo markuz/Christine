@@ -71,6 +71,8 @@ class sqlite3db(Singleton, GtkMisc):
 	def check_version(self):
 		try:
 			version = self.get_registry('/core/dbversion')
+			version = tuple(map(int, version.split(".")))
+			print version
 		except ValueError:
 			version = (0,0,0)
 		for i in DBVERSIONS:
@@ -93,7 +95,7 @@ class sqlite3db(Singleton, GtkMisc):
 		sentences = (
 				'ALTER TABLE registry ADD COLUMN key VARCHAR(255)',
 				'ALTER TABLE registry ADD COLUMN type VARCHAR(10)',
-				'UPDATE registry SET value="0.7.0", type="list",key="/core/dbversion" WHERE desc = "version"',
+				'UPDATE registry SET value="0.7.0", type="string",key="/core/dbversion" WHERE desc = "version"',
 				)
 		for strSQL in sentences:
 			try:
@@ -108,7 +110,7 @@ class sqlite3db(Singleton, GtkMisc):
 	def get_registry(self,key):
 		strSQL = '''SELECT * FROM registry WHERE key = ?'''
 		try:
-			res = self.execute(strSQL)
+			res = self.execute(strSQL, key)
 		except:
 			res = 0
 		if not res:

@@ -3,12 +3,9 @@ import mutagen.mp3, mutagen.oggvorbis
 from libchristine.pattern.Singleton import Singleton
 
 class Track:
-	def __init__(self,*args):
-		'''
-		Do nothing
-		'''
-		pass
 	def setSong(self, song):
+		if not isinstance(song, basestring):
+			raise ValueError("The first argument must be a string")
 		self.Song = song
 		self.Title = ""
 		self.Artist = ""
@@ -40,9 +37,6 @@ class MP3Track(Singleton,Track):
 			"TDRC": "year",
 			"TCON": "genre"
 			}
-
-	def __init__(self, *args):
-		Track.__init__(self, *args)
 	
 	def getTag(self, id3, t):
 		if not id3.has_key(t): return ""
@@ -94,12 +88,7 @@ class MP3Track(Singleton,Track):
 		
 		return self.createDict()
 
-
-
 class OGGTrack(Singleton,Track):
-	def __init__(self, *args):
-		Track.__init__(self, *args)
-
 	def getTag(self, f, tag):
 		try:
 			return unicode(f[tag][0])
@@ -140,14 +129,17 @@ class FakeTrack(Singleton,Track):
 
 class Tagger(Singleton):
 	def readTags(self, song):
-		self.Song = song
-		if self.Song.split('.').pop().lower() == 'mp3':
-			self.Rola = MP3Track()
-		elif self.Song.split('.').pop().lower() == 'ogg':
-			self.Rola = OGGTrack()
-		else:
-			self.Rola = FakeTrack()
-		return self.Rola.readTags(self.Song)
+		'''
+		Reat the tags of a given file
+		@param song:
+		'''
+		if not isinstance(song, basestring):
+			raise TypeError('The first argument must be string, got %s'%type(song))
+		ext = song.split('.').pop().lower()
+		objects = {'mp3':MP3Track, 'ogg':OGGTrack}
+		obj = objects.get(ext, FakeTrack)
+		self.Rola = obj() 
+		return self.Rola.readTags(song)
 	
 	def taggify(self, file, msg):
 		tags = self.readTags(file)
