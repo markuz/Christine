@@ -23,9 +23,10 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 from ConfigParser import ConfigParser
 from libchristine.pattern.Singleton import Singleton
-from libchristine.Translator import *
+from libchristine.Translator import translate
 from libchristine.Logger import LoggerManager
 from libchristine.globalvars import USERDIR
+from libchristine.envelopes import deprecated
 import gtk
 import sys
 import os
@@ -105,6 +106,7 @@ class christineConf(Singleton):
 		del f
 		return True
 	
+	@deprecated
 	def exists(self, path):
 		'''
 		Creates a new section/key 
@@ -117,14 +119,14 @@ class christineConf(Singleton):
 		if self.configParser.has_section(sp[0]) and \
 		 	self.configParser.has_option(sp[0], sp[1]):
 			return True
-
+	@deprecated
 	def resetDefaults(self):
 		'''
 		reset to defaults. behaviour is the same that using
 		create_basic_config_file
 		'''
 		return self.create_basic_config_file()
-
+	@deprecated
 	def toggleWidget(self, value, widget):
 		'''
 		Inverts the 'active' property in the widget using the value of the
@@ -133,7 +135,8 @@ class christineConf(Singleton):
 		@param widget: widget to work on
 		'''
 		widget.set_active(value)
-
+	
+	@deprecated
 	def toggleVisible(self, value, widget):
 		'''
 		Toggles the 'visible' property in the widget using the value of the
@@ -151,6 +154,7 @@ class christineConf(Singleton):
 		else:
 			raise TypeError('How should I show/hide this widget: ', widget)
 
+	@deprecated
 	def toggle(self, widget, entry):
 		'''
 		Toggle the entry value according to widget
@@ -158,7 +162,8 @@ class christineConf(Singleton):
 		@param entry:
 		'''
 		self.setValue(entry, widget.get_active())
-
+	
+	@deprecated
 	def get(self, key, method = None):
 		'''
 		Returns the value of a key
@@ -177,7 +182,7 @@ class christineConf(Singleton):
 			result = None
 		return result
 
-
+	@deprecated
 	def getBool(self, key):
 		'''
 		A convenience method which coerces the option in the specified
@@ -187,7 +192,8 @@ class christineConf(Singleton):
 		val = self.get(key, self.configParser.getboolean)
 		if val: return val
 		else: return False
-
+	
+	@deprecated
 	def getString(self, key):
 		'''
 		A convenience method which coerces the option in the specified
@@ -197,7 +203,8 @@ class christineConf(Singleton):
 		val = self.get(key)
 		if val: return val
 		else: return False
-
+	
+	@deprecated
 	def getInt(self, key):
 		'''
 		A convenience method which coerces the option in the specified
@@ -207,7 +214,8 @@ class christineConf(Singleton):
 		val = self.get(key, self.configParser.getint)
 		if val: return val
 		else: return 0
-
+	
+	@deprecated
 	def getFloat(self, key):
 		'''
 		A convenience method which coerces the option in the specified
@@ -217,7 +225,7 @@ class christineConf(Singleton):
 		val = self.get(key, self.configParser.getfloat)
 		if val: return val
 		else: return 0.0
-
+	
 	def setValue(self, key, value):
 		'''
 		Set the value on the key.
@@ -246,7 +254,8 @@ class christineConf(Singleton):
 		f.close()
 		del f
 		self.__executeNotify(key, value)
-
+	
+	@deprecated
 	def __executeNotify(self, key, value):
 		if not self.__notify.has_key(key):
 			return False
@@ -254,7 +263,8 @@ class christineConf(Singleton):
 			func = i[0]
 			args = i[1]
 			func(value, *args)
-
+	
+	@deprecated
 	def notifyAdd(self, key, func, *args):
 		'''
 		Save the func reference in the __notify list to be run every time the
@@ -270,6 +280,7 @@ class christineConf(Singleton):
 			self.__notify[key] = []
 		self.__notify[key].append((func, args))
 
+	@deprecated
 	def notify_add(self, key, func, *args):
 		'''
 		the same has notifyAdd

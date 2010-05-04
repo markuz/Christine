@@ -20,7 +20,8 @@ scripts_DATA=christineConf.py \
 			CLibraryModel.so \
 			ChristineCore.py \
 			globalvars.py \
-			sanity.py
+			sanity.py \
+			envelopes.py
 
 DISTFILES= Makefile.in \
 		   globalvars.py.in \
