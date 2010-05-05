@@ -1,8 +1,9 @@
-#Mon May 03 17:58:51 CDT 2010
+#Tue May 04 20:35:22 CDT 2010
 eclipse.preferences.version=1
 encoding//christinetests/dbustest.py=utf-8
 encoding//extras/rola_christine.py=utf-8
 encoding//libchristine/Christine.py=utf-8
+encoding//libchristine/ChristineCore.py=utf-8
 encoding//libchristine/Events.py=utf-8
 encoding//libchristine/Library.py=latin1
 encoding//libchristine/LibraryModel.py=latin1

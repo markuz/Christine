@@ -53,9 +53,13 @@ class equalizer(gobject.GObject,GtkMisc):
 		presets = list(self.core.Player.get_preset_names())
 		presets.append('neutral')
 		presets.sort()
-		for preset in presets:
+		pre = self.core.config.get_value('equalizer/preset')
+		for index, preset in enumerate(presets):
 			iter = model.append()
 			model.set(iter, 0,preset)
+			if preset == pre:
+				ind = index
+		self.preset_cb.set_active(ind)
 			
 		for i in range(10):
 			wname = 'band%d'%i
@@ -67,8 +71,8 @@ class equalizer(gobject.GObject,GtkMisc):
 			self.__dict__[wname] = widget
 		#Connect the "preset_loaded"
 		self.core.Player.connect('preset_loaded', self._do_preset_loaded)
-		if len (self.preset_cb.get_model()):
-			self.preset_cb.set_active(0)
+		#if len (self.preset_cb.get_model()):
+		#	self.preset_cb.set_active(0)
 	
 	def __apply_value(self, widget, core, band):
 		value = widget.get_value()
@@ -86,6 +90,8 @@ class equalizer(gobject.GObject,GtkMisc):
 		index = combo.get_active()
 		model = combo.get_model()
 		value = model.get_value(model.get_iter(index), 0)
+		#Save the preset in database
+		self.core.config.setValue('equalizer/preset', value)
 		if value == 'neutral':
 			for i in range(10):
 				widget = getattr(self, "band%d"%i, None)
@@ -93,6 +99,7 @@ class equalizer(gobject.GObject,GtkMisc):
 				widget.set_value(0)
 			return
 		self.core.Player.load_preset(value)
+		
 
 	def emitclose(self, button):
 		self.emit('close')
