@@ -1,4 +1,4 @@
-#Tue May 04 20:35:22 CDT 2010
+#Tue May 04 21:52:29 CDT 2010
 eclipse.preferences.version=1
 encoding//christinetests/dbustest.py=utf-8
 encoding//extras/rola_christine.py=utf-8
@@ -12,6 +12,7 @@ encoding//libchristine/Player.py=latin1
 encoding//libchristine/Plugins/christinePyNotify/__init__.py=latin1
 encoding//libchristine/Plugins/gnomeDBus/__init__.py=utf-8
 encoding//libchristine/Plugins/pidgin/__init__.py=utf-8
+encoding//libchristine/Plugins/twitter/__init__.py=utf-8
 encoding//libchristine/Share.py=utf-8
 encoding//libchristine/Storage/sqlitedb.py=utf-8
 encoding//libchristine/Translator.py=utf-8
@@ -23,6 +24,7 @@ encoding//libchristine/envelopes.py=latin1
 encoding//libchristine/globalvars.py=utf-8
 encoding//libchristine/gui/Display.py=utf-8
 encoding//libchristine/gui/GtkMisc.py=latin1
+encoding//libchristine/gui/Preferences.py=utf-8
 encoding//libchristine/gui/openRemote.py=utf-8
 encoding//libchristine/libs_christine.py=latin1
 encoding//libchristine/options.py=utf-8

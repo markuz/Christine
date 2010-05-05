@@ -80,7 +80,6 @@ class sqlite3db(Singleton, GtkMisc):
 		try:
 			version = self.get_registry('/core/dbversion')
 			version = tuple(map(int, version.split(".")))
-			print version
 		except ValueError:
 			version = (0,0,0)
 		for i in DBVERSIONS:
@@ -122,11 +121,13 @@ class sqlite3db(Singleton, GtkMisc):
 		if not result:
 			raise ValueError('The key \'%s\' is not in registry'%key)
 		try:
-			print ">>>>>>>>>>>>>>>>>>",(result,)
 			t = result['type']
 		except KeyError:
 			raise ValueError('Database must be upgraded at least to 0.7.0')
-		value = TYPEFUNCS[t](result['value'])
+		if t == 'bool':
+			value = result['value'] == 'True'
+		else:
+			value = TYPEFUNCS[t](result['value'])
 		return value
 			
 			
