@@ -41,6 +41,14 @@ DBVERSIONS = (
 				(0,7,0),
 			)
 
+TYPEFUNCS = {
+				'bool':bool,
+				'list':list,
+				'int':int,
+				'float':float,
+				'string':str,
+				}
+
 class sqlite3db(Singleton, GtkMisc):
 	def __init__(self):
 		'''
@@ -104,31 +112,60 @@ class sqlite3db(Singleton, GtkMisc):
 			except Exception, e:
 				print e
 
-
-	
-
 	def get_registry(self,key):
 		strSQL = '''SELECT * FROM registry WHERE key = ?'''
 		try:
 			res = self.execute(strSQL, key)
 		except:
-			res = 0
-		if not res:
 			raise ValueError('There is no key %s in registry'%key)
 		result = self.fetchone()
+		if not result:
+			raise ValueError('The key \'%s\' is not in registry'%key)
 		try:
+			print ">>>>>>>>>>>>>>>>>>",(result,)
 			t = result['type']
 		except KeyError:
-			ValueError('Database must be upgraded at least to 0.7.0')
-		typefuncs = {
-				'bool':bool,
-				'list':list,
-				'int':int,
-				'string':str,
-				}
-		value = typefuncs[t](result['value'])
+			raise ValueError('Database must be upgraded at least to 0.7.0')
+		value = TYPEFUNCS[t](result['value'])
 		return value
 			
+			
+	def set_registry(self,key, value):
+		'''
+		Set the value of value in the registry identified by key,
+		Automatically checks the type of value and set the type to the
+		registry.
+		I if key does not exists then this function will create it.
+		@param strung key: Key to create/update 
+		@param * value: value to be set
+		'''
+		#Check if the key exists
+		try:
+			val = self.get_registry(key)
+		except ValueError:
+			self.create_key_registry(key)
+		strvalue = str(value)
+		type = 'string'
+		if isinstance(value, bool):
+			type = 'bool'
+		else:
+			for k, t in TYPEFUNCS.iteritems():
+				if isinstance(value, t):
+					type = k
+					break
+		strSQL = '''
+		UPDATE registry SET value = ?, type=? WHERE key = ?
+		'''
+		self.execute(strSQL,strvalue, type, key)
+		self.commit()
+	
+	def create_key_registry(self, key):
+		strSQL = '''
+		INSERT INTO registry VALUES(null,'','',?,'string')
+		'''
+		self.execute(strSQL, key)
+		self.commit()
+		
 
 
 	def dict_factory(self, cursor, row):

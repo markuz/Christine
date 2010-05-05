@@ -350,7 +350,8 @@ class Christine_old(GtkMisc):
 		self.__HScaleVolume.connect("scroll-event",self.changeVolumeWithScroll)
 
 		volume = self.christineConf.getFloat('control/volume')
-		if (volume):
+		if volume:
+			print " volume>>>>>>>>>>>>>>>>", (volume,)
 			self.__HScaleVolume.set_value(volume)
 		else:
 			self.__HScaleVolume.set_value(0.8)

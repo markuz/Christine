@@ -27,6 +27,7 @@ from libchristine.Translator import translate
 from libchristine.Logger import LoggerManager
 from libchristine.globalvars import USERDIR
 from libchristine.envelopes import deprecated
+from libchristine.Storage.sqlitedb import sqlite3db
 import gtk
 import sys
 import os
@@ -55,6 +56,7 @@ class christineConf(Singleton):
 		'''
 		self.filepath = os.path.join(USERDIR, 'christine.conf')
 		self.configParser = ConfigParser()
+		self.db = sqlite3db()
 		self.__notify = {}
 		if os.path.exists(self.filepath):
 			if not os.path.isfile(self.filepath):
@@ -66,45 +68,49 @@ class christineConf(Singleton):
 		else:
 			self.create_basic_config_file()
 
+	@deprecated
 	def create_basic_config_file(self):
-		f = open(self.filepath, 'w')
-		if not self.configParser.has_section('ui'):
-			self.configParser.add_section('ui')
-		self.configParser.set('ui','show_artist',"true")
-		self.configParser.set('ui','show_album',"true")
-		self.configParser.set('ui','show_play_count',"true")
-		self.configParser.set('ui','show_tn',"true")
-		self.configParser.set('ui','show_length',"true")
-		self.configParser.set('ui','show_genre',"true")
-		self.configParser.set('ui','show_in_notification_area',"true")
-		self.configParser.set('ui','show_pynotify',"true")
-		self.configParser.set('ui','show_type',"true")
-		self.configParser.set('ui','small_view',"false")
-		self.configParser.set('ui','visualization',"false")
-		self.configParser.set('ui','sidepanel',"true")
-		self.configParser.set('ui','LastFolder',USERDIR)
-		if not self.configParser.has_section('control'):
-			self.configParser.add_section('control')
-		self.configParser.set('control','shuffle',"true")
-		self.configParser.set('control','repeat',"false")
-		self.configParser.set('control','volume','0.8')
-		if not self.configParser.has_section('backend'):
-			self.configParser.add_section('backend')
-		self.configParser.set('backend','audiosink','autoaudiosink')
-		sink =['autovideosink', 'xvimagesink'][os.name == 'posix']
-		self.configParser.set('backend','videosink',sink)
-		self.configParser.set('backend','video-aspect-ratio','1/1')
-		self.configParser.set('backend','aspect-ratio','1/1')
-		self.configParser.set('backend','allowed_files','mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav')
-		self.configParser.set('backend','vis-plugin','goom')
-		self.configParser.set('backend','last_played','')
-		self.configParser.write(f)
-		f.close()
-		f = open(self.filepath, 'r')
-		self.configParser.read(f)
-		f.close()
-		del f
 		return True
+		#=======================================================================
+		# f = open(self.filepath, 'w')
+		# if not self.configParser.has_section('ui'):
+		#	self.configParser.add_section('ui')
+		# self.configParser.set('ui','show_artist',"true")
+		# self.configParser.set('ui','show_album',"true")
+		# self.configParser.set('ui','show_play_count',"true")
+		# self.configParser.set('ui','show_tn',"true")
+		# self.configParser.set('ui','show_length',"true")
+		# self.configParser.set('ui','show_genre',"true")
+		# self.configParser.set('ui','show_in_notification_area',"true")
+		# self.configParser.set('ui','show_pynotify',"true")
+		# self.configParser.set('ui','show_type',"true")
+		# self.configParser.set('ui','small_view',"false")
+		# self.configParser.set('ui','visualization',"false")
+		# self.configParser.set('ui','sidepanel',"true")
+		# self.configParser.set('ui','LastFolder',USERDIR)
+		# if not self.configParser.has_section('control'):
+		#	self.configParser.add_section('control')
+		# self.configParser.set('control','shuffle',"true")
+		# self.configParser.set('control','repeat',"false")
+		# self.configParser.set('control','volume','0.8')
+		# if not self.configParser.has_section('backend'):
+		#	self.configParser.add_section('backend')
+		# self.configParser.set('backend','audiosink','autoaudiosink')
+		# sink =['autovideosink', 'xvimagesink'][os.name == 'posix']
+		# self.configParser.set('backend','videosink',sink)
+		# self.configParser.set('backend','video-aspect-ratio','1/1')
+		# self.configParser.set('backend','aspect-ratio','1/1')
+		# self.configParser.set('backend','allowed_files','mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav')
+		# self.configParser.set('backend','vis-plugin','goom')
+		# self.configParser.set('backend','last_played','')
+		# self.configParser.write(f)
+		# f.close()
+		# f = open(self.filepath, 'r')
+		# self.configParser.read(f)
+		# f.close()
+		# del f
+		# return True
+		#=======================================================================
 	
 	@deprecated
 	def exists(self, path):
@@ -189,9 +195,16 @@ class christineConf(Singleton):
 		section to a boolean value.
 		@param key: key to work on
 		'''
-		val = self.get(key, self.configParser.getboolean)
-		if val: return val
-		else: return False
+		try:
+			result = self.get_value(key)
+		except ValueError:
+			val = self.get(key, self.configParser.getboolean)
+			if val != None: 
+				result =  val
+			else: 
+				result = False
+			self.setValue(key, result)
+		return result
 	
 	@deprecated
 	def getString(self, key):
@@ -200,9 +213,16 @@ class christineConf(Singleton):
 		section to a string value.
 		@param key: key to work on
 		'''
-		val = self.get(key)
-		if val: return val
-		else: return False
+		try:
+			result = self.get_value(key)
+		except ValueError:
+			val = self.get(key)
+			if val != None: 
+				result = val
+			else: 
+				resul = False
+			self.setValue(key, result)
+		return result
 	
 	@deprecated
 	def getInt(self, key):
@@ -211,9 +231,16 @@ class christineConf(Singleton):
 		section to a integet number.
 		@param key: key to work on
 		'''
-		val = self.get(key, self.configParser.getint)
-		if val: return val
-		else: return 0
+		try:
+			result = self.get_value(key)
+		except ValueError:
+			val = self.get(key, self.configParser.getint)
+			if val != None: 
+				result =  val
+			else: 
+				result =  0
+			self.setValue(key, result)
+		return result
 	
 	@deprecated
 	def getFloat(self, key):
@@ -222,9 +249,16 @@ class christineConf(Singleton):
 		section to a floating point number.
 		@param key: key to work on
 		'''
-		val = self.get(key, self.configParser.getfloat)
-		if val: return val
-		else: return 0.0
+		try:
+			result = self.get_value(key)
+		except ValueError:
+			val = self.get(key, self.configParser.getfloat)
+			if val != None: 
+				result =  val
+			else: 
+				result =  0.0
+			self.setValue(key, result)
+		return result
 	
 	def setValue(self, key, value):
 		'''
@@ -233,27 +267,31 @@ class christineConf(Singleton):
 		@param key: key to work on, must be in the section/option way
 		@param value: value for the key
 		'''
-		vals = key.split('/')
-		if len(vals) != 2:
-			raise KeyError('The given key is not valid')
-		section, option = vals
-		if self.configParser.has_section(section):
-			if not isinstance(value, str):
-				nvalue = str(value).lower()
-			else:
-				nvalue = value
-			oldvalue = self.getString(key)
-			if oldvalue == nvalue:
-				return True
-			self.configParser.set(section, option, nvalue)
-		else:
-			self.configParser.add_section(section)
-			self.configParser.set(section, option, value)
-		f = open(self.filepath,'w')
-		self.configParser.write(f)
-		f.close()
-		del f
+		self.db.set_registry(key, value)
 		self.__executeNotify(key, value)
+		#=======================================================================
+		# vals = key.split('/')
+		# if len(vals) != 2:
+		#	raise KeyError('The given key is not valid')
+		# type = {} 
+		# section, option = vals
+		# if self.configParser.has_section(section):
+		#	if not isinstance(value, str):
+		#		nvalue = str(value).lower()
+		#	else:
+		#		nvalue = value
+		#	oldvalue = self.getString(key)
+		#	if oldvalue == nvalue:
+		#		return True
+		#	self.configParser.set(section, option, nvalue)
+		# else:
+		#	self.configParser.add_section(section)
+		#	self.configParser.set(section, option, value)
+		# f = open(self.filepath,'w')
+		# self.configParser.write(f)
+		# f.close()
+		# del f
+		#=======================================================================
 	
 	@deprecated
 	def __executeNotify(self, key, value):
@@ -290,7 +328,11 @@ class christineConf(Singleton):
 		self.notifyAdd(self, key, func, *args)
 
 
-
+	def get_value(self, key,):
+		#Lets check if we have it in database, if we have it then 
+		#use it.
+		return self.db.get_registry(key)
+			
 
 
 
