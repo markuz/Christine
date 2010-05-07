@@ -197,8 +197,6 @@ class Christine_old(GtkMisc):
 		core.Player.connect('end-of-stream', self.do_end_of_stream)
 		core.Player.connect('found-tag', self.do_message_tag)
 		core.Player.connect('buffering', self.do_buffering)
-		#core.Player.bus.add_watch(self.__handlerMessage)
-
 	
 		# Calling some widget descriptors with no callback connected "by hand"
 		# This interface should not be private.
@@ -351,7 +349,6 @@ class Christine_old(GtkMisc):
 
 		volume = self.christineConf.getFloat('control/volume')
 		if volume:
-			print " volume>>>>>>>>>>>>>>>>", (volume,)
 			self.__HScaleVolume.set_value(volume)
 		else:
 			self.__HScaleVolume.set_value(0.8)
@@ -370,7 +367,6 @@ class Christine_old(GtkMisc):
 		self.VBoxList2.pack_start(self.infoBar,False, False, 2)
 		self.VBoxList2.show()
 		self.hide_equalizer()
-		#eq.topWidget.show_all()
 	
 	def hide_equalizer(self):
 		if not getattr(self, 'infoBar', False):

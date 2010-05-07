@@ -45,7 +45,7 @@ QUEUE_TARGETS = [
 		]
 
 
-class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
+class christineModel(CLibraryModel, gtk.GenericTreeModel ):
 	'''
 	Modulo basado en gtk.TreeModel que permite el manejo de datos de clientes
 	de manera mas efectiva que en gtk.ListStore.
@@ -119,7 +119,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 			if not path:
 				return False
 			path = path[0]
-		#print "path >>>>>", path, len (self.data)
 		list = self.data[path]
 		size = len(args)
 		for c in xrange(0,size,2):
@@ -150,7 +149,6 @@ class christineModel(CLibraryModel, gtk.GenericTreeModel, ):
 		end =  [end, len(self)-1][end >= len(self)]
 		nindex = 0
 		slice = self.data[start:end]
-		#print start, end, len(self.data), type(self.data), type(slice)
 		slice.reverse()
 		while slice:
 			i = slice.pop()
