@@ -26,6 +26,7 @@ from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.c3rdparty.pylast import *
 import webbrowser
+import os
 
 
 APIKEY = '0da3b11c97759f044bd4223dda212daa'
@@ -95,6 +96,7 @@ class lastfm(plugin_base):
 		if not self.active:
 			return
 		file = self.christineConf.getString('backend/last_played')
+		if not os.path.exists(file):return
 		tags =  self.tagger.readTags(file)
 		for key in ('artist','title'):
 			if not tags[key]:

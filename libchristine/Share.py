@@ -75,13 +75,15 @@ class Share(Singleton):
 		self.__Pixmaps = {}
 		gobject.timeout_add(1000, self.check_pixmap_time_access)
 
-	def getTemplate(self, file = None, root = None):
+	def getTemplate(self, file, root = None):
 		"""
 		Gets glade template
+		@param string file: file to load
+		@param string root: root widget to return instead the main window
 		"""
-		if ((not isNull(file)) or (isStringEmpty(file))):
+		if file:
 			file = ''.join([file, '.glade'])
-			if (isFile(os.path.join(self.__PathTemplate, file))):
+			if isFile(os.path.join(self.__PathTemplate, file)):
 				return glade_xml(os.path.join(self.__PathTemplate, file),root)
 		self.__logger.warning('File %s was not found'%(os.path.join(self.__PathTemplate, file)))
 		return None

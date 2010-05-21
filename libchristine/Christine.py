@@ -54,13 +54,12 @@ try:
 except Exception, e:
 	pass
 from libchristine.options import options
-#rom libchristine.gui.BugReport import BugReport
-#from libchristine.gui.Volume import Volume
 import webbrowser
 from libchristine.ChristineCore import ChristineCore
 from libchristine.gui.mainWindow import mainWindow
 from libchristine.gui.keyvals import PAGEDOWN,PAGEUP
 from libchristine.gui.equalizer import equalizer
+from libchristine.envelopes import deprecated
 
 core = ChristineCore()
 
@@ -197,6 +196,7 @@ class Christine_old(GtkMisc):
 		core.Player.connect('end-of-stream', self.do_end_of_stream)
 		core.Player.connect('found-tag', self.do_message_tag)
 		core.Player.connect('buffering', self.do_buffering)
+		core.Player.connect('set-location', self._do_set_location)
 	
 		# Calling some widget descriptors with no callback connected "by hand"
 		# This interface should not be private.
@@ -443,11 +443,20 @@ class Christine_old(GtkMisc):
 		self.christineConf.setValue('ui/width',width)
 		self.christineConf.setValue('ui/height',height)
 
+	@deprecated
 	def setLocation(self, filename):
 		"""
 		Set the location in the player and
 		perform some other required actions
 		"""
+		core.Player.setLocation(filename)
+
+	def _do_set_location(self, player, last_location,filename):
+		'''
+		Callback for Player's set-location  signal
+		@param filename:
+		'''
+		
 		self.__StatePlaying = False
 		self.__IterNatural  = None
 		# current iter is a temporal variable
@@ -455,8 +464,8 @@ class Christine_old(GtkMisc):
 		# should be setted to None
 		# before using it
 
-		core.Player.stop()
-		core.Player.setLocation(filename)
+		
+		#core.Player.setLocation(filename)
 		name = os.path.split(filename)[-1]
 		core.Display.setSong(name)
 		self.__LastPlayed.append(filename)

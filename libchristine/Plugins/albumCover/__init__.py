@@ -67,9 +67,10 @@ class albumCover(plugin_base):
 			self.lastfmimage.hide()
 			self.lastfmimage.destroy()
 	
-	def getImage(self, *args):
+	def getImage(self, player, last_location, file):
 		self.__clean_image()
 		if not self.active: return False
+		if not os.path.exists(file):return False
 		if not self.set_image_from_directory():
 			tags =  self.tagger.readTags(file)
 			#for key in ('artist','title', 'album'):

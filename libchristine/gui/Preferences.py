@@ -26,7 +26,7 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 #from libchristine.ChristineLibrary import *
 from libchristine.gui.GtkMisc import GtkMisc
-from libchristine.Translator import *
+from libchristine.Translator import translate
 from libchristine.Share import Share
 from libchristine.Validator import *
 from libchristine.christineConf import christineConf
@@ -61,9 +61,10 @@ class guiPreferences(GtkMisc):
 		self.XML.signal_autoconnect(self)
 
 		self.__AudioSink = self.XML['audiosink']
-		self.__AudioSink.connect('changed', self.updateSink, 'audiosink')
-
 		self.__VideoSink = self.XML['videosink']
+		self.selectSinks()
+		#Connect the signals after the first selection to avoid sound flick
+		self.__AudioSink.connect('changed', self.updateSink, 'audiosink')
 		self.__VideoSink.connect('changed', self.updateSink, 'videosink')
 		
 		self.__font_desc = self.XML['font_desc']
@@ -107,7 +108,7 @@ class guiPreferences(GtkMisc):
 
 
 
-		self.selectSinks()
+		
 
 		dialog	 = self.XML['WindowCore']
 		dialog.set_icon(self.__Share.getImageFromPix('logo'))
@@ -186,9 +187,8 @@ class guiPreferences(GtkMisc):
 		Removes extension
 		"""
 		selection     = self.__FTreeView.get_selection()
-		(model, iter) = selection.get_selected()
-
-		if (not isNull(iter)):
+		model, iter = selection.get_selected()
+		if iter:
 			model.remove(iter)
 			self.__saveFModel()
 
@@ -291,10 +291,14 @@ class guiPreferences(GtkMisc):
 		Set the configure button on plugin tab active
 		@param treeview:
 		'''
-		model, iter = treeview.get_selection().get_selected()
-		if iter:
-			enabled = model.get_value(iter, self.PLUGIN_ACTIVE)
-			self.configure_button.set_sensitive(enabled)
+		return
+		#=======================================================================
+		# model, iter = treeview.get_selection().get_selected()
+		# if iter:
+		#	plugin = model.get_value(iter, self.PLUGIN_INSTANCE)
+		#	enabled = enabled = getattr(plugin,'configure', False)
+		#	self.configure_button.set_sensitive(enabled)
+		#=======================================================================
 
 	def __configure_plugin(self, button):
 		model, iter = self.pluginstreeview.get_selection().get_selected()

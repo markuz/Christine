@@ -22,6 +22,7 @@ import os
 import os.path
 import logging
 from  libchristine.globalvars import DATADIR, PROGRAMNAME, SHARE_PATH
+from libchristine.envelopes import deprecated
 
 
 def load_rc():
@@ -32,7 +33,9 @@ def load_rc():
 	gtk.rc_add_default_file(file)
 	gtk.rc_reparse_all()
 
+
 class glade_xml:
+	@deprecated
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of the interface descriptor
 		and then initialize gtk.glade.XML'''
@@ -53,9 +56,12 @@ class glade_xml:
 		self.xml.signal_autoconnect(signals)
 	
 class Builder:
-	def __init__(self, file, root):
+	def __init__(self, file, root=None):
 		'''
 		Load a GUI description from a gtkbuilder file
+		@param name of the file to load. If file is an absolute path then the 
+		file will be loaded insted from DATADIR
+		@param string root: root widget to return instead the main window
 		'''
 		self.__widgets = {}
 		locale_dir = os.path.join(DATADIR, 'locale')
@@ -86,6 +92,9 @@ class Builder:
 			return widget
 		widget = self.__widgets[name]
 		return widget
+
+	def __getitem__(self, name):
+		return self.get_widget(name)
 
 
 class GtkMisc:

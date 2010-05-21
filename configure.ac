@@ -138,6 +138,7 @@ libchristine/Plugins/pidgin/Makefile
 libchristine/Plugins/trayicon/Makefile
 libchristine/Plugins/twitter/Makefile
 libchristine/Plugins/webservices/Makefile
+libchristine/Plugins/webservices/glade/Makefile
 libchristine/christine_dbus/Makefile
 libchristine/c3rdparty/Makefile
 win32resources/Makefile

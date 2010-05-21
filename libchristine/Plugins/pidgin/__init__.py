@@ -109,8 +109,10 @@ class pidgin(plugin_base):
 											"/im/pidgin/purple/PurpleObject")
 			self.purple = dbus.Interface(self.obj,
 										"im.pidgin.purple.PurpleInterface")
+			return True
 		except Exception, e:
 			self.logger.exception(e)
+		return False
 
 	def set_message(self, *args):
 		"""
@@ -120,8 +122,8 @@ class pidgin(plugin_base):
 		like the idea, this is more flexible
 		"""
 		if self.active:
-			self.SessionStart()
-			self.SetMessage()
+			if  self.SessionStart():
+				self.SetMessage()
 
 	def get_active(self):
 		return self.christineConf.getBool('pidgin/enabled')

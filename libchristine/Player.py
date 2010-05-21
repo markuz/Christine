@@ -28,6 +28,7 @@ from libchristine.Validator import isFile
 from globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
+from libchristine.envelopes import deprecated
 import gst
 import gtk
 import gobject
@@ -238,7 +239,11 @@ class Player(gtk.DrawingArea, object):
 			self.set_size_request(width, height)
 			self.show()
 	
+	@deprecated
 	def setLocation(self, file):
+		self.set_location(file)
+	
+	def set_location(self, file):
 		self.Tags = {}
 		last_location = self.getLocation()
 		self.location = file

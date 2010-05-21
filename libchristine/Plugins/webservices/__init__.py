@@ -23,20 +23,25 @@
 # @package   Christine
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2006-2007 Christine Development Group
+# @sponsor	ICT Consulting <http://www.ictc.com.mx>
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 #
-# This module try to get the album cover and shows on the gui if it is found.
+# This module implements the webservices interface in christine
 #
-
+import SOAPpy
+import os
 from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.ui import interface
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.Translator import translate
 from libchristine.Logger import LoggerManager
-import SOAPpy
-import thread
+from libchristine.ChristineCore import ChristineCore
+from libchristine.gui.GtkMisc import Builder
+from libchristine.globalvars import PLUGINSDIR
+import gobject
+
 
 __name__ = translate('webservices')
 __description__  = translate('Create a common webservice for christine.')
@@ -47,47 +52,120 @@ __enabled__ = christineConf.getBool('webservices/getinfo')
 class webservices(plugin_base):
 	def __init__(self):
 		'''
-		Constructor
+		@sponsor	ICT Consulting <http://www.ictc.com.mx>
 		'''
 		plugin_base.__init__(self)
 		self.name = __name__
 		self.description =  __description__
+		self.function_dir = []
 		self.iface = interface()
 		self.Share = Share()
 		self.tagger = Tagger()
 		self.logger = LoggerManager().getLogger("webservices")
 		self.port = self.christineConf.getInt('webservices/port')
-		self.webservices = SOAPpy.SOAPServer(('',self.port))
+		self.core = ChristineCore()
+		if self.active:
+			self.start()
+		
+	
+	
+	def handle_request(self,source, condition):
+		try:
+			self.soapserver.handle_request()
+		except Exception, e:
+			self.logger.exception(e)
+		return True
 	
 	def serve_forever(self):
 		try:
-			self.logger.info('starting webservices on port %s',str(self.port))
-			self.soapserver.serve_forever()
-		except Exception, e:
-			self.logger.exception(e)
-			self.logger.error('Reiniciando webservices')
-			self.logger.info('Reiniciando webservices')
-			self.create_server()
-			thread.start_new(self.serve_forever, tuple())
-			self.re_register_functions()	
+			if not self.port:
+				return
+			self.soapserver = SOAPpy.SOAPServer(('',self.port))
+			self.registerObject(self.set_location)
+			self.re_register_functions()
+			gobject.io_add_watch(self.soapserver.socket, gobject.IO_IN,
+	                     self.handle_request)
+		except:
+			self.active = False
+
+	def shutdown(self):
+		if getattr(self, 'soapserver', False):
+			self.soapserver.shutdown()
+			self.soapserver.close()
+	
+	def start(self):
+		self.serve_forever()
+				
 	def re_register_functions(self):
-		for function, x in self.function_dir.iteritems():
+		for function in self.function_dir:
 			self.soapserver.registerFunction(function)
 			
 	
 	def registerFunction(self, function):
 		self.soapserver.registerFunction(function)
-		self.function_dir[function] = 1
+		self.function_di.append(function)
 	
 	def registerObject(self,object):
-		self.soapserver.registerObject(object)
+		try:
+			self.soapserver.registerObject(object)
+		except:
+			pass
+		self.function_dir.append(object)
 
 	def get_active(self):
 		return self.christineConf.getBool('webservices/enabled')
 	
 	def set_active(self, value):
 		__enabled__ = value
+		if value:
+			self.start()
+		else:
+			self.shutdown()
 		return self.christineConf.setValue('webservices/enabled', value)
+	
+	def set_location(self, path):
+		'''
+		Play a song in the given path, path must be a Christine accesible path.
+		@param string path: 
+		'''
+		if not path.lower().startswith('http'):
+			if not os.path.exists(path) or not os.path.isfile(path):
+				return 
+		self.core.Player.stop()
+		self.core.Player.set_location(path)
+		self.core.Player.playIt()
+		return True
+		
+	def play(self):
+		self.core.Player.playIt()
+		return True
+	
+	def pause(self):
+		self.core.Player.pause()
+		return True
+
+	def configure(self):
+		gladepath = os.path.join(PLUGINSDIR,'webservices','glade')
+		path = os.path.join(gladepath, 'configure.glade')
+		print path
+		b = Builder(path)
+		dialog = b['dialog']
+		entry = b['portEntry']
+		entry.set_text(str(self.port))
+		entry.connect('changed', self.save_port_entry)
+		dialog.run()
+		dialog.destroy()
+	
+	def save_port_entry(self, entry):
+		if not entry.get_text().isdigit():
+			return
+		port = int(entry.get_text())
+		self.core.config.setValue('webservices/port',port)
+		self.port = port
+		self.shutdown()
+		if self.active:
+			self.serve_forever()
+		
 
 	active = property(get_active, set_active, None,
 					'Determine if the plugin is active or inactive')

@@ -49,7 +49,7 @@ class MP3Track(Singleton,Track):
 		self.setSong(Song)
 		try:
 			info = mutagen.mp3.MP3(self.Song)
-		except :
+		except Exception, e:
 			self.Title = ''
 			self.Artist = ''
 			self.Album = ''

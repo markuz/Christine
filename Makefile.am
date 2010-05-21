@@ -17,6 +17,7 @@ SUBDIRS = \
 		  libchristine/Plugins/trayicon/ \
 		  libchristine/Plugins/twitter/ \
 		  libchristine/Plugins/webservices/ \
+		  libchristine/Plugins/webservices/glade/ \
 		  libchristine/c3rdparty/ 
 		  
 

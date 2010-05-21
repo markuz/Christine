@@ -24,8 +24,7 @@
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-
-
+import os
 import logging
 import logging.handlers
 from libchristine.Validator import *
@@ -38,7 +37,10 @@ class LoggerManager(Singleton):
 		self.loggers = {}
 		opts = options()
 		formatter = logging.Formatter('%(asctime)s:%(levelname)-8s:%(name)-10s:%(lineno)4s: %(message)-80s')
-		level = 'DEBUG'
+		level = getattr(opts.options,'verbose','ERROR')
+		if not level:
+			level = 'ERROR'
+		level = level.upper()
 		nlevel = getattr(logging, level, None)
 		if nlevel != None:
 			self.LOGGING_MODE = nlevel
