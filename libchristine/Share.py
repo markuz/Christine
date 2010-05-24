@@ -116,7 +116,7 @@ class Share(Singleton):
 		filesf = [k for k in files if len(k.split('.')) > 1 \
 				and k.split('.')[0].startswith(name)]
 		if not filesf:
-			self.__logger.warning('None of this files \n%s\n where found'%repr(names))
+			self.__logger.warning('None of this files \n%s\n where found'%repr(name))
 			return
 		filepath = os.path.join(self.__PathPixmap, filesf[0])
 		pixdir = self.__Pixmaps.get(filepath,{})

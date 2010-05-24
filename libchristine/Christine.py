@@ -360,13 +360,17 @@ class Christine_old(GtkMisc):
 		self.VBoxList2 = xml["VBoxList2"]
 		self.eq = equalizer()
 		self.eq.connect('close', lambda x: self.hide_equalizer())
-		self.infoBar = gtk.InfoBar()
-		self.infoBar.get_content_area().pack_start(self.eq.topWidget)
+		#self.eq.main_window.set_transient_for(self.coreWindow)
+		#self.infoBar = gtk.InfoBar()
+		#self.infoBar.get_content_area().pack_start(self.eq.topWidget)
 		self.equalizer_mi = xml["equalizer_mi"]
-		self.equalizer_mi.connect('activate', lambda x: self.infoBar.show_all())
-		self.VBoxList2.pack_start(self.infoBar,False, False, 2)
-		self.VBoxList2.show()
-		self.hide_equalizer()
+		self.equalizer_mi.connect('activate', lambda x: self.show_equalizer())
+		#self.VBoxList2.pack_start(self.infoBar,False, False, 2)
+		#self.VBoxList2.show()
+		#self.hide_equalizer()
+	
+	def show_equalizer(self):
+		self.eq.show()
 	
 	def hide_equalizer(self):
 		if not getattr(self, 'infoBar', False):
@@ -1137,7 +1141,9 @@ class Christine_old(GtkMisc):
 		"""
 		GTK application running
 		"""
+		gtk.gtk.threads_enter()
 		gtk.main()
+		gtk.gtk.threads_leave()
 
 def add_items_to_queue(obj, c):
 	if c == None or c.coreWindow.get_property('window'):

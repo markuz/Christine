@@ -503,5 +503,11 @@ class Player(gtk.DrawingArea, object):
 		'''
 		Return preset names obtanined from self.equalizer.get_preset_names()
 		'''
-		return self.equalizer.get_preset_names()
+		try:
+			result =  self.equalizer.get_preset_names()
+		except:
+			result =  ['ska', 'techno', 'rock', 'reggae', 'pop', 'more treble', 
+					'dance', 'soft', 'club', 'party', 'classic', 'more bass', 
+					'ballad', 'more bass and treble']
+		return result
 

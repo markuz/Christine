@@ -41,6 +41,9 @@ from libchristine.ChristineCore import ChristineCore
 from libchristine.gui.GtkMisc import Builder
 from libchristine.globalvars import PLUGINSDIR
 import gobject
+import time
+import thread
+import gtk
 
 
 __name__ = translate('webservices')
@@ -71,6 +74,8 @@ class webservices(plugin_base):
 	
 	def handle_request(self,source, condition):
 		try:
+			self.soapserver.socket.setblocking(1)
+			time.sleep(0.5)
 			self.soapserver.handle_request()
 		except Exception, e:
 			self.logger.exception(e)
@@ -81,10 +86,15 @@ class webservices(plugin_base):
 			if not self.port:
 				return
 			self.soapserver = SOAPpy.SOAPServer(('',self.port))
+			self.soapserver.socket.setblocking(1)
 			self.registerObject(self.set_location)
 			self.re_register_functions()
-			gobject.io_add_watch(self.soapserver.socket, gobject.IO_IN,
-	                     self.handle_request)
+			gtk.gdk.threads_enter()
+			thread.start_new(self.soapserver.serve_forever, tuple())
+			gtk.gdk.threads_leave()
+			
+			#gobject.io_add_watch(self.soapserver.socket, gobject.IO_IN,
+			#            self.handle_request)
 		except:
 			self.active = False
 
@@ -128,13 +138,15 @@ class webservices(plugin_base):
 		Play a song in the given path, path must be a Christine accesible path.
 		@param string path: 
 		'''
-		if not path.lower().startswith('http'):
-			if not os.path.exists(path) or not os.path.isfile(path):
-				return 
-		self.core.Player.stop()
-		self.core.Player.set_location(path)
-		self.core.Player.playIt()
-		return True
+		def set_location(self,path):
+			if not path.lower().startswith('http'):
+				if not os.path.exists(path) or not os.path.isfile(path):
+					return 
+			self.core.Player.stop()
+			self.core.Player.set_location(path)
+			self.core.Player.playIt()
+			return False
+		gobject.idle_add(set_location, self, path)
 		
 	def play(self):
 		self.core.Player.playIt()
@@ -147,24 +159,23 @@ class webservices(plugin_base):
 	def configure(self):
 		gladepath = os.path.join(PLUGINSDIR,'webservices','glade')
 		path = os.path.join(gladepath, 'configure.glade')
-		print path
 		b = Builder(path)
 		dialog = b['dialog']
 		entry = b['portEntry']
 		entry.set_text(str(self.port))
-		entry.connect('changed', self.save_port_entry)
-		dialog.run()
-		dialog.destroy()
-	
-	def save_port_entry(self, entry):
+		dialog.connect('destroy', self.save_port_entry, entry)
+		dialog.show()
+		dialog.connect('response', lambda  *args: dialog.destroy())
+		
+	def save_port_entry(self, dialog, entry):
 		if not entry.get_text().isdigit():
 			return
 		port = int(entry.get_text())
 		self.core.config.setValue('webservices/port',port)
 		self.port = port
-		self.shutdown()
-		if self.active:
-			self.serve_forever()
+		#self.shutdown()
+		#if self.active:
+		#	self.serve_forever()
 		
 
 	active = property(get_active, set_active, None,

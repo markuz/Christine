@@ -39,10 +39,13 @@ class equalizer(gobject.GObject,GtkMisc):
 		#Set the adjustment
 		#Load the template
 		share = Share()
-		xml = share.getTemplate('equalizer','topWidget')
+		xml = share.getTemplate('equalizer')
+		self.main_window = xml['window']
+		self.main_window.connect('delete-event', self.main_window_closed)
+		
 		self.topWidget = xml['topWidget']
-		closebtn = xml['closebutton']
-		closebtn.connect('clicked', self.emitclose)
+		#closebtn = xml['closebutton']
+		#closebtn.connect('clicked', lambda x: self.window.hide())
 		self.preset_cb = xml['preset_cb']
 		model = gtk.ListStore(str)
 		self.preset_cb.set_model(model)
@@ -53,7 +56,10 @@ class equalizer(gobject.GObject,GtkMisc):
 		presets = list(self.core.Player.get_preset_names())
 		presets.append('neutral')
 		presets.sort()
-		pre = self.core.config.get_value('equalizer/preset')
+		try:
+			pre = self.core.config.get_value('equalizer/preset')
+		except:
+			pre = "ballad"
 		for index, preset in enumerate(presets):
 			iter = model.append()
 			model.set(iter, 0,preset)
@@ -71,8 +77,13 @@ class equalizer(gobject.GObject,GtkMisc):
 			self.__dict__[wname] = widget
 		#Connect the "preset_loaded"
 		self.core.Player.connect('preset_loaded', self._do_preset_loaded)
-		#if len (self.preset_cb.get_model()):
-		#	self.preset_cb.set_active(0)
+	
+	def show(self):
+		self.main_window.show_all()
+	
+	def main_window_closed(self,*args):
+		self.main_window.hide()
+		return True
 	
 	def __apply_value(self, widget, core, band):
 		value = widget.get_value()
@@ -102,5 +113,6 @@ class equalizer(gobject.GObject,GtkMisc):
 		
 
 	def emitclose(self, button):
-		self.emit('close')
+		self.main_window.hide()
+		return True
 

@@ -79,7 +79,7 @@ setup(
     options = {
                   'py2exe': {
                       'packages':'encodings,libchristine',
-                      'includes': 'cairo, pango, pangocairo, atk, gobject',
+                      'includes': 'cairo, pango, pangocairo, atk, gobject, gio',
                       'optimize': 0,
                       'excludes':'doctest,pdb,unittest,difflib,inspect',
 					  'compressed': 0,
@@ -94,12 +94,15 @@ setup(
 	ext_modules=[CLibraryModel]#,ChristineGtkBuilder],
 )
 
-try:
-	for i in ['etc','lib','share']:
+for i in ['etc','lib','share','gui/icons/','libchristine/Plugins/webservices/glade/']:
+	try:
 		shutil.copytree(i,os.path.join('dist',i))
+	except Exception, e:
+		print e
+try:
 	shutil.copy(os.path.join('c:\\','GTK','bin','jpeg62.dll'),
                              os.path.join('dist','jpeg62.dll'))
-except Exception, e:
+except:
 	pass
 
 shutil.copy(os.path.join("./",'build','lib.win32-%d.%d'%tuple(sys.version_info[:2]),'libchristine','CLibraryModel.pyd'),
