@@ -220,7 +220,7 @@ class christineConf(Singleton):
 			if val != None: 
 				result = val
 			else: 
-				resul = False
+				result = False
 			self.setValue(key, result)
 		return result
 	
