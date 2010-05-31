@@ -57,10 +57,15 @@ class lastfm(plugin_base):
 		xml = self.Share.getTemplate('plugin_lastfm_main')
 		dialog = xml['dialog']
 		vbox = xml['vbox']
-		autorizebutton = xml['authbuton']
-		autorizebutton.connect('clicked', self.__send_auth_request)
+		self.username = xml['username']
+		us = self.christineConf.getString('lastfm/name')
+		if us:
+			self.username.set_text(us)
 		fsd = xml['fetchsessiondata']
 		fsd.connect('clicked', self.__fetch_session_data)
+		fsd.set_property('visible', False)
+		autorizebutton = xml['authbuton']
+		autorizebutton.connect('clicked', self.__send_auth_request, fsd)
 		response = dialog.run()
 		if response:
 			pass
@@ -74,20 +79,23 @@ class lastfm(plugin_base):
 		return self.christineConf.setValue('lastfm/enabled', value)
 
 
-	def __send_auth_request(self, button):
-		sessiong = SessionGenerator()
+	def __send_auth_request(self, button, fsd):
+		sessiong = SessionGenerator(APIKEY,SECRET)
 		self.token = sessiong.getToken()	
 		url = sessiong.getAuthURL(self.token)
 		webbrowser.open(url)
-		button.set_text()
+		#button.set_text()
+		button.hide()
+		fsd.show()
 
 	def	__fetch_session_data(self, button):
-		sessiong = SessionGenerator()
+		sessiong = SessionGenerator(APIKEY,SECRET)
 		data = sessiong.getSessionData(self.token)
 		if data:
 			self.christineConf.setValue('lastfm/name',data['name'])
 			self.christineConf.setValue('lastfm/key',data['key'])
 			self.christineConf.setValue('lastfm/subscriber',data['subscriber'])
+		button.hide()
 	
 	def postMessage(self, *args):
 		'''
@@ -101,8 +109,6 @@ class lastfm(plugin_base):
 		for key in ('artist','title'):
 			if not tags[key]:
 				pass
-		APIKEY = '0da3b11c97759f044bd4223dda212daa'
-		SECRET = 'b8c00f5548c053033b89633d1004d059'
 		sessionkey = self.christineConf.getString('lastfm/key')
 		username = self.christineConf.getString('lastfm/name')
 
