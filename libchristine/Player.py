@@ -434,7 +434,7 @@ class Player(gtk.DrawingArea, object):
 			return False
 		ext = self.getLocation().split('.').pop().lower()
 		if self.Tags.has_key('audio-codec') or \
-			ext in self.config.get('backend/allowed_files'):
+			ext in self.config.getString('backend/allowed_files').split(','):
 			return True
 		else:
 			return False

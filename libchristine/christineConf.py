@@ -70,47 +70,31 @@ class christineConf(Singleton):
 
 	@deprecated
 	def create_basic_config_file(self):
+		self.setValue('ui/show_artist',True)
+		self.setValue('ui/show_album',True)
+		self.setValue('ui/show_play_count',True)
+		self.setValue('ui/show_tn',True)
+		self.setValue('ui/show_length',True)
+		self.setValue('ui/show_genre',True)
+		self.setValue('ui/show_in_notification_area',True)
+		self.setValue('ui/show_pynotify',True)
+		self.setValue('ui/show_type',True)
+		self.setValue('ui/small_view',False)
+		self.setValue('ui/visualization',False)
+		self.setValue('ui/sidepanel',True)
+		self.setValue('ui/LastFolder',USERDIR)
+		self.setValue('control/shuffle',True)
+		self.setValue('control/repeat',False)
+		self.setValue('control/volume',0.8)
+		self.setValue('backend/audiosink','autoaudiosink')
+		sink =['autovideosink', 'xvimagesink'][os.name == 'posix']
+		self.setValue('backend/videosink',sink)
+		self.setValue('backend/video-aspect-ratio','1/1')
+		self.setValue('backend/aspect-ratio','1/1')
+		self.setValue('backend/allowed_files','mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav')
+		self.setValue('backend/vis-plugin','goom')
+		self.setValue('backend/last_played','')
 		return True
-		#=======================================================================
-		# f = open(self.filepath, 'w')
-		# if not self.configParser.has_section('ui'):
-		#	self.configParser.add_section('ui')
-		# self.configParser.set('ui','show_artist',"true")
-		# self.configParser.set('ui','show_album',"true")
-		# self.configParser.set('ui','show_play_count',"true")
-		# self.configParser.set('ui','show_tn',"true")
-		# self.configParser.set('ui','show_length',"true")
-		# self.configParser.set('ui','show_genre',"true")
-		# self.configParser.set('ui','show_in_notification_area',"true")
-		# self.configParser.set('ui','show_pynotify',"true")
-		# self.configParser.set('ui','show_type',"true")
-		# self.configParser.set('ui','small_view',"false")
-		# self.configParser.set('ui','visualization',"false")
-		# self.configParser.set('ui','sidepanel',"true")
-		# self.configParser.set('ui','LastFolder',USERDIR)
-		# if not self.configParser.has_section('control'):
-		#	self.configParser.add_section('control')
-		# self.configParser.set('control','shuffle',"true")
-		# self.configParser.set('control','repeat',"false")
-		# self.configParser.set('control','volume','0.8')
-		# if not self.configParser.has_section('backend'):
-		#	self.configParser.add_section('backend')
-		# self.configParser.set('backend','audiosink','autoaudiosink')
-		# sink =['autovideosink', 'xvimagesink'][os.name == 'posix']
-		# self.configParser.set('backend','videosink',sink)
-		# self.configParser.set('backend','video-aspect-ratio','1/1')
-		# self.configParser.set('backend','aspect-ratio','1/1')
-		# self.configParser.set('backend','allowed_files','mp3,ogg,avi,wmv,mpg,mpeg,mpe,wav')
-		# self.configParser.set('backend','vis-plugin','goom')
-		# self.configParser.set('backend','last_played','')
-		# self.configParser.write(f)
-		# f.close()
-		# f = open(self.filepath, 'r')
-		# self.configParser.read(f)
-		# f.close()
-		# del f
-		# return True
-		#=======================================================================
 	
 	@deprecated
 	def exists(self, path):

@@ -49,7 +49,7 @@ class Target:
 		          'Programming Language :: C',
 		          ]
 			self.platforms = ['Posix','Windows XP', 'Windows 2000','Windows Vista']
-			self.version        = "0.7.0"
+			self.version        = "0.7.0-Beta1"
 			self.compay_name    = "Christine Project"
 			self.copyright      = "(c) 2006-2009, Marco Islas"
 			self.name           = "Christine Media Player"
@@ -94,11 +94,34 @@ setup(
 	ext_modules=[CLibraryModel]#,ChristineGtkBuilder],
 )
 
-for i in ['etc','lib','share','gui/icons/','libchristine/Plugins/webservices/glade/']:
+gst_libs = (os.path.join("C:\\","gstreamer","lib","gstreamer-0.10"),
+		"lib/gstreamer-0.10")
+for i in ['etc','lib','share','gui/icons/',
+		'libchristine/Plugins/webservices/glade/', gst_libs]:
 	try:
-		shutil.copytree(i,os.path.join('dist',i))
+		if isinstance(i,tuple):
+			src, dest  = i
+		else:
+			src = i
+			dest = i
+		shutil.copytree(i,os.path.join('dist',dest))
 	except Exception, e:
 		print e
+		t = raw_input('Terminate ? [y/N]: ')
+		if t.lower() == 'y':
+			sys.exit(-1)
+
+try:
+	path = os.path.join('C:\\','gstreamer','bin')
+	for i in os.listdir(path):
+		if os.path.isfile(i):
+			shutil.copy(os.path.join(path, i), 
+					os.path.join('dist',i))
+except Exception,e:
+	print e
+	t = raw_input('Terminate ? [y/N]: ')
+	if t.lower() == 'y':
+		sys.exit(-1)
 try:
 	shutil.copy(os.path.join('c:\\','GTK','bin','jpeg62.dll'),
                              os.path.join('dist','jpeg62.dll'))

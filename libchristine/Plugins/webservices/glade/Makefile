@@ -76,7 +76,7 @@ CPP = gcc -E
 CPPFLAGS = -O3 -march=athlon-xp  -msse3 -O2 -pipe -fomit-frame-pointer
 CYGPATH_W = echo
 DATADIRNAME = share
-DEFS = -DPACKAGE_NAME=\"christine\" -DPACKAGE_TARNAME=\"-christine-\" -DPACKAGE_VERSION=\"0.7.0\" -DPACKAGE_STRING=\"christine\ 0.7.0\" -DPACKAGE_BUGREPORT=\"markuz@islascruz.org\" -DPACKAGE_URL=\"\" -DPACKAGE=\"christine\" -DVERSION=\"0.7.0\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -D__EXTENSIONS__=1 -D_ALL_SOURCE=1 -D_GNU_SOURCE=1 -D_POSIX_PTHREAD_SEMANTICS=1 -D_TANDEM_SOURCE=1 -DSTDC_HEADERS=1 -DSTDC_HEADERS=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_READLINE_READLINE_H=1 -DHAVE_READLINE_HISTORY_H=1 -DHAVE_READLINE_READLINE_H=1 -DHAVE_LIBREADLINE=1 -DHAVE_LIBREADLINE_NEW=1
+DEFS = -DPACKAGE_NAME=\"christine\" -DPACKAGE_TARNAME=\"-christine-\" -DPACKAGE_VERSION=\"0.7.0-Beta1\" -DPACKAGE_STRING=\"christine\ 0.7.0-Beta1\" -DPACKAGE_BUGREPORT=\"markuz@islascruz.org\" -DPACKAGE_URL=\"\" -DPACKAGE=\"christine\" -DVERSION=\"0.7.0-Beta1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -D__EXTENSIONS__=1 -D_ALL_SOURCE=1 -D_GNU_SOURCE=1 -D_POSIX_PTHREAD_SEMANTICS=1 -D_TANDEM_SOURCE=1 -DSTDC_HEADERS=1 -DSTDC_HEADERS=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_READLINE_READLINE_H=1 -DHAVE_READLINE_HISTORY_H=1 -DHAVE_READLINE_READLINE_H=1 -DHAVE_LIBREADLINE=1 -DHAVE_LIBREADLINE_NEW=1
 DEPDIR = .deps
 DSYMUTIL = 
 DUMPBIN = 
@@ -139,10 +139,10 @@ OTOOL64 =
 PACKAGE = christine
 PACKAGE_BUGREPORT = markuz@islascruz.org
 PACKAGE_NAME = christine
-PACKAGE_STRING = christine 0.7.0
+PACKAGE_STRING = christine 0.7.0-Beta1
 PACKAGE_TARNAME = -christine-
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.7.0
+PACKAGE_VERSION = 0.7.0-Beta1
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PREFIX = 
@@ -163,7 +163,7 @@ STRIP = strip
 TERMLDFLAGS = 
 TERMLIBS = -lreadline 
 USE_NLS = yes
-VERSION = 0.7.0
+VERSION = 0.7.0-Beta1
 XGETTEXT = /usr/bin/xgettext
 XMKMF = 
 ac_ct_CC = gcc
@@ -206,7 +206,7 @@ oldincludedir = /usr/include
 pdfdir = ${docdir}
 pkgpyexecdir = ${pyexecdir}/christine
 pkgpythondir = ${pythondir}/christine
-prefix = /usr/local
+prefix = /usr
 program_transform_name = s,x,x,
 psdir = ${docdir}
 pyexecdir = ${exec_prefix}/lib/python2.6/dist-packages
@@ -226,7 +226,7 @@ pkgsysconfdir = ${sysconfdir}
 pythonincludedir = /usr/include/python2.6
 usr_libdir = ${prefix}/include
 programname = christine
-version = 0.7.0
+version = 0.7.0-Beta1
 edit = sed \
 	   -e 's,@datadir\@,$(pkgdatadir),g' \
 	   -e 's,@prefix\@,$(prefix),g' \

@@ -30,10 +30,13 @@ class Manager(Singleton):
 			plugin = self.__importByName('libchristine.Plugins.%s'%pluginname,pluginname)
 			if not plugin:
 				continue
-			func = getattr(plugin,pluginname, False)
-			if func:
-				instance = func()
-				self.plugins[instance.name] = instance
+			try:
+				func = getattr(plugin,pluginname, False)
+				if func:
+					instance = func()
+					self.plugins[instance.name] = instance
+			except Exception, e:
+				self.logger.exception(e)
 
 
 	def __importByName(self,modulename,name = None):
@@ -48,6 +51,7 @@ class Manager(Singleton):
 		else:
 			lname = [name]
 		try:
+			self.logger.info('Importing %s - %s'%(modulename, lname))
 			module = __import__(modulename,
 						globals(), locals(), lname)
 		except ImportError, e:

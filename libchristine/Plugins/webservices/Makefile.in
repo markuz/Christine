@@ -217,7 +217,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservice
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservices
 scripts_DATA = __init__.py
 DISTFILES = Makefile.in \
 		   $(scripts_DATA) 

@@ -10,6 +10,7 @@ scripts_DATA=__init__.py \
 			buttons.py \
 			mainWindow.py \
 			Volume.so \
+			keyvals.py \
 			equalizer.py
 
 DISTFILES=Makefile.in \

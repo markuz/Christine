@@ -36,7 +36,7 @@ import gtk
 
 christineConf = christineConf()
 
-class plugin_base(object, GtkMisc):
+class plugin_base(GtkMisc):
 	'''
 	This is the base for the plugins for christine.
 	Implements the basic methods for the plugins to work well with christine

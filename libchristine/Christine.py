@@ -29,6 +29,7 @@ import sys
 from random import randint
 import time
 import gtk
+gtk.gdk.threads_init()
 #import gtk.gdk
 import gst.interfaces
 import gobject
@@ -60,6 +61,8 @@ from libchristine.gui.mainWindow import mainWindow
 from libchristine.gui.keyvals import PAGEDOWN,PAGEUP
 from libchristine.gui.equalizer import equalizer
 from libchristine.envelopes import deprecated
+
+
 
 core = ChristineCore()
 

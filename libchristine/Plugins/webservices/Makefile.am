@@ -1,4 +1,4 @@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservice
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservices
 
 scripts_DATA=__init__.py
 

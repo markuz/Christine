@@ -41,7 +41,7 @@ BORDER_WIDTH  = 3
 POS_INCREMENT = 3
 LINE_WIDTH    = 2
 
-class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
+class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
 	"""
 	Display the track progress in christine
 	"""
@@ -100,6 +100,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		self.__non_shuffle_pixbuf = self.scalePixbuf(self.share.getImageFromPix('sort'),16,16)
 		self.__repeat_pixbuf = self.scalePixbuf(self.share.getImageFromPix('repeat'), 16,16)
 		self.__non_repeat_pixbuf = self.scalePixbuf(self.share.getImageFromPix('urepeat'),16,16)
+		self.value = 0
 
 	
 	def __size_allocate(self,display, area):
@@ -396,4 +397,4 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc, object):
 		cr.set_source_pixbuf(pixbuf, 26, 3)
 		cr.paint()
 
-	value = property(getValue, setScale)
+	#value = property(getValue, setScale)

@@ -34,7 +34,7 @@ def load_rc():
 	gtk.rc_reparse_all()
 
 
-class glade_xml:
+class glade_xml(object):
 	@deprecated
 	def __init__(self,file,root=None):
 		'''constructor, receives the name of the interface descriptor
@@ -55,7 +55,7 @@ class glade_xml:
 		'''
 		self.xml.signal_autoconnect(signals)
 	
-class Builder:
+class Builder(object):
 	def __init__(self, file, root=None):
 		'''
 		Load a GUI description from a gtkbuilder file
@@ -97,7 +97,7 @@ class Builder:
 		return self.get_widget(name)
 
 
-class GtkMisc:
+class GtkMisc(object):
 	def __init__(self):
 		self.__Logger = logging.getLogger('GtkMisc')
 		self.wdir = SHARE_PATH
@@ -176,7 +176,7 @@ class GtkMisc:
 				pass
 		return text
 
-class CairoMisc:
+class CairoMisc(object):
 	def __init__(self):
 		self.colors = {}
 
@@ -222,7 +222,7 @@ class CairoMisc:
 		cr.curve_to(x0+radius, y1, x0, y1, x0, y1-radius -1)
 		cr.close_path()
 
-class error:
+class error(object):
 	def __init__(self,text):
 		if os.path.isdir("./gui/"):
 			path = "./gui"

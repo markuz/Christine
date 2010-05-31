@@ -67,10 +67,10 @@ class sqlite3db(Singleton, GtkMisc):
 		self.have_to_commit = False
 		self.cursor = self.connection.cursor()
 		self.cursor.row_factory = self.dict_factory
+		self.createSchema()
 		if not self.check_version():
 			self.__logger.debug('No se encontro la version de la base de datos.')
 			self.__logger.debug(self.get_db_version())
-			self.createSchema()
 			self.fillRegistry()
 		self.iface = interface()
 		self.iface.db = self

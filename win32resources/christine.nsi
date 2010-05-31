@@ -2,11 +2,11 @@
 !define link "christine.lnk"
 !define install_path "$PROGRAMFILES\Christine"
 !define source_path "dist\"
-!define install_file "Christine-0.7.0.exe"
+!define install_file "Christine-0.7.0-Beta1.exe"
 ;!define config_path ${}\Christine
 ;!define config_file "config.ini"
 !define PRODUCT_NAME "Christine"
-!define PRODUCT_VERSION "0.7.0"
+!define PRODUCT_VERSION "0.7.0-Beta1"
 !define PRODUCT_PUBLISHER "Christine Project"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${exe}"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
