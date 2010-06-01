@@ -24,7 +24,7 @@ from libchristine.Plugins.plugin_base import plugin_base, christineConf
 from libchristine.globalvars import PROGRAMNAME
 from libchristine.Events import christineEvents
 from libchristine.Translator import translate
-
+from libchristine.pattern.Singleton import Singleton
 logger = LoggerManager().getLogger('PyNotify')
 
 try:
@@ -48,11 +48,12 @@ __enabled__ = christineConf.getBool('pynotify/enabled')
 
 
 def _christinePyNotify(*args):
-	result = pynotify.Notification(*args)
+	c =christinePyNotify()
+	result = c.Notification(*args)
 	return result
 
 
-class christinePyNotify(plugin_base):
+class christinePyNotify(plugin_base, Singleton):
 	'''
 	This plugins shows notify bubbles using python-notify
 	'''
@@ -80,14 +81,21 @@ class christinePyNotify(plugin_base):
 				notify_text += " by <big>%s</big>\n" % tags['artist']
 			if tags['album']:
 				notify_text += " from <big>%s</big>" % tags['album']
-				
-			if not getattr(self, 'Notify', False):
-				pixmap = self.__Share.getImage('logo')
-				self.Notify = _christinePyNotify('christine', '',pixmap)
-			if getattr(self.interface, 'TrayIcon', False):
-				self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
-			self.Notify.set_property('body', notify_text)
-			self.Notify.show()
+			self.Notification(notify_text)
+			
+	def get_notification_obj(self):
+		if not getattr(self, 'Notify', False):
+			pixmap = self.__Share.getImage('logo')
+			self.Notify = pynotify.Notification('christine', '',pixmap)
+		return self.Notify
+			
+	def Notification(self,text):
+		n = self.get_notification_obj()
+		if getattr(self.interface, 'TrayIcon', False):
+			n.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
+		n.set_property('body', text)
+		n.show()
+		return True
 
 	def get_active(self):
 		return self.christineConf.getBool('pynotify/enabled')

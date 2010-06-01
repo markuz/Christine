@@ -99,12 +99,7 @@ class gnomeDBus(plugin_base):
 				self.iface.coreClass.goPrev()
 		if getattr(self, 'Notify', False):
 			self.Notify.close()
-		pixmap = self.__Share.getImage('trayicon')
-		self.Notify = _christinePyNotify('christine', '',pixmap)
-		if getattr(self.interface, 'TrayIcon', False):
-			self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
-		self.Notify.set_property('body', key)
-		self.Notify.show()
+		Notify = _christinePyNotify(key)
 	
 	def get_active(self):
 		return self.christineConf.getBool('dbus/gnome_media')
