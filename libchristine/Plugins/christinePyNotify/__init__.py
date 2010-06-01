@@ -81,10 +81,9 @@ class christinePyNotify(plugin_base):
 			if tags['album']:
 				notify_text += " from <big>%s</big>" % tags['album']
 				
-			if getattr(self, 'Notify', False):
-				self.Notify.close()
-			pixmap = self.__Share.getImage('logo')
-			self.Notify = _christinePyNotify('christine', '',pixmap)
+			if not getattr(self, 'Notify', False):
+				pixmap = self.__Share.getImage('logo')
+				self.Notify = _christinePyNotify('christine', '',pixmap)
 			if getattr(self.interface, 'TrayIcon', False):
 				self.Notify.attach_to_status_icon(self.interface.TrayIcon.TrayIcon)
 			self.Notify.set_property('body', notify_text)

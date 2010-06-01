@@ -1,7 +1,20 @@
 Changelog for 0.7.0
 * Bug: Use themeable icons #34
 * Bug: Control buttons are not shown right with some themes #36
-* New: Botones de control de reproduccion
+* New: Control buttons for shuffle/repeat on display
+* Improvement: Display
+* Improvement: Christine performs well on win32 #24
+* Bug: Christine errors block christine for a while #35
+* Bug: Control buttons are not shown in the right place #36
+* Bug: Christine cannot start if visualization is active #38,#40
+* Improvement: Album cover makes use of "on dir" cover.jpg or AlbumArt.
+* Improvement: Win32 ships Gstreamer 10.5
+* Improvement: Enter/Intro key on open remote is the same that Accept
+* Improvement: Enter/Intro key on new source is the same that Accept
+* Improvmeent: Migrate the configuration to database
+* Bug: LastFM configure plugin wasn't doing anything.
+* Bug: Text almost invisible if the theme set the font clear.
+* Improvement: Speed in queue refresh.
 Changelog for 0.6.1
 * Bugfix: Christine cannot import folders
 * Win32: Removed Christine from the start menu
