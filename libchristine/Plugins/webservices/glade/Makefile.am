@@ -1,4 +1,4 @@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservice/glade/
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservices/glade/
 
 scripts_DATA=configure.glade
 
