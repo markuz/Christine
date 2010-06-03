@@ -74,7 +74,7 @@ class webservices(plugin_base):
 	
 	def handle_request(self,source, condition):
 		try:
-			self.soapserver.socket.setblocking(1)
+			#self.soapserver.socket.setblocking(1)
 			time.sleep(0.5)
 			self.soapserver.handle_request()
 		except Exception, e:
@@ -86,15 +86,15 @@ class webservices(plugin_base):
 			if not self.port:
 				return
 			self.soapserver = SOAPpy.SOAPServer(('',self.port))
-			self.soapserver.socket.setblocking(1)
+			#self.soapserver.socket.setblocking(1)
 			self.registerObject(self.set_location)
 			self.re_register_functions()
-			gtk.gdk.threads_enter()
-			thread.start_new(self.soapserver.serve_forever, tuple())
-			gtk.gdk.threads_leave()
+			#gtk.gdk.threads_enter()
+			#thread.start_new(self.soapserver.serve_forever, tuple())
+			#gtk.gdk.threads_leave()
 			
-			#gobject.io_add_watch(self.soapserver.socket, gobject.IO_IN,
-			#            self.handle_request)
+			gobject.io_add_watch(self.soapserver.socket, gobject.IO_IN,
+			            self.handle_request)
 		except:
 			self.active = False
 
@@ -138,7 +138,7 @@ class webservices(plugin_base):
 		Play a song in the given path, path must be a Christine accesible path.
 		@param string path: 
 		'''
-		def set_location(self,path):
+		def set_location1(self,path):
 			if not path.lower().startswith('http'):
 				if not os.path.exists(path) or not os.path.isfile(path):
 					return 
@@ -146,7 +146,7 @@ class webservices(plugin_base):
 			self.core.Player.set_location(path)
 			self.core.Player.playIt()
 			return False
-		gobject.idle_add(set_location, self, path)
+		gobject.idle_add(set_location1, self, path)
 		
 	def play(self):
 		self.core.Player.playIt()

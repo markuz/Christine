@@ -29,10 +29,9 @@ import sys
 from random import randint
 import time
 import gtk
-gtk.gdk.threads_init()
-#import gtk.gdk
-import gst.interfaces
 import gobject
+gobject.threads_init()
+import gst.interfaces
 import os
 import signal
 from libchristine.globalvars import  BUGURL,PIDFILE,TRANSLATEURL

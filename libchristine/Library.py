@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+# -*- encoding: latin-1 -*-
+# -*- coding: latin-1 -*-
 ## Copyright (c) 2006 Marco Antonio Islas Cruz
 ## <markuz@islascruz.org>
 # This program is free software; you can redistribute it and/or modify
@@ -40,8 +42,15 @@ HAVE_TAGS) = range(12)
 
 (VPATH,VNAME,VPIX) = range(3)
 
-QUEUE_TARGETS = [('text/plain',0,0),('TEXT', 0, 1),('STRING', 0, 2),
-				('COMPOUND_TEXT', 0, 3), ('UTF8_STRING', 0, 4)]
+TYPE_OGG, TYPE_MP3 = range(80,82)
+
+QUEUE_TARGETS = [('MY_TREE_MODEL_ROW', gtk.TARGET_SAME_WIDGET, 0),
+				('application/x-ogg',0, TYPE_OGG),
+				('application/x-mp3',0, TYPE_MP3),
+				('text/plain',0,1),('TEXT', 0, 2),('STRING', 0, 3),
+				('COMPOUND_TEXT', 0, 4), ('UTF8_STRING', 0, 5),
+				
+				]
 
 share = Share()
 pix = share.getImageFromPix('blank')
@@ -86,10 +95,10 @@ class libraryBase(GtkMisc):
 		self.tv.connect('scroll-event', self.__scroll_child)
 		self.tv.drag_source_set(gtk.gdk.BUTTON1_MASK, 
 							QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
-		self.tv.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
+		self.tv.drag_dest_set(gtk.DEST_DEFAULT_ALL |
                   gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                   QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
-		self.scroll.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
+		self.scroll.drag_dest_set(gtk.DEST_DEFAULT_ALL |
                   gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                   QUEUE_TARGETS, gtk.gdk.ACTION_COPY)
 		self.tv.connect('drag-data-get', self.drag_data_get)
@@ -99,8 +108,10 @@ class libraryBase(GtkMisc):
 						selection, info, etime):
 		self.tv.emit_stop_by_name('drag-data-received')
 		data = selection.data
+		print (selection.target, info)
 		files = []
 		dirs = []
+		print data
 		for url in [k.strip() for k in data.split("\n")]:
 			file = url
 			if file.lower().startswith('file://'):
@@ -120,7 +131,8 @@ class libraryBase(GtkMisc):
 		treeselection = treeview.get_selection()
 		model, iter = treeselection.get_selected()
 		text = model.get_value(iter, PATH)
-		selection.set('text/plain', 8, text)
+		print (selection.target, info)
+		selection.set(selection.target, 8,text)
 
 	def __scroll_child(self, scroll, event):
 		if event.type == gtk.gdk.SCROLL:

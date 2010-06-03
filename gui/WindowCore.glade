@@ -171,7 +171,6 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Control</property>
                 <property name="use_underline">True</property>
-                <signal name="activate" handler="on_control1_activate"/>
                 <child type="submenu">
                   <object class="GtkMenu" id="control1_menu">
                     <child>
@@ -272,7 +271,6 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
-                <signal name="activate" handler="on_view1_activate"/>
                 <child type="submenu">
                   <object class="GtkMenu" id="view1_menu">
                     <child>
@@ -299,7 +297,6 @@
                         <property name="label" translatable="yes">Browser</property>
                         <property name="use_underline">True</property>
                         <accelerator key="B" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                        <signal name="activate" handler="toggleBrowser"/>
                       </object>
                     </child>
                     <child>

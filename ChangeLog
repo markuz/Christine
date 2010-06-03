@@ -10,6 +10,9 @@ Changelog for 0.7.0
 * Improvement: Speed in queue refresh.
 * Improvement: GNOME-DBus plugin makes use of the new notify plugin schema
 * Improvement: Notify plugin is a singleton and everybody can use it.
+* Improvement: New database version management.
+* Improvement: New signals for Player.
+* Improvement: Prints removed
 * Bug: Use themeable icons #34
 * Bug: Control buttons are not shown right with some themes #36
 * Bug: LastFM configure plugin wasn't doing anything.
