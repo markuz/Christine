@@ -29,6 +29,7 @@ from globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.Logger import LoggerManager
 from libchristine.ui import interface
 from libchristine.envelopes import deprecated
+from libchristine.pattern.Singleton import Singleton
 import gst
 import gtk
 import gobject
@@ -40,7 +41,7 @@ BORDER_WIDTH = 0
 #
 # Player for manager play files
 #
-class Player(gtk.DrawingArea, object):
+class Player(gtk.DrawingArea,Singleton):
 	"""
 	Player for manage play files
 	"""
@@ -90,7 +91,7 @@ class Player(gtk.DrawingArea, object):
 		self.__Logger = LoggerManager().getLogger('Player')
 		self.__Logger.info('Starting player')
 		self.__Text = ''
-		self.location = None
+		self.__location = None
 		self.config = christineConf(self)
 		self.events = christineEvents()
 		self.__ShouldShow = False
@@ -246,44 +247,53 @@ class Player(gtk.DrawingArea, object):
 	def set_location(self, file):
 		self.Tags = {}
 		last_location = self.getLocation()
-		self.location = file
+		self.__location = file
 		if getattr(self, 'visualizationPlugin', None) != None and \
 			os.name != "nt":
 			self.__elementSetProperty(self.__PlayBin,'vis-plugin', self.visualizationPlugin)
 		if (isFile(file)):
-			self.__setState(gst.STATE_READY)
-			if os.name == 'nt':
-				p = file.split("\\")
-				file = "/" + "/".join(p)
-			nfile = 'file://' + file
-			self.__elementSetProperty(self.__PlayBin,'uri', nfile)
-			self.__elementSetProperty(self.__PlayBin, 'suburi', None)
-			self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', None)
-			self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', None)
-			if self.isVideo():
-				self.__ShouldShow = True
-				self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
-				subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
-				if os.path.exists(subtitle):
-					self.__elementSetProperty(self.__PlayBin, 'suburi', 'file://'+subtitle)
-					self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', self.config.getString('backend/subtitle_font_desc'))
-					self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', self.config.getString('backend/subtitle_encoding'))
-					
+			self.__handle_file(file)
 		else:
 			file = file.replace( "\\'", r"'\''" )
 			if file:
 				self.__elementSetProperty(self.__PlayBin,'uri', file)
-		self.emit('set-location',last_location, self.location)
-		self.christineConf.setValue('backend/last_played', self.location)
-		self.show()
+		self.emit('set-location',last_location, self.__location)
+		self.christineConf.setValue('backend/last_played', self.__location)
+		#self.show()
 		self.getType()
 		self.exposeCallback(self.window, gtk.gdk.Event(gtk.gdk.EXPOSE))
+	
+	def __handle_file(self, file):
+		self.__setState(gst.STATE_READY)
+		if os.name == 'nt':
+			p = file.split("\\")
+			file = "/" + "/".join(p)
+		nfile = 'file://' + file
+		self.__elementSetProperty(self.__PlayBin,'uri', nfile)
+		self.__elementSetProperty(self.__PlayBin, 'suburi', None)
+		self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', None)
+		self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', None)
+		if self.isVideo():
+			self.__handle_video()
+	
+	def __handle_video(self):
+		self.__ShouldShow = True
+		self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
+		subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
+		if os.path.exists(subtitle):
+			self.__elementSetProperty(self.__PlayBin, 'suburi', 'file://'+subtitle)
+			self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', self.config.getString('backend/subtitle_font_desc'))
+			self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', self.config.getString('backend/subtitle_encoding'))
 
+	@deprecated
 	def getLocation(self):
 		"""
 		Gets location
 		"""
-		return self.location		
+		return self.location
+	
+	def get_location(self):
+		return self.__location		
 
 	def playIt(self):
 		"""
@@ -446,7 +456,7 @@ class Player(gtk.DrawingArea, object):
 		type_file = b.type
 		if (type_file == gst.MESSAGE_ERROR):
 			if not os.path.isfile(self.getLocation()):
-				self.emit('io-eror')
+				self.emit('io-error')
 			else:
 				self.emit('gst-error',b.parse_error()[1])
 		if (type_file == gst.MESSAGE_EOS):
@@ -468,7 +478,7 @@ class Player(gtk.DrawingArea, object):
 		pad = self.equalizer.get_static_pad('src')
 		self.aubin.add_pad(gst.GhostPad('src',pad))
 		pad = self.equalizer.get_static_pad('sink')
-		self.aubin.add_many(self.equalizer, self.__AudioSinkPack)
+		self.aubin.add(self.equalizer, self.__AudioSinkPack)
 		self.aubin.add_pad(gst.GhostPad('sink',pad))
 		self.equalizer.link(self.__AudioSinkPack)
 
@@ -511,3 +521,4 @@ class Player(gtk.DrawingArea, object):
 					'ballad', 'more bass and treble']
 		return result
 
+	location = property(get_location, set_location,None, 'Current location')
