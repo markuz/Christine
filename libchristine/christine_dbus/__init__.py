@@ -41,7 +41,7 @@ from libchristine.christineConf import christineConf
 from libchristine.Events import christineEvents
 from libchristine.gui.GtkMisc import GtkMisc
 from libchristine.Logger import LoggerManager
-
+from libchristine.ChristineCore import ChristineCore
 
 
 main_loop = DBusGMainLoop()
@@ -50,6 +50,7 @@ main_loop = DBusGMainLoop()
 DBUS_SESSION = dbus.SessionBus(mainloop = main_loop)
 iface = interface()
 iface.DBus_Session = DBUS_SESSION
+
 
 DBUS_NAME = 'org.christine'
 DBUS_PATH = '/org/christine'
@@ -60,6 +61,7 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	'''
 	def __init__(self):
 		GtkMisc.__init__(self)
+		self.core = ChristineCore()
 		self.christineConf = christineConf()
 		self.Events = christineEvents()
 		self.__Logger = LoggerManager().getLogger('christineDBus')
@@ -69,13 +71,17 @@ class christineDBus(dbus.service.Object,GtkMisc):
 		self.christineConf.notifyAdd('backend/last_played', self.emit_last_played)
 	
 	@dbus.service.method(DBUS_NAME)
+	def set_location(self, uri):
+		res = self.core.Player.set_location(uri)
+		return res
+	@dbus.service.method(DBUS_NAME)
 	def play(self):
-		iface.Player.playIt()
+		self.core.Player.playIt()
 		return True
 	
 	@dbus.service.method(DBUS_NAME)
 	def pause(self):
-		iface.Player.pause()
+		self.core.Player.pause()
 		return True
 	
 	@dbus.service.method(DBUS_NAME)
@@ -91,7 +97,7 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	
 	@dbus.service.method(DBUS_NAME)
 	def current_location(self):
-		location = iface.Player.getLocation()
+		location = self.core.Player.get_location
 		if not location:
 			result = ''
 		else:
@@ -100,11 +106,11 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	
 	@dbus.service.method(DBUS_NAME)
 	def get_location(self):
-		return iface.Player.getLocation()
+		return self.core.Player.location
 	
 	@dbus.service.method(DBUS_NAME)
 	def now_playing(self):
-		return iface.Player.getLocation()
+		return self.core.Player.getLocationlocation
 
 	@dbus.service.method(DBUS_NAME)
 	def get_tags(self, uri):
@@ -124,7 +130,7 @@ class christineDBus(dbus.service.Object,GtkMisc):
 	
 	@dbus.service.method(DBUS_NAME)
 	def add_to_queue(self, uri):
-		iface.Queue.add(uri)
+		self.core.Queue.add(uri)
 	
 	@dbus.service.method(DBUS_NAME)
 	def get_playlists(self):

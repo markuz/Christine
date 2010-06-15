@@ -119,9 +119,6 @@ class OGGTrack(Singleton,Track):
 		return self.createDict()  
 
 class FakeTrack(Singleton,Track):
-	def __init__(self, *args):
-		Track.__init__(self, *args)
-
 	def readTags(self,song):
 		self.setSong(song)
 		return self.createDict()

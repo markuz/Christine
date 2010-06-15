@@ -397,4 +397,4 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
 		cr.set_source_pixbuf(pixbuf, 26, 3)
 		cr.paint()
 
-	#value = property(getValue, setScale)
+	value = property(getValue, setScale)

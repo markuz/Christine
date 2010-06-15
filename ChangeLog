@@ -20,6 +20,7 @@ Changelog for 0.7.0
 * Bug: Christine errors block christine for a while #35
 * Bug: Control buttons are not shown in the right place #36
 * Bug: Christine cannot start if visualization is active #38,#40
+* Bug: Christine object initialization fail.
 Changelog for 0.6.1
 * Bugfix: Christine cannot import folders
 * Win32: Removed Christine from the start menu

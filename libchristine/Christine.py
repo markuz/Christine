@@ -109,9 +109,9 @@ class Christine(GtkMisc):
 	'''
 	def __init__(self):
 		if opts.options.use_new_main_window:
-			c = mainWindow()
+			self.c = mainWindow()
 		else:
-			c = Christine_old()
+			self.c = Christine_old()
 	
 	def runGtk(self):
 		gtk.main()
@@ -1151,7 +1151,8 @@ def add_items_to_queue(obj, c):
 	if c == None or c.coreWindow.get_property('window'):
 		for i in sys.argv[1:]:
 			if os.path.exists(i) and os.path.isfile(i):
-				obj.add_to_queue(i)
+				obj.set_location(i)
+				obj.play()
 		return False
 	return True
 
@@ -1162,29 +1163,28 @@ def runChristine():
 	'''
 	if os.name == 'nt':
 		ex = Exception
-	else:
-		import dbus
-		ex = dbus.exceptions.DBusException
 	try:
-		import dbus
-		from dbus.mainloop.glib import DBusGMainLoop
-		main_loop = DBusGMainLoop()
-		DBUS_SESSION = dbus.SessionBus(mainloop = main_loop)
+		#import dbus
+		#from dbus.mainloop.glib import DBusGMainLoop
+		import libchristine.christine_dbus
+		#main_loop = DBusGMainLoop()
+		DBUS_SESSION = libchristine.christine_dbus.DBUS_SESSION
 		obj = DBUS_SESSION.get_object('org.christine', '/org/christine',)
 		c = None
 		add_items_to_queue(obj,c)
 		sys.exit()
-	except ex, e:
+	except Exception, e:
 		print e
 		try:
-			import libchristine.christine_dbus.christineDBus
-			a = christineDBus()
-		except:
-			pass
+			import libchristine.christine_dbus
+			a = libchristine.christine_dbus.christineDBus()
+		except Exception, e:
+			print e
 		c = Christine()
 		for i in sys.argv[1:]:
 			if os.path.exists(i) and os.path.isfile(i):
-				c.Queue.add(i)
+				#c.c.Queue.add(i)
+				print i
 		f = open(PIDFILE,'w')
 		f.write('%d'%(os.getpid()))
 		f.close()

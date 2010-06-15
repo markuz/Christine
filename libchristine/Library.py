@@ -882,6 +882,8 @@ class queue (libraryBase ,gobject.GObject):
 		tv.set_headers_visible(False)
 
 	def add(self,file,prepend=False):
+		if not file:
+			return False
 		if isinstance(file, tuple):
 			file = file[0]
 		if not os.path.isfile(file):
