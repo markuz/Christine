@@ -13,6 +13,7 @@ Changelog for 0.7.0
 * Improvement: New database version management.
 * Improvement: New signals for Player.
 * Improvement: Prints removed
+* Improvement: Code migrated from svn to git
 * Bug: Use themeable icons #34
 * Bug: Control buttons are not shown right with some themes #36
 * Bug: LastFM configure plugin wasn't doing anything.
