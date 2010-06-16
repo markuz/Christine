@@ -217,7 +217,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservice/glade/
+scriptsdir = @PYTHON_LIB_DIR@/libchristine/Plugins/webservices/glade/
 scripts_DATA = configure.glade
 DISTFILES = Makefile.in \
 		   $(scripts_DATA) 

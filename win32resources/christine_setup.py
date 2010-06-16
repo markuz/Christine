@@ -39,7 +39,7 @@ class Target:
 			self.maintainer_email = 'markuz@islascruz.org'
 			self.url='http://www.christine-project.org'
 			self.classifiers=[
-		          'Development Status :: 4 - Beta',
+		          'Development Status :: 5 - Stable',
 		          'Environment :: GUI',
 		          'Intended Audience :: End Users/Desktop',
 		          'License :: OSI Approved :: GNU/GPL v.2.0',
@@ -49,7 +49,7 @@ class Target:
 		          'Programming Language :: C',
 		          ]
 			self.platforms = ['Posix','Windows XP', 'Windows 2000','Windows Vista']
-			self.version        = "0.7.0-Beta1"
+			self.version        = "0.7.0"
 			self.compay_name    = "Christine Project"
 			self.copyright      = "(c) 2006-2009, Marco Islas"
 			self.name           = "Christine Media Player"

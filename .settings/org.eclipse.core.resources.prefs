@@ -1,4 +1,4 @@
-#Mon May 31 10:54:36 CDT 2010
+#Tue Jun 15 16:31:27 CDT 2010
 eclipse.preferences.version=1
 encoding//christinetests/dbustest.py=utf-8
 encoding//extras/rola_christine.py=utf-8
@@ -29,6 +29,7 @@ encoding//libchristine/gui/Display.py=utf-8
 encoding//libchristine/gui/GtkMisc.py=latin1
 encoding//libchristine/gui/Preferences.py=utf-8
 encoding//libchristine/gui/buttons.py=utf-8
+encoding//libchristine/gui/mainWindow.py=utf-8
 encoding//libchristine/gui/openRemote.py=utf-8
 encoding//libchristine/libs_christine.py=latin1
 encoding//libchristine/options.py=utf-8
