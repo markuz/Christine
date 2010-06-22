@@ -32,7 +32,7 @@ DIST_FILES = config.rpath \
 
 
 	   	   	
-EXTRA_DIST = config.rpath  createDeb.sh.in \
+EXTRA_DIST = config.rpath  config.rpath  createDeb.sh.in \
 			 $(DIST_FILES)
 
 program_name = @PROGRAM_NAME@

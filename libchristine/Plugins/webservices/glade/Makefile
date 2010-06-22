@@ -42,7 +42,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/intltool.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
 	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -59,15 +59,15 @@ am__installdirs = "$(DESTDIR)$(scriptsdir)"
 scriptsDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(scripts_DATA)
 pkgdatadir = ${datadir}
-ACLOCAL = ${SHELL} /home/markuz/workspace/christine/missing --run aclocal-1.9
+ACLOCAL = ${SHELL} /home/markuz/tmp/christine/missing --run aclocal-1.9
 ALL_LINGUAS = ar  bg cs de en_GB es fi ga hu it mk nb oc pt_BR ro sk sv zh_CN be ca da el			es_ES eu fr he id lv ml nl pl pt ru sv_FI tr
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /home/markuz/workspace/christine/missing --run tar
+AMTAR = ${SHELL} /home/markuz/tmp/christine/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/markuz/workspace/christine/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/markuz/workspace/christine/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/markuz/workspace/christine/missing --run automake-1.9
+AUTOCONF = ${SHELL} /home/markuz/tmp/christine/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/markuz/tmp/christine/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/markuz/tmp/christine/missing --run automake-1.9
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=none
@@ -127,7 +127,7 @@ LTLIBOBJS =
 MAINT = #
 MAINTAINER_MODE_FALSE = 
 MAINTAINER_MODE_TRUE = #
-MAKEINFO = ${SHELL} /home/markuz/workspace/christine/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/markuz/tmp/christine/missing --run makeinfo
 MSGFMT = /usr/bin/msgfmt
 MSGMERGE = /usr/bin/msgmerge
 NM = /usr/bin/nm -B
@@ -194,7 +194,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = /home/markuz/workspace/christine/install-sh
+install_sh = /home/markuz/tmp/christine/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale

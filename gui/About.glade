@@ -12,7 +12,7 @@
     <property name="program_name">Christine Media Player</property>
     <property name="version">0.1</property>
     <property name="copyright">2006-2010 (c) Marco Antonio Islas Cruz</property>
-    <property name="comments">A small and cute media player for GNOME</property>
+    <property name="comments" translatable="yes">A small and cute Media Player</property>
     <property name="website">http://www.christine-project.com</property>
     <property name="website_label">http://www.christine-project.com</property>
     <property name="license">		    GNU GENERAL PUBLIC LICENSE
