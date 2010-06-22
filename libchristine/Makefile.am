@@ -1,6 +1,11 @@
 scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
-scripts_DATA=christineConf.py \
+
+DISTFILES= Makefile.in \
+		   globalvars.py.in \
+		   CLibraryModel.c \
+		   CLibraryModel.h\
+			christineConf.py \
 			christineLogger.py \
 			Christine.py \
 			Events.py \
@@ -17,17 +22,13 @@ scripts_DATA=christineConf.py \
 			Translator.py \
 			ui.py \
 			Validator.py \
-			CLibraryModel.so \
 			ChristineCore.py \
 			globalvars.py \
 			sanity.py \
 			envelopes.py
 
-DISTFILES= Makefile.in \
-		   globalvars.py.in \
-		   CLibraryModel.c \
-			${scripts_DATA}
-
+scripts_DATA=${DISTFILES} \
+			 CLibraryModel.so
 
 pkgdatadir=${datadir}
 pkgsysconfdir=${sysconfdir}
