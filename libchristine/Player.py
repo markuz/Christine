@@ -274,9 +274,9 @@ class Player(gtk.DrawingArea,Singleton):
 		self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', None)
 		self.__elementSetProperty(self.__PlayBin, 'subtitle-encoding', None)
 		if self.isVideo():
-			self.__handle_video()
+			self.__handle_video(nfile)
 	
-	def __handle_video(self):
+	def __handle_video(self,file):
 		self.__ShouldShow = True
 		self.__elementSetProperty(self.VideoSink,'force-aspect-ratio', True)
 		subtitle = '.'.join(file.split('.')[:-1]) + '.srt'
