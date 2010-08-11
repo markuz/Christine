@@ -7,7 +7,7 @@
 /*
 * This file is part of the Christine project
 *
-* Copyright (c) 2006-2007 Marco Antonio Islas Cruz
+* Copyright (c) 2006-2010 Marco Antonio Islas Cruz
 *
 * Christine is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,6 @@
 *
 * Module that holds all christine global vars.
 */
-#define PROGRAM_VERSION ("0.8.0");
-#define BUGURL ("http://github.com/markuz/Christine/issues");
-
 
 void error(char *msg) {
 	PyErr_Print();
