@@ -70,6 +70,7 @@ opts = options()
 def close(*args):
 	if os.path.exists(PIDFILE):
 		os.unlink(PIDFILE)
+	sys.stderr.write(translate('Deleting pidfile'))
 	sys.exit()
 	gtk.main_quit()
 

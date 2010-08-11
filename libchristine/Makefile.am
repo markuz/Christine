@@ -3,6 +3,7 @@ scriptsdir = @PYTHON_LIB_DIR@/libchristine
 
 DISTFILES= Makefile.in \
 		   globalvars.py.in \
+		   cglobalvars.c \
 		   CLibraryModel.c \
 		   CLibraryModel.h\
 			christineConf.py \
@@ -29,6 +30,7 @@ DISTFILES= Makefile.in \
 
 scripts_DATA=${DISTFILES} \
 			 CLibraryModel.so
+			 cglobalvars.so
 
 pkgdatadir=${datadir}
 pkgsysconfdir=${sysconfdir}
@@ -57,10 +59,16 @@ CLibraryModel.so:  Makefile $(srcdir)/CLibraryModel.so
 	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c CLibraryModel.c -o CLibraryModel.o
 	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} CLibraryModel.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o CLibraryModel.so
 
-all: globalvars.py
+cglobalvars.so:  Makefile $(srcdir)/cglobalvars.so
+	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c cglobalvars.c -o cglobalvars.o
+	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} cglobalvars.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o cglobalvars.so
+
+all: cglobalvars.so
 
 clean:
 	rm $(srcdir)/*.pyc &
 	rm globalvars.py &
 	rm CLibraryModel.o &
 	rm CLibraryModel.so &
+	rm cglobalvars.o &
+	rm cglobalvars.so &

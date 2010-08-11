@@ -32,6 +32,7 @@ import os
 import sys
 import gtk
 from libchristine.options import options
+from libchristine import cglobalvars
 
 VERSION = '@version@'
 PROGRAMNAME = '@programname@'
@@ -75,8 +76,8 @@ else:
 	ICONPATH =  os.path.join(SHARE_PATH,"icons")
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
 LOCALE_DIR = os.path.join("@datadir@','locale")
-BUGURL='http://apps.sourceforge.net/trac/christine/newticket?version=%s'%VERSION
-TRANSLATEURL = 'https://translations.launchpad.net/christine'
+BUGURL=cglobalvars.BUGURL
+TRANSLATEURL = cglobalvars.TRANSLATEURL
 
 
 icon_theme = gtk.icon_theme_get_default()
