@@ -32,6 +32,7 @@
 * Module that holds all christine global vars.
 */
 
+
 void error(char *msg) {
 	PyErr_Print();
 	//printf("%s\n", msg);
@@ -73,6 +74,13 @@ initcglobalvars(void)
 	/* add variables to class */
 	PyDict_SetItemString(moduleDict, "BUGURL", Py_BuildValue("s","http://github.com/markuz/Christine/issues"));
 	PyDict_SetItemString(moduleDict, "TRANSLATEURL", Py_BuildValue("s","https://translations.launchpad.net/christine"));
+	PyDict_SetItemString(moduleDict, "PROGRAMNAME", Py_BuildValue("s","christine"));
+	PyDict_SetItemString(moduleDict, "VERSION", Py_BuildValue("s",VERSION));
+	
+
+	#if defined (__WIN32__)
+	  // Windows stuff
+	#endif
 	
 
     /* add methods to class */

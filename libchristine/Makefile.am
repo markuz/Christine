@@ -56,11 +56,11 @@ globalvars.py: Makefile $(srcdir)/globalvars.py.in
 
 
 CLibraryModel.so:  Makefile $(srcdir)/CLibraryModel.so
-	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c CLibraryModel.c -o CLibraryModel.o
-	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} CLibraryModel.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o CLibraryModel.so
+	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -D"VERSION=${version}" -I/usr/include/ -c CLibraryModel.c -o CLibraryModel.o
+	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} CLibraryModel.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o CLibraryModel.so 
 
 cglobalvars.so:  Makefile $(srcdir)/cglobalvars.so
-	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c cglobalvars.c -o cglobalvars.o
+	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c -D'VERSION="${version}"' cglobalvars.c -o cglobalvars.o
 	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} cglobalvars.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o cglobalvars.so
 
 all: cglobalvars.so

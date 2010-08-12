@@ -34,8 +34,8 @@ import gtk
 from libchristine.options import options
 from libchristine import cglobalvars
 
-VERSION = '@version@'
-PROGRAMNAME = '@programname@'
+VERSION =cglobalvars.VERSION
+PROGRAMNAME = cglobalvars.PROGRAMNAME 
 DATADIR = '@datadir@'
 PREFIX = '@prefix@'
 SYSCONFDIR = '@sysconfdir@'
