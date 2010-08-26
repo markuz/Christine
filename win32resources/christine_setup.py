@@ -104,7 +104,7 @@ for i in ['etc','lib','share','gui/icons/',
 		else:
 			src = i
 			dest = i
-		shutil.copytree(i,os.path.join('dist',dest))
+		shutil.copytree(src,os.path.join('dist',dest))
 	except Exception, e:
 		print e
 		t = raw_input('Terminate ? [y/N]: ')

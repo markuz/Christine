@@ -25,12 +25,10 @@ from libchristine.Plugins.plugin_base import plugin_base,christineConf
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.c3rdparty.pylast import *
+from libchristine.cglobalvars import LASTFM_SECRET, LASTFM_APIKEY
 import webbrowser
 import os
 
-
-APIKEY = '0da3b11c97759f044bd4223dda212daa'
-SECRET = 'b8c00f5548c053033b89633d1004d059'
 
 __name__ = _('Lastfm')
 __description__  = _('Enables the last.fm interaction')
@@ -80,7 +78,7 @@ class lastfm(plugin_base):
 
 
 	def __send_auth_request(self, button, fsd):
-		sessiong = SessionGenerator(APIKEY,SECRET)
+		sessiong = SessionGenerator(LASTFM_APIKEY,LASTFM_SECRET)
 		self.token = sessiong.getToken()	
 		url = sessiong.getAuthURL(self.token)
 		webbrowser.open(url)
@@ -89,7 +87,7 @@ class lastfm(plugin_base):
 		fsd.show()
 
 	def	__fetch_session_data(self, button):
-		sessiong = SessionGenerator(APIKEY,SECRET)
+		sessiong = SessionGenerator(LASTFM_APIKEY,LASTFM_SECRET)
 		data = sessiong.getSessionData(self.token)
 		if data:
 			self.christineConf.setValue('lastfm/name',data['name'])
@@ -112,9 +110,9 @@ class lastfm(plugin_base):
 		sessionkey = self.christineConf.getString('lastfm/key')
 		username = self.christineConf.getString('lastfm/name')
 
-		user = User(username, APIKEY, SECRET, sessionkey)
+		user = User(username, LASTFM_APIKEY, LASTFM_SECRET, sessionkey)
 
-		track = Track(tags['artist'], tags['title'], APIKEY, SECRET, sessionkey)
+		track = Track(tags['artist'], tags['title'], LASTFM_APIKEY, LASTFM_SECRET, sessionkey)
 		thread.start_new(self.__postMessage, (user, track))
 		
 	def __postMessage(self, user, track):

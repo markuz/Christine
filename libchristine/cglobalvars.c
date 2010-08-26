@@ -77,6 +77,17 @@ initcglobalvars(void)
 	PyDict_SetItemString(moduleDict, "PROGRAMNAME", Py_BuildValue("s","christine"));
 	PyDict_SetItemString(moduleDict, "VERSION", Py_BuildValue("s",VERSION));
 	
+	#if defined (LASTFM_SECRET)
+		PyDict_SetItemString(moduleDict, "LASTFM_SECRET", Py_BuildValue("s",LASTFM_SECRET));
+	#else
+		PyDict_SetItemString(moduleDict, "LASTFM_SECRET", Py_BuildValue("s",""));
+	#endif
+
+	#if defined (LASTFM_APIKEY)
+		PyDict_SetItemString(moduleDict, "LASTFM_APIKEY", Py_BuildValue("s",LASTFM_SECRET));
+	#else
+		PyDict_SetItemString(moduleDict, "LASTFM_APIKEY", Py_BuildValue("s",""));
+	#endif
 
 	#if defined (__WIN32__)
 	  // Windows stuff
