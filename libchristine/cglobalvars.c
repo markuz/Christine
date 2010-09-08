@@ -61,7 +61,7 @@ initcglobalvars(void)
     module = Py_InitModule("cglobalvars", ModuleMethods);
     moduleDict = PyModule_GetDict(module);
     classDict = PyDict_New();
-    className = PyString_FromString("globalvars");
+    className = PyString_FromString("cglobalvars");
     fooClass = PyClass_New(NULL, classDict, className);
 
 	PyImport_AddModule("cglobalvars");
@@ -75,19 +75,26 @@ initcglobalvars(void)
 	PyDict_SetItemString(moduleDict, "BUGURL", Py_BuildValue("s","http://github.com/markuz/Christine/issues"));
 	PyDict_SetItemString(moduleDict, "TRANSLATEURL", Py_BuildValue("s","https://translations.launchpad.net/christine"));
 	PyDict_SetItemString(moduleDict, "PROGRAMNAME", Py_BuildValue("s","christine"));
-	PyDict_SetItemString(moduleDict, "VERSION", Py_BuildValue("s",VERSION));
-	
-	#if defined (LASTFM_SECRET)
-		PyDict_SetItemString(moduleDict, "LASTFM_SECRET", Py_BuildValue("s",LASTFM_SECRET));
-	#else
-		PyDict_SetItemString(moduleDict, "LASTFM_SECRET", Py_BuildValue("s",""));
-	#endif
+    #if defined (VERSION)
+    	PyDict_SetItemString(moduleDict, "VERSION", Py_BuildValue("s",VERSION));
+    #else
+    	PyDict_SetItemString(moduleDict, "VERSION", Py_BuildValue("s",'0.7.1'));
+    #endif
 
-	#if defined (LASTFM_APIKEY)
-		PyDict_SetItemString(moduleDict, "LASTFM_APIKEY", Py_BuildValue("s",LASTFM_SECRET));
-	#else
-		PyDict_SetItemString(moduleDict, "LASTFM_APIKEY", Py_BuildValue("s",""));
-	#endif
+	
+	/*#if defined (LASTFM_SECRET)
+        if (LASTFM_SECRET)
+    		PyDict_SetItemString(moduleDict, "LASTFM_SECRET", Py_BuildValue("s",LASTFM_SECRET));
+	#else*/
+	PyDict_SetItemString(moduleDict, "LASTFM_SECRET", Py_BuildValue("s","b8c00f5548c053033b89633d1004d059"));
+	//#endif
+
+	/*#if defined (LASTFM_APIKEY)
+        if (LASTFM_APIKEY)
+    		PyDict_SetItemString(moduleDict, "LASTFM_APIKEY", Py_BuildValue("s",LASTFM_APIKEY));
+	#else*/
+	PyDict_SetItemString(moduleDict, "LASTFM_APIKEY", Py_BuildValue("s","0da3b11c97759f044bd4223dda212daa"));
+	//#endif
 
 	#if defined (__WIN32__)
 	  // Windows stuff

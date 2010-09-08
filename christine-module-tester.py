@@ -10,9 +10,6 @@ import logging
 if len(sys.argv) < 2:
 	modulo = raw_input('Prueba a correr: \n')
 	sys.argv.append(modulo)
-if  '-p' in sys.argv:
-	import pdb
-	pdb.set_trace()
 
 
 level = logging.DEBUG

@@ -69,8 +69,6 @@ class webservices(plugin_base):
 		self.core = ChristineCore()
 		if self.active:
 			self.start()
-		
-	
 	
 	def handle_request(self,source, condition):
 		try:
@@ -86,13 +84,8 @@ class webservices(plugin_base):
 			if not self.port:
 				return
 			self.soapserver = SOAPpy.SOAPServer(('',self.port))
-			#self.soapserver.socket.setblocking(1)
 			self.registerObject(self.set_location)
 			self.re_register_functions()
-			#gtk.gdk.threads_enter()
-			#thread.start_new(self.soapserver.serve_forever, tuple())
-			#gtk.gdk.threads_leave()
-			
 			gobject.io_add_watch(self.soapserver.socket, gobject.IO_IN,
 			            self.handle_request)
 		except:

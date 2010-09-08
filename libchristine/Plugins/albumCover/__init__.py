@@ -35,8 +35,8 @@ from libchristine.ui import interface
 from libchristine.Share import Share
 from libchristine.Tagger import Tagger
 from libchristine.globalvars import IMAGEDIR
+from libchristine.cglobalvars import LASTFM_APIKEY, LASTFM_SECRET
 from libchristine.ChristineCore import ChristineCore
-
 import gtk
 import urllib2
 import thread
@@ -58,6 +58,8 @@ class albumCover(plugin_base):
 		if not self.christineConf.exists('lastfm/getimage'):
 			self.christineConf.setValue('lastfm/getimage', True)
 		self.core.Player.connect('set-location', self.getImage)
+		self.sessionkey = self.christineConf.getString('lastfm/key')
+		self.username = self.christineConf.getString('lastfm/name')
 	
 	def __clean_image(self):
 		'''
@@ -93,7 +95,7 @@ class albumCover(plugin_base):
 				k.lower().startswith('albumart')]
 		if files:
 			self.set_image(os.path.join(directory, files[0]))
-		return True
+		return 
 			
 	def __getImage(self, tags):
 		have_image = False
@@ -104,10 +106,8 @@ class albumCover(plugin_base):
 		if os.path.exists(os.path.join(IMAGEDIR, filename)):
 			have_image = True
 		else:
-			sessionkey = self.christineConf.getString('lastfm/key')
-			username = self.christineConf.getString('lastfm/name')
-			user = User(username, APIKEY, SECRET, sessionkey)
-			album = Album(tags['artist'], tags['album'], APIKEY, SECRET, sessionkey)
+			user = User(self.username, LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
+			album = Album(tags['artist'], tags['album'], LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
 			image = album.getImage(IMAGE_LARGE)
 			if image:
 				self.__write_image(image,filename)

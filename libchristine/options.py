@@ -54,6 +54,11 @@ class options(Singleton):
                  help="Force christine to quit after startup")
 		parser.add_option("-o","--use-new-main-window", dest="use_new_main_window",action='store_true',
                  help="Force christine to use the new mainWindow ")
+		parser.add_option("-p","--append-podcast", dest="append_podcast",action='store',
+				type='string', help="Append a podcast to the db.")
+		parser.add_option("-g","--get-podcasts", dest="get_podcast",action='store_true',
+				help="Prints the podcast")
+
 		self.options, self.args = parser.parse_args()
 		
 	

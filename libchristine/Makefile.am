@@ -60,10 +60,13 @@ CLibraryModel.so:  Makefile $(srcdir)/CLibraryModel.so
 	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} CLibraryModel.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o CLibraryModel.so 
 
 cglobalvars.so:  Makefile $(srcdir)/cglobalvars.so
-	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c -D'VERSION="${version}"' cglobalvars.c -o cglobalvars.o
+	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ -I/usr/include/ -c -D'VERSION="${version}"' \
+		-D"LASTFM_APIKEY='${LASTFM_APIKEY}'" \
+		-D"LASTFM_SECRET='${LASTFM_SECRET}'" \
+		cglobalvars.c -o cglobalvars.o
 	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} cglobalvars.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o cglobalvars.so
 
-all: cglobalvars.so
+all: cglobalvars.so CLibraryModel.so globalvars.py
 
 clean:
 	rm $(srcdir)/*.pyc &

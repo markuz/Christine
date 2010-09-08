@@ -411,9 +411,6 @@
                       <object class="GtkHBox" id="HBoxToolBoxContainer">
                         <property name="visible">True</property>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
                           <object class="GtkVBox" id="vbox1">
                             <property name="visible">True</property>
                             <child>
@@ -434,18 +431,21 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHScale" id="HScaleVolume">
-                                <property name="width_request">100</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="adjustment">adjustment1</property>
-                                <property name="draw_value">False</property>
-                                <signal name="value_changed" handler="changeVolume"/>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
+                              <placeholder/>
                             </child>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkHScale" id="HScaleVolume">
+                            <property name="width_request">100</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="adjustment">adjustment1</property>
+                            <property name="draw_value">False</property>
+                            <signal name="value_changed" handler="changeVolume"/>
                           </object>
                           <packing>
                             <property name="position">1</property>

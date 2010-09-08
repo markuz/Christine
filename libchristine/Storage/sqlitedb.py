@@ -23,12 +23,12 @@
 # @author    Marco Antonio Islas Cruz <markuz@islascruz.org>
 # @copyright 2006-2007 Christine Development Group
 # @license   http://www.gnu.org/licenses/gpl.txt
-import gobject
-
 #
+
 # This module define the classes and procedures to use SQLite3 on christine
 #
 
+import gobject
 import sqlite3
 from libchristine.globalvars import DBFILE
 from libchristine.pattern.Singleton import Singleton
@@ -104,12 +104,47 @@ class sqlite3db(Singleton, GtkMisc):
 				'ALTER TABLE registry ADD COLUMN type VARCHAR(10)',
 				'UPDATE registry SET value="0.7.0", type="string",key="/core/dbversion" WHERE desc = "version"',
 				)
+		self.__sentence_executer(sentences)
+	
+	def _update_0_8_0(self):
+		sentences = (
+				'CREATE TABLE IF NOT EXISTS podcast (\
+						id INTEGER PRIMARY KEY, \
+						desc VARCHAR(255), url VARCHAR(255),\
+						title VARCHAR(255), \
+						subtitle VARCHAR(255), \
+						author VARCHAR(255), \
+						date DATE, \
+						copyright VARCHAR(255),\
+						summary TEXT, \
+						description TEXT, \
+						image TEXT,\
+						)',
+				'CREATE TABLE IF NOT EXISTS podcast_entries (\
+						id INTEGER PRIMARY KEY,\
+						idpodcast INTEGER, \
+						count INTEGER,\
+						author  VARCHAR(255), \
+						subtitle VARCHAR(255), \
+						summary VARCHAR(255), \
+						file_url VARCHAR(255), \
+						length INTEGER, \
+						guid VARCHAR(255), \
+						pubdate DATE,\
+						duration INTEGER,\
+						keywords VARCHAR(255),\
+						)',
+				)
+		self.__sentence_executer(sentences)
+	
+	def __sentence_executer(self, sentences):
 		for strSQL in sentences:
 			try:
 				self.execute(strSQL)
 				self.commit()
 			except Exception, e:
 				print e
+
 
 	def get_registry(self,key):
 		strSQL = '''SELECT * FROM registry WHERE key = ?'''
@@ -506,3 +541,25 @@ class sqlite3db(Singleton, GtkMisc):
 		'''
 		self.execute('INSERT INTO playlists VALUES (null, ?)',"music")
 		return True
+
+
+	def get_all_podcasts():
+		strSQL = '''
+		SELECT * FROM podcast
+		'''
+		self.execute(strSQL)
+		result = self.fetchall()
+		return result
+
+	def get_latest_podcasts_items(self, idpodcast):
+		'''
+		Look for the latest podcast by the idposcast
+		'''
+		strSQL = '''
+		SELECT * FROM podcast_entries WHERE idpodcast = ?
+		ODER BY date DESC limit 0,100
+		'''
+		self.execute(strSQL, idpodcast)
+		result = self.fetchall()
+		self.commit()
+		return result

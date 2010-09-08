@@ -105,6 +105,7 @@ class next_button(button):
 	def __init__(self):
 		button.__init__(self)
 		self.connect('expose-event', self.do_expose1)
+		self.set_size_request(32,32)
 	
 	def do_expose1(self, button, event):
 		x, y, w, h =  self.allocation
