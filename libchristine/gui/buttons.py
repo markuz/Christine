@@ -38,18 +38,18 @@ class button(gtk.Button, CairoMisc):
         CairoMisc.__init__(self)
         self.__clicked =  False
         self.set_border_width(1)
-        self.set_size_request(20,20)
+        self.set_size_request(32,32)
 
-        self.connect('button-press-event', self.__do_button_press)
-        self.connect('button-release-event', self.__do_button_release)
+        self.connect('button-press-event', self.do_button_press)
+        self.connect('button-release-event', self.do_button_release)
         self.connect('expose-event', self.__do_expose)
     
-    def __do_button_press(self, button, event):
+    def do_button_press(self, button, event):
         if event.button == 1:
             self.__clicked = True
             self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
 
-    def __do_button_release(self,button, event):
+    def do_button_release(self,button, event):
         if event.button == 1:
             self.__clicked =  False
             self.emit('expose-event', gtk.gdk.Event(gtk.gdk.EXPOSE))
@@ -71,8 +71,8 @@ class button(gtk.Button, CairoMisc):
             color = gtk.gdk.color_parse("#F8FBE2")
             colorbg = gtk.gdk.color_parse("#D6D0B7")
         else:
-            colorbg = gtk.gdk.color_parse("#F8FBE2")
-            color = gtk.gdk.color_parse("#D6D0B7")
+            colorbg = gtk.gdk.color_parse("#CBCCB2")
+            color = gtk.gdk.color_parse("#9A9065")
 
         linear.add_color_stop_rgb(0.0,
                         self.getCairoColor(color.red),
@@ -105,7 +105,6 @@ class next_button(button):
     def __init__(self):
         button.__init__(self)
         self.connect('expose-event', self.do_expose1)
-        self.set_size_request(32,32)
     
     def do_expose1(self, button, event):
         x, y, w, h =  self.allocation
@@ -115,13 +114,12 @@ class next_button(button):
         context = button.window.cairo_create()    
         self.draw_arc(context)
         context.clip()
-        line_width = w * 0.1
         context.move_to(((w/5)*1.5)+x, (h/3)+y)
         context.line_to((w -(w/5))+x, (h/2)+y)
         context.line_to(((w/5)*1.5)+x, (h - (h/3))+y)
         context.close_path()
         context.fill()
-        context.rectangle(((w/5)*3.5)+x, (h/2)-3+y, 2, 6)
+        context.rectangle(((w/5)*3.5)+x, (h/2)-(h*0.1)+y, w * 0.12, h*0.2)
         context.fill()
         return True
 
@@ -143,7 +141,7 @@ class prev_button(button):
         context.line_to(((w/5)*3.5)+x, (h - (h/3))+y)
         context.close_path()
         context.fill()
-        context.rectangle((w/5)+x, (h/2)-3+y, 2, 6)
+        context.rectangle((w/5)+x, (h/2)-(h*0.1)+y, (w*0.12), (h*0.2))
         context.fill()
         return True
 
