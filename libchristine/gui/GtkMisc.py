@@ -196,7 +196,7 @@ class CairoMisc(object):
         self.hex[hex] = ret
         return ret
 
-    def render_rect(self, cr, x, y, w, h, o):
+    def render_rect(self, cr, x, y, w, h, o, preradius = 5):
         '''
         create a rectangle with rounded corners
         '''
@@ -204,7 +204,7 @@ class CairoMisc(object):
         y0 = y
         rect_width = w
         rect_height = h
-        radius = 5 + o
+        radius = preradius + o
 
         x1 = x0 + rect_width
         y1 = y0 + rect_height
