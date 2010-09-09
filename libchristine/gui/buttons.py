@@ -115,6 +115,7 @@ class next_button(button):
 		context = button.window.cairo_create()	
 		self.draw_arc(context)
 		context.clip()
+		line_width = w * 0.1
 		context.move_to(((w/5)*1.5)+x, (h/3)+y)
 		context.line_to((w -(w/5))+x, (h/2)+y)
 		context.line_to(((w/5)*1.5)+x, (h - (h/3))+y)
