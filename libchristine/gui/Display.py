@@ -222,7 +222,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w,h)
         context = cairo.Context(surface)
         context.move_to(0, 0)
-        context.set_line_width(2.0)
+        #context.set_line_width(1.5)
         self.render_rect(context, x, y, w, h, 0.5)
         context.clip_preserve()
         context.save()
@@ -247,7 +247,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
                 self.getCairoColor(b1color.green),
                 self.getCairoColor(b1color.blue))
         
-        self.render_rect(context, x, y, w, h-1, 0.5)
+        self.render_rect(context, x, y, w, h, 0.5)
         
         linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
         color = gtk.gdk.color_parse("#F8FBE2")
@@ -261,13 +261,9 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
         context.fill_preserve()
 
         #Greadiente para el borde
-        color = gtk.gdk.color_parse("black")
-        linear = cairo.LinearGradient(x+1, y+1 , x+1, h-1)
-        linear.add_color_stop_rgb(0,cr1,cg1,cb1)
-        linear.add_color_stop_rgb(0.2,cr1,cg1,cb1)
-        color = gtk.gdk.color_parse("white")
-        linear.add_color_stop_rgb(0.9,cr,cg,cb,)
-        context.set_source(linear)
+        color = gtk.gdk.color_parse("#666")
+        cr, cg,cb = map(self.getCairoColor, (color.red, color.green, color.blue))
+        context.set_source_rgb(cr, cg, cb)
         context.stroke()
         
         self.draw_text(context, x,y,w,h)
