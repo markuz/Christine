@@ -33,13 +33,13 @@ import os
 # @param  void
 # @return boolean
 def isNull(value):
-	"""
-	Compare if it is none or not
-	"""
-	if value != None:
-		return False
+    """
+    Compare if it is none or not
+    """
+    if value != None:
+        return False
 
-	return True
+    return True
 
 #
 # Compare if it is none or not
@@ -47,10 +47,10 @@ def isNull(value):
 # @param  void
 # @return boolean
 def isBoolean(value):
-	"""
-	Compare if it is boolean or not
-	"""
-	return isinstance(value, bool)
+    """
+    Compare if it is boolean or not
+    """
+    return isinstance(value, bool)
 
 #
 # Compare if it is integer or not
@@ -58,10 +58,10 @@ def isBoolean(value):
 # @param  void
 # @return boolean
 def isInteger(value):
-	"""
-	Compare if it is integer or not
-	"""
-	return isinstance(value, int)
+    """
+    Compare if it is integer or not
+    """
+    return isinstance(value, int)
 
 #
 # Compare if it is float or not
@@ -69,10 +69,10 @@ def isInteger(value):
 # @param  void
 # @return boolean
 def isFloat(value):
-	"""
-	Compare if it is float or not
-	"""
-	return isinstance(value, float)
+    """
+    Compare if it is float or not
+    """
+    return isinstance(value, float)
 
 #
 # Compare if it is string or not
@@ -80,10 +80,10 @@ def isFloat(value):
 # @param  void
 # @return boolean
 def isString(value):
-	"""
-	Compare if it is string or not
-	"""
-	return isinstance(value, str) or isinstance(value, unicode)
+    """
+    Compare if it is string or not
+    """
+    return isinstance(value, str) or isinstance(value, unicode)
 
 #
 # Compare string if it is empty or not
@@ -91,12 +91,12 @@ def isString(value):
 # @param  void
 # @return boolean
 def isStringEmpty(value):
-	"""
-	Compare string if it is empty or not
-	"""
-	if isinstance(value, str):
-		return (len(value) == 0)
-	return False
+    """
+    Compare string if it is empty or not
+    """
+    if isinstance(value, str):
+        return (len(value) == 0)
+    return False
 
 #
 # Compare if it is a file or not
@@ -104,9 +104,9 @@ def isStringEmpty(value):
 # @param  void
 # @return boolean
 def isFile(value):
-	"""
-	Compare if it is a file or not
-	"""
-	if value:
-		return os.path.isfile(value)
-	return False
+    """
+    Compare if it is a file or not
+    """
+    if value:
+        return os.path.isfile(value)
+    return False

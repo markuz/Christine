@@ -20,16 +20,16 @@ from libchristine.pattern.Singleton import Singleton
 from libchristine.Logger import LoggerManager
 
 class interface(Singleton):
-	'''
-	This class is a singleton storage for the interface instances.
-	'''
-	def __init__(self):
-		self.empty = ''
-		self.LoggerManager = LoggerManager()
-		#Some attributes added:
-		#coreClass, the main class (libchristine.Christine)
-		self.coreClass = None
-		#The player
-		self.Player = None
-		self.db = None
-	
+    '''
+    This class is a singleton storage for the interface instances.
+    '''
+    def __init__(self):
+        self.empty = ''
+        self.LoggerManager = LoggerManager()
+        #Some attributes added:
+        #coreClass, the main class (libchristine.Christine)
+        self.coreClass = None
+        #The player
+        self.Player = None
+        self.db = None
+    

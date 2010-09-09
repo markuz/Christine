@@ -49,102 +49,102 @@ __enabled__ = christineConf.getBool('twitter/enabled')
 
 
 class twitter(plugin_base):
-	"""
-	Class to update twitter with the song being played on Christine
-	"""
-	def __init__(self):
-		plugin_base.__init__(self)
-		self.name = __name__
-		self.description = __description__
-		#self.christineConf.notifyAdd('backend/last_played', self.postMessage)
-		self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
-		self.core = ChristineCore()
-		self.core.Player.connect('end-of-stream', self.postMessage)
-		self.tagger = Tagger()
-		self.Share = Share()
-		self.interface = interface()
-		self.logger = self.interface.LoggerManager.getLogger('PluginTwitter')
+    """
+    Class to update twitter with the song being played on Christine
+    """
+    def __init__(self):
+        plugin_base.__init__(self)
+        self.name = __name__
+        self.description = __description__
+        #self.christineConf.notifyAdd('backend/last_played', self.postMessage)
+        self.christineConf.notifyAdd('twitter/enabled', self.postMessage)
+        self.core = ChristineCore()
+        self.core.Player.connect('end-of-stream', self.postMessage)
+        self.tagger = Tagger()
+        self.Share = Share()
+        self.interface = interface()
+        self.logger = self.interface.LoggerManager.getLogger('PluginTwitter')
 
-	def postMessage(self, args):
-		if not self.active:
-			return
-		file = self.christineConf.getString('backend/last_played')
-		username = self.christineConf.getString('twitter/username')
-		if not username:
-			self.christineConf.setValue('twitter/username','user@somemail.com')
-		password = self.christineConf.getString('twitter/password')
-		if not password:
-			self.christineConf.setValue('twitter/password','1234567890')
-		msg = self.christineConf.getString('twitter/message')
-		if not msg:
-			self.christineConf.setValue('twitter/message',' [christine] _title_ by _artist_ from _album_')
-		msg = self.tagger.taggify(file, msg)
-		url = "http://twitter.com/statuses/update.xml"
-		thread.start_new(self.httpConn, (url, msg, username, password))
+    def postMessage(self, args):
+        if not self.active:
+            return
+        file = self.christineConf.getString('backend/last_played')
+        username = self.christineConf.getString('twitter/username')
+        if not username:
+            self.christineConf.setValue('twitter/username','user@somemail.com')
+        password = self.christineConf.getString('twitter/password')
+        if not password:
+            self.christineConf.setValue('twitter/password','1234567890')
+        msg = self.christineConf.getString('twitter/message')
+        if not msg:
+            self.christineConf.setValue('twitter/message',' [christine] _title_ by _artist_ from _album_')
+        msg = self.tagger.taggify(file, msg)
+        url = "http://twitter.com/statuses/update.xml"
+        thread.start_new(self.httpConn, (url, msg, username, password))
 
-	def httpConn(self,url, msg, username, password):
-		"""
-		Makes authenticated http connection, to avoid shell opening with curl
-		This could be on another module... coded smartly
-		"""
-		pwd_mngr = urllib2.HTTPBasicAuthHandler()
-		pwd_mngr.add_password("Twitter API", url, username, password)
-		opener = urllib2.build_opener(pwd_mngr)
-		urllib2.install_opener(opener)
-		try:
-			urllib2.urlopen(url,urlencode({"status": msg}))
-		except urllib2.HTTPError, e :
-			if e.code == 401:
-				self.logger.info(_('not authorized'))
-			elif e.code == 404:
-				self.logger.info(_('not found'))
-			elif e.code == 503:
-				self.logger.info(_('service not available'))
-			else:
-				self.logger.info(_('unknown error'))
-		else:
-			self.logger.info(_('twitt -> %s'%msg))
+    def httpConn(self,url, msg, username, password):
+        """
+        Makes authenticated http connection, to avoid shell opening with curl
+        This could be on another module... coded smartly
+        """
+        pwd_mngr = urllib2.HTTPBasicAuthHandler()
+        pwd_mngr.add_password("Twitter API", url, username, password)
+        opener = urllib2.build_opener(pwd_mngr)
+        urllib2.install_opener(opener)
+        try:
+            urllib2.urlopen(url,urlencode({"status": msg}))
+        except urllib2.HTTPError, e :
+            if e.code == 401:
+                self.logger.info(_('not authorized'))
+            elif e.code == 404:
+                self.logger.info(_('not found'))
+            elif e.code == 503:
+                self.logger.info(_('service not available'))
+            else:
+                self.logger.info(_('unknown error'))
+        else:
+            self.logger.info(_('twitt -> %s'%msg))
 
-	def get_active(self):
-		return self.christineConf.getBool('twitter/enabled')
+    def get_active(self):
+        return self.christineConf.getBool('twitter/enabled')
 
-	def set_active(self, value):
-		__enabled__ = value
-		return self.christineConf.setValue('twitter/enabled', value)
-	
-	def configure(self):
-		'''
-		Configure twitter plugin 
-		'''
-		xml = self.Share.getTemplate('twitter')
-		dialog = xml['dialog']
-		username = xml['username']
-		password = xml['password']
-		message = xml['message']
-		username.set_text(self.christineConf.getString('twitter/username'))
-		password.set_text(self.christineConf.getString('twitter/password'))
-		password.set_visibility(False)
-		message.set_text(self.christineConf.getString('twitter/message'))
-		username.connect('changed', self.__change_value, 'username')
-		password.connect('changed', self.__change_value, 'password')
-		password.connect('focus-in-event', lambda widget, event: widget.set_visibility(True))
-		password.connect('focus-out-event', lambda widget, event: widget.set_visibility(False))
-		message.connect('changed', self.__change_value, 'message')
-		dialog.run()
-		dialog.destroy()
-	
-	def __change_value(self, entry, key):
-		'''
-		Change a value in the twitter section
-		@param entry: gtk.Entry that emits "changed" signal
-		@param key: key of the section (username, password, message)
-		'''
-		nkey = 'twitter/%s'%key
-		self.christineConf.setValue(nkey, entry.get_text())
-		
-		
-		
-		
+    def set_active(self, value):
+        __enabled__ = value
+        return self.christineConf.setValue('twitter/enabled', value)
+    
+    def configure(self):
+        '''
+        Configure twitter plugin 
+        '''
+        xml = self.Share.getTemplate('twitter')
+        dialog = xml['dialog']
+        username = xml['username']
+        password = xml['password']
+        message = xml['message']
+        username.set_text(self.christineConf.getString('twitter/username'))
+        password.set_text(self.christineConf.getString('twitter/password'))
+        password.set_visibility(False)
+        message.set_text(self.christineConf.getString('twitter/message'))
+        username.connect('changed', self.__change_value, 'username')
+        password.connect('changed', self.__change_value, 'password')
+        password.connect('focus-in-event', lambda widget, event: widget.set_visibility(True))
+        password.connect('focus-out-event', lambda widget, event: widget.set_visibility(False))
+        message.connect('changed', self.__change_value, 'message')
+        dialog.run()
+        dialog.destroy()
+    
+    def __change_value(self, entry, key):
+        '''
+        Change a value in the twitter section
+        @param entry: gtk.Entry that emits "changed" signal
+        @param key: key of the section (username, password, message)
+        '''
+        nkey = 'twitter/%s'%key
+        self.christineConf.setValue(nkey, entry.get_text())
+        
+        
+        
+        
 
-	active = property(get_active, set_active, None,
-					'Determine if the plugin is active or inactive')
+    active = property(get_active, set_active, None,
+                    'Determine if the plugin is active or inactive')

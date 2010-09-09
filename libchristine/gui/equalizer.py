@@ -28,91 +28,91 @@ from libchristine.Share import Share
 import gobject
 
 class equalizer(gobject.GObject,GtkMisc):
-	__gsignals__= {
-				'close' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-								tuple()),
-				}
-	def __init__(self):
-		gobject.GObject.__init__(self)
-		GtkMisc.__init__(self)
-		self.core = ChristineCore()
-		#Set the adjustment
-		#Load the template
-		share = Share()
-		xml = share.getTemplate('equalizer')
-		self.main_window = xml['window']
-		self.main_window.connect('delete-event', self.main_window_closed)
-		
-		self.topWidget = xml['topWidget']
-		#closebtn = xml['closebutton']
-		#closebtn.connect('clicked', lambda x: self.window.hide())
-		self.preset_cb = xml['preset_cb']
-		model = gtk.ListStore(str)
-		self.preset_cb.set_model(model)
-		cell = gtk.CellRendererText()
-		self.preset_cb.pack_start(cell, True)
-		self.preset_cb.add_attribute(cell, 'text',0)
-		self.preset_cb.connect('changed', self._do_load_preset)
-		presets = list(self.core.Player.get_preset_names())
-		presets.append('neutral')
-		presets.sort()
-		try:
-			pre = self.core.config.get_value('equalizer/preset')
-		except:
-			pre = "ballad"
-		for index, preset in enumerate(presets):
-			iter = model.append()
-			model.set(iter, 0,preset)
-			if preset == pre:
-				ind = index
-		self.preset_cb.set_active(ind)
-			
-		for i in range(10):
-			wname = 'band%d'%i
-			widget = xml[wname]
-			adjustment = gtk.Adjustment(value=-24, lower=-24, upper=12)
-			widget.set_adjustment(adjustment)
-			widget.connect('value-changed', self.__apply_value, self.core, wname)
-			widget.set_value(0)
-			self.__dict__[wname] = widget
-		#Connect the "preset_loaded"
-		self.core.Player.connect('preset_loaded', self._do_preset_loaded)
-	
-	def show(self):
-		self.main_window.show_all()
-	
-	def main_window_closed(self,*args):
-		self.main_window.hide()
-		return True
-	
-	def __apply_value(self, widget, core, band):
-		value = widget.get_value()
-		core.Player.set_band_value(band, value)
-	
-	def _do_preset_loaded(self, player):
-		for i in range(10):
-			band = "band%d"%i
-			widget = getattr(self, band, None)
-			#Get the value of the band.
-			value = self.core.Player.get_band_value(band)
-			widget.set_value(value)
-	
-	def _do_load_preset(self, combo):
-		index = combo.get_active()
-		model = combo.get_model()
-		value = model.get_value(model.get_iter(index), 0)
-		#Save the preset in database
-		self.core.config.setValue('equalizer/preset', value)
-		if value == 'neutral':
-			for i in range(10):
-				widget = getattr(self, "band%d"%i, None)
-				if not widget: continue
-				widget.set_value(0)
-			return
-		self.core.Player.load_preset(value)
-		
+    __gsignals__= {
+                'close' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                                tuple()),
+                }
+    def __init__(self):
+        gobject.GObject.__init__(self)
+        GtkMisc.__init__(self)
+        self.core = ChristineCore()
+        #Set the adjustment
+        #Load the template
+        share = Share()
+        xml = share.getTemplate('equalizer')
+        self.main_window = xml['window']
+        self.main_window.connect('delete-event', self.main_window_closed)
+        
+        self.topWidget = xml['topWidget']
+        #closebtn = xml['closebutton']
+        #closebtn.connect('clicked', lambda x: self.window.hide())
+        self.preset_cb = xml['preset_cb']
+        model = gtk.ListStore(str)
+        self.preset_cb.set_model(model)
+        cell = gtk.CellRendererText()
+        self.preset_cb.pack_start(cell, True)
+        self.preset_cb.add_attribute(cell, 'text',0)
+        self.preset_cb.connect('changed', self._do_load_preset)
+        presets = list(self.core.Player.get_preset_names())
+        presets.append('neutral')
+        presets.sort()
+        try:
+            pre = self.core.config.get_value('equalizer/preset')
+        except:
+            pre = "ballad"
+        for index, preset in enumerate(presets):
+            iter = model.append()
+            model.set(iter, 0,preset)
+            if preset == pre:
+                ind = index
+        self.preset_cb.set_active(ind)
+            
+        for i in range(10):
+            wname = 'band%d'%i
+            widget = xml[wname]
+            adjustment = gtk.Adjustment(value=-24, lower=-24, upper=12)
+            widget.set_adjustment(adjustment)
+            widget.connect('value-changed', self.__apply_value, self.core, wname)
+            widget.set_value(0)
+            self.__dict__[wname] = widget
+        #Connect the "preset_loaded"
+        self.core.Player.connect('preset_loaded', self._do_preset_loaded)
+    
+    def show(self):
+        self.main_window.show_all()
+    
+    def main_window_closed(self,*args):
+        self.main_window.hide()
+        return True
+    
+    def __apply_value(self, widget, core, band):
+        value = widget.get_value()
+        core.Player.set_band_value(band, value)
+    
+    def _do_preset_loaded(self, player):
+        for i in range(10):
+            band = "band%d"%i
+            widget = getattr(self, band, None)
+            #Get the value of the band.
+            value = self.core.Player.get_band_value(band)
+            widget.set_value(value)
+    
+    def _do_load_preset(self, combo):
+        index = combo.get_active()
+        model = combo.get_model()
+        value = model.get_value(model.get_iter(index), 0)
+        #Save the preset in database
+        self.core.config.setValue('equalizer/preset', value)
+        if value == 'neutral':
+            for i in range(10):
+                widget = getattr(self, "band%d"%i, None)
+                if not widget: continue
+                widget.set_value(0)
+            return
+        self.core.Player.load_preset(value)
+        
 
-	def emitclose(self, button):
-		self.main_window.hide()
-		return True
+    def emitclose(self, button):
+        self.main_window.hide()
+        return True
 

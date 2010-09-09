@@ -26,8 +26,8 @@ PAGEDOWN = gtk.gdk.keyval_from_name('Page_Up')
 
 NUMBERS = []
 for i in tuple('1234567890'):
-	for j in ('','KP_'):
-		NUMBERS.append(gtk.gdk.keyval_from_name(j+i))
+    for j in ('','KP_'):
+        NUMBERS.append(gtk.gdk.keyval_from_name(j+i))
 
 DOTS = (PERIOD, KP_DECIMAL)
 DELETES = ( BACKSPACE, DELETE )

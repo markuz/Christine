@@ -31,7 +31,7 @@ import gtk
 from libchristine.customButtons import christineButton
 
 def printAction(buttons, action):
-	print action
+    print action
 
 
 window = gtk.Window()

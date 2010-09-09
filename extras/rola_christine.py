@@ -36,29 +36,29 @@ import xchat
 from dbus.mainloop.glib import DBusGMainLoop
  
 class RolaChristine:
-	def __init__(self):
-		self.mainloop = DBusGMainLoop()
-		self.dbus_session = dbus.SessionBus(mainloop = self.mainloop)
-		xchat.prnt("rola-christine.py Version %s loaded!" %version)
-		xchat.prnt("/rola-christine")
-	
-	def rola(self,word,word_eol,userdata):
-		try:
-			christine = self.dbus_session.get_object('org.christine', '/org/christine')
-		except:
-			xchat.command('Nada a mostrar.. :-(')
-			return xchat.EAT_XCHAT
-		uri = christine.now_playing()
-		tags = christine.get_tags(uri)
-		title = '%s'%tags.get('title','')
-		if not title:
-			xchat.command('Nada a mostrar.. :-(')
-			return xchat.EAT_XCHAT
-		artist = "%s"%tags.get('artist','')
-		if artist:
-			artist = "%s -"%artist
-		xchat.command("me esta escuchando: %s %s" %(artist,title))
-		return xchat.EAT_XCHAT
+    def __init__(self):
+        self.mainloop = DBusGMainLoop()
+        self.dbus_session = dbus.SessionBus(mainloop = self.mainloop)
+        xchat.prnt("rola-christine.py Version %s loaded!" %version)
+        xchat.prnt("/rola-christine")
+    
+    def rola(self,word,word_eol,userdata):
+        try:
+            christine = self.dbus_session.get_object('org.christine', '/org/christine')
+        except:
+            xchat.command('Nada a mostrar.. :-(')
+            return xchat.EAT_XCHAT
+        uri = christine.now_playing()
+        tags = christine.get_tags(uri)
+        title = '%s'%tags.get('title','')
+        if not title:
+            xchat.command('Nada a mostrar.. :-(')
+            return xchat.EAT_XCHAT
+        artist = "%s"%tags.get('artist','')
+        if artist:
+            artist = "%s -"%artist
+        xchat.command("me esta escuchando: %s %s" %(artist,title))
+        return xchat.EAT_XCHAT
 
 control = RolaChristine()
 xchat.hook_command("rola-christine",control.rola)

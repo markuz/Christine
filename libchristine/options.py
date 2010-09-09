@@ -30,35 +30,35 @@ from libchristine.pattern.Singleton import Singleton
 
 
 class options(Singleton):
-	def __init__(self):
-		'''
-		Constructor. Parsea los valores que vienen en sys.argv[1:] y almacena
-		los valores en self.options.
-		
-		Utiliza optparse para parsear las opciones.
-		
-		Las opciones disponibles son:
-		
-		self.options.debug (-v , --debug)
-		self.options.daemon (-D, --daemon)
-		'''
-		usage ='%prog [-v --debug]'
-		version = '%prog' 
-		parser = OptionParser(usage = usage,version=version)
-		parser.add_option("-d","--devel", dest="debug",action='store_true',
+    def __init__(self):
+        '''
+        Constructor. Parsea los valores que vienen en sys.argv[1:] y almacena
+        los valores en self.options.
+        
+        Utiliza optparse para parsear las opciones.
+        
+        Las opciones disponibles son:
+        
+        self.options.debug (-v , --debug)
+        self.options.daemon (-D, --daemon)
+        '''
+        usage ='%prog [-v --debug]'
+        version = '%prog' 
+        parser = OptionParser(usage = usage,version=version)
+        parser.add_option("-d","--devel", dest="debug",action='store_true',
                   help="If christine must run in devel mode")
-		parser.add_option("-v","--verbose", dest="verbose",action='store',
-				type="string",
+        parser.add_option("-v","--verbose", dest="verbose",action='store',
+                type="string",
                   help="Force christine to dump the logs to the stdout")
-		parser.add_option("-q","--quit", dest="quit",action='store_true',
+        parser.add_option("-q","--quit", dest="quit",action='store_true',
                  help="Force christine to quit after startup")
-		parser.add_option("-o","--use-new-main-window", dest="use_new_main_window",action='store_true',
+        parser.add_option("-o","--use-new-main-window", dest="use_new_main_window",action='store_true',
                  help="Force christine to use the new mainWindow ")
-		parser.add_option("-p","--append-podcast", dest="append_podcast",action='store',
-				type='string', help="Append a podcast to the db.")
-		parser.add_option("-g","--get-podcasts", dest="get_podcast",action='store_true',
-				help="Prints the podcast")
+        parser.add_option("-p","--append-podcast", dest="append_podcast",action='store',
+                type='string', help="Append a podcast to the db.")
+        parser.add_option("-g","--get-podcasts", dest="get_podcast",action='store_true',
+                help="Prints the podcast")
 
-		self.options, self.args = parser.parse_args()
-		
-	
+        self.options, self.args = parser.parse_args()
+        
+    

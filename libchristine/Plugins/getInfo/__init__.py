@@ -48,60 +48,60 @@ __enabled__ = christineConf.getBool('lastfm/getinfo')
 
 
 class getInfo(plugin_base):
-	def __init__(self):
-		'''
-		Constructor
-		'''
-		plugin_base.__init__(self)
-		self.name = __name__
-		self.description =  __description__
-		self.iface = interface()
-		self.Share = Share()
-		self.tagger = Tagger()
-		#self.iface.mainLibrary.connect('popping_menu', self.append_option)
-	
-	def append_option(self, library, menu):
-		item =gtk.MenuItem(translate('Show info'))
-		item.connect('activate', self.get_tags, library)
-		menu.append(item)
-	
-	def get_tags(self, menu, library):
-		#Obtain the current tags..
-		model, iter = library.tv.get_selection().get_selected()
-		if not iter:
-			return False
-		path = model.get_value(iter, PATH)
-		tags = self.tagger.readTags(path)
-		xml = self.Share.getTemplate('showInfo')
-		pathlbl = xml['path']
-		pathlbl.set_text(path)
-		title = xml['title']
-		title.set_text(tags['title'])
-		artist = xml['artist']
-		artist.set_text(tags['artist'])
-		album = xml['album']
-		album.set_text(tags['album'])
-		genre = xml['genre']
-		genre.set_text(str(tags['genre']))
-		track_number = xml['track_number']
-		track_number.set_text(str(tags['track']))
-		dialog = xml ['dialog']
-		response = dialog.run()
-		dialog.destroy()
-	
-	def update_tags(self, path, key):
-		'''
-		Update the tags in the file
-		'''
-		self.iface.Player.set_tag(path, key)
-		
-		
-	def get_active(self):
-		return self.christineConf.getBool('lastfm/getinfo')
-	
-	def set_active(self, value):
-		__enabled__ = value
-		return self.christineConf.setValue('lastfm/getinfo', value)
+    def __init__(self):
+        '''
+        Constructor
+        '''
+        plugin_base.__init__(self)
+        self.name = __name__
+        self.description =  __description__
+        self.iface = interface()
+        self.Share = Share()
+        self.tagger = Tagger()
+        #self.iface.mainLibrary.connect('popping_menu', self.append_option)
+    
+    def append_option(self, library, menu):
+        item =gtk.MenuItem(translate('Show info'))
+        item.connect('activate', self.get_tags, library)
+        menu.append(item)
+    
+    def get_tags(self, menu, library):
+        #Obtain the current tags..
+        model, iter = library.tv.get_selection().get_selected()
+        if not iter:
+            return False
+        path = model.get_value(iter, PATH)
+        tags = self.tagger.readTags(path)
+        xml = self.Share.getTemplate('showInfo')
+        pathlbl = xml['path']
+        pathlbl.set_text(path)
+        title = xml['title']
+        title.set_text(tags['title'])
+        artist = xml['artist']
+        artist.set_text(tags['artist'])
+        album = xml['album']
+        album.set_text(tags['album'])
+        genre = xml['genre']
+        genre.set_text(str(tags['genre']))
+        track_number = xml['track_number']
+        track_number.set_text(str(tags['track']))
+        dialog = xml ['dialog']
+        response = dialog.run()
+        dialog.destroy()
+    
+    def update_tags(self, path, key):
+        '''
+        Update the tags in the file
+        '''
+        self.iface.Player.set_tag(path, key)
+        
+        
+    def get_active(self):
+        return self.christineConf.getBool('lastfm/getinfo')
+    
+    def set_active(self, value):
+        __enabled__ = value
+        return self.christineConf.setValue('lastfm/getinfo', value)
 
-	active = property(get_active, set_active, None,
-					'Determine if the plugin is active or inactive')
+    active = property(get_active, set_active, None,
+                    'Determine if the plugin is active or inactive')

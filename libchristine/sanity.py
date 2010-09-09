@@ -20,48 +20,48 @@ import os
 from libchristine.globalvars import USERDIR
 
 class sanity:
-	'''
-		Make all the sanity checks
-	'''
-	def __init__(self):
-		self.__check_christine_dir()
-		self.check_xgd_data_home()
+    '''
+        Make all the sanity checks
+    '''
+    def __init__(self):
+        self.__check_christine_dir()
+        self.check_xgd_data_home()
 
-	def __check_christine_dir(self):
-		if not os.path.exists(USERDIR):
-			os.mkdir(USERDIR)
-		else:
-			if os.path.isfile(USERDIR):
-				os.unlink(USERDIR)
-				self.__check_christine_dir()
+    def __check_christine_dir(self):
+        if not os.path.exists(USERDIR):
+            os.mkdir(USERDIR)
+        else:
+            if os.path.isfile(USERDIR):
+                os.unlink(USERDIR)
+                self.__check_christine_dir()
 
-	def __check_dir(self,dir):
-		if not os.path.exists(dir):
-			os.mkdir (dir)
-		else:
-			if os.path.isfile(dir):
-				os.unlink(dir)
-				self.__check_dir(dir)
-	
-	def check_xgd_data_home(self):
-		if os.name == 'nt':
-			return True
-		oldpath = os.path.join(os.environ["HOME"],".christine")
-		if os.path.exists(oldpath):
-			import shutil
-			a = os.walk(oldpath)
-			while 1:
-				try:
-					dirpath, dirnames, files = a.next()
-					for i in dirnames:
-						shutil.move(os.path.join(dirpath, i), USERDIR)
-					for i in files:
-						shutil.move(os.path.join(dirpath, i), USERDIR)
-				except StopIteration:
-					break
-			#remove the old directory:
-			try:
-				shutil.rmtree(oldpath)
-			except:
-				pass
-		return True
+    def __check_dir(self,dir):
+        if not os.path.exists(dir):
+            os.mkdir (dir)
+        else:
+            if os.path.isfile(dir):
+                os.unlink(dir)
+                self.__check_dir(dir)
+    
+    def check_xgd_data_home(self):
+        if os.name == 'nt':
+            return True
+        oldpath = os.path.join(os.environ["HOME"],".christine")
+        if os.path.exists(oldpath):
+            import shutil
+            a = os.walk(oldpath)
+            while 1:
+                try:
+                    dirpath, dirnames, files = a.next()
+                    for i in dirnames:
+                        shutil.move(os.path.join(dirpath, i), USERDIR)
+                    for i in files:
+                        shutil.move(os.path.join(dirpath, i), USERDIR)
+                except StopIteration:
+                    break
+            #remove the old directory:
+            try:
+                shutil.rmtree(oldpath)
+            except:
+                pass
+        return True

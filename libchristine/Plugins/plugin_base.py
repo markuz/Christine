@@ -37,31 +37,31 @@ import gtk
 christineConf = christineConf()
 
 class plugin_base(GtkMisc):
-	'''
-	This is the base for the plugins for christine.
-	Implements the basic methods for the plugins to work well with christine
-	'''
-	def __init__(self):
-		self.name = 'Base Plugin'
-		self.description = 'Here goes the plugin description'
-		self.configurable = False #If christine should ask for the config dialog
-		self.__active =  True
-		self.interface = interface()
-		self.christineConf = christineConf
-		self.events = christineEvents()
+    '''
+    This is the base for the plugins for christine.
+    Implements the basic methods for the plugins to work well with christine
+    '''
+    def __init__(self):
+        self.name = 'Base Plugin'
+        self.description = 'Here goes the plugin description'
+        self.configurable = False #If christine should ask for the config dialog
+        self.__active =  True
+        self.interface = interface()
+        self.christineConf = christineConf
+        self.events = christineEvents()
 
-	def configure(self):
-		'''
-		This method will be called when in the christine plugins preferences
-		tab get the preferences button get pressed
-		'''
-		return None
+    def configure(self):
+        '''
+        This method will be called when in the christine plugins preferences
+        tab get the preferences button get pressed
+        '''
+        return None
 
-	def get_active(self):
-		self.__active
+    def get_active(self):
+        self.__active
 
-	def set_active(self, value):
-		self.__active = value
+    def set_active(self, value):
+        self.__active = value
 
-	active = property(get_active, set_active, None,
-					'Determine if the plugin is active or inactive')
+    active = property(get_active, set_active, None,
+                    'Determine if the plugin is active or inactive')

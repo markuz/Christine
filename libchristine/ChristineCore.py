@@ -43,13 +43,13 @@ from libchristine.sources_list import sources_list
 from libchristine.christineConf import christineConf
 
 class ChristineCore(Singleton):
-	def __init__(self):
-		self.logger = LoggerManager().getLogger('ChristineCore')
-		#Crear la instancia del player
-		self.Player = Player()
-		self.Display = Display()
-		self.mainLibrary  = library()
-		self.Queue = queue()
-		self.Plugins = Manager()
-		self.sourcesList = sources_list()
-		self.config = christineConf()
+    def __init__(self):
+        self.logger = LoggerManager().getLogger('ChristineCore')
+        #Crear la instancia del player
+        self.Player = Player()
+        self.Display = Display()
+        self.mainLibrary  = library()
+        self.Queue = queue()
+        self.Plugins = Manager()
+        self.sourcesList = sources_list()
+        self.config = christineConf()

@@ -19,89 +19,89 @@ from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Logger import LoggerManager
 
 class lib_library(object):
-	def __init__(self,list):
-		self.__logger = LoggerManager().getLogger('liblibrary')
-		self.__db = sqlite3db()
-		self.idlist = self.__db.PlaylistIDFromName(list)
-		if self.idlist == None:
-			self.__db.insert_music_playlist()
-			self.idlist = self.__db.PlaylistIDFromName('music')
-		self.idlist = self.idlist['id']
-		self.list = list
-		self.__files = self.__db.getItemsForPlaylist(self.idlist)
-	
-	def __setitem__(self,name,path):
-		self.append(name,path)
+    def __init__(self,list):
+        self.__logger = LoggerManager().getLogger('liblibrary')
+        self.__db = sqlite3db()
+        self.idlist = self.__db.PlaylistIDFromName(list)
+        if self.idlist == None:
+            self.__db.insert_music_playlist()
+            self.idlist = self.__db.PlaylistIDFromName('music')
+        self.idlist = self.idlist['id']
+        self.list = list
+        self.__files = self.__db.getItemsForPlaylist(self.idlist)
+    
+    def __setitem__(self,name,path):
+        self.append(name,path)
 
-	def __getitem__(self,key):
-		return self.__files[key]
+    def __getitem__(self,key):
+        return self.__files[key]
 
-	def iteritems(self):
-		return self.__files.iteritems()
+    def iteritems(self):
+        return self.__files.iteritems()
 
-	def append(self,name,data):
-		if not isinstance(data, dict):
-			raise TypeError("data must be a dict, got %s"%type(data))
-		self.__files[name]=data
-		id = self.__db.additem(
-						path = name,
-						title = data['title'],
-						artist = data['artist'],
-						album = data['album'],
-						time = data['time'],
-						type = data['type'],
-						genre = data['genre'],
-						track_number = data['track_number']
-						)
-		self.__db.addItemToPlaylist(self.idlist, id)
-		self.__db.commit()
+    def append(self,name,data):
+        if not isinstance(data, dict):
+            raise TypeError("data must be a dict, got %s"%type(data))
+        self.__files[name]=data
+        id = self.__db.additem(
+                        path = name,
+                        title = data['title'],
+                        artist = data['artist'],
+                        album = data['album'],
+                        time = data['time'],
+                        type = data['type'],
+                        genre = data['genre'],
+                        track_number = data['track_number']
+                        )
+        self.__db.addItemToPlaylist(self.idlist, id)
+        self.__db.commit()
 
-	def updateItem(self, path, **kwargs):
-		'''
-		Updates the data of a item in the db.
-		'''
-		self.__db.updateItemValues(path, **kwargs)
-		self.__db.commit()
+    def updateItem(self, path, **kwargs):
+        '''
+        Updates the data of a item in the db.
+        '''
+        self.__db.updateItemValues(path, **kwargs)
+        self.__db.commit()
 
-	def keys(self):
-		return self.__files.keys()
+    def keys(self):
+        return self.__files.keys()
 
-	def clean_playlist(self):
-		self.__db.deleteFromPlaylist(self.idlist)
+    def clean_playlist(self):
+        self.__db.deleteFromPlaylist(self.idlist)
 
-	def clear(self):
-		self.__files.clear()
+    def clear(self):
+        self.__files.clear()
 
-	def remove(self,key):
-		'''
-		Remove an item from the main dict and return True or False
-		'''
-		self.__db.removeItem(key,self.idlist)
-		self.__files = self.__db.getItemsForPlaylist(self.idlist)
-		return True
+    def remove(self,key):
+        '''
+        Remove an item from the main dict and return True or False
+        '''
+        self.__db.removeItem(key,self.idlist)
+        self.__files = self.__db.getItemsForPlaylist(self.idlist)
+        return True
 
-	def get_all(self):
-		return self.__files
+    def get_all(self):
+        return self.__files
 
-	def get_sounds(self):
-		a = {}
-		for i in self.keys():
-			if self.__files[i]["type"] == "audio":
-				a[i] = self.__files[i]
-		return a
+    def get_sounds(self):
+        a = {}
+        for i in self.keys():
+            if self.__files[i]["type"] == "audio":
+                a[i] = self.__files[i]
+        return a
 
-	def get_videos(self):
-		a = {}
-		for i in self.keys():
-			if self.__files[i]["type"] == "video":
-				a[i] = self.__files[i]
-		return a
+    def get_videos(self):
+        a = {}
+        for i in self.keys():
+            if self.__files[i]["type"] == "video":
+                a[i] = self.__files[i]
+        return a
 
-	def get_by_path(self, path):
-		'''
-		Return the info os a song in the given path, if path doesn't exists 
-		then return None
-		@param path: Path of the file to be looked.
-		'''
-		return self.__db.getItemByPath(path)
+    def get_by_path(self, path):
+        '''
+        Return the info os a song in the given path, if path doesn't exists 
+        then return None
+        @param path: Path of the file to be looked.
+        '''
+        return self.__db.getItemByPath(path)
 

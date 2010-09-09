@@ -30,57 +30,57 @@
 # Singleton implements
 #
 class Singleton(object):
-	#
-	# Manage instance
-	#
-	# @var object
-	__Instance = None
-	
-	#
-	# Name of the self
-	#
-	# @var string
-	__Name = 'Singleton'
-	
-	#
-	# callback
-	#
-	def __new__(self,*args):
-		if (not self.__Instance):
-			self.__Instance = super(Singleton, self).__new__(self,*args)
-		else:
-			self.__init__ = self.__doNothing
-		
-		return self.__Instance
+    #
+    # Manage instance
+    #
+    # @var object
+    __Instance = None
+    
+    #
+    # Name of the self
+    #
+    # @var string
+    __Name = 'Singleton'
+    
+    #
+    # callback
+    #
+    def __new__(self,*args):
+        if (not self.__Instance):
+            self.__Instance = super(Singleton, self).__new__(self,*args)
+        else:
+            self.__init__ = self.__doNothing
+        
+        return self.__Instance
 
 
-	def __doNothing(self,*args):
-		'''
-		This method do nothing. is used to override the __init__ method
-		and then, do not re-declare values that may be declared at first
-		use of __init__ (When no instance was made).
-		'''
-		pass
+    def __doNothing(self,*args):
+        '''
+        This method do nothing. is used to override the __init__ method
+        and then, do not re-declare values that may be declared at first
+        use of __init__ (When no instance was made).
+        '''
+        pass
 
-	#
-	# Sets name of the self
-	#
-	def setName(self, value = 'Singleton'):
-		self.__Name = value
+    #
+    # Sets name of the self
+    #
+    def setName(self, value = 'Singleton'):
+        self.__Name = value
 
-	#
-	# Returns name of the class
-	#
-	# @return string
-	def getName(self):
-		return self.__Name
+    #
+    # Returns name of the class
+    #
+    # @return string
+    def getName(self):
+        return self.__Name
 
-	#
-	# Returns Id of the object
-	#
-	# @return integer
-	def getId(self):
-		"""
-		Returns singleton Id
-		"""
-		return id(self)
+    #
+    # Returns Id of the object
+    #
+    # @return integer
+    def getId(self):
+        """
+        Returns singleton Id
+        """
+        return id(self)

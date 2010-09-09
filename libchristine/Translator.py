@@ -35,35 +35,35 @@ gettext.bindtextdomain('@programname@', locale_dir)
 gettext.textdomain('@programname@')
 
 def translate(text):
-	return gettext.gettext(text)
+    return gettext.gettext(text)
 
 __builtins__["_"] = translate
 
 class Translator(Singleton):
-	"""
-	Translator manager
-	"""
-	#
-	# Constructor
-	#
-	def __init__(self):
-		"""
-		Constructor
-		"""
-		self.setName('Translator')
+    """
+    Translator manager
+    """
+    #
+    # Constructor
+    #
+    def __init__(self):
+        """
+        Constructor
+        """
+        self.setName('Translator')
 
-		self.__Path = os.path.join(DATADIR,'locale')
+        self.__Path = os.path.join(DATADIR,'locale')
 
-		gettext.bindtextdomain(PROGRAMNAME, self.__Path)
-		gettext.textdomain(PROGRAMNAME)
+        gettext.bindtextdomain(PROGRAMNAME, self.__Path)
+        gettext.textdomain(PROGRAMNAME)
 
-	#
-	# Parse text to be translate
-	#
-	# @param  string text
-	# @return string
-	def parse(self, text):
-		"""
-		Parse text to be translate
-		"""
-		return gettext.gettext(text)
+    #
+    # Parse text to be translate
+    #
+    # @param  string text
+    # @return string
+    def parse(self, text):
+        """
+        Parse text to be translate
+        """
+        return gettext.gettext(text)

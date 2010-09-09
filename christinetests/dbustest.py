@@ -58,28 +58,28 @@ tags = obj.get_tags(uri)
 print tags
 
 def printLocation(newlocation):
-	print newlocation
+    print newlocation
 #obj.connect_to_signal('NewLocation', printLocation)
 #===============================================================================
 # options = {
-#		'Play': obj.play,
-#		'Pause': obj.pause,
-#		'Go prev': obj.go_prev,
-#		'Go next': obj.go_next,
-#		}
+#        'Play': obj.play,
+#        'Pause': obj.pause,
+#        'Go prev': obj.go_prev,
+#        'Go next': obj.go_next,
+#        }
 # gtk.main()
 # keys = ('Play', 'Pause', 'Go prev','Go next')
 #===============================================================================
-#	time.sleep(a
-	
+#    time.sleep(a
+    
 #===============================================================================
 # for num, key in enumerate(keys):
-#	print '%d - %s'%(num, key)
+#    print '%d - %s'%(num, key)
 # value = raw_input()
 # try: 
-#	method = options[keys[int(value)]]
-#	method()
-#	sys.stdout.write(clear)
+#    method = options[keys[int(value)]]
+#    method()
+#    sys.stdout.write(clear)
 # except Exception, e:
-#	pass
+#    pass
 #===============================================================================

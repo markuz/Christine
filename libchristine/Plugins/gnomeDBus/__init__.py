@@ -48,66 +48,66 @@ minor = 18 #default to 2.18 if there are problems in the following code
 output = os.popen("LANG=C gnome-about --gnome-version")  
 pattern = re.compile(r'^Version: ([0-9]+)\.([0-9]+)\..*')  
 for line in output.readlines():
-	if pattern.match(line):
-		major = pattern.search(line).group(1)
-		minor = pattern.search(line).group(2)
-		
+    if pattern.match(line):
+        major = pattern.search(line).group(1)
+        minor = pattern.search(line).group(2)
+        
 __name__ = _('GNOME Media Keys')
 __description__  = _('Allows christine to react to GNOME media key press events')
 __author__  = 'Marco Antonio Islas Cruz <markuz@islascruz.org>'
 __enabled__ = christineConf.getBool('dbus/gnome_media')
 
 class gnomeDBus(plugin_base):
-	def __init__(self):
-		'''
-		Constructor
-		'''
-		plugin_base.__init__(self)
-		self.name = __name__
-		self.description = __description__
-		self.iface = interface()
-		self.__Share   = Share()
-		if (int(major) == 2) & (int(minor) > 20):
-			self.obj = DBUS_SESSION.get_object('org.gnome.SettingsDaemon',
-											'/org/gnome/SettingsDaemon/MediaKeys') 
-			self.obj.connect_to_signal("MediaPlayerKeyPressed", self.mediak_press, 
-						dbus_interface='org.gnome.SettingsDaemon.MediaKeys')
-		else:
-			self.obj = DBUS_SESSION.get_object('org.gnome.SettingsDaemon',
-											'/org/gnome/SettingsDaemon') 
-			self.obj.connect_to_signal("MediaPlayerKeyPressed", self.mediak_press, 
-						dbus_interface='org.gnome.SettingsDaemon')
-		if not self.christineConf.exists('dbus/gnome_media'):
-			self.christineConf.setValue('dbus/gnome_media', True)
+    def __init__(self):
+        '''
+        Constructor
+        '''
+        plugin_base.__init__(self)
+        self.name = __name__
+        self.description = __description__
+        self.iface = interface()
+        self.__Share   = Share()
+        if (int(major) == 2) & (int(minor) > 20):
+            self.obj = DBUS_SESSION.get_object('org.gnome.SettingsDaemon',
+                                            '/org/gnome/SettingsDaemon/MediaKeys') 
+            self.obj.connect_to_signal("MediaPlayerKeyPressed", self.mediak_press, 
+                        dbus_interface='org.gnome.SettingsDaemon.MediaKeys')
+        else:
+            self.obj = DBUS_SESSION.get_object('org.gnome.SettingsDaemon',
+                                            '/org/gnome/SettingsDaemon') 
+            self.obj.connect_to_signal("MediaPlayerKeyPressed", self.mediak_press, 
+                        dbus_interface='org.gnome.SettingsDaemon')
+        if not self.christineConf.exists('dbus/gnome_media'):
+            self.christineConf.setValue('dbus/gnome_media', True)
 
-	def mediak_press(self, *keys):
-		'''
-		This method is called everytime the MediaPlayerKeyPressed signal
-		is emited by the org.gnome.SetingsDaemon object.
-		'''
-		if not self.active:
-			return False
-		for key in keys:
-			if key == 'Play':
-				state =  not self.iface.coreClass.PlayButton.get_active()
-				self.iface.coreClass.PlayButton.set_active( state)
-			elif key in ('Pause', 'Stop'):
-				self.iface.coreClass.pause()
-			elif key == 'Next':
-				self.iface.coreClass.goNext()
-			elif key == 'Previous':
-				self.iface.coreClass.goPrev()
-		if getattr(self, 'Notify', False):
-			self.Notify.close()
-		Notify = _christinePyNotify(key)
-	
-	def get_active(self):
-		return self.christineConf.getBool('dbus/gnome_media')
-	
-	def set_active(self, value):
-		__enabled__ = value
-		return self.christineConf.setValue('dbus/gnome_media', value)
-	
-	active = property(get_active, set_active, None,
-					'Determine if the plugin is active or inactive')
-			
+    def mediak_press(self, *keys):
+        '''
+        This method is called everytime the MediaPlayerKeyPressed signal
+        is emited by the org.gnome.SetingsDaemon object.
+        '''
+        if not self.active:
+            return False
+        for key in keys:
+            if key == 'Play':
+                state =  not self.iface.coreClass.PlayButton.get_active()
+                self.iface.coreClass.PlayButton.set_active( state)
+            elif key in ('Pause', 'Stop'):
+                self.iface.coreClass.pause()
+            elif key == 'Next':
+                self.iface.coreClass.goNext()
+            elif key == 'Previous':
+                self.iface.coreClass.goPrev()
+        if getattr(self, 'Notify', False):
+            self.Notify.close()
+        Notify = _christinePyNotify(key)
+    
+    def get_active(self):
+        return self.christineConf.getBool('dbus/gnome_media')
+    
+    def set_active(self, value):
+        __enabled__ = value
+        return self.christineConf.setValue('dbus/gnome_media', value)
+    
+    active = property(get_active, set_active, None,
+                    'Determine if the plugin is active or inactive')
+            

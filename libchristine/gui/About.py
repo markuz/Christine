@@ -33,29 +33,29 @@ from libchristine.globalvars import PROGRAMNAME, VERSION
 # Manage about GTK dialog
 #
 class guiAbout:
-	"""
-	Manange about GTK dialog
-	"""
+    """
+    Manange about GTK dialog
+    """
 
-	#
-	# Constructor
-	#
-	def __init__(self):
-		"""
-		Constructor
-		"""
-		self.__Share = Share()
+    #
+    # Constructor
+    #
+    def __init__(self):
+        """
+        Constructor
+        """
+        self.__Share = Share()
 
-		xml   = self.__Share.getTemplate('About')
-		self.about = xml['about']
-		pix   = self.__Share.getImageFromPix('logo')
+        xml   = self.__Share.getTemplate('About')
+        self.about = xml['about']
+        pix   = self.__Share.getImageFromPix('logo')
 
-		self.about.set_logo(pix)
-		self.about.set_name(PROGRAMNAME)
-		self.about.set_version(VERSION)
-		self.about.set_icon(self.__Share.getImageFromPix('logo'))
-		self.about.set_translator_credits(translate('translator-credits'))
+        self.about.set_logo(pix)
+        self.about.set_name(PROGRAMNAME)
+        self.about.set_version(VERSION)
+        self.about.set_icon(self.__Share.getImageFromPix('logo'))
+        self.about.set_translator_credits(translate('translator-credits'))
 
-	def run(self):
-		self.about.run()
-		self.about.destroy()
+    def run(self):
+        self.about.run()
+        self.about.destroy()

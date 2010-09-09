@@ -32,33 +32,33 @@ import sys
 
 #===============================================================================
 # class christineLogger:
-#	'''
-#	Implements the christine logging facility.
-#	'''
-#	def __init__(self, loggername):
-#		'''
-#		Constructor
-#		'''
-#		self.__Logger = logging.getLogger(loggername)
-#		f = '%(asctime)s:%(levelname)-5s:%(name)-5s:%(lineno)4s: %(message)-80s'
-#		formatter = logging.Formatter(f)
-#		if '--verbose' in sys.argv:
-#			LOGGING_MODE = logging.DEBUG
-#			LOGGING_HANDLER = logging.StreamHandler()
-#		else:
-#			LOGGING_MODE = logging.DEBUG
-#			log = os.path.join(USERDIR, 'christine.log')
-#			LOGGING_HANDLER = logging.handlers.RotatingFileHandler(log,
-#													'a',31457280, 10)
+#    '''
+#    Implements the christine logging facility.
+#    '''
+#    def __init__(self, loggername):
+#        '''
+#        Constructor
+#        '''
+#        self.__Logger = logging.getLogger(loggername)
+#        f = '%(asctime)s:%(levelname)-5s:%(name)-5s:%(lineno)4s: %(message)-80s'
+#        formatter = logging.Formatter(f)
+#        if '--verbose' in sys.argv:
+#            LOGGING_MODE = logging.DEBUG
+#            LOGGING_HANDLER = logging.StreamHandler()
+#        else:
+#            LOGGING_MODE = logging.DEBUG
+#            log = os.path.join(USERDIR, 'christine.log')
+#            LOGGING_HANDLER = logging.handlers.RotatingFileHandler(log,
+#                                                    'a',31457280, 10)
 # 
-#		LOGGING_HANDLER.setFormatter(formatter)
-#		LOGGING_HANDLER.setLevel(LOGGING_MODE)
-#		self.__Logger.setLevel(LOGGING_MODE)
-#		self.__Logger.addHandler(LOGGING_HANDLER)
+#        LOGGING_HANDLER.setFormatter(formatter)
+#        LOGGING_HANDLER.setLevel(LOGGING_MODE)
+#        self.__Logger.setLevel(LOGGING_MODE)
+#        self.__Logger.addHandler(LOGGING_HANDLER)
 # 
-#		self.info = self.__Logger.info
-#		self.debug = self.__Logger.debug
-#		self.warning = self.__Logger.warning
-#		self.exception = self.__Logger.exception
-#		self.critical = self.__Logger.critical
+#        self.info = self.__Logger.info
+#        self.debug = self.__Logger.debug
+#        self.warning = self.__Logger.warning
+#        self.exception = self.__Logger.exception
+#        self.critical = self.__Logger.critical
 #===============================================================================

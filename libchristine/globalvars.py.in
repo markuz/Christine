@@ -40,15 +40,15 @@ DATADIR = '@datadir@'
 PREFIX = '@prefix@'
 SYSCONFDIR = '@sysconfdir@'
 def get_posix_config_dir():
-	if os.environ.has_key('XDG_CONFIG_HOME'):
-		USERDIR  = os.path.join(os.environ['XDG_CONFIG_HOME'],"christine")
-	else: 
-		USERDIR  = os.path.join(os.environ["HOME"],".config","christine")
-	return USERDIR
+    if os.environ.has_key('XDG_CONFIG_HOME'):
+        USERDIR  = os.path.join(os.environ['XDG_CONFIG_HOME'],"christine")
+    else: 
+        USERDIR  = os.path.join(os.environ["HOME"],".config","christine")
+    return USERDIR
 
 def get_nt_config_dir():
-	USERDIR = os.path.join(os.environ['APPDATA'],'christine')
-	return USERDIR
+    USERDIR = os.path.join(os.environ['APPDATA'],'christine')
+    return USERDIR
 
 func = [get_nt_config_dir, get_posix_config_dir][os.name == 'posix']
 USERDIR = func()
@@ -67,13 +67,13 @@ opts = options()
 # global PATH to share files required
 # Ugly hack to make this work on win32
 if opts.options.debug or os.name == 'nt':
-	SHARE_PATH = os.path.join(os.getcwd())
-	PLUGINSDIR = os.path.join(os.getcwd(),'libchristine','Plugins')
-	ICONPATH = os.path.join(SHARE_PATH,'gui','icons')
+    SHARE_PATH = os.path.join(os.getcwd())
+    PLUGINSDIR = os.path.join(os.getcwd(),'libchristine','Plugins')
+    ICONPATH = os.path.join(SHARE_PATH,'gui','icons')
 else:
-	SHARE_PATH = os.path.join('@datadir@', 'christine')
-	PLUGINSDIR = os.path.join('@pythonlibdir@','libchristine','Plugins')
-	ICONPATH =  os.path.join(SHARE_PATH,"icons")
+    SHARE_PATH = os.path.join('@datadir@', 'christine')
+    PLUGINSDIR = os.path.join('@pythonlibdir@','libchristine','Plugins')
+    ICONPATH =  os.path.join(SHARE_PATH,"icons")
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
 LOCALE_DIR = os.path.join("@datadir@','locale")
 BUGURL=cglobalvars.BUGURL
@@ -82,6 +82,6 @@ TRANSLATEURL = cglobalvars.TRANSLATEURL
 
 icon_theme = gtk.icon_theme_get_default()
 for i in os.walk(ICONPATH):
-	directory = i[0]
-	if not directory in icon_theme.get_search_path():
-		icon_theme.append_search_path(directory)
+    directory = i[0]
+    if not directory in icon_theme.get_search_path():
+        icon_theme.append_search_path(directory)

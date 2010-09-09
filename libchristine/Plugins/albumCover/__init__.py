@@ -48,104 +48,104 @@ __author__  = 'Marco Antonio Islas Cruz <markuz@islascruz.org>'
 __enabled__ = christineConf.getBool('lastfm/getimage') 
 
 class albumCover(plugin_base):
-	def __init__(self):
-		plugin_base.__init__(self)
-		self.name = __name__
-		self.description = __description__
-		self.iface = interface()
-		self.core = ChristineCore()
-		self.tagger = Tagger()
-		if not self.christineConf.exists('lastfm/getimage'):
-			self.christineConf.setValue('lastfm/getimage', True)
-		self.core.Player.connect('set-location', self.getImage)
-		self.sessionkey = self.christineConf.getString('lastfm/key')
-		self.username = self.christineConf.getString('lastfm/name')
-	
-	def __clean_image(self):
-		'''
-		Destroy self.lastfmimage
-		'''
-		if getattr(self, 'lastfmimage', False):
-			self.lastfmimage.hide()
-			self.lastfmimage.destroy()
-	
-	def getImage(self, player, last_location, file):
-		self.__clean_image()
-		if not self.active: return False
-		if not os.path.exists(file):return False
-		if not self.set_image_from_directory():
-			tags =  self.tagger.readTags(file)
-			#for key in ('artist','title', 'album'):
-			#	if not tags[key]:
-			#		pass
-			thread.start_new(self.__getImage, (tags, ))
-	
-	def set_image_from_directory(self):
-		'''
-		Look for the album cover in the directory
-		'''
-		file = self.core.Player.getLocation()
-		if not os.path.exists(file):return 
-		directory = os.path.join(os.path.split(file)[:-1])
-		if not directory: return
-		directory = directory[0]
-		files  = [k for k in os.listdir(directory) \
-				if k.lower().startswith('cover') or \
-				k.lower().startswith('folder') or\
-				k.lower().startswith('albumart')]
-		if files:
-			self.set_image(os.path.join(directory, files[0]))
-		return 
-			
-	def __getImage(self, tags):
-		have_image = False
-		filename = '_'.join((tags['artist'].replace(' ','_'),
-							tags['album'].replace(' ','_')))
-		filename += '.jpg'
-		#TODO: Search for the cover in the file directory.
-		if os.path.exists(os.path.join(IMAGEDIR, filename)):
-			have_image = True
-		else:
-			user = User(self.username, LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
-			album = Album(tags['artist'], tags['album'], LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
-			image = album.getImage(IMAGE_LARGE)
-			if image:
-				self.__write_image(image,filename)
-				have_image = True
-		if have_image:
-			self.set_image(os.path.join(IMAGEDIR, filename))
+    def __init__(self):
+        plugin_base.__init__(self)
+        self.name = __name__
+        self.description = __description__
+        self.iface = interface()
+        self.core = ChristineCore()
+        self.tagger = Tagger()
+        if not self.christineConf.exists('lastfm/getimage'):
+            self.christineConf.setValue('lastfm/getimage', True)
+        self.core.Player.connect('set-location', self.getImage)
+        self.sessionkey = self.christineConf.getString('lastfm/key')
+        self.username = self.christineConf.getString('lastfm/name')
+    
+    def __clean_image(self):
+        '''
+        Destroy self.lastfmimage
+        '''
+        if getattr(self, 'lastfmimage', False):
+            self.lastfmimage.hide()
+            self.lastfmimage.destroy()
+    
+    def getImage(self, player, last_location, file):
+        self.__clean_image()
+        if not self.active: return False
+        if not os.path.exists(file):return False
+        if not self.set_image_from_directory():
+            tags =  self.tagger.readTags(file)
+            #for key in ('artist','title', 'album'):
+            #    if not tags[key]:
+            #        pass
+            thread.start_new(self.__getImage, (tags, ))
+    
+    def set_image_from_directory(self):
+        '''
+        Look for the album cover in the directory
+        '''
+        file = self.core.Player.getLocation()
+        if not os.path.exists(file):return 
+        directory = os.path.join(os.path.split(file)[:-1])
+        if not directory: return
+        directory = directory[0]
+        files  = [k for k in os.listdir(directory) \
+                if k.lower().startswith('cover') or \
+                k.lower().startswith('folder') or\
+                k.lower().startswith('albumart')]
+        if files:
+            self.set_image(os.path.join(directory, files[0]))
+        return 
+            
+    def __getImage(self, tags):
+        have_image = False
+        filename = '_'.join((tags['artist'].replace(' ','_'),
+                            tags['album'].replace(' ','_')))
+        filename += '.jpg'
+        #TODO: Search for the cover in the file directory.
+        if os.path.exists(os.path.join(IMAGEDIR, filename)):
+            have_image = True
+        else:
+            user = User(self.username, LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
+            album = Album(tags['artist'], tags['album'], LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
+            image = album.getImage(IMAGE_LARGE)
+            if image:
+                self.__write_image(image,filename)
+                have_image = True
+        if have_image:
+            self.set_image(os.path.join(IMAGEDIR, filename))
 
-	def __wirte_image(self, image, filename):
-		f = urllib2.urlopen(image)
-		name = os.path.split(image)[-1]
-		g = open(os.path.join(IMAGEDIR, filename),"w")
-		for line in f:
-			g.write(line)
-		g.close()
-	
-	def set_image(self, path):
-		'''
-		Set the image from the path
-		'''
-		try:
-			self.__clean_image()
-			self.lastfmimage = gtk.Image()
-			pixbuf = self.gen_pixbuf_from_file(path)
-			pixbuf = self.scalePixbuf(pixbuf, 150, 150)
-			self.lastfmimage.set_from_pixbuf(pixbuf)
-			self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
-														False, False, 0)
-			self.lastfmimage.show()
-		except:
-			pass
+    def __wirte_image(self, image, filename):
+        f = urllib2.urlopen(image)
+        name = os.path.split(image)[-1]
+        g = open(os.path.join(IMAGEDIR, filename),"w")
+        for line in f:
+            g.write(line)
+        g.close()
+    
+    def set_image(self, path):
+        '''
+        Set the image from the path
+        '''
+        try:
+            self.__clean_image()
+            self.lastfmimage = gtk.Image()
+            pixbuf = self.gen_pixbuf_from_file(path)
+            pixbuf = self.scalePixbuf(pixbuf, 150, 150)
+            self.lastfmimage.set_from_pixbuf(pixbuf)
+            self.interface.coreClass.VBoxList.pack_start(self.lastfmimage,
+                                                        False, False, 0)
+            self.lastfmimage.show()
+        except:
+            pass
 
-	
-	def get_active(self):
-		return self.christineConf.getBool('lastfm/getimage')
-	
-	def set_active(self, value):
-		__enabled__ = value 
-		return self.christineConf.setValue('lastfm/getimage', value)
+    
+    def get_active(self):
+        return self.christineConf.getBool('lastfm/getimage')
+    
+    def set_active(self, value):
+        __enabled__ = value 
+        return self.christineConf.setValue('lastfm/getimage', value)
 
-	active = property(get_active, set_active, None,
-					'Determine if the plugin is active or inactive')
+    active = property(get_active, set_active, None,
+                    'Determine if the plugin is active or inactive')
