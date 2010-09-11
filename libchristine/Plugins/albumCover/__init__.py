@@ -115,7 +115,7 @@ class albumCover(plugin_base):
         if have_image:
             self.set_image(os.path.join(IMAGEDIR, filename))
 
-    def __wirte_image(self, image, filename):
+    def __write_image(self, image, filename):
         f = urllib2.urlopen(image)
         name = os.path.split(image)[-1]
         g = open(os.path.join(IMAGEDIR, filename),"w")
