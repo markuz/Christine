@@ -138,7 +138,6 @@ class albumCover(plugin_base):
             self.lastfmimage.show()
         except:
             pass
-
     
     def get_active(self):
         return self.christineConf.getBool('lastfm/getimage')
