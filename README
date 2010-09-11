@@ -1,4 +1,20 @@
-christine is a new gstreamer based media player.
+Christine Media Player is a python/gstreamer based Media Player.
 
-This means, christine can play your music and videos, and
-in the next future, radio stations too.
+This program is inteded to be easy to use and small. Most people
+want to listen music and view viedeos, earing their subscribed
+podcasts or internet radio stations.
+
+We want to create something that fits this. 
+
+Features:
+
+- Plays all audio/video formats available in your Gstreamer 
+    installation.
+- Manage Music "sources" (Music/video libraries and Radio stations)
+    and a queue where you can put whatever you want to play in 
+    order.
+- It fits in 32Mb of ram, we want to make it fit in less.
+- It's very simple to use.
+- It handles some "extra" features called plugins, the are
+    work in progress.
+- Runs on Posix compilant and win32.
