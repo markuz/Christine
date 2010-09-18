@@ -49,15 +49,15 @@ from libchristine.sources_list import LIST_NAME, LIST_TYPE, LIST_EXTRA
 from libchristine.Logger import LoggerManager
 from libchristine.Events import christineEvents
 from libchristine.gui.buttons import next_button, toggle_button, prev_button
-try:
-    from libchristine.christine_dbus import christineDBus
-except Exception, e:
-    pass
+#try:
+#    from libchristine.christine_dbus import christineDBus
+#except Exception, e:
+#    pass
 from libchristine.options import options
 import webbrowser
 from libchristine.ChristineCore import ChristineCore
 from libchristine.gui.mainWindow import mainWindow
-from libchristine.gui.keyvals import PAGEDOWN,PAGEUP
+#from libchristine.gui.keyvals import PAGEDOWN,PAGEUP
 from libchristine.gui.equalizer import equalizer
 from libchristine.envelopes import deprecated
 

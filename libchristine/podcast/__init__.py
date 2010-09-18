@@ -27,6 +27,7 @@
 # @license   http://www.gnu.org/licenses/gpl.txt
 
 from libchristine.Logger import LoggerManager
+from libchristine.Storage.sqlitedb import sqlite3db
 
 class podcastManager(object):
     '''
@@ -34,6 +35,7 @@ class podcastManager(object):
     '''
     def __init__(self):
         self.__logger = LoggerManager().getLogger('PodcastManager')
+        self.db = sqlite3db()
     
     def add(self, url):
         '''
@@ -46,5 +48,15 @@ class podcastManager(object):
         @return bool: True if the podcast got it's way to db. or
                     False if not.
         '''
+        #Try to get from database.
+        return False
+    
+    def get(self, url):
+        '''
+        Get the podcast from database.
+        @param string url: url of the podcast.
+        @return podcast object of False if the podcast
+        does not exists in database.
+        '''
+        #data = self.
         pass
-
