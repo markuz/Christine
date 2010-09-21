@@ -50,14 +50,12 @@ search_iter_on_column(PyObject *self, PyObject *args){
 		sdatat = PyIter_Next(iter);
 		if (!sdatat){
 			result = NULL;
-			//printf("No sdatat\n");
 			result = NULL;
 			break;
 		}
 		lvalue = PyList_GetItem(sdatat, columnint); 
 		Py_DECREF(sdatat);
 		if (!lvalue){
-			//printf("No lvalue\n");
 			result = NULL;
 			break;
 		}
@@ -65,9 +63,7 @@ search_iter_on_column(PyObject *self, PyObject *args){
 			nargs = Py_BuildValue("(i)", counter);
 			if (nargs){
 				result = PyEval_CallObject(get_iter, nargs);
-				//printf("dec get_iter \n");
 				Py_DECREF(get_iter);
-				//printf("dec nargs \n");
 				Py_DECREF(nargs);
 				break;
 			}
@@ -75,19 +71,15 @@ search_iter_on_column(PyObject *self, PyObject *args){
 		counter ++;
 	}
 	// Decrementar las referencias
-	//printf("dec data \n");
 	Py_DECREF(data);
 	if (iter){
-		//printf("dec iter \n");
 		Py_DECREF(iter);
 	}
 
 	if (result == NULL){
-		//printf("return none\n");
 		Py_INCREF(Py_None);
     	return Py_None;
 	}
-	//printf("return result\n");
 	return result;
 }
 

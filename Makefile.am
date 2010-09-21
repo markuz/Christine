@@ -15,7 +15,6 @@ SUBDIRS = \
 		  libchristine/Plugins/lastfm/ \
 		  libchristine/Plugins/pidgin/ \
 		  libchristine/Plugins/trayicon/ \
-		  libchristine/Plugins/twitter/ \
 		  libchristine/Plugins/webservices/ \
 		  libchristine/Plugins/webservices/glade/ \
 		  libchristine/c3rdparty/ 

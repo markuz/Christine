@@ -60,3 +60,15 @@ class podcastManager(object):
         '''
         #data = self.
         pass
+
+class podcast(object):
+    '''
+    This object represents a podcast.
+    '''
+    pass
+
+class entry(object):
+    '''
+    This object represents a podcast entry.
+    '''
+    pass
