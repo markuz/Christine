@@ -178,7 +178,7 @@ class mainWindow(gobject.GObject):
         core.sourcesList.vbox.show_all()
         self.__ControlButton = xml['control_button']
         self.__MenuItemShuffle = xml['MenuItemShuffle']
-        self.__MenuItemShuffle.set_active(self.christineConf.getBool('control/shuffle'))
+        self.__MenuItemShuffle.set_active(self.christineConf.get_value('control/shuffle'))
         self.__MenuItemShuffle.connect('toggled',
             lambda widget: self.christineConf.setValue('control/shuffle',
             widget.get_active()))
@@ -188,7 +188,7 @@ class mainWindow(gobject.GObject):
             self.__MenuItemShuffle)
 
         self.__ControlRepeat = xml['repeat']
-        self.__ControlRepeat.set_active(self.christineConf.getBool('control/repeat'))
+        self.__ControlRepeat.set_active(self.christineConf.get_value('control/repeat'))
 
         self.__ControlRepeat.connect('toggled',
             lambda widget: self.christineConf.setValue('control/repeat',
@@ -199,16 +199,16 @@ class mainWindow(gobject.GObject):
             self.__ControlRepeat)
         
         self.__MenuItemVisualMode = xml['MenuItemVisualMode']
-        self.__MenuItemVisualMode.set_active(self.christineConf.getBool('ui/visualization'))
+        self.__MenuItemVisualMode.set_active(self.christineConf.get_value('ui/visualization'))
 
         self.visualModePlayer()
 
-        self.__MenuItemSmallView.set_active(self.christineConf.getBool('ui/small_view'))
+        self.__MenuItemSmallView.set_active(self.christineConf.get_value('ui/small_view'))
         self.toggleViewSmall(self.__MenuItemSmallView)
         
         self.MenuItemSidePane = xml ['sidepanel']
         self.MenuItemSidePane.connect('toggled', self.ShowHideSidePanel)
-        self.MenuItemSidePane.set_active(self.christineConf.getBool('ui/sidepanel'))
+        self.MenuItemSidePane.set_active(self.christineConf.get_value('ui/sidepanel'))
         self.christineConf.notifyAdd('ui/sidepanel',
                                     self.christineConf.toggleWidget,
                                     self.MenuItemSidePane)

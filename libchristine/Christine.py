@@ -32,6 +32,7 @@ import gtk
 import gobject
 gobject.threads_init()
 import gst.interfaces
+import gst
 import os
 import signal
 from libchristine.globalvars import  BUGURL,PIDFILE,TRANSLATEURL
@@ -304,7 +305,7 @@ class Christine_old(GtkMisc):
         core.sourcesList.vbox.show_all()
         self.__ControlButton = xml['control_button']
         self.__MenuItemShuffle = xml['MenuItemShuffle']
-        self.__MenuItemShuffle.set_active(self.christineConf.getBool('control/shuffle'))
+        self.__MenuItemShuffle.set_active(self.christineConf.get_value('control/shuffle'))
         self.__MenuItemShuffle.connect('toggled',
             lambda widget: self.christineConf.setValue('control/shuffle',
             widget.get_active()))
@@ -314,7 +315,7 @@ class Christine_old(GtkMisc):
             self.__MenuItemShuffle)
 
         self.__ControlRepeat = xml['repeat']
-        self.__ControlRepeat.set_active(self.christineConf.getBool('control/repeat'))
+        self.__ControlRepeat.set_active(self.christineConf.get_value('control/repeat'))
 
         self.__ControlRepeat.connect('toggled',
             lambda widget: self.christineConf.setValue('control/repeat',
@@ -325,16 +326,16 @@ class Christine_old(GtkMisc):
             self.__ControlRepeat)
         
         self.__MenuItemVisualMode = xml['MenuItemVisualMode']
-        self.__MenuItemVisualMode.set_active(self.christineConf.getBool('ui/visualization'))
+        self.__MenuItemVisualMode.set_active(self.christineConf.get_value('ui/visualization'))
 
         self.visualModePlayer()
 
-        self.__MenuItemSmallView.set_active(self.christineConf.getBool('ui/small_view'))
+        self.__MenuItemSmallView.set_active(self.christineConf.get_value('ui/small_view'))
         self.toggleViewSmall(self.__MenuItemSmallView)
         
         self.MenuItemSidePane = xml ['sidepanel']
         self.MenuItemSidePane.connect('toggled', self.ShowHideSidePanel)
-        self.MenuItemSidePane.set_active(self.christineConf.getBool('ui/sidepanel'))
+        self.MenuItemSidePane.set_active(self.christineConf.get_value('ui/sidepanel'))
         self.christineConf.notifyAdd('ui/sidepanel',
                                     self.christineConf.toggleWidget,
                                     self.MenuItemSidePane)
@@ -482,11 +483,11 @@ class Christine_old(GtkMisc):
         # if we can't get the length, in more than 20
         # times in the same song, then, jump to the
         # next song
-        if (self.__LocationCount > 20):
-            gobject.timeout_add(1000, self.goNext)
-            self.__LocationCount = 0
-        else:
-            self.__LocationCount +=1
+#       if (self.__LocationCount > 20):
+#           gobject.timeout_add(1000, self.goNext)
+#           self.__LocationCount = 0
+#       else:
+#           self.__LocationCount +=1
         core.mainLibrary.tv.grab_focus()
         if core.Player.getType() == 'video':
             self.__MenuItemVisualMode.set_active(False)
@@ -556,7 +557,7 @@ class Christine_old(GtkMisc):
             self.toggleViewSmall(self.__MenuItemSmallView)
         core.Player.setVisualization(widget.get_active())
         core.Player.set_property('visible', core.Player.isVideo() or \
-                self.christineConf.getBool('ui/visualization'))
+                self.christineConf.get_value('ui/visualization'))
 
     def toggleFullScreen(self, widget = None):
         """
@@ -567,14 +568,14 @@ class Christine_old(GtkMisc):
         if not self.__IsFullScreen:
             self.__IsFullScreen = True
             self.coreWindow.fullscreen()
-            if core.Player.isVideo() or self.christineConf.getBool('ui/visualization'):
+            if core.Player.isVideo() or self.christineConf.get_value('ui/visualization'):
                 self.__VBoxList.set_size_request(0,0)
         else:
         # Non-full screen mode.
         # hide if we are not playing a video nor
         # visualization.
             if not core.Player.isVideo() and \
-                    not self.christineConf.getBool('ui/visualization'):
+                    not self.christineConf.get_value('ui/visualization'):
                 core.Player.hide()
             core.mainLibrary.scroll.set_size_request(200,200)
             self.__VBoxList.set_size_request(150,0)
@@ -703,7 +704,6 @@ class Christine_old(GtkMisc):
         Go to play the previous song. If no previous song was played in the
         current session, then plays the previous song in the library
         """
-        import gst
         if core.Player.getLocation():
             nanos = core.Player.query_position(gst.FORMAT_TIME)[0]
             ts = (nanos / gst.SECOND)
@@ -771,7 +771,7 @@ class Christine_old(GtkMisc):
                     randompath = randint(0,int(Elements)-1)
                 filename = core.mainLibrary.tv.get_model()[randompath][PATH]
                 if (not filename in self.__LastPlayed) or \
-                        (self.christineConf.getBool('control/repeat')) and filename:
+                        (self.christineConf.get_value('control/repeat')) and filename:
                         self.setLocation(filename)
                         self.simplePlay()
                 else:
@@ -979,9 +979,11 @@ class Christine_old(GtkMisc):
 
     def do_gst_error(self, player, emsg):
         if emsg.find('File not found'):
-            self.__Logger.warning(emsg)
+            self.__Logger.error(emsg)
             self.goNext()
+            sys.exit()
             return
+        self.__Logger.error(emsg)
         error(emsg)
     
     def do_end_of_stream(self, player):
@@ -1097,7 +1099,7 @@ class Christine_old(GtkMisc):
         if gst.State(gst.STATE_PLAYING) is state:
             isPlaying = True
         comp = core.Player.isVideo() or \
-                self.christineConf.getBool('ui/visualization')
+                self.christineConf.get_value('ui/visualization')
         core.Player.set_property('visible', comp)
 
     def cleanLibrary(self,widget):

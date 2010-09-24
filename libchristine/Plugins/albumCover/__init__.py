@@ -41,6 +41,7 @@ import gtk
 import urllib2
 import thread
 import os
+import re
 
 __name__ = _('Album Cover')
 __description__  = _('Try to get the album cover and shows on the gui if it is found.')
@@ -96,18 +97,27 @@ class albumCover(plugin_base):
         if files:
             self.set_image(os.path.join(directory, files[0]))
         return 
-            
+
     def __getImage(self, tags):
         have_image = False
-        filename = '_'.join((tags['artist'].replace(' ','_'),
-                            tags['album'].replace(' ','_')))
+        discname = tags['album'].lower().replace(' ','_')
+        ocur = re.findall("\(disc..?\)|\(cd..?\)", discname,re.I)
+        print ocur
+        for i in ocur:
+            print discname,
+            discname = discname.replace(i,'')
+        discname = discname.strip('_')
+        print discname
+        artist = tags['artist'].replace(' ','_')
+        filename = '_'.join((artist,
+                            discname))
         filename += '.jpg'
         #TODO: Search for the cover in the file directory.
         if os.path.exists(os.path.join(IMAGEDIR, filename)):
             have_image = True
         else:
             user = User(self.username, LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
-            album = Album(tags['artist'], tags['album'], LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
+            album = Album(tags['artist'], discname.replace("_",' '), LASTFM_APIKEY, LASTFM_SECRET, self.sessionkey)
             image = album.getImage(IMAGE_LARGE)
             if image:
                 self.__write_image(image,filename)

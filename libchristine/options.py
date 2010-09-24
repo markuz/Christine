@@ -42,7 +42,7 @@ class options(Singleton):
         self.options.debug (-v , --debug)
         self.options.daemon (-D, --daemon)
         '''
-        usage ='%prog [-v --debug]'
+        usage ='%prog [args]'
         version = '%prog' 
         parser = OptionParser(usage = usage,version=version)
         parser.add_option("-d","--devel", dest="debug",action='store_true',

@@ -268,7 +268,8 @@ class Player(gtk.DrawingArea,Singleton):
         if os.name == 'nt':
             p = file.split("\\")
             file = "/" + "/".join(p)
-        nfile = 'file://' + file
+        import urllib
+        nfile = 'file://' + urllib.quote(file)
         self.__elementSetProperty(self.__PlayBin,'uri', nfile)
         self.__elementSetProperty(self.__PlayBin, 'suburi', None)
         self.__elementSetProperty(self.__PlayBin, 'subtitle-font-desc', None)
@@ -457,8 +458,10 @@ class Player(gtk.DrawingArea,Singleton):
         if (type_file == gst.MESSAGE_ERROR):
             if not os.path.isfile(self.getLocation()):
                 self.emit('io-error')
+                self.__Logger.error(b.parse_error()[1])
             else:
                 self.emit('gst-error',b.parse_error()[1])
+                self.__Logger.error(b.parse_error()[1])
         if (type_file == gst.MESSAGE_EOS):
             self.emit('end-of-stream')
         elif (type_file == gst.MESSAGE_TAG):

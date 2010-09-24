@@ -165,10 +165,10 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
         cond_to_shuffle = (x >= 10 and x <= 26) and (y >= 3 and y <= 19)
         cond_to_repeat = (x >= 26 and x <= 38) and (y >= 3 and y <= 19)
         if cond_to_shuffle:
-            self.config.setValue('control/shuffle',not self.config.getBool('control/shuffle'))
+            self.config.setValue('control/shuffle',not self.config.get_value('control/shuffle'))
             self.__emit()
         elif cond_to_repeat:
-            self.config.setValue('control/repeat',not self.config.getBool('control/repeat'))
+            self.config.setValue('control/repeat',not self.config.get_value('control/repeat'))
             self.__emit()
 
 
@@ -384,7 +384,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
         Show a widget that represent if the current playlist method is
         shuffle or not.
         '''
-        if self.config.getBool('control/shuffle'):
+        if self.config.get_value('control/shuffle'):
             pixbuf = self.__shuffle_pixbuf
         else:
             pixbuf = self.__non_shuffle_pixbuf
@@ -397,7 +397,7 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
         Show a widget that represent if the current playlist has to 
         be repeated when it ends.
         '''
-        if self.config.getBool('control/repeat'):
+        if self.config.get_value('control/repeat'):
             pixbuf = self.__repeat_pixbuf
         else:
             pixbuf = self.__non_repeat_pixbuf

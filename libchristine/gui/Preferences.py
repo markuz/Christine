@@ -240,31 +240,31 @@ class guiPreferences(GtkMisc):
         Sets check boxes
         """
         self.__Artist = self.XML['artist']
-        self.__Artist.set_active(self.__GConf.getBool('ui/show_artist'))
+        self.__Artist.set_active(self.__GConf.get_value('ui/show_artist'))
         self.__Artist.connect('toggled', self.__GConf.toggle,'ui/show_artist')
 
         self.__Album = self.XML['album']
-        self.__Album.set_active(self.__GConf.getBool('ui/show_album'))
+        self.__Album.set_active(self.__GConf.get_value('ui/show_album'))
         self.__Album.connect('toggled',self.__GConf.toggle,'ui/show_album')
 
         self.__Type = self.XML['type']
-        self.__Type.set_active(self.__GConf.getBool('ui/show_type'))
+        self.__Type.set_active(self.__GConf.get_value('ui/show_type'))
         self.__Type.connect('toggled',self.__GConf.toggle,'ui/show_type')
 
         self.__Length = self.XML['length']
-        self.__Length.set_active(self.__GConf.getBool('ui/show_length'))
+        self.__Length.set_active(self.__GConf.get_value('ui/show_length'))
         self.__Length.connect('toggled',self.__GConf.toggle,'ui/show_length')
 
         self.__TrackNumber = self.XML['track_number']
-        self.__TrackNumber.set_active(self.__GConf.getBool('ui/show_tn'))
+        self.__TrackNumber.set_active(self.__GConf.get_value('ui/show_tn'))
         self.__TrackNumber.connect('toggled',self.__GConf.toggle,'ui/show_tn')
 
         self.__PlayCount = self.XML['play_count']
-        self.__PlayCount.set_active(self.__GConf.getBool('ui/show_play_count'))
+        self.__PlayCount.set_active(self.__GConf.get_value('ui/show_play_count'))
         self.__PlayCount.connect('toggled',self.__GConf.toggle,'ui/show_play_count')
 
         self.__Genre = self.XML['genre']
-        self.__Genre.set_active(self.__GConf.getBool('ui/show_genre'))
+        self.__Genre.set_active(self.__GConf.get_value('ui/show_genre'))
         self.__Genre.connect('toggled',self.__GConf.toggle,'ui/show_genre')
 
     def __set_plugins_columns(self):
