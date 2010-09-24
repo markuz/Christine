@@ -101,13 +101,10 @@ class albumCover(plugin_base):
     def __getImage(self, tags):
         have_image = False
         discname = tags['album'].lower().replace(' ','_')
-        ocur = re.findall("\(disc..?\)|\(cd..?\)", discname,re.I)
-        print ocur
+        ocur = re.findall("\(disc.?.?\)|\(cd.?.?\)|cd.?.?", discname,re.I)
         for i in ocur:
-            print discname,
             discname = discname.replace(i,'')
         discname = discname.strip('_')
-        print discname
         artist = tags['artist'].replace(' ','_')
         filename = '_'.join((artist,
                             discname))
