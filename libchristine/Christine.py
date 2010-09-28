@@ -428,12 +428,9 @@ class Christine_old(GtkMisc):
                     error(translate('%s does not exists'%file))
                     return False
             else:
-                if os.name == 'posix':
-                    import urllib
-                    gate = urllib.FancyURLopener()
-                    urldesc = gate.open(location)
-                else:
-                    urldes = location
+                import urllib
+                gate = urllib.FancyURLopener()
+                urldesc = gate.open(location)
 
             if extension == "pls":
                 for i in urldesc.readlines():
@@ -704,15 +701,20 @@ class Christine_old(GtkMisc):
         Go to play the previous song. If no previous song was played in the
         current session, then plays the previous song in the library
         """
+        size = len(self.__LastPlayed)
         if core.Player.getLocation():
             nanos = core.Player.query_position(gst.FORMAT_TIME)[0]
             ts = (nanos / gst.SECOND)
             cmins, cseconds = map(int, divmod(ts, 60))
             if cseconds > 5:
-                self.__LastPlayed.pop()
+                if size:
+                    self.__LastPlayed.pop()
                 self.setLocation(core.Player.getLocation())
                 return 
-        if len(self.__LastPlayed) > 1:
+        print size
+        if size >= 1:
+            import pdb
+            pdb.set_trace()
             #remove the last played since it's the same that we are playing.
             self.__LastPlayed.pop()
             self.setLocation(self.__LastPlayed.pop())

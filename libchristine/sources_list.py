@@ -140,16 +140,18 @@ class sources_list (GtkMisc):
         entry = xml['entry']
         title_entry = xml['title_entry']
         response = dialog.run()
-        dialog.destroy()
-        if response == 1:
+        print response
+        if int(response)== 1:
             title = title_entry.get_text()
             if not title:
                 return True
             url = entry.get_text()
             if not url[-3:].lower() == 'pls':
+                print "This is not a valid pls file"
                 return True
             exists = self.__db.get_radio_by_url(url)
             if exists:
+                print "This radio already exists on the database"
                 return True
             self.__db.add_radio(title, url)
             radio = self.__db.get_radio_by_url(url)
@@ -159,6 +161,7 @@ class sources_list (GtkMisc):
                 self.model.set(iter, LIST_NAME, radio['title'], LIST_TYPE, 'radio',
                        LIST_EXTRA, radio)
             
+        dialog.destroy()
 
     def delSource(self, button):
         xml = self.__Share.getTemplate('genericQuestion')
