@@ -425,12 +425,12 @@ class sqlite3db(Singleton, GtkMisc):
         self.execute(strSQL)
         self.commit()
         
-    def getItemsForPlaylist(self, playlistid):
+    def getItemsForPlaylist(self, playlistid, orderby='path',orderytype='ASC'):
         '''
         Return all the items on a given playlist
         @param playlistid: id of the playlist
         '''
-        strSQL = 'SELECT a.path, a.title, a.album, a.artist, a.time, \
+        strSQL = 'SELECT a.id, a.path, a.title, a.album, a.artist, a.time, \
                     \na.playcount, a.rate, a.type, a.track_number, a.genre, \
                     \na.have_tags \
                     \nFROM items as a \
@@ -439,15 +439,16 @@ class sqlite3db(Singleton, GtkMisc):
                     \nINNER JOIN playlists as c ON \
                     \nc.id = b.playlistid \
                     \nWHERE b.playlistid = %d \
-                    \nORDER BY a.path'%(playlistid)
+                    \nORDER BY %s %s'%(playlistid, orderby, orderytype)
 
         self.execute(strSQL)
         r = self.cursor.fetchall()
-        d = {}
-        while r:
-            value = r.pop(0)
-            d[value['path']] = value
-        return d
+        return r
+#       d = {}
+#       while r:
+#           value = r.pop(0)
+#           d[value['path']] = value
+#       return d
 
     def getItemByPath(self, path):
         '''

@@ -238,18 +238,16 @@ class libraryBase(GtkMisc):
         self.iters = {}
 
     def fillModel(self):
-        keys = self.library_lib.keys()
-        keys.sort()
-        l = self.library_lib
+        #keys = self.library_lib.keys()
+        #keys.sort()
         model = self.model
         tts = model.TextToSearch.lower()
-        while keys:
-            path = keys.pop(0)
-            self.__insert_item(path, l, model, tts)
+        for i in self.library_lib.get_all():
+            path = i['path']
+            self.__insert_item(path, i, model, tts)
         self.library_lib.clear()
     
-    def __insert_item(self, path,l,model, tts):
-        values = l[path]
+    def __insert_item(self, path,values,model, tts):
         searchstring = ''.join((values['title'],values['artist'],
                             values['album'],values['type']))
         if not tts or searchstring.lower().find(tts) > -1:
@@ -945,20 +943,20 @@ class queue (libraryBase ,gobject.GObject):
                 PLAY_COUNT,0,
                 GENRE,genre
                 )
-        self.library_lib[file] = {"title": tags['title'],
+        self.library_lib.append(file,{"title": tags['title'],
                 "type":t,"artist":tags['artist'],
                 "album":tags['album'],"track_number":int(tn),
                 "playcount":0,
                 "time":'0:00',
-                "genre":tags['genre']}
+                "genre":tags['genre']})
 
     def fillModel(self):
         sounds = self.library_lib.get_all()
         pix = self.share.getImageFromPix('blank')
         pix = pix.scale_simple(20, 20, gtk.gdk.INTERP_BILINEAR)
-        keys = sounds.keys()
-        keys.sort()
-        for path,values in sounds.iteritems():
+        for i in sounds:
+            path = i['path']
+            values = i
             for key in values.keys():
                 if isinstance(values[key],str):
                     values[key] = self.strip_XML_entities(self.encode_text(values[key]))

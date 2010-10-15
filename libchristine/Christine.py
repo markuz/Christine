@@ -462,6 +462,7 @@ class Christine_old(GtkMisc):
         @param filename:
         '''
         
+        self.__LocationCount = 0
         self.__StatePlaying = False
         self.__IterNatural  = None
         # current iter is a temporal variable
@@ -476,13 +477,12 @@ class Christine_old(GtkMisc):
         self.__LastPlayed.append(filename)
         # enable the stream-length for the current song.
         # this will be stopped when we get the length
-        gobject.timeout_add(500,self.__streamLength)
+        gobject.idle_add(self.__streamLength)
         # if we can't get the length, in more than 20
         # times in the same song, then, jump to the
         # next song
 #       if (self.__LocationCount > 20):
 #           gobject.timeout_add(1000, self.goNext)
-#           self.__LocationCount = 0
 #       else:
 #           self.__LocationCount +=1
         core.mainLibrary.tv.grab_focus()
@@ -713,17 +713,20 @@ class Christine_old(GtkMisc):
                 return 
         print size
         if size >= 1:
-            import pdb
-            pdb.set_trace()
+            print "size >= 1"
+            c = time.time()
             #remove the last played since it's the same that we are playing.
             self.__LastPlayed.pop()
             self.setLocation(self.__LastPlayed.pop())
             self.PlayButton.set_active(False)
             self.PlayButton.set_active(True)
+            print time.time() -c 
         else:
+            c = time.time()
             iter = core.mainLibrary.model.basemodel.search_iter_on_column(
                         self.christineConf.getString('backend/last_played'), 
                         PATH)
+            print "core.mainLibrary.model.basemodel.search_iter_on_column",time.time() -c 
             if iter == None:
                 return False
             if not core.mainLibrary.tv.get_model().iter_is_valid(iter):
@@ -734,6 +737,8 @@ class Christine_old(GtkMisc):
             if (path > 0):
                 path = (path[0] -1,)
             elif (path[0] > -1):
+                print "path[0] > -1"
+                c = time.time()
                 iter     = core.mainLibrary.tv.get_model().get_iter(path)
                 location = core.mainLibrary.model.getValue(iter, PATH)
                 self.setLocation(location)
@@ -743,6 +748,7 @@ class Christine_old(GtkMisc):
                 self.__LastPlayed.pop()
                 self.PlayButton.set_active(False)
                 self.PlayButton.set_active(True)
+                print time.time() -c 
 
     def goNext(self, widget = None):
         """
@@ -1026,6 +1032,8 @@ class Christine_old(GtkMisc):
         Catches the lenght of the media and update it in the
         player
         """
+        if self.__LocationCount >= 20: 
+            return False
         location = core.Player.getLocation()
         if not location:
             return True
@@ -1034,8 +1042,8 @@ class Christine_old(GtkMisc):
             return True
         try:
             self.__TimeTotal = core.Player.query_duration(gst.FORMAT_TIME)[0]
-            ts               = (self.__TimeTotal / gst.SECOND)
-            text             = "%02d:%02d" % divmod(ts, 60)
+            ts = (self.__TimeTotal / gst.SECOND)
+            text = "%02d:%02d" % divmod(ts, 60)
             self.__ErrorStreamCount = 0
             iter = core.mainLibrary.model.basemodel.search_iter_on_column(location, PATH)
             if iter is not None:

@@ -18,31 +18,41 @@
 from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Logger import LoggerManager
 
+
 class lib_library(object):
-    def __init__(self,list):
+    def __init__(self,listname):
         self.__logger = LoggerManager().getLogger('liblibrary')
         self.__db = sqlite3db()
-        self.idlist = self.__db.PlaylistIDFromName(list)
+        self.idlist = self.__db.PlaylistIDFromName(listname)
         if self.idlist == None:
             self.__db.insert_music_playlist()
             self.idlist = self.__db.PlaylistIDFromName('music')
         self.idlist = self.idlist['id']
-        self.list = list
+        self.list = listname
+        self.orderby = 'path'
+        self.sorttype = 'ASC'
+        self.load_list()
+
+    def load_list(self):
         self.__files = self.__db.getItemsForPlaylist(self.idlist)
     
-    def __setitem__(self,name,path):
-        self.append(name,path)
+    def __setitem__(self,id,path):
+        self.append(id,path)
 
-    def __getitem__(self,key):
-        return self.__files[key]
+    def __getitem__(self,id):
+        for i in self.__files:
+           if i['id'] == id: 
+               return i
 
     def iteritems(self):
         return self.__files.iteritems()
 
     def append(self,name,data):
+        '''
+        Append an item to the playlist
+        '''
         if not isinstance(data, dict):
             raise TypeError("data must be a dict, got %s"%type(data))
-        self.__files[name]=data
         id = self.__db.additem(
                         path = name,
                         title = data['title'],
@@ -55,6 +65,7 @@ class lib_library(object):
                         )
         self.__db.addItemToPlaylist(self.idlist, id)
         self.__db.commit()
+        self.load_list()
 
     def updateItem(self, path, **kwargs):
         '''
@@ -62,40 +73,36 @@ class lib_library(object):
         '''
         self.__db.updateItemValues(path, **kwargs)
         self.__db.commit()
-
-    def keys(self):
-        return self.__files.keys()
+        self.load_list()
 
     def clean_playlist(self):
         self.__db.deleteFromPlaylist(self.idlist)
 
     def clear(self):
-        self.__files.clear()
+        self.__files = tuple()
 
     def remove(self,key):
         '''
         Remove an item from the main dict and return True or False
         '''
         self.__db.removeItem(key,self.idlist)
-        self.__files = self.__db.getItemsForPlaylist(self.idlist)
+        self.load_list()
         return True
 
     def get_all(self):
-        return self.__files
+        return self.__files[:]
 
-    def get_sounds(self):
+    def __get_item_by_type(self, types):
         a = {}
-        for i in self.keys():
-            if self.__files[i]["type"] == "audio":
-                a[i] = self.__files[i]
+        for i in self.__files:
+            if i["type"] == types:
+                a[i] = i
         return a
+    def get_sounds(self):
+        return self.__get_item_by_type('audo')
 
     def get_videos(self):
-        a = {}
-        for i in self.keys():
-            if self.__files[i]["type"] == "video":
-                a[i] = self.__files[i]
-        return a
+        return self.__get_item_by_type('video')
 
     def get_by_path(self, path):
         '''
