@@ -3,27 +3,28 @@
 #include <graminit.h>
 #include <pythonrun.h>
 
+#ifdef WINDOWS
+    #include <direct.h>
+    #define GetCurrentDir _getcwd
+#else
+    #include <unistd.h>
+    #define GetCurrentDir getcwd
+ #endif
+
 void error(char *msg) {
 	PyErr_Print();
 	printf("%s\n", msg);
 	exit(1);
 }
 
-char* python_code = "\
-import os\n\
-import sys\n\
-print os.getcwd()\n\
-sys.path.insert(0,os.getcwd())\n\
-sys.argv = [k for k in locals()['arguments'] if isinstance(k, str)]\n\
-from libchristine.Christine import *\n\
-runChristine()\n\
-";
-
-
 int
 main(int argc, char *argv[]){
 	PyObject *t,*main_module, *main_dict, *main_dict_copy;
-	PyObject *builtinMod,*c_argv;
+	PyObject *builtinMod,*c_argv, *runChristine,*name;
+	PyObject *path,* os_getcwd, *osname;
+	PyObject *sys_argv, *sys_path;
+	PyObject *christine_module, *christine_dict;
+	char cCurrentPath[FILENAME_MAX];
 	int i;
 	Py_Initialize();
 	// Get a reference to the main module
@@ -50,23 +51,43 @@ main(int argc, char *argv[]){
 			PyObject  *keys = PyDict_Keys(bdict);
 			PyList_Sort(keys);
 	}
-	c_argv = PyList_New(0);
-	if (c_argv == NULL)
-		error("");
-	for (i = 0; i < argc ;i++){
-		if (PyList_Append(c_argv, PyString_FromString(argv[i]))!=0)
-			error("");
-	}
-	PyDict_SetItemString(main_dict,"arguments",c_argv);
+	//Get the reference of sys.argv
+	sys_argv = PySys_GetObject("argv");
+	if (sys_argv == NULL)
+		sys_argv = PyList_New(0);
+	for (i = 0; i < argc ;i++)
+		if (PyList_Append(sys_argv, PyString_FromString(argv[i]))!=0)
+					error("Cannot append to sys_argv");
+	PySys_SetObject("argv",sys_argv);
 	main_dict_copy = PyDict_Copy(main_dict);
 	if (main_dict_copy == NULL)
-		error ("");
-	//t = PyRun_String(python_code, Py_file_input, main_dict, main_dict);
-	t = PyRun_String(python_code, Py_file_input, main_dict, main_dict);
+		error ("Can't get the main_dict _copy");
+	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
+	     error("Can't get the current path");
+	//Get the reference os sys.path
+	sys_path = PySys_GetObject("path");
+	if (PyList_Append(sys_path,  PyString_FromString(cCurrentPath)) < 0)
+		error ("Cannot append the current path to sys");
+	PySys_SetObject("path", sys_path);
+	name = PyString_FromString("libchristine.Christine");
+	christine_module= PyImport_Import(name);
+	if (christine_module == NULL){
+		error ("Cannot import libchristine.Christine.runChristine");
+	}
+	//getting the module dict
+	christine_dict =  PyModule_GetDict(christine_module);
+	//Get the runChristine function
+	runChristine = PyDict_GetItemString(christine_dict, "runChristine");
+	if (!PyCallable_Check(runChristine)) {
+				error("runChristine is not callable");
+	            return NULL;
+	        }
+	Py_XINCREF(runChristine);
+	PyObject_CallObject(runChristine,  PyTuple_New(0));
+	Py_XDECREF(runChristine);
 	if (t == NULL){
 		error("Error while trying to run christine");
 	}
-	//Py_DECREF(t);
 	Py_Finalize();
 	return 0;
 }
