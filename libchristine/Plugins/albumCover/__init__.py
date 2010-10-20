@@ -42,6 +42,7 @@ import urllib2
 import thread
 import os
 import re
+import time
 
 __name__ = _('Album Cover')
 __description__  = _('Try to get the album cover and shows on the gui if it is found.')
@@ -50,6 +51,7 @@ __enabled__ = christineConf.getBool('lastfm/getimage')
 
 class albumCover(plugin_base):
     def __init__(self):
+        self.timestamp = None
         plugin_base.__init__(self)
         self.name = __name__
         self.description = __description__
@@ -72,16 +74,18 @@ class albumCover(plugin_base):
     
     def getImage(self, player, last_location, file):
         self.__clean_image()
+        timestamp = time.time()
+        self.timestamp = timestamp
         if not self.active: return False
         if not os.path.exists(file):return False
-        if not self.set_image_from_directory():
+        if not self.set_image_from_directory(timestamp = timestamp):
             tags =  self.tagger.readTags(file)
             #for key in ('artist','title', 'album'):
             #    if not tags[key]:
             #        pass
-            thread.start_new(self.__getImage, (tags, ))
+            thread.start_new(self.__getImage, (tags, timestamp))
     
-    def set_image_from_directory(self):
+    def set_image_from_directory(self, timestamp ):
         '''
         Look for the album cover in the directory
         '''
@@ -95,10 +99,10 @@ class albumCover(plugin_base):
                 k.lower().startswith('folder') or\
                 k.lower().startswith('albumart')]
         if files:
-            self.set_image(os.path.join(directory, files[0]))
+            self.set_image(os.path.join(directory, files[0]), timestamp)
         return 
 
-    def __getImage(self, tags):
+    def __getImage(self, tags, timestamp):
         have_image = False
         discname = tags['album'].lower().replace(' ','_')
         ocur = re.findall("\(disc.?.?\)|\(cd.?.?\)|cd.?.?", discname,re.I)
@@ -120,7 +124,7 @@ class albumCover(plugin_base):
                 self.__write_image(image,filename)
                 have_image = True
         if have_image:
-            self.set_image(os.path.join(IMAGEDIR, filename))
+            self.set_image(os.path.join(IMAGEDIR, filename), timestamp)
 
     def __write_image(self, image, filename):
         f = urllib2.urlopen(image)
@@ -130,11 +134,13 @@ class albumCover(plugin_base):
             g.write(line)
         g.close()
     
-    def set_image(self, path):
+    def set_image(self, path, timestamp):
         '''
         Set the image from the path
         '''
         try:
+            if self.timestamp != timestamp:
+                return 
             self.__clean_image()
             self.lastfmimage = gtk.Image()
             pixbuf = self.gen_pixbuf_from_file(path)
