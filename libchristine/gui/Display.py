@@ -285,14 +285,18 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
         # Drawing the progress bar
         self.render_rect(context,fh, ((BORDER_WIDTH * 2) + fh) +1.5 ,
                 width, BORDER_WIDTH +1, 3,0)
-        #context.rectangle(fh, ((BORDER_WIDTH * 2) + fh) +1.5,
-        #        width, BORDER_WIDTH+1)
         context.set_line_width(1)
         context.set_line_cap(cairo.LINE_CAP_BUTT)
         color = gtk.gdk.color_parse("#ddd")
         cr, cg,cb = map(self.getCairoColor, 
                 (color.red, color.green, color.blue))
         context.set_source_rgb(cr, cg, cb)
+        
+        pat = cairo.LinearGradient(fh, ((BORDER_WIDTH * 2) + fh)+1.5, 
+                fh,((BORDER_WIDTH * 2) + fh)+1.5 + BORDER_WIDTH)
+        pat.add_color_stop_rgb(0.0,cr,cg,cb)
+        pat.add_color_stop_rgb(0.9, self.bar1 ,self.bag1,self.bab1)
+        context.set_source(pat)
         context.fill_preserve()
         color = gtk.gdk.color_parse("#666")
         cr, cg,cb = map(self.getCairoColor, 
@@ -300,16 +304,17 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
         context.set_source_rgb(cr, cg, cb)
         context.stroke()
         width = (self.__Value * width)
-        self.render_rect(context,fh-1, ((BORDER_WIDTH * 2) + fh)+1, 
+        self.render_rect(context,fh, ((BORDER_WIDTH * 2) + fh)+1.5, 
                 width, BORDER_WIDTH+1,2,0)
-        #context.rectangle(fh-1, ((BORDER_WIDTH * 2) + fh)+1, 
-        #        width, BORDER_WIDTH+1)
+        context.set_source_rgb(cr,cg,cb)
+        context.fill_preserve()
         pat = cairo.LinearGradient(fh, ((BORDER_WIDTH * 2) + fh)+1.5, 
                 fh,((BORDER_WIDTH * 2) + fh)+1.5 + BORDER_WIDTH)
-        pat.add_color_stop_rgb(0.0, self.bar1 ,self.bag1,self.bab1)
-        pat.add_color_stop_rgb(0.9,cr,cg,cb)
+        pat.add_color_stop_rgb(0.0,cr,cg,cb)
+        pat.add_color_stop_rgb(0.5,cr,cg,cb)
+        pat.add_color_stop_rgb(1.0, self.bar1 ,self.bag1,self.bab1)
         context.set_source(pat)
-        context.fill()
+        context.stroke()
     
     def draw_pos_circle(self, context):
         if not self.window:
