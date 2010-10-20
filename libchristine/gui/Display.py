@@ -303,17 +303,26 @@ class Display(gtk.DrawingArea, CairoMisc, GtkMisc):#, object):
                 (color.red, color.green, color.blue))
         context.set_source_rgb(cr, cg, cb)
         context.stroke()
+        
+        color = gtk.gdk.color_parse("#ddd")
+        cr, cg,cb = map(self.getCairoColor, 
+                (color.red, color.green, color.blue))
+        color = gtk.gdk.color_parse("#696969")
+        dr, dg,db = map(self.getCairoColor, 
+                (color.red, color.green, color.blue))
         width = (self.__Value * width)
         self.render_rect(context,fh, ((BORDER_WIDTH * 2) + fh)+1.5, 
-                width, BORDER_WIDTH+1,2,0)
-        context.set_source_rgb(cr,cg,cb)
-        context.fill_preserve()
-        pat = cairo.LinearGradient(fh, ((BORDER_WIDTH * 2) + fh)+1.5, 
-                fh,((BORDER_WIDTH * 2) + fh)+1.5 + BORDER_WIDTH)
-        pat.add_color_stop_rgb(0.0,cr,cg,cb)
-        pat.add_color_stop_rgb(0.5,cr,cg,cb)
-        pat.add_color_stop_rgb(1.0, self.bar1 ,self.bag1,self.bab1)
+                width, BORDER_WIDTH + 1,3,0)
+        pat.add_color_stop_rgb(0.0,dr,dg,db)
+        pat.add_color_stop_rgb(1,cr,cg,cb)
         context.set_source(pat)
+        context.fill_preserve()
+        
+        context.set_source_rgb(cr, cg, cb)
+        color = gtk.gdk.color_parse("#666")
+        cr, cg,cb = map(self.getCairoColor, 
+                (color.red, color.green, color.blue))
+        context.set_source_rgb(cr, cg, cb)
         context.stroke()
     
     def draw_pos_circle(self, context):
