@@ -1,23 +1,5 @@
-!define exe "christine.exe"
-!define link "christine.lnk"
-!define install_path "$PROGRAMFILES\Christine"
-!define source_path "dist\"
-!define install_file "Christine-0.7.0.exe"
-;!define config_path ${}\Christine
-;!define config_file "config.ini"
-!define PRODUCT_NAME "Christine"
-!define PRODUCT_VERSION "0.7.0"
-!define PRODUCT_PUBLISHER "Christine Project"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${exe}"
-!define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
-!define PRODUCT_UNINST_ROOT_KEY "HKLM"
-
-; Best Compression
-SetCompress Auto
-SetCompressor /SOLID lzma
-SetCompressorDictSize 32
-SetDatablockOptimize On
-
+!include _christine.nsh
+;
 ;TODO: We need to make the dialogs use several languages
 
 Function .onInit
@@ -52,8 +34,6 @@ FunctionEnd
 
 ; MUI Settings
 !define MUI_ABORTWARNING
-!define MUI_ICON "win32resources/christine.ico"
-!define MUI_UNICON "win32resources/christine_uninst.ico"
 ;!define MUI_WELCOMEFINISHPAGE_BITMAP "nsis.bmp" ; optional
 
 ; Welcome page

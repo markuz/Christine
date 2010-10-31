@@ -140,7 +140,7 @@ libchristine/Plugins/webservices/Makefile
 libchristine/Plugins/webservices/glade/Makefile
 libchristine/christine_dbus/Makefile
 libchristine/c3rdparty/Makefile
-win32resources/Makefile
+build_win32/Makefile
 gui/Makefile
 gui/pixmaps/Makefile
 gui/icons/Makefile
