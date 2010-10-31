@@ -73,6 +73,7 @@ main(int argc, char *argv[]){
 	christine_module= PyImport_Import(name);
 	if (christine_module == NULL){
 		error ("Cannot import libchristine.Christine.runChristine");
+		return NULL;
 	}
 	//getting the module dict
 	christine_dict =  PyModule_GetDict(christine_module);
