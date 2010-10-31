@@ -71,6 +71,7 @@ class libraryBase(GtkMisc):
         '''
         self.iters = {}
         self.__FilesToAdd = []
+        self.__walking = False
         GtkMisc.__init__(self)
         self.logger = LoggerManager().getLogger('sqldb')
         self.share = Share()
@@ -173,6 +174,8 @@ class libraryBase(GtkMisc):
         self.logger.debug('metatags: %s',repr(metatags))
         if not metatags['have_tags']: 
             metatags = self.tagger.readTags(filepath)
+            if not metatags:
+                return False
             track_key = 'track'
         else:
             track_key = 'track_number'
@@ -494,14 +497,18 @@ class libraryBase(GtkMisc):
         A Checkbox let you set if the import will be
         recursive.
         """
+        tmpdirs = []
         for i in filenames:
             if walk:
-                self.addDirectories(i)
+                tmpdirs.append(i)
+                
             else:
                 files = [os.path.join(i, k)  for k in os.listdir(i) \
                     if os.path.isfile(os.path.join(i, k))]
                 if files:
                     self.addFiles(files = files)
+        if tmpdirs:
+            self.addDirectories(tmpdirs)
         return True
         
     
@@ -510,7 +517,12 @@ class libraryBase(GtkMisc):
         Recursive import, first and only argument
         is the dir where to digg
         """
-        a         = os.walk(dir)
+        tmpa = []
+        if isinstance(dir, list):
+            for i in dir:
+                tmpa.append(i)
+        else:
+            tmpa.append(dir)
         f         = []
         filenames = []
         self.f = []
@@ -520,7 +532,7 @@ class libraryBase(GtkMisc):
         progress = xml['progressbar1']
         label = xml['label1']
         self.__walking = True
-        gobject.idle_add(self.__walkDirectories, a, f, filenames, label, dialog)
+        gobject.idle_add(self.__walkDirectories, tmpa, f, filenames, label, dialog)
         gobject.idle_add(self.__walkProgressPulse, progress)
         dialog.connect('response', self.__addDirectories_response)
     
@@ -532,28 +544,34 @@ class libraryBase(GtkMisc):
         progress.pulse()
         return self.__walking
 
-    def __walkDirectories(self, a, f, filenames, label, dialog):
-        #if not self.__walking:
-        #    return False
-        try:
-            (dirpath, dirnames, files) = a.next()
-            filenames.append([dirpath, files])
-            npath = self.encode_text(dirpath)
-            label.set_text(translate('Exploring') + '%s'%npath)
-            allowdexts = self.christineConf.getString('backend/allowed_files')
-            allowdexts = allowdexts.split(',')
-            for path in filenames[-1][1]:
-                ext    = path.split('.').pop().lower()
-                exists = os.path.join(filenames[-1][0], path) in self.f
-                if ext in allowdexts and not exists:
-                    f.append(os.path.join(filenames[-1][0],path))
-        except StopIteration:
+    def __walkDirectories(self, tmpa, f, filenames, label, dialog):
+        allowdexts = self.christineConf.getString('backend/allowed_files')
+        allowdexts = allowdexts.split(',')
+        if not tmpa:
             dialog.destroy()
             self.__walking = False
             if f:
                 self.addFiles(files = f)
             return False
+        a = os.walk(tmpa.pop())
+        while True:
+            try:
+                (dirpath, dirnames, files) = a.next()
+                gobject.idle_add(self.__update_labels,dirpath, dirnames, files, 
+                                 filenames, label, allowdexts,f)
+            except StopIteration:
+                break
         return True
+    
+    def __update_labels(self, dirpath, dirnames, files, filenames,label, allowdexts,f):
+        filenames.append([dirpath, files])
+        npath = self.encode_text(dirpath)
+        label.set_text(translate('Exploring') + '%s'%npath)
+        for path in filenames[-1][1]:
+            ext    = path.split('.').pop().lower()
+            exists = os.path.join(filenames[-1][0], path) in self.f
+            if ext in allowdexts and not exists:
+                f.append(os.path.join(filenames[-1][0],path))
 
     def __addFile(self, ):
         """
@@ -573,6 +591,7 @@ class libraryBase(GtkMisc):
                 self.__updateAddProgressBar(new_file)
             else:
                 self.__AddWindow.destroy()
+                self.__AddWIndow = None
                 self.__walking = False
                 return False
         return True
@@ -597,9 +616,17 @@ class libraryBase(GtkMisc):
         """
         Add files to the library or to the queue
         """
+        if not isinstance(files, list):
+            raise TypeError, "files must be List, got %s" % type(files)
+        if not self.__walking:
+            self.__create_add_window()
+        self.__add_files(files)
+    
+    def __create_add_window(self):
+        self.__Paths      = []
+        self.model.basemodel.foreach(self.getPaths)
         XML = self.share.getTemplate('addFiles')
         XML.signal_autoconnect(self)
-
         self.__AddWindow       = XML['window']
         self.__AddWindow.set_transient_for(self.interface.coreWindow)
         self.__AddProgress     = XML['progressbar']
@@ -612,27 +639,19 @@ class libraryBase(GtkMisc):
         self.__AddWindow.set_modal(True)
         self.__AddWindow.set_modal(False)
         self.__AddWindow.set_property('modal', False)
-
-        #self.__AddCloseButton.grab_add()
-        # Be sure that we are working with a list of files
-        if not isinstance(files, list):
-            raise TypeError, "files must be List, got %s" % type(files)
+        self.__Percentage      = 0
+        self.__TimeTotalNFiles = len(self.__FilesToAdd)
+        
+        
+    def __add_files(self, files):
         files.reverse()
-        # Global variable to save temporal files and paths
-        self.__Paths      = []
-        self.model.basemodel.foreach(self.getPaths)
         extensions = self.christineConf.getString('backend/allowed_files')
         extensions = extensions.split(',')
-        iterator = iter(files)
-        while True:
-            try:
-                i = iterator.next()
-                ext = i.split('.').pop().lower()
-                if not i in self.__Paths and ext in extensions:
-                    self.__FilesToAdd.append(i)
-            except StopIteration:
-                break
-        self.__Percentage      = 0
+        while len(files):
+            i = files.pop()
+            ext = i.split('.').pop().lower()
+            if not i in self.__Paths and ext in extensions:
+                self.__FilesToAdd.append(i)
         self.__TimeTotalNFiles = len(self.__FilesToAdd)
         gobject.idle_add(self.__addFileCycle)
     
@@ -650,7 +669,6 @@ class libraryBase(GtkMisc):
         """
         self.__Paths.append(model.get_value(iter, PATH))
     
-        
 class library(gtk.Widget,libraryBase):
     __gsignals__= {
                 'popping_menu' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
