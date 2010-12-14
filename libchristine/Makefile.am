@@ -29,7 +29,7 @@ DISTFILES= Makefile.in \
 			envelopes.py
 
 scripts_DATA=${DISTFILES} \
-			 CLibraryModel.so
+			 CLibraryModel.so \
 			 cglobalvars.so
 
 pkgdatadir=${datadir}
