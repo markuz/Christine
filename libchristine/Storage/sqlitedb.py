@@ -465,7 +465,7 @@ class sqlite3db(Singleton, GtkMisc):
         @param playlist: playlist name
         '''
         if not isinstance(playlist, str):
-            return None
+            raise ValueError('playlist must be an string')
         strSQL = 'SELECT id FROM playlists WHERE name=?'
         self.execute(strSQL, playlist)
         return self.fetchone()

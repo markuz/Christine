@@ -966,7 +966,6 @@ class Christine_old(GtkMisc):
     def __do_import_folder_response(self, ds, response, walk):
         if response == gtk.RESPONSE_OK:
             filenames = ds.get_filenames()
-            print walk
             walkdir = walk.get_active()
             self.christineConf.setValue("ui/LastFolder",filenames[0])
             ds.destroy()

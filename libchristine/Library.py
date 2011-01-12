@@ -501,7 +501,6 @@ class libraryBase(GtkMisc):
         for i in filenames:
             if walk:
                 tmpdirs.append(i)
-                
             else:
                 files = [os.path.join(i, k)  for k in os.listdir(i) \
                     if os.path.isfile(os.path.join(i, k))]
