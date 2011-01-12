@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-04-30 10:16+0000\n"
+"Last-Translator: Ivan S.M <ivan90112@gmail.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,10 +32,14 @@ msgstr "<b>Sedang mengimpor berkas</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Ivan S.M https://launchpad.net/~ivan90112"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
-msgstr ""
+msgstr "Tambah sumber baru."
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
@@ -82,13 +86,15 @@ msgstr ""
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
-msgstr ""
+msgstr "laporkan bug"
 
 #: gui/plugin_pidgin_main.glade:38
 msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
 msgstr ""
+"Pasang pesan yang ingin Anda tampilkan sebagai\n"
+"status di pidgin."
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -100,7 +106,7 @@ msgstr "Berkas"
 
 #: gui/Properties.glade:108
 msgid "Audio codec"
-msgstr ""
+msgstr "Audio codec"
 
 #: gui/Properties.glade:136
 msgid "Mode"
@@ -127,13 +133,15 @@ msgstr "Nomor Trek"
 
 #: gui/Properties.glade:612
 msgid "Video codec"
-msgstr ""
+msgstr "Video codec"
 
 #: gui/deleteQuestion.glade:29
 msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
+"Anda akan menghapus semua file dalam Perpustakaan.\n"
+"Ingat bahwa ini tidak dapat dibatalkan!"
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
@@ -141,23 +149,23 @@ msgstr ""
 
 #: gui/WindowCore.glade:60
 msgid "Import to queue"
-msgstr ""
+msgstr "Impor ke antrian"
 
 #: gui/WindowCore.glade:74
 msgid "Open remote"
-msgstr ""
+msgstr "buka remote"
 
 #: gui/WindowCore.glade:88
 msgid "Jump _to"
-msgstr ""
+msgstr "langsung_ke"
 
 #: gui/WindowCore.glade:97
 msgid "_Jump to playing"
-msgstr ""
+msgstr "Langsung mainkan"
 
 #: gui/WindowCore.glade:111
 msgid "Clean main List"
-msgstr ""
+msgstr "Hapus daftar Utama"
 
 #: gui/WindowCore.glade:137
 msgid "_Edit"
@@ -181,11 +189,11 @@ msgstr ""
 
 #: gui/WindowCore.glade:243
 msgid "Less volume"
-msgstr ""
+msgstr "Volume kurang"
 
 #: gui/WindowCore.glade:252
 msgid "More volume"
-msgstr ""
+msgstr "Volume lebih"
 
 #: gui/WindowCore.glade:261
 msgid "Mute"
@@ -197,15 +205,15 @@ msgstr ""
 
 #: gui/WindowCore.glade:282
 msgid "_Small view"
-msgstr ""
+msgstr "_Tampilan Mini"
 
 #: gui/WindowCore.glade:291
 msgid "Switch the view of the side panel"
-msgstr ""
+msgstr "Ubah tampilan Panel sisi"
 
 #: gui/WindowCore.glade:292
 msgid "S_ide panel"
-msgstr ""
+msgstr "_panel sisi"
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
@@ -225,7 +233,7 @@ msgstr ""
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "Daftar Sumber"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
@@ -237,15 +245,15 @@ msgstr "Cari"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "Halaman 1"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "Halaman 2"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "Halaman 3"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -265,7 +273,7 @@ msgstr ""
 
 #: gui/walkdirectories.glade:46
 msgid "Exploring"
-msgstr ""
+msgstr "Menjelajahi"
 
 #: gui/Preferences.glade:71
 msgid "Type"
@@ -281,7 +289,7 @@ msgstr "Penghitungan main"
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
-msgstr ""
+msgstr "<b>Kolom Perpustakaan</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
@@ -362,15 +370,15 @@ msgstr ""
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr ""
+msgstr "Permintaan otorisasi"
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
-msgstr ""
+msgstr "Mengambl data sesi"
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr ""
+msgstr "<b>otorisasi</b>"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
@@ -418,11 +426,11 @@ msgstr ""
 
 #: libchristine/Plugins/trayicon/__init__.py:27
 msgid "This plugins shows a Try Icon on the notification area"
-msgstr ""
+msgstr "Plugin ini menunjukkan tray Icon pada area pemberitahuan"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:55
 msgid "GNOME Media Keys"
-msgstr ""
+msgstr "Tombol GNOME Media"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:56
 msgid "Allows christine to react to GNOME media key press events"
@@ -430,27 +438,28 @@ msgstr ""
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
-msgstr ""
+msgstr "Sampul Album"
 
 #: libchristine/Plugins/albumCover/__init__.py:44
 msgid "Try to get the album cover and shows on the gui if it is found."
 msgstr ""
+"Cobalah untuk mencari sampul album dan tampilkan pada gui jika ditemukan."
 
 #: libchristine/Plugins/getInfo/__init__.py:44
 msgid "getInfo"
-msgstr ""
+msgstr "Info"
 
 #: libchristine/Plugins/getInfo/__init__.py:45
 msgid "Shows/Update the info on the tags of the given file."
-msgstr ""
+msgstr "Tampilkan / Perbarui info di tag dari file yang diberikan."
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Lastfm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
-msgstr ""
+msgstr "Aktifkan interaksi dengan Lastfm"
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
@@ -458,11 +467,11 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
-msgstr ""
+msgstr "Plugin ini mengirim dan memperbarui account twitter Anda"
 
 #: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
-msgstr ""
+msgstr "Tidak ter-otorisasi"
 
 #: libchristine/Plugins/twitter/__init__.py:97
 msgid "not found"
@@ -470,7 +479,7 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:99
 msgid "service not available"
-msgstr ""
+msgstr "Layanan tidak ditemukan"
 
 #: libchristine/Plugins/twitter/__init__.py:101
 msgid "unknown error"
@@ -479,7 +488,7 @@ msgstr ""
 #: libchristine/Plugins/twitter/__init__.py:103
 #, python-format
 msgid "twitt -> %s"
-msgstr ""
+msgstr "Twitt -> %s"
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
@@ -487,12 +496,21 @@ msgstr ""
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
-msgstr ""
+msgstr "Plugin ini mengatur lau yang anda mainkan di Pidgin"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
-msgstr ""
+msgstr "Tampilkan balon pemberitahuan"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-cancel"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "video player"
+#~ msgstr "Pemutar video"

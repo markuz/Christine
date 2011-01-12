@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-03-18 23:00+0000\n"
+"Last-Translator: irtigor <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,18 +32,22 @@ msgstr "<b>Importando arquivos</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
+"Launchpad Contributions:\n"
+"  irtigor https://launchpad.net/~irtigor"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
-msgstr ""
+msgstr "Adicionar uma nova fonte"
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
-msgstr ""
+msgstr "Remover item selecionado"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr ""
+msgstr "Caminho"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
@@ -63,7 +67,7 @@ msgstr "Gênero"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Número da faixa"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -96,6 +100,8 @@ msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
 msgstr ""
+"Coloque aqui a mensagem que você quer\n"
+"mostrar no estado do pidgin."
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -210,11 +216,11 @@ msgstr "_Pequena vista"
 
 #: gui/WindowCore.glade:291
 msgid "Switch the view of the side panel"
-msgstr ""
+msgstr "Mude a exibição do painel lateral"
 
 #: gui/WindowCore.glade:292
 msgid "S_ide panel"
-msgstr ""
+msgstr "S_ide painel"
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
@@ -230,11 +236,11 @@ msgstr "Visualização"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
-msgstr ""
+msgstr "Fila"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "Lista de fontes"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
@@ -246,15 +252,15 @@ msgstr "Localizar"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "página 1"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "página 2"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "página 3"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -294,15 +300,15 @@ msgstr "<b>Colunas de biblioteca</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
-msgstr ""
+msgstr "Fonte"
 
 #: gui/Preferences.glade:190
 msgid "Encoding"
-msgstr ""
+msgstr "Codificação"
 
 #: gui/Preferences.glade:230
 msgid "<b>Subtitles</b>"
-msgstr ""
+msgstr "<b>Legendas</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
@@ -316,6 +322,11 @@ msgid ""
 "autoaudiosink\n"
 "pulsesink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
@@ -355,7 +366,7 @@ msgstr "Plug-ins"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "Menssagem"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
@@ -367,7 +378,7 @@ msgstr "Senha"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
@@ -423,51 +434,55 @@ msgstr ":"
 
 #: libchristine/Plugins/trayicon/__init__.py:26
 msgid "TrayIcon"
-msgstr ""
+msgstr "Ícone da área de notificação"
 
 #: libchristine/Plugins/trayicon/__init__.py:27
 msgid "This plugins shows a Try Icon on the notification area"
-msgstr ""
+msgstr "Estes plugins mostram um icone da area de notificação"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:55
 msgid "GNOME Media Keys"
-msgstr ""
+msgstr "Teclas multimídia do Gnome"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:56
 msgid "Allows christine to react to GNOME media key press events"
 msgstr ""
+"Permita o Christine reagir com os eventos de teclas pressionadas do GNOME "
+"media"
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
-msgstr ""
+msgstr "Capa do álbum"
 
 #: libchristine/Plugins/albumCover/__init__.py:44
 msgid "Try to get the album cover and shows on the gui if it is found."
 msgstr ""
+"Tenta conseguir a capa do álbum e a exibe na interface gráfica se for "
+"encontrada."
 
 #: libchristine/Plugins/getInfo/__init__.py:44
 msgid "getInfo"
-msgstr ""
+msgstr "Consiga informações"
 
 #: libchristine/Plugins/getInfo/__init__.py:45
 msgid "Shows/Update the info on the tags of the given file."
-msgstr ""
+msgstr "Mostra/Atualiza as informações das tags do arquivo escolhido"
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Lastfm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
-msgstr ""
+msgstr "Permitir a interação com o last.fm"
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
-msgstr ""
+msgstr "Este plugin envia e atualiza a sua conta do twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
@@ -492,16 +507,34 @@ msgstr "twitt -> %s"
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
-msgstr ""
+msgstr "Pidgin"
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
-msgstr ""
+msgstr "Este plugin define a música que está tocando no pidgin"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
-msgstr ""
+msgstr "Mostrar balões de notificação"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-cancel"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "video player"
+#~ msgstr "reproduzir vídeo"
+
+#~ msgid "gtk-save"
+#~ msgstr "gtk-salvar"
+
+#~ msgid "gtk-add"
+#~ msgstr "gtk-adicionar"
+
+#~ msgid "gtk-delete"
+#~ msgstr "gtk-deletar"

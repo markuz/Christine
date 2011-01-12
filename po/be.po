@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,6 +32,10 @@ msgstr "<b>Імпартаванне файла</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Voishalk https://launchpad.net/~uglikdv"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
@@ -67,7 +71,7 @@ msgstr ""
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
-msgstr ""
+msgstr "Назва крыніцы"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -79,6 +83,11 @@ msgid ""
 "\n"
 "Thank you for taking the time to improve christine."
 msgstr ""
+"Мы знайшлі праграмны ган, калі ласка, дашліця ягы дасылаеця праграмо на "
+"вывучэньне.\n"
+"Ка Вы дасылаеця праграмны ган на вывучэньне, то, калі ласка, зрабіця водпіс "
+"інфармацыі, каб паспрабаваць узнавіць\n"
+"праграмны ган і зафіксаваць яго. Таксама пажадана распавесьці, што Вы рабілі."
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
@@ -134,6 +143,8 @@ msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
+"Вы зьбіраецеся выдаліць усе Вашыя файлы ў Бібліятэцы.\n"
+"Заўважця, што гэта ня можна будзе выправіць!"
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
@@ -157,7 +168,7 @@ msgstr ""
 
 #: gui/WindowCore.glade:111
 msgid "Clean main List"
-msgstr ""
+msgstr "Спустошыць галоўны сьпіс"
 
 #: gui/WindowCore.glade:137
 msgid "_Edit"
@@ -181,11 +192,11 @@ msgstr ""
 
 #: gui/WindowCore.glade:243
 msgid "Less volume"
-msgstr ""
+msgstr "Памешыць гук"
 
 #: gui/WindowCore.glade:252
 msgid "More volume"
-msgstr ""
+msgstr "Павялічыць гук"
 
 #: gui/WindowCore.glade:261
 msgid "Mute"
@@ -281,7 +292,7 @@ msgstr "Колькасць прайграванняў"
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
-msgstr ""
+msgstr "<b>Слупкі бібліятэкі</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
@@ -348,7 +359,7 @@ msgstr ""
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
-msgstr ""
+msgstr "Імя карыстальніка"
 
 #: gui/twitter.glade:81 gui/plugin_lastfm_main.glade:113
 msgid "Password"
@@ -360,7 +371,7 @@ msgstr ""
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr ""
+msgstr "Запыт на статус"
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
@@ -368,11 +379,11 @@ msgstr ""
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr ""
+msgstr "<b>Праверка статутсу<b>"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
-msgstr ""
+msgstr "<b>Праверка статусу</b>"
 
 #: gui/FileSelector.glade:13
 msgid "Select your files"
@@ -460,7 +471,7 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
-msgstr ""
+msgstr "статус ня вызначаны"
 
 #: libchristine/Plugins/twitter/__init__.py:97
 msgid "not found"
@@ -472,7 +483,7 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:101
 msgid "unknown error"
-msgstr ""
+msgstr "невядомая памылка"
 
 #: libchristine/Plugins/twitter/__init__.py:103
 #, python-format
@@ -494,3 +505,21 @@ msgstr ""
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
 msgstr ""
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-добра"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-скасаванне"
+
+#~ msgid "video player"
+#~ msgstr "видэа прайгравальнік"
+
+#~ msgid "gtk-delete"
+#~ msgstr "выдаленьне gtk"
+
+#~ msgid "gtk-add"
+#~ msgstr "дадаваньне gtk"
+
+#~ msgid "gtk-save"
+#~ msgstr "захаваць gtk"

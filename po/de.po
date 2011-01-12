@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-11-03 07:18+0000\n"
+"Last-Translator: bpola <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,18 +32,25 @@ msgstr "<b>Importiere Dateien</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
+"Launchpad Contributions:\n"
+"  BBO https://launchpad.net/~bbo\n"
+"  Florian Sievers https://launchpad.net/~florian-sievers\n"
+"  Vinzenz Vietzke https://launchpad.net/~vinzv\n"
+"  bpola https://launchpad.net/~manuel-pirolt"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
-msgstr ""
+msgstr "Neue Quelle hinzufügen."
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
-msgstr ""
+msgstr "Gewählten Eintrag entfernen"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr ""
+msgstr "Pfad"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
@@ -63,7 +70,7 @@ msgstr "Genre"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Titelnummer"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -95,6 +102,8 @@ msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
 msgstr ""
+"Tragen Sie hier die Nachricht ein, die Sie als\n"
+"Status in Pidgin setzen möchten."
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -161,7 +170,7 @@ msgstr "Springen _zu"
 
 #: gui/WindowCore.glade:97
 msgid "_Jump to playing"
-msgstr ""
+msgstr "_Zum Spielenden springen"
 
 #: gui/WindowCore.glade:111
 msgid "Clean main List"
@@ -209,11 +218,11 @@ msgstr "Kleine An_sicht"
 
 #: gui/WindowCore.glade:291
 msgid "Switch the view of the side panel"
-msgstr ""
+msgstr "Ansicht der Seitenleiste wechseln"
 
 #: gui/WindowCore.glade:292
 msgid "S_ide panel"
-msgstr ""
+msgstr "Se_itenleiste"
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
@@ -229,11 +238,11 @@ msgstr "Visuelle Effekte"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
-msgstr ""
+msgstr "Warteschlange"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "Quellenübersicht"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
@@ -245,15 +254,15 @@ msgstr "Suchen"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "Seite 1"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "Seite 2"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "Seite 3"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -293,15 +302,15 @@ msgstr "<b>Sammlungs-Spalten</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
-msgstr ""
+msgstr "Schriftart"
 
 #: gui/Preferences.glade:190
 msgid "Encoding"
-msgstr ""
+msgstr "Kodierung"
 
 #: gui/Preferences.glade:230
 msgid "<b>Subtitles</b>"
-msgstr ""
+msgstr "<b>Untertitel</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
@@ -315,6 +324,11 @@ msgid ""
 "autoaudiosink\n"
 "pulsesink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
@@ -354,7 +368,7 @@ msgstr "Plugins"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "Nachricht"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
@@ -366,7 +380,7 @@ msgstr "Passwort"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
@@ -390,7 +404,7 @@ msgstr "Wählen Sie Ihre Dateien"
 
 #: gui/genericQuestion.glade:30
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #: gui/directorySelector.glade:9
 msgid "Select a folder"
@@ -422,51 +436,51 @@ msgstr ":"
 
 #: libchristine/Plugins/trayicon/__init__.py:26
 msgid "TrayIcon"
-msgstr ""
+msgstr "Benachrichtigungssymbol"
 
 #: libchristine/Plugins/trayicon/__init__.py:27
 msgid "This plugins shows a Try Icon on the notification area"
-msgstr ""
+msgstr "Dieses Plugin zeigt ein Symbol im Benachrichtigungsbereich an"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:55
 msgid "GNOME Media Keys"
-msgstr ""
+msgstr "GNOME Medientasten"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:56
 msgid "Allows christine to react to GNOME media key press events"
-msgstr ""
+msgstr "Erlaubt christine auf Ereignisse der GNOME Medientasten zu reagieren"
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
-msgstr ""
+msgstr "Album Cover"
 
 #: libchristine/Plugins/albumCover/__init__.py:44
 msgid "Try to get the album cover and shows on the gui if it is found."
-msgstr ""
+msgstr "Erlaubt es das Album Cover zu laden und es im Programm anzuzeigen."
 
 #: libchristine/Plugins/getInfo/__init__.py:44
 msgid "getInfo"
-msgstr ""
+msgstr "getInfo"
 
 #: libchristine/Plugins/getInfo/__init__.py:45
 msgid "Shows/Update the info on the tags of the given file."
-msgstr ""
+msgstr "Zeigt/Aktualisiert die Infos der angegebenen Datei."
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Lastfm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
-msgstr ""
+msgstr "Aktiviert die last.fm Unterstützung"
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
-msgstr ""
+msgstr "Dieses Plugin sendet und aktualisiert Ihr Twitterkonto"
 
 #: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
@@ -482,7 +496,7 @@ msgstr "Dienst nicht verfügbar"
 
 #: libchristine/Plugins/twitter/__init__.py:101
 msgid "unknown error"
-msgstr "unbekannter Fehler"
+msgstr "Unbekannter Fehler"
 
 #: libchristine/Plugins/twitter/__init__.py:103
 #, python-format
@@ -491,16 +505,34 @@ msgstr "twitt -> %s"
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
-msgstr ""
+msgstr "Pidgin"
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
-msgstr ""
+msgstr "Dieses Plugin setzt den aktuellen Song als Pidgin-Notiz"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
-msgstr ""
+msgstr "Zeigt Benachrichtigungsblasen"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-abbrechen"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "video player"
+#~ msgstr "Videoplayer"
+
+#~ msgid "gtk-save"
+#~ msgstr "gtk-save"
+
+#~ msgid "gtk-add"
+#~ msgstr "gtk-add"
+
+#~ msgid "gtk-delete"
+#~ msgstr "gtk-delete"

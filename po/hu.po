@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-08-04 13:15+0000\n"
-"Last-Translator: Gergely Szarka <gszarka@invitel.hu>\n"
+"PO-Revision-Date: 2010-02-26 22:24+0000\n"
+"Last-Translator: Gergely Szarka <szarka.honved@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,8 +32,14 @@ msgstr "<b>Fájlok importálása</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
 "Launchpad Contributions:\n"
-"  Gergely Szarka https://launchpad.net/~gszarka"
+"  Gergely Szarka https://launchpad.net/~gszarka\n"
+"  Krasznecz Zoltán https://launchpad.net/~krasznecz-zoltan\n"
+"  Lévai Tamás https://launchpad.net/~lt\n"
+"  Muszela Balázs https://launchpad.net/~bazsi86-deactivatedaccount\n"
+"  maty https://launchpad.net/~kovacs-m"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
@@ -65,7 +71,7 @@ msgstr "Műfaj"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Zeneszám sorszáma"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -91,6 +97,8 @@ msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
 msgstr ""
+"Írja be ide az üzenetét, amit a pidgin-ben\n"
+"állapotaként szeretne látni."
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -136,6 +144,8 @@ msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
+"El fogja távolítani az összes fájlt a Könyvtárból.\n"
+"Ez később nem vonható  vissza."
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
@@ -147,7 +157,7 @@ msgstr "Hozzáadás a sorhoz"
 
 #: gui/WindowCore.glade:74
 msgid "Open remote"
-msgstr ""
+msgstr "Távoli megnyitása"
 
 #: gui/WindowCore.glade:88
 msgid "Jump _to"
@@ -155,11 +165,11 @@ msgstr "_Ugrás"
 
 #: gui/WindowCore.glade:97
 msgid "_Jump to playing"
-msgstr ""
+msgstr "_Ugrás a most játszott számra"
 
 #: gui/WindowCore.glade:111
 msgid "Clean main List"
-msgstr ""
+msgstr "Fő lista törlése"
 
 #: gui/WindowCore.glade:137
 msgid "_Edit"
@@ -227,7 +237,7 @@ msgstr "Sor"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "Forrás lista"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
@@ -239,15 +249,15 @@ msgstr "Keresés"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "1. oldal"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "2. oldal"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "3. oldal"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -267,7 +277,7 @@ msgstr ""
 
 #: gui/walkdirectories.glade:46
 msgid "Exploring"
-msgstr ""
+msgstr "Felfedezés"
 
 #: gui/Preferences.glade:71
 msgid "Type"
@@ -283,7 +293,7 @@ msgstr "Lejátszva"
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
-msgstr ""
+msgstr "<b>Könyvtár oszlopok</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
@@ -369,7 +379,7 @@ msgstr "URL"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr ""
+msgstr "Engedélyezést igényel"
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
@@ -377,7 +387,7 @@ msgstr ""
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr ""
+msgstr "<b>Jogosultság</b>"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
@@ -434,6 +444,8 @@ msgstr "GNOME Media Keys"
 #: libchristine/Plugins/gnomeDBus/__init__.py:56
 msgid "Allows christine to react to GNOME media key press events"
 msgstr ""
+"Engedélyezi a christine-nek, hogy reagáljon a GNOME média gombjainak "
+"leütésére."
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
@@ -503,3 +515,21 @@ msgstr "PyNotify"
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
 msgstr "Értesítőbuborékok"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-mégse"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "video player"
+#~ msgstr "videólejátszó"
+
+#~ msgid "gtk-save"
+#~ msgstr "gtk-mentés"
+
+#~ msgid "gtk-add"
+#~ msgstr "gtk-hozzáadás"
+
+#~ msgid "gtk-delete"
+#~ msgstr "gtk-törlés"

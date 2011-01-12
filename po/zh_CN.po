@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-10-06 04:20+0000\n"
-"Last-Translator: 陶元蜀 <danieltaoys@gmail.com>\n"
+"PO-Revision-Date: 2009-11-10 07:44+0000\n"
+"Last-Translator: 英华 <wantinghard@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,12 +32,16 @@ msgstr "<b>导入文件</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
 "Launchpad Contributions:\n"
-"  陶元蜀 https://launchpad.net/~danieltaoys-gmail"
+"  Daniel Tao https://launchpad.net/~danieltaoys-gmail\n"
+"  Kyle WANG https://launchpad.net/~osfans-deactivatedaccount-"
+"deactivatedaccount"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
-msgstr ""
+msgstr "添加新源。"
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
@@ -81,6 +85,11 @@ msgid ""
 "\n"
 "Thank you for taking the time to improve christine."
 msgstr ""
+"我们找到了一个错误，请提交。\n"
+"\n"
+"当提交错误报告时，请复制如下信息，以帮助重现该错误并修复它。您应该同时说明您正在进行的操作。\n"
+"\n"
+"感谢您花时间帮助我们改进 christine 。"
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
@@ -90,7 +99,7 @@ msgstr "报告这个 bug"
 msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
-msgstr ""
+msgstr "在这里书写您想放在 pidgin 状态栏中的消息"
 
 #: gui/Properties.glade:9
 msgid "Properties"
@@ -136,6 +145,8 @@ msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
+"您将要删除媒体库中的所有文件。\n"
+"请注意此操作无法撤销。"
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
@@ -151,15 +162,15 @@ msgstr "打开远程模式"
 
 #: gui/WindowCore.glade:88
 msgid "Jump _to"
-msgstr "跳到(_T)"
+msgstr "跳转到(_T)"
 
 #: gui/WindowCore.glade:97
 msgid "_Jump to playing"
-msgstr "跳到正在播放"
+msgstr "跳转到正在播放(_J)"
 
 #: gui/WindowCore.glade:111
 msgid "Clean main List"
-msgstr "清空主列表"
+msgstr "清除主播放列表"
 
 #: gui/WindowCore.glade:137
 msgid "_Edit"
@@ -175,11 +186,11 @@ msgstr "播放"
 
 #: gui/WindowCore.glade:222
 msgid "Shuffle"
-msgstr "打乱"
+msgstr "乱序"
 
 #: gui/WindowCore.glade:230
 msgid "Repeat"
-msgstr "重复"
+msgstr "重复播放"
 
 #: gui/WindowCore.glade:243
 msgid "Less volume"
@@ -195,19 +206,19 @@ msgstr "静音"
 
 #: gui/WindowCore.glade:274
 msgid "_View"
-msgstr "察看(_V)"
+msgstr "查看(_V)"
 
 #: gui/WindowCore.glade:282
 msgid "_Small view"
-msgstr ""
+msgstr "简单视图(_S)"
 
 #: gui/WindowCore.glade:291
 msgid "Switch the view of the side panel"
-msgstr ""
+msgstr "切换侧边栏视图"
 
 #: gui/WindowCore.glade:292
 msgid "S_ide panel"
-msgstr ""
+msgstr "侧边栏(_I)"
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
@@ -219,15 +230,15 @@ msgstr "全屏"
 
 #: gui/WindowCore.glade:323
 msgid "Visualization"
-msgstr "可视化效果"
+msgstr "视觉效果"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
-msgstr ""
+msgstr "队列"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "源列表"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
@@ -239,15 +250,15 @@ msgstr "查找"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "第1页"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "第2页"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "第3页"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -267,7 +278,7 @@ msgstr ""
 
 #: gui/walkdirectories.glade:46
 msgid "Exploring"
-msgstr ""
+msgstr "浏览"
 
 #: gui/Preferences.glade:71
 msgid "Type"
@@ -283,7 +294,7 @@ msgstr "播放次数"
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
-msgstr ""
+msgstr "媒体库栏目"
 
 #: gui/Preferences.glade:179
 msgid "Font"
@@ -299,7 +310,7 @@ msgstr "<b>字幕</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
-msgstr "察看"
+msgstr "查看"
 
 #: gui/Preferences.glade:279
 msgid ""
@@ -309,6 +320,11 @@ msgid ""
 "autoaudiosink\n"
 "pulsesink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
@@ -332,7 +348,7 @@ msgstr "后端"
 
 #: gui/Preferences.glade:462
 msgid "<b>Allowed Files</b>"
-msgstr ""
+msgstr "<b>允许的文件</b>"
 
 #: gui/Preferences.glade:477
 msgid "Importing"
@@ -348,7 +364,7 @@ msgstr "插件"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "消息"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
@@ -364,15 +380,15 @@ msgstr "网址"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr ""
+msgstr "请求授权"
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
-msgstr ""
+msgstr "获取会话数据"
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr ""
+msgstr "<b>授权</b>"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
@@ -408,7 +424,7 @@ msgstr "错误文本"
 
 #: gui/JumpTo.glade:7
 msgid "Jump to time"
-msgstr "跳到特定时间"
+msgstr "跳转到特定时间"
 
 #: gui/JumpTo.glade:45
 msgid ":"
@@ -420,47 +436,47 @@ msgstr "托盘图标"
 
 #: libchristine/Plugins/trayicon/__init__.py:27
 msgid "This plugins shows a Try Icon on the notification area"
-msgstr ""
+msgstr "此插件将在系统通知区域显示一个托盘图标"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:55
 msgid "GNOME Media Keys"
-msgstr ""
+msgstr "GNOME 媒体键"
 
 #: libchristine/Plugins/gnomeDBus/__init__.py:56
 msgid "Allows christine to react to GNOME media key press events"
-msgstr ""
+msgstr "允许 christine 响应 GNOME 媒体键按钮事件"
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
-msgstr ""
+msgstr "专辑封面"
 
 #: libchristine/Plugins/albumCover/__init__.py:44
 msgid "Try to get the album cover and shows on the gui if it is found."
-msgstr ""
+msgstr "如果可以的话尝试自动获取专辑封面"
 
 #: libchristine/Plugins/getInfo/__init__.py:44
 msgid "getInfo"
-msgstr ""
+msgstr "获取信息"
 
 #: libchristine/Plugins/getInfo/__init__.py:45
 msgid "Shows/Update the info on the tags of the given file."
-msgstr ""
+msgstr "显示、更新指定文件的标签信息"
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Lastfm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
-msgstr ""
+msgstr "启用 last.fm 交互"
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
-msgstr ""
+msgstr "此插件能发送和更新您的 twitter 帐户"
 
 #: libchristine/Plugins/twitter/__init__.py:95
 msgid "not authorized"
@@ -481,11 +497,11 @@ msgstr "未知错误"
 #: libchristine/Plugins/twitter/__init__.py:103
 #, python-format
 msgid "twitt -> %s"
-msgstr ""
+msgstr "twitt -> %s"
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
-msgstr ""
+msgstr "Pidgin"
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
@@ -493,8 +509,17 @@ msgstr "这个插件将把您正在收听的歌曲信息发送到 pidgin 中"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
-msgstr ""
+msgstr "显示提醒气泡框"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-取消"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-确定"
+
+#~ msgid "video player"
+#~ msgstr "视频播放器"

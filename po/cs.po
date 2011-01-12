@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-10-06 04:41+0000\n"
-"Last-Translator: Petr Šimáček <petr.simacek@gmail.com>\n"
+"PO-Revision-Date: 2009-12-07 11:27+0000\n"
+"Last-Translator: Jan Kubeša <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,8 +32,13 @@ msgstr "<b>Importuji soubory</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
 "Launchpad Contributions:\n"
-"  Petr Šimáček https://launchpad.net/~petr-simacek"
+"  Jan Kubeša https://launchpad.net/~jankubesa\n"
+"  MiSi https://launchpad.net/~kettis\n"
+"  Petr Šimáček https://launchpad.net/~petr-simacek\n"
+"  Roman Horník https://launchpad.net/~roman.hornik"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
@@ -45,7 +50,7 @@ msgstr "Odstranit vybranou položku"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr "Cesta"
+msgstr "Umístění"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
@@ -53,7 +58,7 @@ msgstr "Název"
 
 #: gui/showInfo.glade:57 gui/Properties.glade:500 gui/Preferences.glade:41
 msgid "Artist"
-msgstr "Umělec"
+msgstr "Interpret"
 
 #: gui/showInfo.glade:69 gui/Properties.glade:528 gui/Preferences.glade:56
 msgid "Album"
@@ -99,10 +104,12 @@ msgid ""
 "Put here the the message you want to be put as\n"
 "status in pidgin."
 msgstr ""
+"Sem vložte zprávu, kterou chcete zobrazit\n"
+"jako stav v Pidginu."
 
 #: gui/Properties.glade:9
 msgid "Properties"
-msgstr "Vlastnosti"
+msgstr "Nastavení"
 
 #: gui/Properties.glade:69
 msgid "File"
@@ -319,6 +326,11 @@ msgid ""
 "autoaudiosink\n"
 "pulsesink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
@@ -508,3 +520,21 @@ msgstr "PyNotify"
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
 msgstr "Ukáže informační bublinu"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "gtk-save"
+#~ msgstr "gtk-save"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-cancel"
+
+#~ msgid "video player"
+#~ msgstr "videopřehrávač"
+
+#~ msgid "gtk-add"
+#~ msgstr "gtk-add"
+
+#~ msgid "gtk-delete"
+#~ msgstr "gtk-delete"

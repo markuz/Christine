@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-10-09 01:21+0000\n"
-"Last-Translator: Ruban Victor <Unknown>\n"
+"PO-Revision-Date: 2010-08-19 16:09+0000\n"
+"Last-Translator: revivva <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,6 +32,8 @@ msgstr "<b>Импортирование файлов</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
 "Launchpad Contributions:\n"
 "  Andy Lemz https://launchpad.net/~andy-lemz\n"
 "  Ruban Victor https://launchpad.net/~scorp337150"
@@ -519,3 +521,21 @@ msgstr "PyNotify"
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
 msgstr "Показывает вплывающие уведомления"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "Отменить"
+
+#~ msgid "gtk-ok"
+#~ msgstr "ОК"
+
+#~ msgid "video player"
+#~ msgstr "видео плеер"
+
+#~ msgid "gtk-save"
+#~ msgstr "сохранить"
+
+#~ msgid "gtk-add"
+#~ msgstr "Добавить"
+
+#~ msgid "gtk-delete"
+#~ msgstr "Удалить"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-09-25 11:12+0000\n"
-"Last-Translator: Andriy Tsykholyas <andriy.tsykholyas@gmail.com>\n"
+"PO-Revision-Date: 2010-04-08 13:37+0000\n"
+"Last-Translator: Sergiy Gavrylov <sergiovana@bigmir.net>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,8 +32,11 @@ msgstr "<b>Імпортую файли</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
 "Launchpad Contributions:\n"
-"  Andriy Tsykholyas https://launchpad.net/~andriy-tsykholyas"
+"  Andriy Tsykholyas https://launchpad.net/~andriy-tsykholyas\n"
+"  Sergiy Gavrylov https://launchpad.net/~gavro"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
@@ -515,4 +518,22 @@ msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
-msgstr ""
+msgstr "Показує зринаючі повідомлення"
+
+#~ msgid "video player"
+#~ msgstr "відеопрогравач"
+
+#~ msgid "gtk-save"
+#~ msgstr "пел-зберегти"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-скасування"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "gtk-add"
+#~ msgstr "gtk-додати"
+
+#~ msgid "gtk-delete"
+#~ msgstr "gtk-видалити"

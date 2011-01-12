@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2009-11-11 23:27+0000\n"
+"Last-Translator: EllordsK <pz77@o2.ie>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -23,7 +23,7 @@ msgstr "Importovanie:"
 
 #: gui/addFiles.glade:64
 msgid "label2"
-msgstr "položka2"
+msgstr "menovka2"
 
 #: gui/addFiles.glade:106
 msgid "<b>Importing files</b>"
@@ -32,18 +32,22 @@ msgstr "<b>Importovanie súborov</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
+"Launchpad Contributions:\n"
+"  EllordsK https://launchpad.net/~pz77"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
-msgstr ""
+msgstr "Pridať nový zdroj."
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
-msgstr ""
+msgstr "Odstrániť zvolenú položku"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr ""
+msgstr "Umiestnenie"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
@@ -63,11 +67,11 @@ msgstr "Žáner"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Číslo skladby"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
-msgstr ""
+msgstr "Názov zdroja"
 
 #: gui/errorReporter.glade:37
 msgid ""
@@ -82,7 +86,7 @@ msgstr ""
 
 #: gui/errorReporter.glade:103
 msgid "Report the bug"
-msgstr ""
+msgstr "Poslať správu o chybe"
 
 #: gui/plugin_pidgin_main.glade:38
 msgid ""
@@ -92,7 +96,7 @@ msgstr ""
 
 #: gui/Properties.glade:9
 msgid "Properties"
-msgstr "Vlastnosti"
+msgstr "Predvoľby"
 
 #: gui/Properties.glade:69
 msgid "File"
@@ -108,7 +112,7 @@ msgstr "Mód"
 
 #: gui/Properties.glade:164
 msgid "Bitrate"
-msgstr "Prenosová rýchlosť"
+msgstr "Dátový tok"
 
 #: gui/Properties.glade:192 gui/Properties.glade:220 gui/Properties.glade:248
 #: gui/Properties.glade:276 gui/Properties.glade:304 gui/Properties.glade:332
@@ -134,6 +138,8 @@ msgid ""
 "You are about to remove all your files in the Library. \n"
 "Note that this cannot be undone!"
 msgstr ""
+"Chystáte sa odstrániť všetky súbory zo Zbierky. \n"
+"Toto už nebude možné vrátiť naspäť!"
 
 #: gui/WindowCore.glade:20
 msgid "_Media"
@@ -141,7 +147,7 @@ msgstr ""
 
 #: gui/WindowCore.glade:60
 msgid "Import to queue"
-msgstr ""
+msgstr "Importovať do poradia"
 
 #: gui/WindowCore.glade:74
 msgid "Open remote"
@@ -149,7 +155,7 @@ msgstr ""
 
 #: gui/WindowCore.glade:88
 msgid "Jump _to"
-msgstr ""
+msgstr "Skoč _na"
 
 #: gui/WindowCore.glade:97
 msgid "_Jump to playing"
@@ -157,47 +163,47 @@ msgstr ""
 
 #: gui/WindowCore.glade:111
 msgid "Clean main List"
-msgstr ""
+msgstr "Vymazať hlavný Zoznam"
 
 #: gui/WindowCore.glade:137
 msgid "_Edit"
-msgstr ""
+msgstr "_Upraviť"
 
 #: gui/WindowCore.glade:176
 msgid "_Control"
-msgstr ""
+msgstr "_Ovládanie"
 
 #: gui/WindowCore.glade:184
 msgid "Play"
-msgstr ""
+msgstr "Prehrať"
 
 #: gui/WindowCore.glade:222
 msgid "Shuffle"
-msgstr ""
+msgstr "Náhodne"
 
 #: gui/WindowCore.glade:230
 msgid "Repeat"
-msgstr ""
+msgstr "Opakovať"
 
 #: gui/WindowCore.glade:243
 msgid "Less volume"
-msgstr ""
+msgstr "Menej hlasitosti"
 
 #: gui/WindowCore.glade:252
 msgid "More volume"
-msgstr ""
+msgstr "Viac hlasitosti"
 
 #: gui/WindowCore.glade:261
 msgid "Mute"
-msgstr ""
+msgstr "Stlmiť"
 
 #: gui/WindowCore.glade:274
 msgid "_View"
-msgstr ""
+msgstr "_Zobraziť"
 
 #: gui/WindowCore.glade:282
 msgid "_Small view"
-msgstr ""
+msgstr "_Malý pohľad"
 
 #: gui/WindowCore.glade:291
 msgid "Switch the view of the side panel"
@@ -205,31 +211,31 @@ msgstr ""
 
 #: gui/WindowCore.glade:292
 msgid "S_ide panel"
-msgstr ""
+msgstr "B_očný panel"
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
-msgstr ""
+msgstr "Prehliadač"
 
 #: gui/WindowCore.glade:309
 msgid "Full Screen"
-msgstr ""
+msgstr "Celá Obrazovka"
 
 #: gui/WindowCore.glade:323
 msgid "Visualization"
-msgstr ""
+msgstr "Vizualizácia"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
-msgstr ""
+msgstr "Poradie"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
-msgstr ""
+msgstr "Zoznam Zdrojov"
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
-msgstr ""
+msgstr "_Pomoc"
 
 #: gui/WindowCore.glade:524
 msgid "Find"
@@ -237,15 +243,15 @@ msgstr "Hľadať"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "strana 1"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "strana 2"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "strana 3"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -273,7 +279,7 @@ msgstr "Typ"
 
 #: gui/Preferences.glade:86
 msgid "Length"
-msgstr "Dĺžka"
+msgstr "Dľžka"
 
 #: gui/Preferences.glade:112
 msgid "Play count"
@@ -281,11 +287,11 @@ msgstr "Počet prehraní"
 
 #: gui/Preferences.glade:145
 msgid "<b>Library columns</b>"
-msgstr ""
+msgstr "<b>Stľpce zoznamu</b>"
 
 #: gui/Preferences.glade:179
 msgid "Font"
-msgstr ""
+msgstr "Písmo"
 
 #: gui/Preferences.glade:190
 msgid "Encoding"
@@ -293,11 +299,11 @@ msgstr ""
 
 #: gui/Preferences.glade:230
 msgid "<b>Subtitles</b>"
-msgstr ""
+msgstr "<b>Titulky</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
-msgstr ""
+msgstr "Pohľad"
 
 #: gui/Preferences.glade:279
 msgid ""
@@ -330,35 +336,35 @@ msgstr "Zo zadu"
 
 #: gui/Preferences.glade:462
 msgid "<b>Allowed Files</b>"
-msgstr ""
+msgstr "<b>Povolené Súbory</b>"
 
 #: gui/Preferences.glade:477
 msgid "Importing"
-msgstr ""
+msgstr "Importujem"
 
 #: gui/Preferences.glade:517
 msgid "Configure _Plugin"
-msgstr ""
+msgstr "Prispôsob _Zásuvný modul"
 
 #: gui/Preferences.glade:544
 msgid "Plugins"
-msgstr ""
+msgstr "Zásuvné moduly"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "Správa"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
-msgstr ""
+msgstr "Užívateľské meno"
 
 #: gui/twitter.glade:81 gui/plugin_lastfm_main.glade:113
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
-msgstr ""
+msgstr "Webová adresa"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
@@ -382,15 +388,15 @@ msgstr "Vyber svoje súbory"
 
 #: gui/genericQuestion.glade:30
 msgid "Label"
-msgstr ""
+msgstr "Názov"
 
 #: gui/directorySelector.glade:9
 msgid "Select a folder"
-msgstr "Vyber adresár"
+msgstr "Vyberte priečinok"
 
 #: gui/directorySelector.glade:19
 msgid "Include subfolders"
-msgstr "Zahrnúť podadresáre"
+msgstr "Zahrnúť podpriečinky"
 
 #: gui/TreeViewReorderable.glade:7
 msgid "window1"
@@ -496,3 +502,12 @@ msgstr ""
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
 msgstr ""
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-zrušenie"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "video player"
+#~ msgstr "video prehrávač"

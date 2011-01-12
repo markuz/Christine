@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-04-03 10:53+0000\n"
+"Last-Translator: svilborg <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
-msgstr ""
+msgstr "Импортиране:"
 
 #: gui/addFiles.glade:64
 msgid "label2"
@@ -27,11 +27,15 @@ msgstr "етикет2"
 
 #: gui/addFiles.glade:106
 msgid "<b>Importing files</b>"
-msgstr ""
+msgstr "<b>Импортиране на файлове</b>"
 
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
+"Launchpad Contributions:\n"
+"  svilborg https://launchpad.net/~svilborg"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
@@ -39,31 +43,31 @@ msgstr ""
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
-msgstr ""
+msgstr "Премахване на избрания обект"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr ""
+msgstr "Път"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
-msgstr ""
+msgstr "Заглавие"
 
 #: gui/showInfo.glade:57 gui/Properties.glade:500 gui/Preferences.glade:41
 msgid "Artist"
-msgstr ""
+msgstr "Изпълнител"
 
 #: gui/showInfo.glade:69 gui/Properties.glade:528 gui/Preferences.glade:56
 msgid "Album"
-msgstr ""
+msgstr "Албум"
 
 #: gui/showInfo.glade:81 gui/Properties.glade:472 gui/Preferences.glade:126
 msgid "Genre"
-msgstr ""
+msgstr "Жанр"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Номер на песен"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -103,15 +107,15 @@ msgstr "Характеристики"
 
 #: gui/Properties.glade:69
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: gui/Properties.glade:108
 msgid "Audio codec"
-msgstr ""
+msgstr "Аудио кодек"
 
 #: gui/Properties.glade:136
 msgid "Mode"
-msgstr ""
+msgstr "Режим"
 
 #: gui/Properties.glade:164
 msgid "Bitrate"
@@ -126,7 +130,7 @@ msgstr ""
 
 #: gui/Properties.glade:444
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #: gui/Properties.glade:584 gui/Preferences.glade:98
 msgid "Track number"
@@ -134,7 +138,7 @@ msgstr "Номер на песен"
 
 #: gui/Properties.glade:612
 msgid "Video codec"
-msgstr ""
+msgstr "Видео кодек"
 
 #: gui/deleteQuestion.glade:29
 msgid ""
@@ -170,23 +174,23 @@ msgstr ""
 
 #: gui/WindowCore.glade:137
 msgid "_Edit"
-msgstr ""
+msgstr "_Редактиране"
 
 #: gui/WindowCore.glade:176
 msgid "_Control"
-msgstr ""
+msgstr "_Управление"
 
 #: gui/WindowCore.glade:184
 msgid "Play"
-msgstr ""
+msgstr "Изпълнение"
 
 #: gui/WindowCore.glade:222
 msgid "Shuffle"
-msgstr ""
+msgstr "Разбъркано"
 
 #: gui/WindowCore.glade:230
 msgid "Repeat"
-msgstr ""
+msgstr "Повтаряне"
 
 #: gui/WindowCore.glade:243
 msgid "Less volume"
@@ -198,11 +202,11 @@ msgstr ""
 
 #: gui/WindowCore.glade:261
 msgid "Mute"
-msgstr ""
+msgstr "Без звук"
 
 #: gui/WindowCore.glade:274
 msgid "_View"
-msgstr ""
+msgstr "_Изглед"
 
 #: gui/WindowCore.glade:282
 msgid "_Small view"
@@ -218,19 +222,19 @@ msgstr ""
 
 #: gui/WindowCore.glade:300
 msgid "Browser"
-msgstr ""
+msgstr "Браузър"
 
 #: gui/WindowCore.glade:309
 msgid "Full Screen"
-msgstr ""
+msgstr "Пълен екран"
 
 #: gui/WindowCore.glade:323
 msgid "Visualization"
-msgstr ""
+msgstr "Визуализация"
 
 #: gui/WindowCore.glade:332 libchristine/Christine.py:225
 msgid "Queue"
-msgstr ""
+msgstr "Опашка"
 
 #: gui/WindowCore.glade:340 libchristine/Christine.py:234
 msgid "Sources List"
@@ -238,11 +242,11 @@ msgstr ""
 
 #: gui/WindowCore.glade:352
 msgid "_Help"
-msgstr ""
+msgstr "Помо_щ"
 
 #: gui/WindowCore.glade:524
 msgid "Find"
-msgstr ""
+msgstr "Търсене"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
@@ -262,13 +266,15 @@ msgstr ""
 
 #: gui/openRemote.glade:20
 msgid "Location"
-msgstr ""
+msgstr "Местоположение"
 
 #: gui/deleteFileFromDisk.glade:35
 msgid ""
 "Are you sure?\n"
 "This cannot be undone"
 msgstr ""
+"Сигурни ли сте?\n"
+"Това не може да бъде отменено"
 
 #: gui/walkdirectories.glade:46
 msgid "Exploring"
@@ -292,19 +298,19 @@ msgstr ""
 
 #: gui/Preferences.glade:179
 msgid "Font"
-msgstr ""
+msgstr "Шрифт"
 
 #: gui/Preferences.glade:190
 msgid "Encoding"
-msgstr ""
+msgstr "Кодиране"
 
 #: gui/Preferences.glade:230
 msgid "<b>Subtitles</b>"
-msgstr ""
+msgstr "<b>Субтитри</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
-msgstr ""
+msgstr "Изглед"
 
 #: gui/Preferences.glade:279
 msgid ""
@@ -314,6 +320,11 @@ msgid ""
 "autoaudiosink\n"
 "pulsesink"
 msgstr ""
+"gconfaudiosink\n"
+"alsasink\n"
+"esdsink\n"
+"autoaudiosink\n"
+"pulsesink"
 
 #: gui/Preferences.glade:301
 msgid "<b>Audiosink</b>"
@@ -324,6 +335,8 @@ msgid ""
 "ximagesink\n"
 "xvimagesink"
 msgstr ""
+"ximagesink\n"
+"xvimagesink"
 
 #: gui/Preferences.glade:350
 msgid "<b>Videosink</b>"
@@ -335,11 +348,11 @@ msgstr ""
 
 #: gui/Preferences.glade:462
 msgid "<b>Allowed Files</b>"
-msgstr ""
+msgstr "<b>Разрешени файлове</b>"
 
 #: gui/Preferences.glade:477
 msgid "Importing"
-msgstr ""
+msgstr "Импортиране"
 
 #: gui/Preferences.glade:517
 msgid "Configure _Plugin"
@@ -351,19 +364,19 @@ msgstr "Добавки"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "Съобщение"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
-msgstr ""
+msgstr "Потребителско име"
 
 #: gui/twitter.glade:81 gui/plugin_lastfm_main.glade:113
 msgid "Password"
-msgstr ""
+msgstr "Парола"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
-msgstr ""
+msgstr "Адрес (URL)"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
@@ -379,7 +392,7 @@ msgstr ""
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
-msgstr ""
+msgstr "<b>Идентификация</b>"
 
 #: gui/FileSelector.glade:13
 msgid "Select your files"
@@ -387,7 +400,7 @@ msgstr ""
 
 #: gui/genericQuestion.glade:30
 msgid "Label"
-msgstr ""
+msgstr "Етикет"
 
 #: gui/directorySelector.glade:9
 msgid "Select a folder"
@@ -407,7 +420,7 @@ msgstr "Грешка"
 
 #: gui/Error.glade:82
 msgid "Error text"
-msgstr ""
+msgstr "Текст за грешка"
 
 #: gui/JumpTo.glade:7
 msgid "Jump to time"
@@ -415,7 +428,7 @@ msgstr "Прескачане до време"
 
 #: gui/JumpTo.glade:45
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: libchristine/Plugins/trayicon/__init__.py:26
 msgid "TrayIcon"
@@ -451,7 +464,7 @@ msgstr ""
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Lastfm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
@@ -459,7 +472,7 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
@@ -471,24 +484,24 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:97
 msgid "not found"
-msgstr ""
+msgstr "не е намерен"
 
 #: libchristine/Plugins/twitter/__init__.py:99
 msgid "service not available"
-msgstr ""
+msgstr "услугата не е достъпна"
 
 #: libchristine/Plugins/twitter/__init__.py:101
 msgid "unknown error"
-msgstr ""
+msgstr "неизвестна грешка"
 
 #: libchristine/Plugins/twitter/__init__.py:103
 #, python-format
 msgid "twitt -> %s"
-msgstr ""
+msgstr "twitt -> %s"
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
-msgstr ""
+msgstr "Pidgin"
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
@@ -496,7 +509,7 @@ msgstr ""
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:44
 msgid "PyNotify"
-msgstr ""
+msgstr "PyNotify"
 
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"

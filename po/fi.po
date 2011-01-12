@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: christine\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-11 03:53-0500\n"
-"PO-Revision-Date: 2009-07-21 15:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2009-12-10 10:33+0000\n"
+"Last-Translator: pete-rok <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-10-09 03:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-11 02:08+0000\n"
+"X-Generator: Launchpad (build 12161)\n"
 
 #: gui/addFiles.glade:53
 msgid "Importing:"
@@ -32,6 +32,10 @@ msgstr "<b>Tuodaan tiedostoja</b>"
 #: gui/About.glade:59
 msgid "translator-credits"
 msgstr ""
+"This is a dummy translation so that the credits are counted as translated.\n"
+"\n"
+"Launchpad Contributions:\n"
+"  pete-rok https://launchpad.net/~kpteam"
 
 #: gui/SourcesList.glade:42
 msgid "Add a new source."
@@ -39,11 +43,11 @@ msgstr ""
 
 #: gui/SourcesList.glade:51
 msgid "Remove selected item"
-msgstr ""
+msgstr "Poista valittu kohde"
 
 #: gui/showInfo.glade:35
 msgid "Path"
-msgstr ""
+msgstr "Polku"
 
 #: gui/showInfo.glade:45 gui/Properties.glade:556 gui/NewRadioDialog.glade:55
 msgid "Title"
@@ -63,7 +67,7 @@ msgstr "Tyylilaji"
 
 #: gui/showInfo.glade:93
 msgid "Track Number"
-msgstr ""
+msgstr "Kappaleen numero"
 
 #: gui/NewSourceDialog.glade:41
 msgid "Source Name"
@@ -106,11 +110,11 @@ msgstr "Tiedosto"
 
 #: gui/Properties.glade:108
 msgid "Audio codec"
-msgstr ""
+msgstr "Äänikoodekki"
 
 #: gui/Properties.glade:136
 msgid "Mode"
-msgstr ""
+msgstr "Tila"
 
 #: gui/Properties.glade:164
 msgid "Bitrate"
@@ -245,15 +249,15 @@ msgstr "Etsi"
 
 #: gui/WindowCore.glade:578
 msgid "page 1"
-msgstr ""
+msgstr "sivu 1"
 
 #: gui/WindowCore.glade:592
 msgid "page 2"
-msgstr ""
+msgstr "sivu 2"
 
 #: gui/WindowCore.glade:607
 msgid "page 3"
-msgstr ""
+msgstr "sivu 3"
 
 #: gui/openRemote.glade:8
 msgid "Open Remote"
@@ -271,7 +275,7 @@ msgstr "Oletko varma?"
 
 #: gui/walkdirectories.glade:46
 msgid "Exploring"
-msgstr ""
+msgstr "Selataan"
 
 #: gui/Preferences.glade:71
 msgid "Type"
@@ -291,19 +295,19 @@ msgstr ""
 
 #: gui/Preferences.glade:179
 msgid "Font"
-msgstr ""
+msgstr "Fontti"
 
 #: gui/Preferences.glade:190
 msgid "Encoding"
-msgstr ""
+msgstr "Koodaus"
 
 #: gui/Preferences.glade:230
 msgid "<b>Subtitles</b>"
-msgstr ""
+msgstr "<b>Tekstitys</b>"
 
 #: gui/Preferences.glade:250
 msgid "View"
-msgstr ""
+msgstr "Näkymä"
 
 #: gui/Preferences.glade:279
 msgid ""
@@ -350,7 +354,7 @@ msgstr "Liitännäiset"
 
 #: gui/twitter.glade:59
 msgid "Message"
-msgstr ""
+msgstr "Viesti"
 
 #: gui/twitter.glade:71 gui/plugin_lastfm_main.glade:125
 msgid "Username"
@@ -362,11 +366,11 @@ msgstr "Salasana"
 
 #: gui/NewRadioDialog.glade:43
 msgid "URL"
-msgstr ""
+msgstr "URL-osoite"
 
 #: gui/plugin_lastfm_main.glade:36
 msgid "Request authorization"
-msgstr ""
+msgstr "Vaadi tunnistusta"
 
 #: gui/plugin_lastfm_main.glade:45
 msgid "Fetch session data"
@@ -374,7 +378,7 @@ msgstr "Hae istuntotiedot"
 
 #: gui/plugin_lastfm_main.glade:59
 msgid "<b>Authorization</b>"
-msgstr ""
+msgstr "<b>Tunnistus</b>"
 
 #: gui/plugin_lastfm_main.glade:139
 msgid "<b>Authentication</b>"
@@ -398,7 +402,7 @@ msgstr "Sisällytä alikansiot"
 
 #: gui/TreeViewReorderable.glade:7
 msgid "window1"
-msgstr ""
+msgstr "window1"
 
 #: gui/Error.glade:8
 msgid "Error"
@@ -434,7 +438,7 @@ msgstr ""
 
 #: libchristine/Plugins/albumCover/__init__.py:43
 msgid "Album Cover"
-msgstr ""
+msgstr "Albumin kuvitus"
 
 #: libchristine/Plugins/albumCover/__init__.py:44
 msgid "Try to get the album cover and shows on the gui if it is found."
@@ -450,7 +454,7 @@ msgstr ""
 
 #: libchristine/Plugins/lastfm/__init__.py:39
 msgid "Lastfm"
-msgstr ""
+msgstr "Lastfm"
 
 #: libchristine/Plugins/lastfm/__init__.py:40
 msgid "Enables the last.fm interaction"
@@ -458,7 +462,7 @@ msgstr ""
 
 #: libchristine/Plugins/twitter/__init__.py:44
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: libchristine/Plugins/twitter/__init__.py:45
 msgid "This plugins send and update to your twitter account"
@@ -487,7 +491,7 @@ msgstr ""
 
 #: libchristine/Plugins/pidgin/__init__.py:39
 msgid "Pidgin"
-msgstr ""
+msgstr "Pidgin"
 
 #: libchristine/Plugins/pidgin/__init__.py:40
 msgid "This plugin set the song you are playing on pidgin"
@@ -500,3 +504,21 @@ msgstr ""
 #: libchristine/Plugins/christinePyNotify/__init__.py:45
 msgid "Shows notify bubbles"
 msgstr ""
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-peruuta"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "gtk-save"
+#~ msgstr "gtk-tallenna"
+
+#~ msgid "video player"
+#~ msgstr "videosoitin"
+
+#~ msgid "gtk-delete"
+#~ msgstr "gtk-poista"
+
+#~ msgid "gtk-add"
+#~ msgstr "gtk-lisää"
