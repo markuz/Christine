@@ -74,7 +74,7 @@ run:
 
 christine: Makefile $(srcdir)/christine.c
 	$(CC) ${CFLAGS} -Wall -fPIC -I${pythonincludedir} -c christine.c -o christine.o
-	$(CC) ${CFLAGS} ${LDFLAGS} ${pythonlfs} christine.o -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion} -o christine
+	$(CC) ${CFLAGS} ${LDFLAGS} ${pythonlfs} christine.o -ldl -lpthread -lutil -lm -lpython${pythonversion} -o christine
 	python -c "import compileall,re; compileall.compile_dir('./', rx=re.compile('/[.]svn'),force=True, maxlevels=11)"
 
 ACLOCAL_AMFLAGS = -I m4

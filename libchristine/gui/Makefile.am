@@ -40,7 +40,7 @@ edit = sed \
 
 Volume.so:  Makefile $(srcdir)/Volume.so
 	$(CC) ${CFLAGS} -Wall -fPIC ${CFLAGS} -I${pythonincludedir}/ $(GTK_FLAGS) $(PYGTK_FLAGS)  -I/usr/include/ -c Volume.c -o Volume.o
-	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} $(GTK_FLAGS) $(PYGTK_FLAGS)  Volume.o -L/usr/lib -L/usr/local/lib -lnsl -ldl -lieee -lpthread -lutil -lm -lpython${pythonversion}  -o Volume.so
+	$(CC) -shared ${CFLAGS} ${LDFLAGS} ${pythonlfs} $(GTK_FLAGS) $(PYGTK_FLAGS)  Volume.o -L/usr/lib -L/usr/local/lib -ldl -lpthread -lutil -lm -lpython${pythonversion}  -o Volume.so
 
 
 clean:
