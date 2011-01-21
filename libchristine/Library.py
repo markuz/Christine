@@ -29,7 +29,7 @@ from libchristine.gui.GtkMisc import GtkMisc, error
 from libchristine.Translator import translate
 from libchristine.christineConf import christineConf
 from libchristine.Share import Share
-from libchristine.Tagger import Tagger
+from libchristine.Tagger import Tagger, GsTagger
 from libchristine.LibraryModel import LibraryModel
 from libchristine.globalvars import CHRISTINE_VIDEO_EXT
 from libchristine.Logger import LoggerManager
@@ -174,6 +174,11 @@ class libraryBase(GtkMisc):
         self.logger.debug('metatags: %s',repr(metatags))
         if not metatags['have_tags']: 
             metatags = self.tagger.readTags(filepath)
+            #===================================================================
+            # tagger = GsTagger()
+            # tagger.connect('found-tag', self.__update_tags, filepath)
+            # tagger.set_location(filepath)
+            #===================================================================
             if not metatags:
                 return False
             track_key = 'track'
@@ -196,6 +201,27 @@ class libraryBase(GtkMisc):
                 "play_count":0,
                 "time":'0:00',
                 "genre":metatags['genre'],
+                'have_tags':True
+                }
+        self.updateData(filepath,**kwargs)
+    
+    def __update_tags(self, tagger, filepath):
+        try:
+            tn = int(tagger.get('track_number',0))
+        except:
+            tn = 0
+        title = tagger.get('title','') 
+        if not title:
+            filenamesplit = os.path.split(filepath)[1]
+            title = '.'.join(filenamesplit.split('.')[:-1])
+        
+        kwargs = {"title":title,
+                "artist":tagger.get('artist',''),
+                "album":tagger.get('album',''),
+                "track_number": tn, 
+                "play_count":0,
+                "time":'0:00',
+                "genre":tagger.get('genre',''),
                 'have_tags':True
                 }
         self.updateData(filepath,**kwargs)
