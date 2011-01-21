@@ -76,8 +76,11 @@ class albumCover(plugin_base):
         self.__clean_image()
         timestamp = time.time()
         self.timestamp = timestamp
-        if not self.active: return False
-        if not os.path.exists(file):return False
+        if not self.active:
+            print "Cannot continue, we are not enabled (AlbumCover)" 
+            return False
+        if not os.path.exists(file):
+            return False
         if not self.set_image_from_directory(timestamp = timestamp):
             tags =  self.tagger.readTags(file)
             #for key in ('artist','title', 'album'):
@@ -153,10 +156,14 @@ class albumCover(plugin_base):
             pass
     
     def get_active(self):
+        if not self.username or not self.sessionkey:
+            return False
         return self.christineConf.getBool('lastfm/getimage')
     
     def set_active(self, value):
-        __enabled__ = value 
+        if not self.username or not self.sessionkey:
+            value = False
+        __enabled__ = value
         return self.christineConf.setValue('lastfm/getimage', value)
 
     active = property(get_active, set_active, None,
