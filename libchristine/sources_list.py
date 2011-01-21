@@ -36,9 +36,9 @@ class sources_list (GtkMisc):
         self.music_iter = None
         self.__logger = LoggerManager().getLogger('sources_list')
         self.__db = sqlite3db()
-        idlist = self.__db.PlaylistIDFromName(list)
-        if idlist != None:
-            idlist = idlist['id']
+        #idlist = self.__db.PlaylistIDFromName('Music')
+        #if idlist != None:
+        #    idlist = idlist['id']
         self.__Share = Share()
         xml = self.__Share.getTemplate('SourcesList', 'vbox')
         self.__gen_model()
