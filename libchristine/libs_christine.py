@@ -25,7 +25,6 @@ class lib_library(object):
         self.__db = sqlite3db()
         self.idlist = self.__db.PlaylistIDFromName(listname)
         if self.idlist == None:
-            self.__db.insert_music_playlist()
             self.idlist = self.__db.PlaylistIDFromName('music')
         self.idlist = self.idlist['id']
         self.list = listname

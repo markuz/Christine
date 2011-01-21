@@ -511,17 +511,17 @@ class libraryBase(GtkMisc):
         return True
         
     
-    def addDirectories(self, dir):
+    def addDirectories(self, directory):
         """
         Recursive import, first and only argument
         is the dir where to digg
         """
         tmpa = []
-        if isinstance(dir, list):
-            for i in dir:
+        if isinstance(directory, list):
+            for i in directory:
                 tmpa.append(i)
         else:
-            tmpa.append(dir)
+            tmpa.append(directory)
         f         = []
         filenames = []
         self.f = []
@@ -531,9 +531,9 @@ class libraryBase(GtkMisc):
         progress = xml['progressbar1']
         label = xml['label1']
         self.__walking = True
-        gobject.idle_add(self.__walkDirectories, tmpa, f, filenames, label, dialog)
-        gobject.idle_add(self.__walkProgressPulse, progress)
         dialog.connect('response', self.__addDirectories_response)
+        gobject.idle_add(self.__walkProgressPulse, progress)
+        gobject.idle_add(self.__walkDirectories, tmpa, f, filenames, label, dialog)
     
     def __addDirectories_response(self, dialog, response):
         self.__walking = False
@@ -547,6 +547,7 @@ class libraryBase(GtkMisc):
         allowdexts = self.christineConf.getString('backend/allowed_files')
         allowdexts = allowdexts.split(',')
         if not tmpa:
+            print 'no tmpa'
             dialog.destroy()
             self.__walking = False
             if f:
@@ -558,20 +559,21 @@ class libraryBase(GtkMisc):
                 (dirpath, dirnames, files) = a.next()
                 gobject.idle_add(self.__update_labels,dirpath, dirnames, files, 
                                  filenames, label, allowdexts,f)
+                filenames.append([dirpath, files])
+                for path in filenames[-1][1]:
+                    ext    = path.split('.').pop().lower()
+                    exists = os.path.join(filenames[-1][0], path) in self.f
+                    if ext in allowdexts and not exists:
+                        f.append(os.path.join(filenames[-1][0],path))
+
             except StopIteration:
                 break
         return True
     
     def __update_labels(self, dirpath, dirnames, files, filenames,label, allowdexts,f):
-        filenames.append([dirpath, files])
         npath = self.encode_text(dirpath)
         label.set_text(translate('Exploring') + '%s'%npath)
-        for path in filenames[-1][1]:
-            ext    = path.split('.').pop().lower()
-            exists = os.path.join(filenames[-1][0], path) in self.f
-            if ext in allowdexts and not exists:
-                f.append(os.path.join(filenames[-1][0],path))
-
+        
     def __addFile(self, ):
         """
         Add a single file, to the library or queue.
@@ -646,7 +648,7 @@ class libraryBase(GtkMisc):
         files.reverse()
         extensions = self.christineConf.getString('backend/allowed_files')
         extensions = extensions.split(',')
-        while len(files):
+        while files:
             i = files.pop()
             ext = i.split('.').pop().lower()
             if not i in self.__Paths and ext in extensions:

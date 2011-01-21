@@ -72,6 +72,9 @@ class sqlite3db(Singleton, GtkMisc):
             self.__logger.debug('No se encontro la version de la base de datos.')
             self.__logger.debug(self.get_db_version())
             self.fillRegistry()
+        for i in ('music','queue'):
+            if self.PlaylistIDFromName(i) == None:
+                self.addPlaylist(i)
         self.iface = interface()
         self.iface.db = self
         return True
@@ -291,14 +294,16 @@ class sqlite3db(Singleton, GtkMisc):
         for strSQL in tabledesc:
             self.execute(strSQL)
             self.commit()
+        self.insert_music_playlist()
 
     def fillRegistry(self):
         '''
         Rellena el registro con valores adecuados
         '''
-        reglist = ['INSERT INTO registry VALUES (null, "version", "0.2")',
-                'INSERT INTO playlists VALUES (null, \'music\')',
-                'INSERT INTO playlists VALUES (null, \'queue\')']
+        reglist = [
+                    'INSERT INTO registry VALUES (null, "version", "0.2")',
+                  ]
+        
         for strSQL in reglist:
             self.execute(strSQL)
             self.commit()
@@ -387,6 +392,8 @@ class sqlite3db(Singleton, GtkMisc):
         @param name: name of the playlists
         @return: The playlist id
         '''
+        if self.PlaylistIDFromName(name):
+            return self.PlaylistIDFromName(name)
         strSQL = 'INSERT INTO playlists values(null, ?)'
         self.execute(strSQL,name)
         self.commit()
@@ -464,8 +471,8 @@ class sqlite3db(Singleton, GtkMisc):
         Return the playlist according to the name
         @param playlist: playlist name
         '''
-        if not isinstance(playlist, str):
-            raise ValueError('playlist must be an string')
+        if not isinstance(playlist, basestring):
+            raise ValueError('playlist must be an string, got %s'%type(playlist))
         strSQL = 'SELECT id FROM playlists WHERE name=?'
         self.execute(strSQL, playlist)
         return self.fetchone()
@@ -540,7 +547,7 @@ class sqlite3db(Singleton, GtkMisc):
         '''
         Insert the music playlist
         '''
-        self.execute('INSERT INTO playlists VALUES (null, ?)',"music")
+        self.addPlaylist('music')
         return True
 
 
