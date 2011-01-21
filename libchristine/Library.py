@@ -362,7 +362,6 @@ class libraryBase(GtkMisc):
                 PLAY_COUNT,0,
                 GENRE,tags["genre"]
                 )
-
         self.library_lib.append(file, {"title":name,
                 "type":t,"artist":artist,
                 "album":album,
@@ -615,12 +614,12 @@ class libraryBase(GtkMisc):
             if self.__FilesToAdd:
                 new_file = self.__FilesToAdd.pop()
                 self.add(new_file)
-                self.__updateAddProgressBar(new_file)
             else:
                 self.__AddWindow.destroy()
                 self.__AddWIndow = None
                 self.__walking = False
                 return False
+        self.__updateAddProgressBar(new_file)
         return True
 
     def __updateAddProgressBar(self, file):

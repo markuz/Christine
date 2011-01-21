@@ -17,6 +17,8 @@
 
 from libchristine.Storage.sqlitedb import sqlite3db
 from libchristine.Logger import LoggerManager
+import time
+import thread
 
 
 class lib_library(object):
@@ -31,6 +33,21 @@ class lib_library(object):
         self.orderby = 'path'
         self.sorttype = 'ASC'
         self.load_list()
+        thread.start_new(self.__check_reload, tuple())
+    
+    def __check_reload(self):
+        '''
+        Check every 0.5 secs if we have to reload the library. if we have
+        then reload, if not, then sleep 0.5 secs :-)
+        '''
+        while True:
+            try:
+                time.sleep(0.5)
+                if self.should_load_list:
+                    self.load_list()
+                    self.should_load_list = False
+            except:
+                pass
 
     def load_list(self):
         self.__files = self.__db.getItemsForPlaylist(self.idlist)
@@ -40,8 +57,8 @@ class lib_library(object):
 
     def __getitem__(self,id):
         for i in self.__files:
-           if i['id'] == id: 
-               return i
+            if i['id'] == id:
+                return i
 
     def iteritems(self):
         return self.__files.iteritems()
@@ -64,7 +81,7 @@ class lib_library(object):
                         )
         self.__db.addItemToPlaylist(self.idlist, id)
         self.__db.commit()
-        self.load_list()
+        self.should_load_list = True
 
     def updateItem(self, path, **kwargs):
         '''
@@ -72,7 +89,7 @@ class lib_library(object):
         '''
         self.__db.updateItemValues(path, **kwargs)
         self.__db.commit()
-        self.load_list()
+        self.should_load_list = True
 
     def clean_playlist(self):
         self.__db.deleteFromPlaylist(self.idlist)
@@ -85,7 +102,7 @@ class lib_library(object):
         Remove an item from the main dict and return True or False
         '''
         self.__db.removeItem(key,self.idlist)
-        self.load_list()
+        self.should_load_list = True
         return True
 
     def get_all(self):
