@@ -207,6 +207,11 @@ class Christine_old(GtkMisc):
         #===================================================
         # Public Widgets
         self.MenuBar        = xml['MenuBar']
+        if sys.platform == 'darwin':
+            import igemacintegration
+            self.MenuBar.unparent()
+            macmenu = igemacintegration.MacMenu()
+            macmenu.set_menu_bar(self.MenuBar)
         self.HBoxSearch    = xml['HBoxSearch']
         self.EntrySearch    = xml['EntrySearch']
         self.EntrySearch.connect('changed',self.search)
