@@ -1,7 +1,7 @@
 SUBDIRS = \
 		  gui \
 		  po \
-		  build_win32 \
+		  packages/win32/ \
 		  libchristine \
 		  libchristine/christine_dbus/ \
 		  libchristine/pattern/ \
