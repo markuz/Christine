@@ -1,5 +1,5 @@
 DIST_FILES = christine.ico \
-			 christine_setup.py \
+			 setup.py \
 			 christine.nsi 
 
 EXTRA_DIST = Makefile.in \
