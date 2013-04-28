@@ -72,7 +72,7 @@ if opts.options.debug or os.name == 'nt':
     ICONPATH = os.path.join(SHARE_PATH,'gui','icons')
 else:
     SHARE_PATH = os.path.join('/usr/local/share', 'christine')
-    PLUGINSDIR = os.path.join('/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages','libchristine','Plugins')
+    PLUGINSDIR = os.path.join('/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages','libchristine','Plugins')
     ICONPATH =  os.path.join(SHARE_PATH,"icons")
 GUI_PATH = os.path.join(SHARE_PATH,"gui")
 LOCALE_DIR = os.path.join("/usr/local/share','locale")

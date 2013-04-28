@@ -17,7 +17,6 @@ AC_HEADER_STDC
 
 AM_MAINTAINER_MODE
 AM_PATH_PYTHON(2.4)
-AM_PROG_LIBTOOL
 LIBTOOL="$LIBTOOL"
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -122,8 +121,7 @@ USE_NLS=yes
 AC_SUBST(USE_NLS)
 IT_PROG_INTLTOOL
 
-AC_CONFIG_FILES([po/Makefile.in
-Makefile
+AC_CONFIG_FILES([Makefile
 libchristine/Makefile
 libchristine/pattern/Makefile
 libchristine/gui/Makefile

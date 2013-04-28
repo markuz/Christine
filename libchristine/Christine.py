@@ -114,7 +114,7 @@ class Christine(GtkMisc):
             self.c = mainWindow()
         else:
             self.c = Christine_old()
-    
+
     def runGtk(self):
         gtk.main()
 
@@ -201,7 +201,7 @@ class Christine_old(GtkMisc):
         core.Player.connect('found-tag', self.do_message_tag)
         core.Player.connect('buffering', self.do_buffering)
         core.Player.connect('set-location', self._do_set_location)
-    
+
         # Calling some widget descriptors with no callback connected "by hand"
         # This interface should not be private.
         #===================================================
@@ -249,7 +249,7 @@ class Christine_old(GtkMisc):
         self.PlayButton.show()
         self.interface.playButton =  self.PlayButton
         self.menuItemPlay = xml['MenuItemPlay']
-        
+
         next = next_button()
         parent.pack_start(next, False, False, 2)
         next.connect('clicked', self.goNext)
@@ -282,7 +282,7 @@ class Christine_old(GtkMisc):
         self.mainSpace.add2(core.mainLibrary.scroll)
         core.mainLibrary.show_all()
         core.Player.hide()
-        
+
         self.__VBoxList = xml["VBoxList"]
         self.sideNotebook = gtk.Notebook()
         self.sideNotebook.set_show_tabs(False)
@@ -329,7 +329,7 @@ class Christine_old(GtkMisc):
         self.christineConf.notifyAdd('control/repeat',
             self.christineConf.toggleWidget,
             self.__ControlRepeat)
-        
+
         self.__MenuItemVisualMode = xml['MenuItemVisualMode']
         self.__MenuItemVisualMode.set_active(self.christineConf.get_value('ui/visualization'))
 
@@ -337,16 +337,16 @@ class Christine_old(GtkMisc):
 
         self.__MenuItemSmallView.set_active(self.christineConf.get_value('ui/small_view'))
         self.toggleViewSmall(self.__MenuItemSmallView)
-        
+
         self.MenuItemSidePane = xml ['sidepanel']
         self.MenuItemSidePane.connect('toggled', self.ShowHideSidePanel)
         self.MenuItemSidePane.set_active(self.christineConf.get_value('ui/sidepanel'))
         self.christineConf.notifyAdd('ui/sidepanel',
                                     self.christineConf.toggleWidget,
                                     self.MenuItemSidePane)
-        
+
         translateMenuItem = xml['translateThisApp']
-        translateMenuItem.connect('activate', 
+        translateMenuItem.connect('activate',
                 lambda widget: webbrowser.open(TRANSLATEURL))
 
         reportaBug = xml['reportABug']
@@ -377,23 +377,23 @@ class Christine_old(GtkMisc):
         #self.VBoxList2.pack_start(self.infoBar,False, False, 2)
         #self.VBoxList2.show()
         #self.hide_equalizer()
-    
+
     def show_equalizer(self):
         self.eq.show()
-    
+
     def hide_equalizer(self):
         if not getattr(self, 'infoBar', False):
             return
         self.infoBar.hide()
-        
-    
+
+
     def __check_queue(self, queue, size):
         if size < 1:
             self.sources_mi.activate()
         else:
             self.Queue_mi.activate()
-        
-    
+
+
     def __check_items_on_media(self):
         size = len(core.mainLibrary.model.basemodel)
         if size>1:
@@ -444,7 +444,7 @@ class Christine_old(GtkMisc):
                         break
             self.setLocation(location.strip().strip("'"))
             self.simplePlay()
-    
+
     def __on_corewindow_resized(self, window, event):
         '''
         This method is called every time the main window is resized
@@ -466,7 +466,7 @@ class Christine_old(GtkMisc):
         Callback for Player's set-location  signal
         @param filename:
         '''
-        
+
         self.__LocationCount = 0
         self.__StatePlaying = False
         self.__IterNatural  = None
@@ -475,7 +475,7 @@ class Christine_old(GtkMisc):
         # should be setted to None
         # before using it
 
-        
+
         #core.Player.setLocation(filename)
         name = os.path.split(filename)[-1]
         core.Display.setSong(name)
@@ -629,7 +629,7 @@ class Christine_old(GtkMisc):
         text = self.EntrySearch.get_text().lower()
         if diff > 0.5 and diff < 1 or not text:
             core.mainLibrary.model.TextToSearch = text
-            core.mainLibrary.refilter() 
+            core.mainLibrary.refilter()
             self.jumpToPlaying()
             return False
         if diff > 1.5:
@@ -687,10 +687,10 @@ class Christine_old(GtkMisc):
             else:
                 self.setLocation(location)
             core.Player.playIt()
-            
+
     def simplePlay(self):
         '''
-        
+
         '''
         self.PlayButton.set_active(False)
         self.PlayButton.set_active(True)
@@ -715,7 +715,7 @@ class Christine_old(GtkMisc):
                 if size:
                     self.__LastPlayed.pop()
                 self.setLocation(core.Player.getLocation())
-                return 
+                return
         print size
         if size >= 1:
             print "size >= 1"
@@ -725,13 +725,13 @@ class Christine_old(GtkMisc):
             self.setLocation(self.__LastPlayed.pop())
             self.PlayButton.set_active(False)
             self.PlayButton.set_active(True)
-            print time.time() -c 
+            print time.time() -c
         else:
             c = time.time()
             iter = core.mainLibrary.model.basemodel.search_iter_on_column(
-                        self.christineConf.getString('backend/last_played'), 
+                        self.christineConf.getString('backend/last_played'),
                         PATH)
-            print "core.mainLibrary.model.basemodel.search_iter_on_column",time.time() -c 
+            print "core.mainLibrary.model.basemodel.search_iter_on_column",time.time() -c
             if iter == None:
                 return False
             if not core.mainLibrary.tv.get_model().iter_is_valid(iter):
@@ -753,7 +753,7 @@ class Christine_old(GtkMisc):
                 self.__LastPlayed.pop()
                 self.PlayButton.set_active(False)
                 self.PlayButton.set_active(True)
-                print time.time() -c 
+                print time.time() -c
 
     def goNext(self, widget = None):
         """
@@ -957,7 +957,7 @@ class Christine_old(GtkMisc):
                 core.mainLibrary.addFiles(files)
             path = os.path.join(os.path.split(files[0])[:-1])[0]
             self.christineConf.setValue("ui/LastFolder",path)
-    
+
     def importFolder(self, widget):
         XML  = self.share.getTemplate('directorySelector')
         ds   = XML['ds']
@@ -967,7 +967,7 @@ class Christine_old(GtkMisc):
             ds.set_uri('file://'+uri)
         ds.show_all()
         ds.connect('response', self.__do_import_folder_response, walk)
-    
+
     def __do_import_folder_response(self, ds, response, walk):
         if response == gtk.RESPONSE_OK:
             filenames = ds.get_filenames()
@@ -977,7 +977,7 @@ class Christine_old(GtkMisc):
             core.mainLibrary.importFolder(filenames, walkdir)
             return True
         ds.destroy()
-    
+
 
     def importToQueue(self, widget):
         """
@@ -997,13 +997,13 @@ class Christine_old(GtkMisc):
             return
         self.__Logger.error(emsg)
         error(emsg)
-    
+
     def do_end_of_stream(self, player):
         self.goNext()
 
     def do_message_tag(self, player):
         self.setTags()
-    
+
     def do_buffering(self, player, percent):
         core.Display.setText("%d" % percent)
         core.Display.setScale((percent / 100))
@@ -1036,7 +1036,7 @@ class Christine_old(GtkMisc):
         Catches the lenght of the media and update it in the
         player
         """
-        if self.__LocationCount >= 20: 
+        if self.__LocationCount >= 20:
             return False
         location = core.Player.getLocation()
         if not location:
@@ -1125,7 +1125,7 @@ class Christine_old(GtkMisc):
         dialog.destroy()
 
     def openRemote(self,widget):
-        import libchristine.gui.openRemote 
+        import libchristine.gui.openRemote
         libchristine.gui.openRemote.openRemote()
 
     def showGtkAbout(self, widget):
@@ -1146,7 +1146,7 @@ class Christine_old(GtkMisc):
 
     def ShowHideSidePanel(self, widget):
         '''
-        Show or hide the side Panel 
+        Show or hide the side Panel
         @param widget:
         '''
         self.VBoxList.set_property('visible', widget.get_active())
@@ -1155,7 +1155,7 @@ class Christine_old(GtkMisc):
     def quitGtk(self, widget = None):
         core.Player.stop()
         close()
-    
+
     def runGtk(self):
         """
         GTK application running
@@ -1209,5 +1209,5 @@ def runChristine():
         print e
         #BugReport()
     gtk.main()
-    
+
 
